@@ -8,6 +8,7 @@ import { CubeComponent } from './cube/cube.component';
 import {RenderService} from './cube/render.service';
 import {BasicService} from './basic.service';
 
+import { CrosswordGameModule } from '../crossword-game/crossword-game.module'
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {BasicService} from './basic.service';
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpModule,
+	CrosswordGameModule
   ],
   providers: [
     RenderService,
