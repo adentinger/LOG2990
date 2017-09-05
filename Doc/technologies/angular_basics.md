@@ -36,7 +36,7 @@ Commande du terminal. Permet de:
 - Démarrer une application Angular: `$ ng serve`
 - Générer des _Components_, _Services_, _Modules_ vides: `$ ng generate component components/MyComponent `. Je conseille de les créer à la main une couple de fois pour comprendre comment ça marche, puis de les générer avec `ng`.
 - **Exécuter les tests: `$ ng test`**
-- **Vérifier la qualité du code: `$ ng lint`**
+- **Vérifier la qualité du code: `$ ng lint --type-check`**
 
 Organisation des fichiers
 =========================
