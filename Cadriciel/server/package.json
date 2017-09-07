@@ -25,7 +25,8 @@
     "pug": "^2.0.0-alpha6",
     "serve-favicon": "~2.3.0",
     "socket.io": "1.4.4",
-    "systemjs": "0.19.39"
+    "systemjs": "0.19.39",
+    "mongodb" : "^2.2.31"
   },
   "devDependencies": {
     "@types/body-parser": "1.16.5",
