@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {Message} from '../../../commun/communication/message';
+import {Message} from '../../../common/communication/message';
 
 @Injectable()
 export class BasicService {

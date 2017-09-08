@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {Message} from '../../../commun/communication/message';
+import {Message} from '../../../common/communication/message';
 
 module Route {
 
