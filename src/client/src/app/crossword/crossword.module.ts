@@ -6,6 +6,7 @@ import { BoardComponent } from './components/crossword/board/board.component';
 import { DefinitionFieldComponent } from './components/crossword/definition-field/definition-field.component';
 import { ConfigMenuComponent } from './components/crossword/config-menu/config-menu.component';
 import { GameDetailsComponent } from './components/crossword/game-details/game-details.component';
+import { DefinitionComponent } from './components/crossword/definition-field/definition/definition.component';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { GameDetailsComponent } from './components/crossword/game-details/game-d
         BoardComponent,
         DefinitionFieldComponent,
         ConfigMenuComponent,
-        GameDetailsComponent
+        GameDetailsComponent,
+        DefinitionComponent
     ],
     exports: [
         CrosswordComponent
