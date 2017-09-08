@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'crossword',
+    selector: 'app-crossword',
     template: `<h3>Crossword component works!</h3>`
 })
 
