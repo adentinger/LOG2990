@@ -5,10 +5,11 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CubeComponent } from './cube/cube.component';
 
-import {RenderService} from './cube/render.service';
-import {BasicService} from './basic.service';
+import { RenderService } from './cube/render.service';
+import { BasicService } from './basic.service';
 
 import { CrosswordModule } from './crossword/crossword.module';
+import { RacingModule } from './racing/racing.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CrosswordModule } from './crossword/crossword.module';
   imports: [
     BrowserModule,
     HttpModule,
-    CrosswordModule
+    CrosswordModule,
+    RacingModule
   ],
   providers: [
     RenderService,
