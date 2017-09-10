@@ -1,16 +1,14 @@
 <h2>Map size</h2>
-<div><label>height: </label>{{map.height}}</div>
-<div><label>length: </label>{{map.length}}</div>
 <div>
   <label>height: </label>
-  <input [(ngModel)]="map.height" placeholder="500">
+  <input [(ngModel)]="map.height" placeholder="map height">
 </div>
 <div>
   <label>length: </label>
-  <input [(ngModel)]="map.length" placeholder="500">
+  <input [(ngModel)]="map.length" placeholder="map length">
 </div>
 <div class="creationSpace">
   <h2>This is the space to edit your map</h2>
-  <canvas #myMap width="500" height="500" > <!-- style="max-width: 20px" --> 
+  <canvas #myMap [width]="map.length" [height]="map.height" > <!-- style="max-width: 20px" --> 
   </canvas>
 </div>

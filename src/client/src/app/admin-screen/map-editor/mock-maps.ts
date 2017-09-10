@@ -1,3 +1,3 @@
 import { Map } from './map';
 
-export const MAPS: Map[] = [{ height: 500, lenght: 500, points: []}];
+export const MAPS: Map[] = [{ height: 500, length: 500, points: []}];

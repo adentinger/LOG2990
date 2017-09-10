@@ -9,8 +9,7 @@ import { Map } from './map';
 })
 export class MapEditorComponent {
 
-    public map: Map = { height: 500, lenght: 500, points: []};
-    public tmp: number;
+    public map: Map = { height: 500, length: 500, points: []};
 
     @ViewChild("myMap") private myMap: ElementRef;
 
@@ -19,17 +18,7 @@ export class MapEditorComponent {
     ngOnInit() {
         const ctxt: CanvasRenderingContext2D =
             this.myMap.nativeElement.getContext('2d');
-        ctxt.strokeRect(0, 0, 500, 500);
-        ctxt.clip('evenodd');
-        ctxt.beginPath();
-        ctxt.fillStyle = '#DD0031';
-        for (let i = 0; i < 50000; ++i) {
-            const x = Math.random() * 500;
-            const y = Math.random() * 500;
-            ctxt.moveTo(x, y);
-            ctxt.arc(x, y, 0.8, 0, Math.PI * 2);
-        }
-        ctxt.fill();
+        ctxt.strokeRect(0, 0, this.map.length, this.map.height);
     }
 
 }
