@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
 import { RenderService } from './cube/render.service';
 import { BasicService } from './basic.service';
 import { Routes, RouterModule } from '@angular/router';
@@ -35,14 +36,15 @@ const appRoutes: Routes = [
         SelectionScreenComponent,
         AppHeaderComponent,
         AdminScreenComponent,
-        MapEditorComponent
+        MapEditorComponent,
     ],
     imports: [
         BrowserModule,
         HttpModule,
         CrosswordModule,
         RacingModule,
-        RouterModule.forRoot(appRoutes)
+        RouterModule.forRoot(appRoutes),
+        FormsModule
     ],
     providers: [
         RenderService,
