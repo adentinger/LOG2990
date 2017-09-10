@@ -20,10 +20,10 @@ import { RacingComponent } from './racing/racing.component';
 import { AdminScreenComponent } from './admin-screen/admin-screen.component';
 
 const appRoutes: Routes = [
-    { path: 'admin', component: AdminScreenComponent},
     { path: '', component: SelectionScreenComponent },
     { path: 'crossword', component: CrosswordComponent },
     { path: 'racing', component: RacingComponent },
+    { path: 'admin', component: AdminScreenComponent},
 ];
 
 @NgModule({
