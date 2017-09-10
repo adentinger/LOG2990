@@ -17,8 +17,10 @@ import { SelectionScreenComponent } from './selection-screen/selection-screen.co
 import { CrosswordComponent } from './crossword/components/crossword/crossword.component';
 import { RacingComponent } from './racing/components/racing/racing.component';
 import { AdminScreenComponent } from './admin-screen/admin-screen.component';
+import { MapEditorComponent } from './admin-screen/map-editor/map-editor.component';
 
 const appRoutes: Routes = [
+    { path: 'admin/map-editor' , component: MapEditorComponent},
     { path: 'admin', component: AdminScreenComponent},
     { path: '', component: SelectionScreenComponent },
     { path: 'crossword', component: CrosswordComponent },
@@ -31,7 +33,8 @@ const appRoutes: Routes = [
         CubeComponent,
         SelectionScreenComponent,
         AppHeaderComponent,
-        AdminScreenComponent
+        AdminScreenComponent,
+        MapEditorComponent
     ],
     imports: [
         BrowserModule,
