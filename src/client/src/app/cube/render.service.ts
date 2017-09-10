@@ -5,107 +5,107 @@ import Stats = require('stats.js');
 @Injectable()
 export class RenderService {
 
-  private container: HTMLDivElement;
+    private container: HTMLDivElement;
 
-  private camera: THREE.PerspectiveCamera;
+    private camera: THREE.PerspectiveCamera;
 
-  private stats: Stats;
+    private stats: Stats;
 
-  private cube: THREE.Mesh;
+    private cube: THREE.Mesh;
 
-  private renderer: THREE.WebGLRenderer;
+    private renderer: THREE.WebGLRenderer;
 
-  private scene: THREE.Scene;
+    private scene: THREE.Scene;
 
-  private cameraZ = 400;
+    private cameraZ = 400;
 
-  private fieldOfView = 70;
+    private fieldOfView = 70;
 
-  private nearClippingPane = 1;
+    private nearClippingPane = 1;
 
-  private farClippingPane = 1000;
+    private farClippingPane = 1000;
 
-  public rotationSpeedX = 0.005;
+    public rotationSpeedX = 0.005;
 
-  public rotationSpeedY = 0.01;
+    public rotationSpeedY = 0.01;
 
-  private animateCube() {
-    this.cube.rotation.x += this.rotationSpeedX;
-    this.cube.rotation.y += this.rotationSpeedY;
-  }
-
-  private createCube() {
-    const geometry = new THREE.BoxGeometry(200, 200, 200);
-
-    for (let i = 0; i < geometry.faces.length; i += 2) {
-      const hex = Math.random() * 0xffffff;
-      geometry.faces[i].color.setHex(hex);
-      geometry.faces[i + 1].color.setHex(hex);
+    private animateCube() {
+        this.cube.rotation.x += this.rotationSpeedX;
+        this.cube.rotation.y += this.rotationSpeedY;
     }
 
-    const material = new THREE.MeshBasicMaterial({ vertexColors: THREE.FaceColors, overdraw: 0.5 });
-    this.cube = new THREE.Mesh(geometry, material);
-    this.scene.add(this.cube);
-  }
+    private createCube() {
+        const geometry = new THREE.BoxGeometry(200, 200, 200);
 
-  private createScene() {
-    /* Scene */
-    this.scene = new THREE.Scene();
+        for (let i = 0; i < geometry.faces.length; i += 2) {
+            const hex = Math.random() * 0xffffff;
+            geometry.faces[i].color.setHex(hex);
+            geometry.faces[i + 1].color.setHex(hex);
+        }
 
-    /* Camera */
-    const aspectRatio = this.getAspectRatio();
-    this.camera = new THREE.PerspectiveCamera(
-      this.fieldOfView,
-      aspectRatio,
-      this.nearClippingPane,
-      this.farClippingPane
-    );
-    this.camera.position.z = this.cameraZ;
-  }
+        const material = new THREE.MeshBasicMaterial({ vertexColors: THREE.FaceColors, overdraw: 0.5 });
+        this.cube = new THREE.Mesh(geometry, material);
+        this.scene.add(this.cube);
+    }
 
-  private getAspectRatio() {
-    return this.container.clientWidth / this.container.clientHeight;
-  }
+    private createScene() {
+        /* Scene */
+        this.scene = new THREE.Scene();
 
-  private startRenderingLoop() {
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setPixelRatio(devicePixelRatio);
-    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        /* Camera */
+        const aspectRatio = this.getAspectRatio();
+        this.camera = new THREE.PerspectiveCamera(
+            this.fieldOfView,
+            aspectRatio,
+            this.nearClippingPane,
+            this.farClippingPane
+        );
+        this.camera.position.z = this.cameraZ;
+    }
 
-    this.container.appendChild(this.renderer.domElement);
-    this.render();
-  }
+    private getAspectRatio() {
+        return this.container.clientWidth / this.container.clientHeight;
+    }
 
-  private render() {
-    requestAnimationFrame(() => this.render());
-    this.animateCube();
+    private startRenderingLoop() {
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setPixelRatio(devicePixelRatio);
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
 
-    this.renderer.render(this.scene, this.camera);
-    this.stats.update();
-  }
+        this.container.appendChild(this.renderer.domElement);
+        this.render();
+    }
 
-  private initStats() {
-    this.stats = new Stats();
-    this.stats.dom.style.position = 'absolute';
+    private render() {
+        requestAnimationFrame(() => this.render());
+        this.animateCube();
 
-    this.container.appendChild(this.stats.dom);
-  }
+        this.renderer.render(this.scene, this.camera);
+        this.stats.update();
+    }
 
-  public onResize() {
-    this.camera.aspect = this.getAspectRatio();
-    this.camera.updateProjectionMatrix();
+    private initStats() {
+        this.stats = new Stats();
+        this.stats.dom.style.position = 'absolute';
 
-    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-  }
+        this.container.appendChild(this.stats.dom);
+    }
 
-  public initialize(container: HTMLDivElement, rotationX: number, rotationY: number) {
-    this.container = container;
-    this.rotationSpeedX = rotationX;
-    this.rotationSpeedY = rotationY;
+    public onResize() {
+        this.camera.aspect = this.getAspectRatio();
+        this.camera.updateProjectionMatrix();
 
-    this.createScene();
-    this.createCube();
-    this.initStats();
-    this.startRenderingLoop();
-  }
+        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    }
+
+    public initialize(container: HTMLDivElement, rotationX: number, rotationY: number) {
+        this.container = container;
+        this.rotationSpeedX = rotationX;
+        this.rotationSpeedY = rotationY;
+
+        this.createScene();
+        this.createCube();
+        this.initStats();
+        this.startRenderingLoop();
+    }
 }
