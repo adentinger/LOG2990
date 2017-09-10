@@ -14,8 +14,8 @@ import { CrosswordModule } from './crossword/crossword.module';
 import { RacingModule } from './racing/racing.module';
 
 import { SelectionScreenComponent } from './selection-screen/selection-screen.component';
-import { CrosswordComponent } from './crossword/components/crossword/crossword.component';
-import { RacingComponent } from './racing/components/racing/racing.component';
+import { CrosswordComponent } from './crossword/crossword.component';
+import { RacingComponent } from './racing/racing.component';
 
 const appRoutes: Routes = [
     { path: '', component: SelectionScreenComponent },

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { RacingComponent } from './components/racing/racing.component';
+import { RacingComponent } from './racing.component';
 
 @NgModule({
     imports: [
