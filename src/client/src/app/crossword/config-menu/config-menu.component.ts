@@ -44,6 +44,10 @@ export class ConfigMenuComponent implements OnInit {
     }
     public ngOnInit() {
     }
+
+    public stateBack() {
+        this.states.pop();
+    }
     public chooseGameMode(gameMode: number) {
         this.config.gameMode = gameMode as GameMode;
         this.states.push(ConfigMenuState.ChoosePlayerNumber);

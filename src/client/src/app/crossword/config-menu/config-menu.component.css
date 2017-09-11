@@ -1,3 +1,104 @@
-.menu-page.hide {
-    visibility: hidden;
+.disclaimer {
+    background-color: black;
+    opacity: 0.7;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+div.outer-menu {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+div.outer-menu div.menu {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    z-index: 2;
+    min-width: 300px;
+    max-height: 90%;
+    width: 30%;
+    height: auto;
+    padding: 20px;
+    margin: auto;
+    overflow: hidden;
+}
+
+@keyframes slideout {
+    0% {
+        width: 100%;
+        opacity: 1;
+        left: 0
+    }
+    99% {
+        width: 0%;
+        opacity: 0;
+        left: -100%;
+    }
+    100% {
+        width: 0%;
+    }
+}
+@keyframes slidein {
+    0% {
+        left: 100%;
+    }
+}
+
+.menu-page-container {
+    background-color: transparent;
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.menu-page {
+    align-items: center;
+    flex-shrink: 0;
+    width: 0;
+    height: 100%;
+    position: relative;
+    left: 0;
+    top: 0;
+    animation-name: slideout;
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+    overflow: hidden;
+}
+
+.menu-page.show {
+    z-index: 1;
+    width: 100%;
+    opacity: 1;
+    position: relative;
+    animation-name: slidein;
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.menu-page > h4 {
+    color: #242424;
+}
+
+.menu-page > button {
+    display: inline-block;
+    width: 100%;
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    box-shadow: 1px 1px 2px #888;
+    padding: 10px;
 }
