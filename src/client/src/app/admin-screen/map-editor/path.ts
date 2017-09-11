@@ -1,4 +1,3 @@
-import { Line } from './line';
 import { Point } from './point';
 import { Drawable } from './drawable';
 

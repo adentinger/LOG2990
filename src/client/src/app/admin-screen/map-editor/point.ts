@@ -21,4 +21,11 @@ export class Point implements Drawable {
         this.context.fillStyle = this.color;
         this.context.fill();
     }
+
+    public isMouseOver(x: number, y: number): boolean {
+        const DISTANCE_SQUARED: number = (x - this.x) * (x - this.x) + (y - this.y) * (y - this.y);
+        const RADIUS_SQUARED: number = this.radius * this.radius;
+
+        return (DISTANCE_SQUARED < RADIUS_SQUARED);
+    }
 }
