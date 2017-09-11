@@ -1,3 +1,9 @@
-.canvas {
-    text-align: center
+.mapEditionScreen {
+    text-align: center;
+}
+
+.creationSpace {
+    border: 25px solid #000000;
+    padding: 25px;
+    padding: 0px;
 }

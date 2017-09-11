@@ -1,14 +1,21 @@
-<h2>Map size</h2>
-<div>
-  <label>height: </label>
-  <input [(ngModel)]="map.height" placeholder="map height">
-</div>
-<div>
-  <label>length: </label>
-  <input [(ngModel)]="map.length" placeholder="map length">
-</div>
-<div class="creationSpace">
+<div class= "mapEditionScreen">
+  <h2>Map size</h2>
+  <div>
+    <label>map name: </label>
+    <input [(ngModel)]="map.name" placeholder="map name">
+  </div>
+  <div>
+    <label>map type: </label>
+    <input [(ngModel)]="map.type" placeholder="map type">
+  </div>
+  <div>
+    <label>description: </label>
+    <input [(ngModel)]="map.description" placeholder="description">
+  </div>
   <h2>This is the space to edit your map</h2>
-  <canvas #myMap [width]="map.length" [height]="map.height" > <!-- style="max-width: 20px" --> 
-  </canvas>
+  <button type="button" (click)="undoLastPoint()">Undo</button>
+  <div>
+    <canvas class="creationSpace" #editingArea [width]="width" [height]="height" > <!-- style="max-width: 20px" --> 
+    </canvas>
+  </div>
 </div>
