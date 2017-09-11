@@ -1,46 +1,19 @@
 <div class="disclaimer"></div>
-<div class="outer-menu">
+<div [ngClass]="['outer-menu']">
   <div class="menu">
     <h2 class="text-center">New game</h2>
-    <div class="row text-center">
-      <p> current states:{{ states[states.length - 1] }} </p>
-      <div class="col-lg-12 text-center menu-page-container">
-
-        <!-- choose game mode -->
-        <div class="menu-page" [ngClass]="{show: states[states.length - 1] == 0}">
-          <h4>choose a game mode:</h4>
-          <button (click)="chooseGameMode(1)" class="btn btn-xl">Classique</button>
-          <button (click)="chooseGameMode(2)" class="btn btn-xl">Dynamique</button>
-        </div>
-
-        <!-- choose player number -->
-        <div class="menu-page" [ngClass]="{show: states[states.length - 1] == 1}">
-          <h4>{{ config.gameMode== 1 ? "Classic mode" : "Dynamic mode" }}</h4>
-          <button (click)="choosePlayerNumber(1)" class="btn btn-xl">Single player Game</button>
-          <button (click)="choosePlayerNumber(2)" class="btn btn-xl">Two players Game</button>
-          <button (click)="stateBack()" class="btn btn-xl">Back</button>
-        </div>
-
-        <!-- choose difficulty -->
-        <div class="menu-page" [ngClass]="{show: states[states.length - 1] == 2}">
-          <h4> {{ config.playerNumber == 1 ? "Single Player" : "Two Players"}}</h4>
-          <button (click)="chooseDifficulty(1)" class="btn btn-xl">easy</button>
-          <button (click)="chooseDifficulty(2)" class="btn btn-xl">normal</button>
-          <button (click)="chooseDifficulty(2)" class="btn btn-xl">BRUTAL</button>
-          <button (click)="stateBack()" class="btn btn-xl">Back</button>
-        </div>
-
-        <!-- confirmation screen -->
-        <div class="menu-page" [ngClass]="{show: states[states.length - 1] == 5}">
-          <h4> Accept these settings ?</h4>
-          <ul>
-            <li>Mode: {{ config.gameMode }}</li>
-            <li>Players: {{ config.playerNumber }}</li>
-          </ul>
-
-          <button (click)="sendConfigToServer()" class="btn btn-xl">Start</button>
-          <button (click)="stateBack()" class="btn btn-xl">Back</button>
-        </div>
+    <div class="menu-page-container">
+      <div
+        *ngFor="let menuPage of menuPages"
+        class="menu-page"
+        [ngClass]="{show: states[states.length - 1] == menuPage.id}">
+        <h4>{{menuPage.title}}</h4>
+        <span
+          *ngIf="menuPage.description != undefined"
+          [innerHTML]="getDescription(menuPage.description)"></span>
+        <button
+          *ngFor="let option of menuPage.options"
+          class="" (click)="option.clickHandler()">{{option.name}}</button>
       </div>
     </div>
   </div>
