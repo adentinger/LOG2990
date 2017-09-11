@@ -9,7 +9,7 @@ export class AdminScreenComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
 }

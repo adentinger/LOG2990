@@ -15,7 +15,11 @@
   <h2>This is the space to edit your map</h2>
   <button type="button" (click)="undoLastPoint()">Undo</button>
   <div>
-    <canvas class="creationSpace" #editingArea [width]="width" [height]="height" (click)="addPoint($event)"> <!-- style="max-width: 20px" --> 
+    <canvas class="creationSpace" #editingArea
+      [width]="width" 
+      [height]="height" 
+      (click)="addPoint($event)" 
+      (mousemove)="mouseMoved($event)">
     </canvas>
   </div>
 </div>

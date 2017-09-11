@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { NgModel } from '@angular/forms';
 import { Path } from './path';
 import { Point } from './point';
 
@@ -13,22 +12,23 @@ export class MapEditorComponent implements OnInit {
     public mockPath: Path;
     @ViewChild('editingArea') private editingArea: ElementRef;
 
-    private width = 500;
-    private height = 500;
+    public width = 500;
+    public height = 500;
 
     constructor() { }
     public ngOnInit(): void {
         this.ctxt = this.editingArea.nativeElement.getContext('2d');
         this.mockPath = new Path( this.ctxt, [] );
     }
-    private addPoint(mouseDown): void {
+
+    public addPoint(event: MouseEvent): void {
         this.mockPath.points.push(new Point(this.ctxt,
-                                            mouseDown.offsetX,
-                                            mouseDown.offsetY));
+                                            event.offsetX,
+                                            event.offsetY));
         this.drawPath();
     }
 
-    private undoLastPoint(): void {
+    public undoLastPoint(): void {
         this.mockPath.points.pop();
         this.drawPath();
     }
@@ -36,5 +36,16 @@ export class MapEditorComponent implements OnInit {
     private drawPath(): void {
         this.ctxt.clearRect(0, 0, this.width, this.height);
         this.mockPath.draw();
+    }
+
+    public mouseMoved(event: MouseEvent): void {
+        this.mockPath.points.forEach(point => {
+            // tslint:disable-next-line:no-bitwise
+            if (point.isMouseOver(event.offsetX, event.offsetY) && (event.buttons & 1)) {
+                point.x = event.offsetX;
+                point.y = event.offsetY;
+                this.drawPath();
+            }
+        });
     }
 }
