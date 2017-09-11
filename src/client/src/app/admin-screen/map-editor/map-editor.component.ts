@@ -23,15 +23,11 @@ export class MapEditorComponent implements OnInit {
     }
 
     public undoLastPoint() {
-        console.log('hello!');
         this.map.points.pop();
     }
 
     private onmousedown(mouseDown) {
         this.addPoint(mouseDown.offsetX, mouseDown.offsetY);
-        this.map.points.forEach(points => {
-            this.ctxt.fillRect(points.x, points.y, 10, 10);
-        });
     }
 
     public ngOnInit() {
