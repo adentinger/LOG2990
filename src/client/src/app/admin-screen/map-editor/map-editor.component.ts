@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { Map } from './map';
+import { Path } from './path';
 import { Point } from './point';
 
 @Component({
@@ -10,27 +10,31 @@ import { Point } from './point';
 })
 export class MapEditorComponent implements OnInit {
     private ctxt: CanvasRenderingContext2D;
-    public map: Map = new Map('test1', 'amateur', 'description', []);
+    public mockPath: Path;
     @ViewChild('editingArea') private editingArea: ElementRef;
 
     private width = 500;
     private height = 500;
 
     constructor() { }
-
-    public addPoint(x, y) {
-        this.map.points.push(new Point(x, y));
-    }
-
-    public undoLastPoint() {
-        this.map.points.pop();
-    }
-
-    private onmousedown(mouseDown) {
-        this.addPoint(mouseDown.offsetX, mouseDown.offsetY);
-    }
-
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.ctxt = this.editingArea.nativeElement.getContext('2d');
+        this.mockPath = new Path( this.ctxt, [] );
+    }
+    private addPoint(mouseDown): void {
+        this.mockPath.points.push(new Point(this.ctxt,
+                                            mouseDown.offsetX,
+                                            mouseDown.offsetY));
+        this.drawPath();
+    }
+
+    private undoLastPoint(): void {
+        this.mockPath.points.pop();
+        this.drawPath();
+    }
+
+    private drawPath(): void {
+        this.ctxt.clearRect(0, 0, this.width, this.height);
+        this.mockPath.draw();
     }
 }
