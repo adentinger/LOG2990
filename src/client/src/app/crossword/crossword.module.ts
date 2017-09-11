@@ -8,10 +8,12 @@ import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { GameDetailsComponent } from './game-details/game-details.component';
 import { DefinitionComponent } from './definition-field/definition/definition.component';
 import { PlayerInfoComponent } from './game-details/player-info/player-info.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        FormsModule
     ],
     declarations: [
         CrosswordComponent,

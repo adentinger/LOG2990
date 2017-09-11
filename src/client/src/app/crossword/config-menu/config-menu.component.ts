@@ -1,33 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { NgModel } from '@angular/forms';
+import { Location } from '@angular/common';
 
-enum GameMode {
-    Unselected = 0,
-    Classic,
-    Dynamic,
-}
-enum PlayerNumber {
-    Unselected = 0,
-    SinglePlayer = 1,
-    TwoPlayers = 2,
-}
-enum DifficultyLevel {
-    Unselected = 0,
-    Easy,
-    Normal,
-    Difficult,
-}
+import { GameMode, PlayerNumber, DifficultyLevel, ConfigMenuState } from './enums';
+import { MenuPage } from './menu-page';
+
 class CrosswordGameConfiguration {
     public gameMode: GameMode = GameMode.Unselected;
     public playerNumber: PlayerNumber = PlayerNumber.Unselected;
     public difficultyLevel: DifficultyLevel = DifficultyLevel.Unselected;
-}
-enum ConfigMenuState {
-    ChooseMode         = 0,
-    ChoosePlayerNumber = 1,
-    ChooseDifficulty   = 2,
-    ChooseCreateJoin   = 3,
-    ChooseGameToJoin   = 4,
-    ConfirmGame        = 5,
 }
 
 @Component({
@@ -38,15 +19,134 @@ enum ConfigMenuState {
 export class ConfigMenuComponent implements OnInit {
     public config: CrosswordGameConfiguration = new CrosswordGameConfiguration;
     public states: ConfigMenuState[] = [ConfigMenuState.ChooseMode];
+    public menuPages: MenuPage[];
+    public none: HTMLDivElement;
 
-    constructor() {
-
+    constructor(private location: Location) {
+        this.menuPages = [
+            {
+                id: 0,
+                title: 'Choose a game mode:',
+                options: [
+                    {
+                        name: 'Classique',
+                        clickHandler: () => this.chooseGameMode(1)
+                    },
+                    {
+                        name: 'Dynamic',
+                        clickHandler: () => this.chooseGameMode(2)
+                    },
+                    {
+                        name: 'Back to Main Page',
+                        clickHandler: () => this.location.back()
+                    }
+                ]
+            },
+            {
+                id: 1,
+                title: '',
+                options: [
+                    {
+                        name: 'Single Player',
+                        clickHandler: () => this.choosePlayerNumber(1)
+                    },
+                    {
+                        name: 'Two Players',
+                        clickHandler: () => this.choosePlayerNumber(2)
+                    },
+                    {
+                        name: 'Back',
+                        clickHandler: () => this.stateBack()
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: '',
+                options: [
+                    {
+                        name: 'Easy',
+                        clickHandler: () => this.chooseDifficulty(1)
+                    },
+                    {
+                        name: 'Normal',
+                        clickHandler: () => this.chooseDifficulty(2)
+                    },
+                    {
+                        name: 'BRUTAL',
+                        clickHandler: () => this.chooseDifficulty(3)
+                    },
+                    {
+                        name: 'Back',
+                        clickHandler: () => this.stateBack()
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: 'Two Players',
+                options: [
+                    {
+                        name: 'Create New Game',
+                        clickHandler: () => this.chooseCreateJoin(1)
+                    },
+                    {
+                        name: 'Join Game',
+                        clickHandler: () => this.chooseCreateJoin(2)
+                    },
+                    {
+                        name: 'Back',
+                        clickHandler: () => this.stateBack()
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: 'Available Games',
+                options: [
+                    {
+                        name: 'Back',
+                        clickHandler: () => this.stateBack()
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: 'Accept these settings ?',
+                description: () => {
+                    let constructedDescription = '<ul>';
+                    constructedDescription += `<li>Game Mode: ${GameMode[this.config.gameMode]}</li>`;
+                    constructedDescription += `<li>Player Mode: ${PlayerNumber[this.config.playerNumber]}</li>`;
+                    constructedDescription += `<li>Difficulty: ${DifficultyLevel[this.config.difficultyLevel]}</li>`;
+                    constructedDescription += '</ul>';
+                    return constructedDescription;
+                },
+                options: [
+                    {
+                        name: 'Start',
+                        clickHandler: () => this.sendConfigToServer()
+                    },
+                    {
+                        name: 'Back',
+                        clickHandler: () => this.stateBack()
+                    }
+                ]
+            }
+        ];
+        Object.defineProperty(this.menuPages[1], 'title', {
+            get: () => GameMode[this.config.gameMode]
+        });
+        Object.defineProperty(this.menuPages[2], 'title', {
+            get: () => PlayerNumber[this.config.playerNumber]
+        });
     }
     public ngOnInit() {
     }
 
     public stateBack() {
-        this.states.pop();
+        if (this.states.length > 1) {
+            this.states.pop();
+        }
     }
     public chooseGameMode(gameMode: number) {
         this.config.gameMode = gameMode as GameMode;
@@ -57,7 +157,7 @@ export class ConfigMenuComponent implements OnInit {
         if (playerNumber === 1) {
             this.states.push(ConfigMenuState.ChooseDifficulty);
         } else {
-            this.states.push(ConfigMenuState.ChooseGameToJoin);
+            this.states.push(ConfigMenuState.ChooseCreateJoin);
         }
     }
     public chooseDifficulty(difficulty: number) {
@@ -65,13 +165,25 @@ export class ConfigMenuComponent implements OnInit {
         this.states.push(ConfigMenuState.ConfirmGame);
     }
     public chooseCreateJoin(choice: number) {
-
+        //
+        if (choice === 1) {
+            this.states.push(ConfigMenuState.ChooseDifficulty);
+        } else {
+            this.states.push(ConfigMenuState.ChooseGameToJoin);
+        }
     }
     public chooseGameToJoin(choice: number) {
 
     }
     public sendConfigToServer(): void {
 
+    }
+
+    public getDescription(object: string | (() => string)): string {
+        if (typeof(object) === 'string') {
+            return object as string;
+        }
+        return (object as (() => string))();
     }
 
 }
