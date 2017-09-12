@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgModel } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { GameMode, PlayerNumber, DifficultyLevel, ConfigMenuState } from './enums';
@@ -25,7 +24,7 @@ export class ConfigMenuComponent implements OnInit {
     constructor(private location: Location) {
         this.menuPages = [
             {
-                id: 0,
+                id: ConfigMenuState.ChooseMode,
                 title: 'Choose a game mode:',
                 options: [
                     {
@@ -43,7 +42,7 @@ export class ConfigMenuComponent implements OnInit {
                 ]
             },
             {
-                id: 1,
+                id: ConfigMenuState.ChoosePlayerNumber,
                 title: '',
                 options: [
                     {
@@ -61,7 +60,7 @@ export class ConfigMenuComponent implements OnInit {
                 ]
             },
             {
-                id: 2,
+                id: ConfigMenuState.ChooseCreateJoin,
                 title: 'Two Players',
                 options: [
                     {
@@ -79,7 +78,7 @@ export class ConfigMenuComponent implements OnInit {
                 ]
             },
             {
-                id: 3,
+                id: ConfigMenuState.ChooseDifficulty,
                 title: '',
                 options: [
                     {
@@ -101,7 +100,7 @@ export class ConfigMenuComponent implements OnInit {
                 ]
             },
             {
-                id: 4,
+                id: ConfigMenuState.ChooseGameToJoin,
                 title: 'Available Games',
                 options: [
                     {
@@ -111,7 +110,7 @@ export class ConfigMenuComponent implements OnInit {
                 ]
             },
             {
-                id: 5,
+                id: ConfigMenuState.ConfirmGame,
                 title: 'Accept these settings ?',
                 description: () => {
                     let constructedDescription = '<ul>';
@@ -133,10 +132,12 @@ export class ConfigMenuComponent implements OnInit {
                 ]
             }
         ];
-        Object.defineProperty(this.menuPages[1], 'title', {
+        const playerPagePredicate = (page) => page.id === ConfigMenuState.ChoosePlayerNumber;
+        const createJoinPagePredicate = (page) => page.id === ConfigMenuState.ChooseCreateJoin;
+        Object.defineProperty(this.menuPages.find(playerPagePredicate), 'title', {
             get: () => GameMode[this.config.gameMode]
         });
-        Object.defineProperty(this.menuPages[3], 'title', {
+        Object.defineProperty(this.menuPages.find(createJoinPagePredicate), 'title', {
             get: () => PlayerNumber[this.config.playerNumber]
         });
     }

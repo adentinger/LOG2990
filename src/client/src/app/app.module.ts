@@ -13,8 +13,6 @@ import { CrosswordModule } from './crossword/crossword.module';
 import { RacingModule } from './racing/racing.module';
 
 import { SelectionScreenComponent } from './selection-screen/selection-screen.component';
-import { CrosswordComponent } from './crossword/crossword.component';
-import { RacingComponent } from './racing/racing.component';
 
 import { AdminScreenComponent } from './admin-screen/admin-screen.component';
 import { MapEditorComponent } from './admin-screen/map-editor/map-editor.component';

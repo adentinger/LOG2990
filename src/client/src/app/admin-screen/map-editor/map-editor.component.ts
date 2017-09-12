@@ -9,7 +9,7 @@ export class MapEditorComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
 }
