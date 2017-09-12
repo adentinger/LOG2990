@@ -62,6 +62,24 @@ export class ConfigMenuComponent implements OnInit {
             },
             {
                 id: 2,
+                title: 'Two Players',
+                options: [
+                    {
+                        name: 'Create New Game',
+                        clickHandler: () => this.chooseCreateJoin(1)
+                    },
+                    {
+                        name: 'Join Game',
+                        clickHandler: () => this.chooseCreateJoin(2)
+                    },
+                    {
+                        name: 'Back',
+                        clickHandler: () => this.stateBack()
+                    }
+                ]
+            },
+            {
+                id: 3,
                 title: '',
                 options: [
                     {
@@ -75,24 +93,6 @@ export class ConfigMenuComponent implements OnInit {
                     {
                         name: 'BRUTAL',
                         clickHandler: () => this.chooseDifficulty(3)
-                    },
-                    {
-                        name: 'Back',
-                        clickHandler: () => this.stateBack()
-                    }
-                ]
-            },
-            {
-                id: 3,
-                title: 'Two Players',
-                options: [
-                    {
-                        name: 'Create New Game',
-                        clickHandler: () => this.chooseCreateJoin(1)
-                    },
-                    {
-                        name: 'Join Game',
-                        clickHandler: () => this.chooseCreateJoin(2)
                     },
                     {
                         name: 'Back',
@@ -136,7 +136,7 @@ export class ConfigMenuComponent implements OnInit {
         Object.defineProperty(this.menuPages[1], 'title', {
             get: () => GameMode[this.config.gameMode]
         });
-        Object.defineProperty(this.menuPages[2], 'title', {
+        Object.defineProperty(this.menuPages[3], 'title', {
             get: () => PlayerNumber[this.config.playerNumber]
         });
     }
