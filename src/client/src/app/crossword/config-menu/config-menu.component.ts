@@ -133,11 +133,11 @@ export class ConfigMenuComponent implements OnInit {
             }
         ];
         const playerPagePredicate = (page) => page.id === ConfigMenuState.ChoosePlayerNumber;
-        const createJoinPagePredicate = (page) => page.id === ConfigMenuState.ChooseCreateJoin;
+        const difficultyPagePredicate = (page) => page.id === ConfigMenuState.ChooseDifficulty;
         Object.defineProperty(this.menuPages.find(playerPagePredicate), 'title', {
             get: () => GameMode[this.config.gameMode]
         });
-        Object.defineProperty(this.menuPages.find(createJoinPagePredicate), 'title', {
+        Object.defineProperty(this.menuPages.find(difficultyPagePredicate), 'title', {
             get: () => PlayerNumber[this.config.playerNumber]
         });
     }
