@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Location } from '@angular/common';
+import { SpyLocation } from '@angular/common/testing';
 
 import { ConfigMenuComponent } from './config-menu.component';
 
@@ -8,7 +10,8 @@ describe('ConfigMenuComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ConfigMenuComponent]
+            declarations: [ConfigMenuComponent],
+            providers: [{provide: Location, useClass: SpyLocation}]
         })
             .compileComponents();
     }));
