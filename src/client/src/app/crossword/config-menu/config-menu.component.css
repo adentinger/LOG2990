@@ -52,7 +52,7 @@
     justify-content: flex-start;
     width: 100%;
     padding: 0;
-    transition: transform 1s ease-in-out 0s;
+    transition: transform 0.5s ease-in-out 0s;
 }
 
 .menu-page {
@@ -68,7 +68,7 @@
     top: 0;
     overflow: hidden;
     pointer-events: none;
-    transition: opacity 1s ease-in-out 0s;
+    transition: opacity 0.5s ease-in-out 0s;
     opacity: 0;
 }
 
