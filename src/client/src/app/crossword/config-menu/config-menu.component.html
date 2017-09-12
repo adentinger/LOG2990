@@ -2,11 +2,11 @@
 <div [ngClass]="['outer-menu']">
   <div class="menu">
     <h2 class="text-center">New game</h2>
-    <div class="menu-page-container">
+    <div class="menu-page-container" [style.transform]="'translateX(-'+states.slice(-1)[0]+'00%)'">
       <div
         *ngFor="let menuPage of menuPages"
         class="menu-page"
-        [ngClass]="{show: states[states.length - 1] == menuPage.id}">
+        [ngClass]="{'active-page': states.slice(-1)[0] === menuPage.id}">
         <h4>{{menuPage.title}}</h4>
         <span
           *ngIf="menuPage.description != undefined"

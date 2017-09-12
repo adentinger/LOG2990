@@ -22,8 +22,8 @@ export enum CreateJoin {
 export enum ConfigMenuState {
     ChooseMode         = 0,
     ChoosePlayerNumber = 1,
-    ChooseDifficulty   = 2,
-    ChooseCreateJoin   = 3,
+    ChooseCreateJoin   = 2,
+    ChooseDifficulty   = 3,
     ChooseGameToJoin   = 4,
     ConfirmGame        = 5,
 }
