@@ -1,3 +1,20 @@
-<p>
-  config-menu works!
-</p>
+<div class="disclaimer"></div>
+<div [ngClass]="['outer-menu']">
+  <div class="menu">
+    <h2 class="text-center">New game</h2>
+    <div class="menu-page-container" [style.transform]="'translateX(-'+states.slice(-1)[0]+'00%)'">
+      <div
+        *ngFor="let menuPage of menuPages"
+        class="menu-page"
+        [ngClass]="{'active-page': states.slice(-1)[0] === menuPage.id}">
+        <h4>{{menuPage.title}}</h4>
+        <span
+          *ngIf="menuPage.description != undefined"
+          [innerHTML]="getDescription(menuPage.description)"></span>
+        <button
+          *ngFor="let option of menuPage.options"
+          class="" (click)="option.clickHandler()">{{option.name}}</button>
+      </div>
+    </div>
+  </div>
+</div>

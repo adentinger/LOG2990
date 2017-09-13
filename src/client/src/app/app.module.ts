@@ -4,7 +4,6 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { RenderService } from './cube/render.service';
 import { BasicService } from './basic.service';
-import { Routes, RouterModule } from '@angular/router';
 
 import { AppHeaderComponent } from './app-header/app-header.component';
 
@@ -15,19 +14,11 @@ import { CrosswordModule } from './crossword/crossword.module';
 import { RacingModule } from './racing/racing.module';
 
 import { SelectionScreenComponent } from './selection-screen/selection-screen.component';
-import { CrosswordComponent } from './crossword/crossword.component';
-import { RacingComponent } from './racing/racing.component';
 
 import { AdminScreenComponent } from './admin-screen/admin-screen.component';
 import { MapEditorComponent } from './admin-screen/map-editor/map-editor.component';
 
-const appRoutes: Routes = [
-    { path: 'admin/map-editor' , component: MapEditorComponent},
-    { path: 'admin', component: AdminScreenComponent},
-    { path: '', component: SelectionScreenComponent },
-    { path: 'crossword', component: CrosswordComponent },
-    { path: 'racing', component: RacingComponent },
-];
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
     declarations: [
@@ -43,8 +34,7 @@ const appRoutes: Routes = [
         HttpModule,
         CrosswordModule,
         RacingModule,
-        RouterModule.forRoot(appRoutes),
-        FormsModule
+        AppRoutingModule
     ],
     providers: [
         RenderService,
