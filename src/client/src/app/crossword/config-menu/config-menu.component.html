@@ -13,6 +13,7 @@
           [innerHTML]="getDescription(menuPage.description)"></span>
         <button
           *ngFor="let option of menuPage.options"
+          [disabled]="states.slice(-1)[0] !== menuPage.id"
           class="" (click)="option.clickHandler()">{{option.name}}</button>
       </div>
     </div>
