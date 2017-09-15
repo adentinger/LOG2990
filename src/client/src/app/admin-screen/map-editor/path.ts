@@ -1,23 +1,22 @@
 import { Point } from './point';
 import { Drawable } from './drawable';
 
-
-export class Path implements Drawable {
-    private context: CanvasRenderingContext2D;
-    public points: Point[];
-    public width: number;
-    public color: string;
+export class Path {
+    // private context: CanvasRenderingContext2D;
+    public points: Point[] = [];
+    // public width: number;
+    // public color: string;
 
     constructor(context: CanvasRenderingContext2D,
                 points: Point[] = [],
                 width: number = 10,
                 color: string = 'black') {
-        this.context = context;
+        //this.context = context;
         this.points = points;
-        this.width = width;
+        //this.width = width;
     }
-
-    public draw(): void {
+    // tout en bas dans le point renderer
+    /*public draw(): void {
         this.drawLines();
         this.drawPoints();
     }
@@ -42,5 +41,5 @@ export class Path implements Drawable {
             point.draw();
         });
     }
-
+*/
 }

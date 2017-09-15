@@ -1,16 +1,15 @@
 export let emptyMap = {
-    'points': [],
+    'path': [],
     'name': '',
     'description': '',
-    'difficulty': '',
     'type': '',
-    'items': {},
+    'items': {'puddles': [], 'potholes': [], 'speedBoosts': []},
     'rating': '0',
     'plays': '0'
 };
 
 export let funtionalMap = {
-    'points': [{'x': '0', 'y': '0'}, {'x': '10', 'y': '0'}, {'x': '0', 'y': '10'}],
+    'path': [{'x': '0', 'y': '0'}, {'x': '10', 'y': '0'}, {'x': '0', 'y': '10'}, {'x': '0', 'y': '0'}],
     'name': 'name',
     'description': 'description',
     'type': 'professional',
@@ -24,15 +23,13 @@ export let funtionalMap = {
 };
 
 export let disfunctionalMap = {
-    'points': [{'x': '0', 'y': '0'}, {'x': '11', 'y': '0'}, {'x': '0', 'y': '10'}],
+    'path': {'points': [{'x': 0, 'y': 2}, {'x': 11, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]},
     'name': 'name',
     'description': 'description',
     'type': 'sdljhgso',
-    'items': {
-        'puddles': [{'distance': '3'}, {'distance': '17'}, {'distance': '22'}],
-        'potholes': [{'distance': '13'}],
-        'speedBoosts': [{'distance': '11'}, {'distance': '12'}, {'distance': '13'}, {'distance': '23'}, {'distance': '27'}]
-    },
-    'rating': '9',
-    'plays': '-1'
+    'items': [],
+    'rating': 9,
+    'plays': -1,
+    'height': -2,
+    'width': -2
 };
