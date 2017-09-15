@@ -9,6 +9,8 @@ import { GameDetailsComponent } from './game-details/game-details.component';
 import { DefinitionComponent } from './definition-field/definition/definition.component';
 import { PlayerInfoComponent } from './game-details/player-info/player-info.component';
 import { FormsModule } from '@angular/forms';
+import { ConfigMenuService } from './config-menu/config-menu.service';
+import { MENU_PAGES } from './config-menu/menu-pages';
 
 @NgModule({
     imports: [
@@ -23,6 +25,10 @@ import { FormsModule } from '@angular/forms';
         GameDetailsComponent,
         DefinitionComponent,
         PlayerInfoComponent
+    ],
+    providers: [
+        ConfigMenuService,
+        {provide: 'menuPages', useValue: MENU_PAGES}
     ],
     exports: [
         CrosswordComponent

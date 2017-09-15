@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 
 import { GameMode, PlayerNumber, DifficultyLevel, ConfigMenuState } from './enums';
 import { MenuPage } from './menu-page';
+import { ConfigMenuService } from './config-menu.service';
+import { MENU_PAGES } from './menu-pages';
 
 class CrosswordGameConfiguration {
     public gameMode: GameMode = GameMode.Unselected;
@@ -13,7 +15,11 @@ class CrosswordGameConfiguration {
 @Component({
     selector: 'app-config-menu',
     templateUrl: './config-menu.component.html',
-    styleUrls: ['./config-menu.component.css']
+    styleUrls: ['./config-menu.component.css'],
+    providers: [
+        ConfigMenuService,
+        {provide: 'menuPages', useValue: MENU_PAGES}
+    ]
 })
 export class ConfigMenuComponent implements OnInit {
     public config: CrosswordGameConfiguration = new CrosswordGameConfiguration;
@@ -21,7 +27,7 @@ export class ConfigMenuComponent implements OnInit {
     public menuPages: MenuPage[];
     public none: HTMLDivElement;
 
-    constructor(private location: Location) {
+    constructor(private location: Location, private configMenuService: ConfigMenuService) {
         this.menuPages = [
             {
                 id: ConfigMenuState.ChooseMode,

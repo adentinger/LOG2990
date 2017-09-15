@@ -9,7 +9,7 @@ type StringResolver = () => string;
 type StringOrResolver = string | StringResolver;
 
 export interface MenuPage {
-    id: ConfigMenuState;
+    id: number;
     title: string;
     description?: StringOrResolver;
     options: Option[];

@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
 
 import { ConfigMenuComponent } from './config-menu.component';
+import { MENU_PAGES } from './menu-pages';
+import { ConfigMenuService } from './config-menu.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -11,7 +13,11 @@ describe('ConfigMenuComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ConfigMenuComponent],
-            providers: [{provide: Location, useClass: SpyLocation}]
+            providers: [
+                ConfigMenuService,
+                {provide: Location, useClass: SpyLocation},
+                {provide: 'menuPages', useValue: MENU_PAGES}
+            ]
         })
             .compileComponents();
     }));
