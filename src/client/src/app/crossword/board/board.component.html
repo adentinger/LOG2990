@@ -1,3 +1,14 @@
-<p>
-  board works!
-</p>
+<div class="container-fluid">
+  <div id="wrapper">
+    <div *ngFor="let row of crossword">
+      <div *ngFor="let square of row" class="square">
+        <div *ngIf='square!=="%"' class="empty"> 
+          {{square}}
+        </div>
+        <div *ngIf='square==="%"' class="filled">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

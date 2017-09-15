@@ -1,6 +1,7 @@
-<div class="disclaimer"></div>
-<div [ngClass]="['outer-menu']">
+<div class="disclaimer" *ngIf="this.isConfiguringGame"></div>
+<div [ngClass]="['outer-menu']" *ngIf="this.isConfiguringGame">
   <div class="menu">
+    <button style="float: right" (click)="isConfiguringGame = false">X</button>
     <h2 class="text-center">New game</h2>
     <div class="menu-page-container" [style.transform]="'translateX(-'+states.slice(-1)[0]+'00%)'">
       <div

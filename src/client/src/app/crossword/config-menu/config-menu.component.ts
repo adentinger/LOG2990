@@ -20,8 +20,10 @@ export class ConfigMenuComponent implements OnInit {
     public states: ConfigMenuState[] = [ConfigMenuState.ChooseMode];
     public menuPages: MenuPage[];
     public none: HTMLDivElement;
+    public isConfiguringGame: boolean;
 
     constructor(private location: Location) {
+        this.isConfiguringGame = true;
         this.menuPages = [
             {
                 id: ConfigMenuState.ChooseMode,
@@ -177,7 +179,7 @@ export class ConfigMenuComponent implements OnInit {
 
     }
     public sendConfigToServer(): void {
-
+        this.isConfiguringGame = false;
     }
 
     public getDescription(object: string | (() => string)): string {
