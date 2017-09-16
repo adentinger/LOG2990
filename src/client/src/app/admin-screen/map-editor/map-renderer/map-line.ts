@@ -1,6 +1,6 @@
 import { Drawable } from './drawable';
 
-export class AbstractDrawablePoint implements Drawable {
+export class MapLine implements Drawable {
 
     public draw(): void {
 
