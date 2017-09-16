@@ -50,9 +50,11 @@ describe('MapEditorService', () => {
 
     it('can check angles', () => {
         service['currentMap'] = Object.create(functionalMap1);
-        expect(service.checkAngles()).toBe(true);
+        expect(service['calculateAngle']({x: 1, y: 0}, {x: 0, y: 1})).toBeCloseTo(Math.PI / 2);
+        expect(service['calculateAngle']({x: 1, y: 0}, {x: 1, y: 1})).toBeCloseTo(Math.PI / 4);
+        expect(service.checkAngles().length).toEqual(0);
         service['currentMap'] = Object.create(disfunctionalMap);
-        expect(service.checkAngles()).toBe(false);
+        expect(service.checkAngles().length).toBeGreaterThan(0);
     });
 
     it('can check if path loops back', () => {
