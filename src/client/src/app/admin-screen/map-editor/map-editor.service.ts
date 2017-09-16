@@ -29,7 +29,7 @@ export class MapEditorService {
     public deleteMap(): void {
     }
 
-    public calculateAngle(vector1: {x: number, y: number}, vector2: {x: number, y: number}): number {
+    private calculateAngle(vector1: {x: number, y: number}, vector2: {x: number, y: number}): number {
         const scalarProduct = (vector1.x * vector2.x + vector1.y * vector2.y);
         const productOfNormOfVectors = (Math.sqrt((vector1.x * vector1.x + vector1.y * vector1.y))) *
                                        (Math.sqrt((vector2.x * vector2.x + vector2.y * vector2.y)));
