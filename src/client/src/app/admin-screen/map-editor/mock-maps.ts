@@ -8,7 +8,7 @@ export let emptyMap = {
     'plays': '0'
 };
 
-export let funtionalMap = {
+export let functionalMap = {
     'path': [{'x': '0', 'y': '0'}, {'x': '10', 'y': '0'}, {'x': '0', 'y': '10'}, {'x': '0', 'y': '0'}],
     'name': 'name',
     'description': 'description',

@@ -1,7 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, funtionalMap, disfunctionalMap } from './mock-maps';
+import { emptyMap, disfunctionalMap } from './mock-maps';
 import { MapEditorService } from './map-editor.service';
-import { Map } from './map';
 import { Point } from './point';
 
 describe('MapEditorService', () => {
@@ -76,12 +75,12 @@ describe('MapEditorService', () => {
     });
 });
 
-//path finished
-//45 degrees
-//line dont cross
-//pop/push
+// path finished
+// 45 degrees
+// line dont cross
+// pop/push
 
-//editPoint
-//dragging
-//place items
-//change item count
+// editPoint
+// dragging
+// place items
+// change item count

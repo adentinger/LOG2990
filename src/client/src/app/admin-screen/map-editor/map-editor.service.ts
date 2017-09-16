@@ -1,13 +1,10 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Map } from './map';
 import { Point } from './point';
-import { Path } from './path';
 
 @Injectable()
 export class MapEditorService {
 
-    private currentMap: Map;
     constructor() { }
 
     public newMap(): boolean {

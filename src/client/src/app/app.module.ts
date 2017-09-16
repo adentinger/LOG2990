@@ -32,6 +32,7 @@ import { AppRoutingModule } from './app-routing.module';
     imports: [
         BrowserModule,
         HttpModule,
+        FormsModule,
         CrosswordModule,
         RacingModule,
         AppRoutingModule
