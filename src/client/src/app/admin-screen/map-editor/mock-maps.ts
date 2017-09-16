@@ -31,7 +31,7 @@ export let functionalMap2: Map = new Map(
 );
 
 export let disfunctionalMap: Map = new Map (
-    new Path([{'x': 0, 'y': 2}, {'x': 11, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
+    new Path([{'x': 0, 'y': 2}, {'x': 10, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
     'name',
     'description',
     'sdljhgso',
