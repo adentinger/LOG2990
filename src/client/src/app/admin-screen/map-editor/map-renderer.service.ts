@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
+import { Drawable } from './drawable';
 
 @Injectable()
-export class MapRendererService {
+export class MapRendererService implements Drawable {
 
     private canvasContext: CanvasRenderingContext2D;
 
