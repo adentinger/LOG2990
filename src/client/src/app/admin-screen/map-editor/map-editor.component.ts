@@ -18,14 +18,9 @@ export class MapEditorComponent implements OnInit {
     }
 
     public addPoint(event: MouseEvent): void {
-        // Add point
-        this.drawPath();
     }
 
     public undoLastPoint(): void {
-    }
-
-    private drawPath(): void {
     }
 
     public mouseMoved(event: MouseEvent): void {

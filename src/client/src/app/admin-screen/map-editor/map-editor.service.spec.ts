@@ -1,7 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, disfunctionalMap } from './mock-maps';
+import { emptyMap, functionalMap1, functionalMap2, disfunctionalMap } from './mock-maps';
 import { MapEditorService } from './map-editor.service';
 import { Point } from './point';
+import { Puddle } from './puddle';
+import { Pothole } from './pothole';
+import { SpeedBoost } from './speed-boost';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
@@ -20,9 +23,14 @@ describe('MapEditorService', () => {
         expect(service['currentMap']).toBeFalsy();
     });
 
-    it('can create map', () => {
+    it('can create map and replace previous map', () => {
+        expect(service['currentMap']).toBeFalsy();
         expect(service.newMap()).toBe(true);
         expect(service['currentMap']).not.toBeFalsy();
+        const map = Object.create(functionalMap1);
+        service['currentMap'] = map;
+        expect(service.newMap()).toBe(true);
+        expect(service['currentMap']).not.toBe(map);
     });
 
     it('can save map', () => {
@@ -33,54 +41,93 @@ describe('MapEditorService', () => {
         });
     });
 
-    it('can check angles', () => {
-        expect(service.checkAngles()).toBe(true);
+    it('can delete map', () => {
+        service['currentMap'] = Object.create(emptyMap);
+        expect(service['currentMap']).not.toBeFalsy();
+        service.deleteMap();
+        expect(service['currentMap']).toBeNull();
     });
 
-    it('can check if path is finished', () => {
-        expect(service.checkPathFinished()).toBe(true);
+    it('can check angles', () => {
+        service['currentMap'] = Object.create(functionalMap1);
+        expect(service.checkAngles()).toBe(true);
+        service['currentMap'] = Object.create(disfunctionalMap);
+        expect(service.checkAngles()).toBe(false);
+    });
+
+    it('can check if path loops back', () => {
+        service['currentMap'] = Object.create(functionalMap1);
+        expect(service.checkPathLoopBack()).toBe(true);
+        service['currentMap'] = Object.create(emptyMap);
+        expect(service.checkPathLoopBack()).toBe(false);
     });
 
     it('can check if lines cross', () => {
         service['currentMap'] = Object.create(disfunctionalMap);
         expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 2}, {'x': 11, 'y': 2}], [{'x': 0, 'y': 10}, {'x': 2, 'y': 1}]]);
+        service['currentMap'] = Object.create(functionalMap1);
+        expect(service.checkLinesCross()).toEqual([]);
     });
 
-    it('can add point', () => {
+    it('can add a valid point', () => {
         service['currentMap'] = Object.create(emptyMap);
-        expect(service['currentMap'].path.points.length).toBe(0);
-        const point: Point = {x: 3, y: 4};
-        service.pushPoint(point);
-        expect(service['currentMap'].path.points.length).toBe(1);
-        expect(service['currentMap'].path.points).toContain(point);
-    });
-
-    it('won\'t add invalid point', () => {
-        service['currentMap'] = Object.create(emptyMap);
-        expect(service['currentMap'].path.points.length).toBe(0);
-        const point: Point = {x: -1, y: 10000};
         service['currentMap'].height = 500;
         service['currentMap'].width = 500;
-        service.pushPoint(point);
+
         expect(service['currentMap'].path.points.length).toBe(0);
+        const validPoint: Point = {x: 3, y: 4};
+        service.pushPoint(validPoint);
+        expect(service['currentMap'].path.points.length).toBe(1);
+        expect(service['currentMap'].path.points).toContain(validPoint);
+
+        const invalidPoint: Point = {x: -1, y: 10000};
+        service.pushPoint(invalidPoint);
+        expect(service['currentMap'].path.points.length).toBe(1);
+        expect(service['currentMap'].path.points).not.toContain(invalidPoint);
     });
 
     it('can delete point', () => {
         service['currentMap'] = Object.create(emptyMap);
         const point: Point = {x: 3, y: 4};
         service['currentMap'].path.points.push(point);
+
         expect(service['currentMap'].path.points.length).toBe(1);
         service.popPoint();
         expect(service['currentMap'].path.points.length).toBe(0);
     });
+
+    it('can edit point', () => {
+        service['currentMap'] = Object.create(functionalMap1);
+
+        service.editPoint();
+        expect(service['currentMap'].path.points[0].x).not.toBe(0);
+        expect(service['currentMap'].path.points[0].y).not.toBe(0);
+    });
+
+    it('can place valid items', () => {
+        service['currentMap'] = Object.create(functionalMap2);
+        const puddle = new Puddle(12);
+        const pothole = new Pothole(18);
+        const speedBoost = new SpeedBoost(23);
+        expect(service.addItem(puddle)).toBe(true);
+        expect(service['currentMap'].puddles.length).toBeGreaterThan(0);
+        expect(service['currentMap'].puddles[0]).toBe(puddle);
+        expect(service.addItem(pothole)).toBe(true);
+        expect(service['currentMap'].potholes.length).toBeGreaterThan(0);
+        expect(service['currentMap'].potholes[0]).toBe(pothole);
+        expect(service.addItem(speedBoost)).toBe(true);
+        expect(service['currentMap'].speedBoosts.length).toBeGreaterThan(0);
+        expect(service['currentMap'].speedBoosts[0]).toBe(speedBoost);
+
+        service['currentMap'] = Object.create(functionalMap2);
+        const invalidPuddle = new Puddle(0);
+        const invalidPothole = new Pothole(0);
+        const invalidSpeedBoost = new SpeedBoost(1000);
+        expect(service.addItem(invalidPuddle)).toBe(false);
+        expect(service['currentMap'].puddles.length).toEqual(0);
+        expect(service.addItem(invalidPothole)).toBe(false);
+        expect(service['currentMap'].potholes.length).toEqual(0);
+        expect(service.addItem(invalidSpeedBoost)).toBe(false);
+        expect(service['currentMap'].speedBoosts.length).toEqual(0);
+    });
 });
-
-// path finished
-// 45 degrees
-// line dont cross
-// pop/push
-
-// editPoint
-// dragging
-// place items
-// change item count
