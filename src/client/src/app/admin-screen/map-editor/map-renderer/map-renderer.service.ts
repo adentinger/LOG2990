@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { MapEditorService } from './map-editor.service';
+import { MapEditorService } from '../map-editor.service';
 import { Drawable } from './drawable';
 
 @Injectable()
