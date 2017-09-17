@@ -22,7 +22,7 @@ export class MapRendererService implements Drawable {
 
     public draw(): void {
         if (this.canvasContext !== undefined) {
-
+            throw new Error('not yet impl.');
         }
         else {
             throw new Error('Cannot draw map: context not set.');
