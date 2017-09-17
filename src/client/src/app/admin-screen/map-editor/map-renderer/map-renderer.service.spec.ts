@@ -36,4 +36,10 @@ describe('MapRendererService', () => {
                       service.context = canvasFactory.make().getContext('2d');
                   }).toThrowError(new RegExp('.*context.*'));
               }));
+
+    it ('should refuse drawing when canvas context is not set',
+        inject([MapRendererService],
+            (service: MapRendererService) => {
+                expect(() => service.draw()).toThrowError(new RegExp('.*context.*'));
+            }));
 });
