@@ -1,4 +1,6 @@
-export let MENU_PAGES: any[] = [
+import { ConfigMenuState } from './config-menu-state';
+
+export let MENU_PAGES: ConfigMenuState[] = [
     {
         id: 0,
         name: 'Game Mode',

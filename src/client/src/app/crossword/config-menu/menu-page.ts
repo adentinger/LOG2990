@@ -1,6 +1,4 @@
-import { ConfigMenuState } from './enums';
-
-interface Option {
+export interface Option {
     name: string;
     clickHandler: () => void;
 }
