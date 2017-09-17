@@ -5,6 +5,9 @@ import { Point } from './point';
 import { Puddle } from './puddle';
 import { Pothole } from './pothole';
 import { SpeedBoost } from './speed-boost';
+import { Vector } from './vector';
+
+type Line = [Point, Vector];
 
 describe('MapEditorService', () => {
     beforeEach(() => {
@@ -66,7 +69,7 @@ describe('MapEditorService', () => {
 
     it('can check if lines cross', () => {
         service['currentMap'] = Object.create(disfunctionalMap);
-        expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 2}, {'x': 11, 'y': 2}], [{'x': 0, 'y': 10}, {'x': 2, 'y': 1}]]);
+        expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 2}, new Vector(10, 0)], [{'x': 0, 'y': 10}, new Vector(2, -9)]]);
         service['currentMap'] = Object.create(functionalMap1);
         expect(service.checkLinesCross()).toEqual([]);
     });
