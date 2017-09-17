@@ -63,10 +63,11 @@ export let MENU_PAGES: ConfigMenuState[] = [
     },
     {
         id: 4,
-        name: 'Player Number',
+        name: 'Pending Games',
         options: {
-            url: 'http://localhost:3000/crossword/api/getGameList',
-            nextPage: -1
+            url: 'http://localhost:3000/crossword/filter/10',
+            nextPage: -1,
+            fetchedOptions: ['Mock Game']
         }
     }
 ];

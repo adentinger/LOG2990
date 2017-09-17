@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { CrosswordComponent } from './crossword.component';
 import { BoardComponent } from './board/board.component';
@@ -15,7 +16,8 @@ import { MENU_PAGES } from './config-menu/menu-pages';
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+        HttpClientModule
     ],
     declarations: [
         CrosswordComponent,
@@ -27,6 +29,7 @@ import { MENU_PAGES } from './config-menu/menu-pages';
         PlayerInfoComponent
     ],
     providers: [
+        HttpClient,
         ConfigMenuService,
         {provide: 'menuPages', useValue: MENU_PAGES}
     ],

@@ -5,6 +5,8 @@ import { SpyLocation } from '@angular/common/testing';
 import { ConfigMenuComponent } from './config-menu.component';
 import { MENU_PAGES } from './menu-pages';
 import { ConfigMenuService } from './config-menu.service';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -12,9 +14,13 @@ describe('ConfigMenuComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [
+                HttpClientModule
+            ],
             declarations: [ConfigMenuComponent],
             providers: [
                 ConfigMenuService,
+                HttpClient,
                 {provide: Location, useClass: SpyLocation},
                 {provide: 'menuPages', useValue: MENU_PAGES}
             ]
