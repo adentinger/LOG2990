@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { CrosswordComponent } from './crossword.component';
 import { BoardComponent } from './board/board.component';
 import { DefinitionFieldComponent } from './definition-field/definition-field.component';
+import { DefinitionComponent } from './definition-field/definition/definition.component';
 import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { GameDetailsComponent } from './game-details/game-details.component';
-import { DefinitionComponent } from './definition-field/definition/definition.component';
 import { PlayerInfoComponent } from './game-details/player-info/player-info.component';
 import { FormsModule } from '@angular/forms';
 
@@ -19,10 +19,11 @@ import { FormsModule } from '@angular/forms';
         CrosswordComponent,
         BoardComponent,
         DefinitionFieldComponent,
+        DefinitionComponent,
         ConfigMenuComponent,
         GameDetailsComponent,
         DefinitionComponent,
-        PlayerInfoComponent
+        PlayerInfoComponent,
     ],
     exports: [
         CrosswordComponent

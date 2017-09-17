@@ -1,14 +1,7 @@
-<div class="container-fluid">
-  <div id="wrapper">
+<div class="crossword-board-container">
+  <div id="crossword board">
     <div *ngFor="let row of crossword">
-      <div *ngFor="let square of row" class="square">
-        <div *ngIf='square!=="%"' class="empty"> 
-          {{square}}
-        </div>
-        <div *ngIf='square==="%"' class="filled">
-          
-        </div>
-      </div>
+      <input *ngFor="let square of row" class="crossword-board__item " [class.black-square]='square==="0"' [disabled]='square==="0"'>
     </div>
   </div>
 </div>

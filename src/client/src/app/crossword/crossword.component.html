@@ -1,12 +1,12 @@
-<app-config-menu *ngIf="gameIsBeingConfigured===true"></app-config-menu>
-
-<div class="container">
+<div class="container" id="crossword-container">
   <div class="row">
-    <div class="col-lg-9">
+    <div class="col-md-8">
       <app-board></app-board>
     </div>
-    <div class="col-lg-3">
+    <div class="col-md-4">
       <app-definition-field></app-definition-field>
     </div>
   </div>
 </div>
+
+<app-config-menu *ngIf="gameIsBeingConfigured===true"></app-config-menu>
