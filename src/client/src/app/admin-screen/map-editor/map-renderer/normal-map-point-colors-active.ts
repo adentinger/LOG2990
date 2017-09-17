@@ -1,7 +1,7 @@
 import { AbstractNormalMapPointColors } from './abstract-normal-map-point-colors';
 
-const INNER_COLOR = '#fff';
-const RIM_COLOR   = '#ccc';
+const INNER_COLOR = '#ccc';
+const RIM_COLOR   = '#999';
 
 export class NormalMapPointColorsActive extends AbstractNormalMapPointColors {
 

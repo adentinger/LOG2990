@@ -2,8 +2,8 @@ import { AbstractMapPoint } from './abstract-map-point';
 import { NormalMapPointColorsActive } from './normal-map-point-colors-active';
 import { NormalMapPointColorsInactive } from './normal-map-point-colors-inactive';
 
-const INNER_RADIUS = 15.0;
-const RIM_RADIUS   = 20.0;
+const INNER_RADIUS = 5.0;
+const RIM_RADIUS   = 10.0;
 
 export class NormalMapPoint extends AbstractMapPoint {
 
@@ -18,12 +18,19 @@ export class NormalMapPoint extends AbstractMapPoint {
     }
 
     public draw(): void {
-        this.context.beginPath();
+        this.drawInner();
+        this.drawRim();
+    }
 
+    private drawInner(): void {
+        this.context.beginPath();
         this.context.arc(this.x, this.y, RIM_RADIUS, 0, 2 * Math.PI);
         this.context.fillStyle = this.currentColors().getColorOf('rim');
         this.context.fill();
+    }
 
+    private drawRim(): void {
+        this.context.beginPath();
         this.context.arc(this.x, this.y, INNER_RADIUS, 0, 2 * Math.PI);
         this.context.fillStyle = this.currentColors().getColorOf('inner');
         this.context.fill();
