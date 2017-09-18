@@ -73,8 +73,8 @@ describe('MapEditorService', () => {
 
     it('can add a valid point', () => {
         service['currentMap'] = Object.create(emptyMap);
-        service['currentMap'].height = 500;
-        service['currentMap'].width = 500;
+        service['currentMap']['height'] = 500;
+        service['currentMap']['width'] = 500;
 
         expect(service['currentMap'].path.points.length).toBe(0);
         const validPoint: Point = {x: 3, y: 4};
