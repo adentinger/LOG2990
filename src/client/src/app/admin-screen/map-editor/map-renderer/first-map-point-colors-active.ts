@@ -1,9 +1,9 @@
 import { AbstractFirstMapPointColors } from './abstract-first-map-point-colors';
 
-const INNER1_COLOR = '#fff';
-const INNER2_COLOR = '#fff';
+const INNER1_COLOR = '#ccc';
+const INNER2_COLOR = '#333';
 const RIM1_COLOR   = '#ccc';
-const RIM2_COLOR   = '#333';
+const RIM2_COLOR   = '#ccc';
 
 export class FirstMapPointColorsActive extends AbstractFirstMapPointColors {
 
