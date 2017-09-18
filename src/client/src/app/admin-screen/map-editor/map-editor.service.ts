@@ -8,7 +8,9 @@ export class MapEditorService {
 
     private currentMap: Map;
 
-    constructor() { }
+    constructor() {
+        this.newMap();
+    }
 
     public newMap(): boolean {
         let mapCreated = false;
