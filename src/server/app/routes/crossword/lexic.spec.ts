@@ -7,6 +7,11 @@ describe('The lexic MicroService', () => {
         expect(new LexicMiddleWare).toBeTruthy();
     });
 
+    let lexic: LexicMiddleWare;
+    beforeEach(() => {
+        lexic = new LexicMiddleWare;
+    });
+
     it('should filter', () => {
         expect(component).toBeTruthy();
     });
