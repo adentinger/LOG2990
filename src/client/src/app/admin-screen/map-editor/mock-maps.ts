@@ -6,6 +6,8 @@ import { SpeedBoost } from './speed-boost';
 
 export let emptyMap: Map = new Map();
 
+export let emptyMap2: Map = new Map();
+
 export let functionalMap1: Map = new Map(
     new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 0}, {'x': 0, 'y': 10}]),
     'name',
@@ -32,6 +34,20 @@ export let functionalMap2: Map = new Map(
 
 export let disfunctionalMap: Map = new Map (
     new Path([{'x': 0, 'y': 2}, {'x': 10, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
+    'name',
+    'description',
+    'sdljhgso',
+    [],
+    [],
+    [],
+    9,
+    -1,
+    -2,
+    -2
+);
+
+export let disfunctionalMap2: Map = new Map (
+    new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
     'name',
     'description',
     'sdljhgso',

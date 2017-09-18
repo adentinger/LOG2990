@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, functionalMap1, functionalMap2, disfunctionalMap } from './mock-maps';
+import { emptyMap, functionalMap1, functionalMap2, disfunctionalMap, disfunctionalMap2, emptyMap2 } from './mock-maps';
 import { MapEditorService } from './map-editor.service';
 import { Point } from './point';
 import { Puddle } from './puddle';
@@ -72,6 +72,8 @@ describe('MapEditorService', () => {
         expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 2}, new Vector(10, 0)], [{'x': 0, 'y': 10}, new Vector(2, -9)]]);
         service['currentMap'] = Object.create(functionalMap1);
         expect(service.checkLinesCross()).toEqual([]);
+        service['currentMap'] = Object.create(disfunctionalMap2);
+        expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 0}, new Vector(10, 2)], [{'x': 0, 'y': 10}, new Vector(2, -9)]]);
     });
 
     it('can add a valid point', () => {
@@ -92,8 +94,9 @@ describe('MapEditorService', () => {
     });
 
     it('can delete point', () => {
-        service['currentMap'] = Object.create(emptyMap);
+        service['currentMap'] = Object.create(emptyMap2);
         const point: Point = {x: 3, y: 4};
+        console.log(expect(service['currentMap'].path.points.length));
         service['currentMap'].path.points.push(point);
 
         expect(service['currentMap'].path.points.length).toBe(1);

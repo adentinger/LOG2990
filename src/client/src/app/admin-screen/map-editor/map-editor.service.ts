@@ -76,18 +76,13 @@ export class MapEditorService {
     }
 
     private isInBetween(value1: number, value2: number, valueInBetween: number): boolean {
-        console.log(value1, value2);
         if (value1 > value2) {
-            console.log('je me suis rendu ici 1');
             if (value1 > valueInBetween && value2 < valueInBetween) {
-                console.log('je me suis rendu ici 2');
                 return true;
             }
         }
         else {
-            console.log('je me suis rendu ici 4');
             if (value1 < valueInBetween && value2 > valueInBetween) {
-                console.log('je me suis rendu ici 3');
                 return true;
             }
         }
@@ -95,30 +90,35 @@ export class MapEditorService {
     }
 
     private checkTwoLinesCross(line1: Line, line2: Line): boolean {
-        console.log(line1, line2);
         if (line1[1].x === 0) {
             const parametricConstant = (line1[0].x - line2[0].x) / line2[1].x;
             const x = line2[0].x + parametricConstant * line2[1].x;
-            if (this.isInBetween(line1[0].x, line1[0].x + line1[1].x, x)) {
+            const y = line2[0].y + parametricConstant * line2[1].y;
+            if (x === line1[0].x && this.isInBetween(line1[0].y, line1[0].y + line1[1].y, y)) {
                 return true;
             }
             return false;
         }
         if (line1[1].y === 0) {
             const parametricConstant = (line1[0].y - line2[0].y) / line2[1].y;
+            const x = line2[0].x + parametricConstant * line2[1].x;
             const y = line2[0].y + parametricConstant * line2[1].y;
-            if (this.isInBetween(line1[0].y, line1[0].y + line1[1].y, y)) {
+            if (this.isInBetween(line1[0].x, line1[0].x + line1[1].x, x) && y === line1[0].y) {
                 return true;
             }
             return false;
         }
         const denominator = line2[1].y / line1[1].y - line2[1].x / line1[1].x;
+        //console.log(denominator);
         if (denominator !== 0) {
             const numerator = ((line2[0].y - line1[0].y) / line1[1].y) - ((line2[0].x - line1[0].x) / line1[1].x);
-            const parametricConstant = numerator / denominator;
+            //console.log(line2[1].x, line2[1].y);
+            const parametricConstant = Math.abs(numerator) / Math.abs(denominator);
             const x = line2[0].x + parametricConstant * line2[1].x;
             const y = line2[0].y + parametricConstant * line2[1].y;
-            console.log(x, y, 'allo');
+            //console.log(parametricConstant);
+            //console.log(x, 'x', y, 'y');
+            //console.log(line1[0].x, 'point', line1[0].x + line1[1].x, 'vect');
             if (this.isInBetween(line1[0].x, line1[0].x + line1[1].x, x) && this.isInBetween(line1[0].y, line1[0].y + line1[1].y, y)) {
                 return true;
             }
@@ -147,11 +147,16 @@ export class MapEditorService {
     }
 
     public pushPoint(point: Point): void {
-        this.currentMap.path.points.push(point);
+        console.log(this.currentMap.path.points.length);
+        if (point.x < this.currentMap.width && point.y < this.currentMap.height && point.x > 0 && point.y > 0) {
+            this.currentMap.path.points.push(point);
+        }
     }
 
     public popPoint(): void {
+        console.log(this.currentMap.path.points.length);
         this.currentMap.path.points.pop();
+        console.log(this.currentMap.path.points.length);
     }
 
     public editPoint(): void {
