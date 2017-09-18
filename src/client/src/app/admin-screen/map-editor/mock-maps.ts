@@ -32,6 +32,18 @@ export let functionalMap2: Map = new Map(
     12
 );
 
+export let functionalMap3: Map = new Map(
+    new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 0}, {'x': 0, 'y': 10}]),
+    'name',
+    'description',
+    'professional',
+    [],
+    [],
+    [],
+    4,
+    12
+);
+
 export let disfunctionalMap: Map = new Map (
     new Path([{'x': 0, 'y': 2}, {'x': 10, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
     'name',

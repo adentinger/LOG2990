@@ -147,16 +147,13 @@ export class MapEditorService {
     }
 
     public pushPoint(point: Point): void {
-        console.log(this.currentMap.path.points.length);
         if (point.x < this.currentMap.width && point.y < this.currentMap.height && point.x > 0 && point.y > 0) {
             this.currentMap.path.points.push(point);
         }
     }
 
     public popPoint(): void {
-        console.log(this.currentMap.path.points.length);
         this.currentMap.path.points.pop();
-        console.log(this.currentMap.path.points.length);
     }
 
     public editPoint(index: number, x: number, y: number): void {
@@ -166,7 +163,30 @@ export class MapEditorService {
         }
     }
 
-    public addItem(item: Item): boolean {
-        return false;
+    private findMapLength(): [number, number] {
+        const points = this.currentMap.path.points;
+        let vector = this.calculateVector(points[0], points[0 + 1]);
+        const firstStreach = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+
+        const length: [number, number] = [0, 0];
+        length[0] += firstStreach;
+        for (let i = 0; i < this.currentMap.path.points.length - 1; i++) {
+            vector = this.calculateVector(points[i], points[i + 1]);
+            length[1] += Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+        }
+        return length;
+    }
+
+    public addItem(item: Item): void {
+        const mapLength = this.findMapLength();
+        if (item.type === 'puddle' && mapLength[0] < item.position && item.position < mapLength[1]) {
+            this.currentMap.puddles.push(item);
+        }
+        else if (item.type === 'pothole' && mapLength[0] < item.position && item.position < mapLength[1]) {
+            this.currentMap.potholes.push(item);
+        }
+        else if (item.type === 'speedBoost' && item.position < mapLength[1]) {
+            this.currentMap.speedBoosts.push(item);
+        }
     }
 }
