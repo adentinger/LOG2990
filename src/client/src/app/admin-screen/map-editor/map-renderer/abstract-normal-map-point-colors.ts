@@ -1,8 +1,5 @@
 import { MapColors } from './map-colors';
 
-const INNER_TOKEN = 'inner';
-const RIM_TOKEN   = 'rim';
-
 export class AbstractNormalMapPointColors extends MapColors {
 
     private inner: string;

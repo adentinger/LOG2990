@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
+import { Point } from './point';
 
 @Component({
     selector: 'app-map-editor',
@@ -25,9 +26,11 @@ export class MapEditorComponent implements OnInit {
     }
 
     public addPoint(event: MouseEvent): void {
+        this.mapEditor.pushPoint(new Point(event.offsetX, event.offsetY));
     }
 
     public undoLastPoint(): void {
+        this.mapEditor.popPoint();
     }
 
     public mouseMoved(event: MouseEvent): void {

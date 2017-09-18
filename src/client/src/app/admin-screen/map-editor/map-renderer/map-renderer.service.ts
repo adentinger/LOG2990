@@ -26,8 +26,7 @@ export class MapRendererService implements Drawable {
 
     public draw(): void {
         if (this.canvasContext !== undefined) {
-            this.path.updatePoints([]); // FIXME Where in the mapEditor to get the
-                                        // points from ?
+            this.path.updatePoints(this.mapEditor.points);
             this.path.draw();
         }
         else {

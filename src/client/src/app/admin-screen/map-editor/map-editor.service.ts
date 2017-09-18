@@ -7,6 +7,7 @@ import { Item } from './item';
 export class MapEditorService {
 
     private currentMap: Map;
+
     constructor() { }
 
     public newMap(): boolean {
@@ -27,6 +28,10 @@ export class MapEditorService {
     }
 
     public deleteMap(): void {
+    }
+
+    public get points(): Point[] {
+        return this.currentMap.path.points;
     }
 
     private calculateAngle(vector1: {x: number, y: number}, vector2: {x: number, y: number}): number {
@@ -74,7 +79,8 @@ export class MapEditorService {
     public pushPoint(point: Point): void {
     }
 
-    public popPoint(): void {
+    public popPoint(): Point {
+        return null;
     }
 
     public editPoint(): void {
