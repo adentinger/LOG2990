@@ -3,6 +3,7 @@ import { Map } from './map';
 import { Point } from './point';
 import { Item } from './item';
 import { Vector } from './vector';
+import { Path } from './path';
 
 type Line = [Point, Vector];
 
@@ -108,17 +109,14 @@ export class MapEditorService {
             }
             return false;
         }
-        const denominator = line2[1].y / line1[1].y - line2[1].x / line1[1].x;
-        //console.log(denominator);
+        const denominator = line2[1].x / line1[1].x - line2[1].y / line1[1].y;
+
         if (denominator !== 0) {
             const numerator = ((line2[0].y - line1[0].y) / line1[1].y) - ((line2[0].x - line1[0].x) / line1[1].x);
-            //console.log(line2[1].x, line2[1].y);
-            const parametricConstant = Math.abs(numerator) / Math.abs(denominator);
+
+            const parametricConstant = numerator / denominator;
             const x = line2[0].x + parametricConstant * line2[1].x;
             const y = line2[0].y + parametricConstant * line2[1].y;
-            //console.log(parametricConstant);
-            //console.log(x, 'x', y, 'y');
-            //console.log(line1[0].x, 'point', line1[0].x + line1[1].x, 'vect');
             if (this.isInBetween(line1[0].x, line1[0].x + line1[1].x, x) && this.isInBetween(line1[0].y, line1[0].y + line1[1].y, y)) {
                 return true;
             }
@@ -188,5 +186,9 @@ export class MapEditorService {
         else if (item.type === 'speedBoost' && item.position < mapLength[1]) {
             this.currentMap.speedBoosts.push(item);
         }
+    }
+
+    public getPath(): Path {
+        return this.currentMap.path;
     }
 }

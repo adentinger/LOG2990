@@ -140,4 +140,10 @@ describe('MapEditorService', () => {
         service.addItem(invalidSpeedBoost);
         expect(service['currentMap'].speedBoosts.length).toEqual(0);
     });
+
+    it('can provide points', () => {
+        service['currentMap'] = Object.create(functionalMap1);
+
+        expect(service.getPath()).toBe(functionalMap1.path);
+    });
 });
