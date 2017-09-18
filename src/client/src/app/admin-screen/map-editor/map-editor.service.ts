@@ -159,7 +159,11 @@ export class MapEditorService {
         console.log(this.currentMap.path.points.length);
     }
 
-    public editPoint(): void {
+    public editPoint(index: number, x: number, y: number): void {
+        if (x < this.currentMap.width && y < this.currentMap.height && x > 0 && y > 0) {
+            this.currentMap.path.points[index].x = x;
+            this.currentMap.path.points[index].y = y;
+        }
     }
 
     public addItem(item: Item): boolean {

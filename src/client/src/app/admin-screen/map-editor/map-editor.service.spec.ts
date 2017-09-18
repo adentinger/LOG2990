@@ -107,9 +107,12 @@ describe('MapEditorService', () => {
     it('can edit point', () => {
         service['currentMap'] = Object.create(functionalMap1);
 
-        service.editPoint();
-        expect(service['currentMap'].path.points[0].x).not.toBe(0);
-        expect(service['currentMap'].path.points[0].y).not.toBe(0);
+        service.editPoint(0, 3, 3);
+        expect(service['currentMap'].path.points[0].x).toBe(3);
+        expect(service['currentMap'].path.points[0].y).toBe(3);
+        service.editPoint(0, -100, 10000);
+        expect(service['currentMap'].path.points[0].x).not.toBe(-100);
+        expect(service['currentMap'].path.points[0].y).not.toBe(10000);
     });
 
     it('can place valid items', () => {
