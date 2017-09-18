@@ -27,7 +27,7 @@ export abstract class AbstractMapLine implements Drawable {
         this.context.moveTo(this.origin.x, this.origin.y);
         this.context.lineTo(this.destination.x, this.destination.y);
 
-        this.context.fillStyle = this.colors.getColorOf('line');
+        this.context.strokeStyle = this.colors.getColorOf('line');
         this.context.lineWidth = this.width;
         this.context.stroke();
     }
