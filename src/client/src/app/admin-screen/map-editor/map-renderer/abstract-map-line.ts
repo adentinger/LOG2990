@@ -1,11 +1,11 @@
 import { Drawable } from './drawable';
 import { Point } from '../point';
 
-export class MapLine implements Drawable {
+export abstract class AbstractMapLine implements Drawable {
 
-    protected context: CanvasRenderingContext2D;
-    protected origin: Point;
-    protected destination: Point;
+    private context: CanvasRenderingContext2D;
+    private origin: Point;
+    private destination: Point;
 
     constructor(context: CanvasRenderingContext2D,
                 origin: Point,
