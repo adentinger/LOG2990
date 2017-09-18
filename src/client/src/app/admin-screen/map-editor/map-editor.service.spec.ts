@@ -20,20 +20,17 @@ describe('MapEditorService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
-        expect(service['currentMap']).toBeFalsy();
+        expect(service['currentMap']).toBeTruthy();
     });
 
-    it('can create map and replace previous map', () => {
-        expect(service['currentMap']).toBeFalsy();
+    it('should be able to replace a previous map', () => {
+        const INITIAL_MAP = expect(service['currentMap']).toBeTruthy();
         expect(service.newMap()).toBe(true);
-        expect(service['currentMap']).not.toBeFalsy();
-        const map = Object.create(functionalMap1);
-        service['currentMap'] = map;
-        expect(service.newMap()).toBe(true);
-        expect(service['currentMap']).not.toBe(map);
+        const NEW_MAP = expect(service['currentMap']).toBeTruthy();
+        expect(INITIAL_MAP).not.toEqual(NEW_MAP);
     });
 
-    it('can save map', () => {
+    it('should be able to save a map', () => {
         service.saveMap().then((isSaved: boolean) => {
             expect(isSaved).toBe(true);
         }).catch(() => {
@@ -41,14 +38,14 @@ describe('MapEditorService', () => {
         });
     });
 
-    it('can delete map', () => {
+    it('should be able to delete a map', () => {
         service['currentMap'] = Object.create(emptyMap);
         expect(service['currentMap']).not.toBeFalsy();
         service.deleteMap();
         expect(service['currentMap']).toBeNull();
     });
 
-    it('can check angles', () => {
+    it('should be able to check angles', () => {
         service['currentMap'] = Object.create(functionalMap1);
         expect(service['calculateAngle']({x: 1, y: 0}, {x: 0, y: 1})).toBeCloseTo(Math.PI / 2);
         expect(service['calculateAngle']({x: 1, y: 0}, {x: 1, y: 1})).toBeCloseTo(Math.PI / 4);
@@ -57,21 +54,21 @@ describe('MapEditorService', () => {
         expect(service.checkAngles().length).toBeGreaterThan(0);
     });
 
-    it('can check if path loops back', () => {
+    it('should be able to check if a path loops back', () => {
         service['currentMap'] = Object.create(functionalMap1);
         expect(service.checkPathLoopBack()).toBe(true);
         service['currentMap'] = Object.create(emptyMap);
         expect(service.checkPathLoopBack()).toBe(false);
     });
 
-    it('can check if lines cross', () => {
+    it('should be able to check if lines cross', () => {
         service['currentMap'] = Object.create(disfunctionalMap);
         expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 2}, {'x': 11, 'y': 2}], [{'x': 0, 'y': 10}, {'x': 2, 'y': 1}]]);
         service['currentMap'] = Object.create(functionalMap1);
         expect(service.checkLinesCross()).toEqual([]);
     });
 
-    it('can add a valid point', () => {
+    it('should be able to add a valid point', () => {
         service['currentMap'] = Object.create(emptyMap);
         service['currentMap']['height'] = 500;
         service['currentMap']['width'] = 500;
@@ -88,7 +85,7 @@ describe('MapEditorService', () => {
         expect(service['currentMap'].path.points).not.toContain(invalidPoint);
     });
 
-    it('can delete point', () => {
+    it('should be able to delete a point', () => {
         service['currentMap'] = Object.create(emptyMap);
         const point: Point = {x: 3, y: 4};
         service['currentMap'].path.points.push(point);
@@ -98,7 +95,7 @@ describe('MapEditorService', () => {
         expect(service['currentMap'].path.points.length).toBe(0);
     });
 
-    it('can edit point', () => {
+    it('should be able to edit a point', () => {
         service['currentMap'] = Object.create(functionalMap1);
 
         service.editPoint();
@@ -106,7 +103,7 @@ describe('MapEditorService', () => {
         expect(service['currentMap'].path.points[0].y).not.toBe(0);
     });
 
-    it('can place valid items', () => {
+    it('should be able to place valid items', () => {
         service['currentMap'] = Object.create(functionalMap2);
         const puddle = new Puddle(12);
         const pothole = new Pothole(18);
