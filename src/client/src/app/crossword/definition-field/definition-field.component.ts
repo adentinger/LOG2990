@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DefinitionComponent } from './definition/definition.component';
+import { Definition } from './definition/definition';
 
 const DEFINITIONS_MOCK: string[] = [
     `At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
@@ -19,11 +19,11 @@ const DEFINITIONS_MOCK: string[] = [
 })
 export class DefinitionFieldComponent implements OnInit {
 
-    public definitions: DefinitionComponent[] = [];
+    public definitions: Definition[] = [];
 
     constructor() {
         for (const definition of DEFINITIONS_MOCK) {
-            this.definitions.push(new DefinitionComponent(definition));
+            this.definitions.push(new Definition(definition));
         }
     }
 
