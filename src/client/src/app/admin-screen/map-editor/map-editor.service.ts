@@ -3,9 +3,8 @@ import { Map } from './map';
 import { Point } from './point';
 import { Item } from './item';
 import { Vector } from './vector';
+import { Line } from './line';
 import { Path } from './path';
-
-type Line = [Point, Vector];
 
 @Injectable()
 export class MapEditorService {
@@ -87,33 +86,35 @@ export class MapEditorService {
     }
 
     private checkTwoLinesCross(line1: Line, line2: Line): boolean {
-        if (line1[1].x === 0) {
-            const PARAMETRIC_CONSTANT = (line1[0].x - line2[0].x) / line2[1].x;
-            const X = line2[0].x + PARAMETRIC_CONSTANT * line2[1].x;
-            const Y = line2[0].y + PARAMETRIC_CONSTANT * line2[1].y;
-            if (X === line1[0].x && this.isInBetween(line1[0].y, line1[0].y + line1[1].y, Y)) {
+        if (line1.translation.x === 0) {
+            const PARAMETRIC_CONSTANT = (line1.origin.x - line2.origin.x) / line2.translation.x;
+            const X = line2.origin.x + PARAMETRIC_CONSTANT * line2.translation.x;
+            const Y = line2.origin.y + PARAMETRIC_CONSTANT * line2.translation.y;
+            if (X === line1.origin.x && this.isInBetween(line1.origin.y, line1.origin.y + line1.translation.y, Y)) {
                 return true;
             }
             return false;
         }
-        if (line1[1].y === 0) {
-            const PARAMETRIC_CONSTANT = (line1[0].y - line2[0].y) / line2[1].y;
-            const X = line2[0].x + PARAMETRIC_CONSTANT * line2[1].x;
-            const Y = line2[0].y + PARAMETRIC_CONSTANT * line2[1].y;
-            if (this.isInBetween(line1[0].x, line1[0].x + line1[1].x, X) && Y === line1[0].y) {
+        if (line1.translation.y === 0) {
+            const PARAMETRIC_CONSTANT = (line1.origin.y - line2.origin.y) / line2.translation.y;
+            const X = line2.origin.x + PARAMETRIC_CONSTANT * line2.translation.x;
+            const Y = line2.origin.y + PARAMETRIC_CONSTANT * line2.translation.y;
+            if (this.isInBetween(line1.origin.x, line1.origin.x + line1.translation.x, X) && Y === line1.origin.y) {
                 return true;
             }
             return false;
         }
-        const DENOMINATOR = line2[1].x / line1[1].x - line2[1].y / line1[1].y;
+        const DENOMINATOR = line2.translation.x / line1.translation.x - line2.translation.y / line1.translation.y;
 
         if (DENOMINATOR !== 0) {
-            const NUMERATOR = ((line2[0].y - line1[0].y) / line1[1].y) - ((line2[0].x - line1[0].x) / line1[1].x);
+            const NUMERATOR =   ((line2.origin.y - line1.origin.y) / line1.translation.y)
+                              - ((line2.origin.x - line1.origin.x) / line1.translation.x);
 
             const PARAMETRIC_CONSTANT = NUMERATOR / DENOMINATOR;
-            const X = line2[0].x + PARAMETRIC_CONSTANT * line2[1].x;
-            const Y = line2[0].y + PARAMETRIC_CONSTANT * line2[1].y;
-            if (this.isInBetween(line1[0].x, line1[0].x + line1[1].x, X) && this.isInBetween(line1[0].y, line1[0].y + line1[1].y, Y)) {
+            const X = line2.origin.x + PARAMETRIC_CONSTANT * line2.translation.x;
+            const Y = line2.origin.y + PARAMETRIC_CONSTANT * line2.translation.y;
+            if (   this.isInBetween(line1.origin.x, line1.origin.x + line1.translation.x, X)
+                && this.isInBetween(line1.origin.y, line1.origin.y + line1.translation.y, Y)) {
                 return true;
             }
         }
@@ -125,9 +126,9 @@ export class MapEditorService {
         const LINES_THAT_CROSS: Array<[Line, Line]> = [];
         const LINES: Array<Line> = [];
         for (let i = 0; i < POINTS.length - 1; i++) {
-            LINES.push([POINTS[i], Vector.fromPoints(POINTS[i], POINTS[i + 1])]);
+            LINES.push(new Line(POINTS[i], POINTS[i + 1]));
         }
-        LINES.push([POINTS[POINTS.length - 1], Vector.fromPoints(POINTS[POINTS.length - 1], POINTS[0])]);
+        LINES.push(new Line(POINTS[POINTS.length - 1], POINTS[0]));
 
         for (let i = 0; i < LINES.length - 1; i++) {
             for (let j = i + 2; j < LINES.length - i; j++) {

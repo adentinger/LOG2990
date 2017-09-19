@@ -6,6 +6,7 @@ import { Puddle } from './puddle';
 import { Pothole } from './pothole';
 import { SpeedBoost } from './speed-boost';
 import { Vector } from './vector';
+import { Line } from './line';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
@@ -67,11 +68,26 @@ describe('MapEditorService', () => {
 
     it('should be able to check if lines cross', () => {
         service['currentMap'] = Object.create(disfunctionalMap);
-        expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 2}, new Vector(10, 0)], [{'x': 0, 'y': 10}, new Vector(2, -9)]]);
+        const CROSSING_LINES1: [Line, Line][] = [
+            [
+                new Line(new Point(0, 2),  new Point(10, 0)),
+                new Line(new Point(0, 10), new Point(2,  1))
+            ]
+        ];
+        expect(service.checkLinesCross()).toEqual(CROSSING_LINES1);
+
         service['currentMap'] = Object.create(functionalMap1);
-        expect(service.checkLinesCross()).toEqual([]);
+        const CROSSING_LINES2: [Line, Line][] = [];
+        expect(service.checkLinesCross()).toEqual(CROSSING_LINES2);
+
         service['currentMap'] = Object.create(disfunctionalMap2);
-        expect(service.checkLinesCross()).toContain([[{'x': 0, 'y': 0}, new Vector(10, 2)], [{'x': 0, 'y': 10}, new Vector(2, -9)]]);
+        const CROSSING_LINES3: [Line, Line][] = [
+            [
+                new Line(new Point(0, 0),  new Point(10, 2)),
+                new Line(new Point(0, 10), new Point(2,  1))
+            ]
+        ];
+        expect(service.checkLinesCross()).toEqual(CROSSING_LINES3);
     });
 
     it('should be able to add a valid point', () => {
