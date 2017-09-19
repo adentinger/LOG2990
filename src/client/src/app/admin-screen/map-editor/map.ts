@@ -44,7 +44,7 @@ export class Map {
         this.width = width;
     }
 
-    public checkAngles(): [Point, Point, Point][] {
+    public computeBadAngles(): [Point, Point, Point][] {
         const MIN_ANGLE = Math.PI / 4;
         const POINTS = [];
         POINTS.push.apply(POINTS, this.path.points);
@@ -65,7 +65,7 @@ export class Map {
         return BAD_ANGLES;
     }
 
-    public checkPathLoopBack(): boolean {
+    public isClosed(): boolean {
         let finished = false;
 
         if (this.path.points.length >= 3) {
@@ -125,7 +125,7 @@ export class Map {
         return false;
     }
 
-    private checkLinesCross(): [Line, Line][] {
+    public computeCrossingLines(): [Line, Line][] {
         const POINTS = this.path.points;
         const LINES_THAT_CROSS: [Line, Line][] = [];
         const LINES: Line[] = [];
