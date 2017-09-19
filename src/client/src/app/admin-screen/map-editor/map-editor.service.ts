@@ -40,6 +40,10 @@ export class MapEditorService {
         return this.currentMap.path.points;
     }
 
+    public get path(): Path {
+        return this.currentMap.path;
+    }
+
     public pushPoint(point: Point): void {
         if (point.x < this.currentMap.width && point.y < this.currentMap.height && point.x > 0 && point.y > 0) {
             this.currentMap.path.points.push(point);
@@ -82,9 +86,5 @@ export class MapEditorService {
         else if (item.type === 'speedBoost' && item.position < MAP_LENGTH[1]) {
             this.currentMap.speedBoosts.push(item);
         }
-    }
-
-    public getPath(): Path {
-        return this.currentMap.path;
     }
 }
