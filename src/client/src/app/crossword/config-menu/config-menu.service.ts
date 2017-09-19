@@ -38,7 +38,7 @@ export class ConfigMenuService {
     private stateStack: number[] = [];
 
     constructor(private location: Location,
-                private http: HttpClient,
+                http: HttpClient,
                 @Inject('menuConfigUrl') menuConfigUrl: string) {
         http.get(menuConfigUrl, {responseType: 'json'}).subscribe((menuPages) => {
             this.states.push.apply(this.states, ConfigMenuState.fromJson(menuPages, http));

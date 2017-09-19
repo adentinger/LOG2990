@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
-import { MENU_PAGES } from './menu-pages';
 import { ConfigMenuState } from './config-menu-state';
 import { ConfigMenuOption } from './config-menu-option';
 

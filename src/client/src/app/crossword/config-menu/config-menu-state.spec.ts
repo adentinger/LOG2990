@@ -1,6 +1,6 @@
 import { ConfigMenuState } from './config-menu-state';
 import { FetchableOptionList } from './config-menu-option';
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 

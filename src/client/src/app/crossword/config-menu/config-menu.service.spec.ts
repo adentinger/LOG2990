@@ -1,13 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
-
-import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
-import { MENU_PAGES } from './menu-pages';
-import { ConfigMenuState } from './config-menu-state';
-import { ConfigMenuOption } from './config-menu-option';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
+
+import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
+import { ConfigMenuState } from './config-menu-state';
+import { ConfigMenuOption } from './config-menu-option';
 
 const mockStates1: ConfigMenuState[] = [
     {
