@@ -87,12 +87,12 @@ describe('MapEditorService', () => {
         service['map']['width'] = 500;
 
         expect(service['map'].path.points.length).toBe(0);
-        const VALID_POINT: Point = {x: 3, y: 4};
+        const VALID_POINT: Point = new Point(3, 4);
         service.pushPoint(VALID_POINT);
         expect(service['map'].path.points.length).toBe(1);
         expect(service['map'].path.points).toContain(VALID_POINT);
 
-        const INVALID_POINT: Point = {x: -1, y: 10000};
+        const INVALID_POINT: Point = new Point(1, 10000);
         service.pushPoint(INVALID_POINT);
         expect(service['map'].path.points.length).toBe(1);
         expect(service['map'].path.points).not.toContain(INVALID_POINT);
@@ -100,7 +100,7 @@ describe('MapEditorService', () => {
 
     it('should be able to delete a point', () => {
         service['map'] = Object.create(emptyMap2);
-        const POINT: Point = {x: 3, y: 4};
+        const POINT: Point = new Point(3, 4);
         service['map'].path.points.push(POINT);
 
         expect(service['map'].path.points.length).toBe(1);

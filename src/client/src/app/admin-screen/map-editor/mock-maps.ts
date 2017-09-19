@@ -3,13 +3,14 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
+import { Point } from './point';
 
 export let emptyMap: Map = new Map();
 
 export let emptyMap2: Map = new Map();
 
 export let functionalMap1: Map = new Map(
-    new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 0}, {'x': 0, 'y': 10}]),
+    new Path([new Point(0, 0), new Point(10, 0), new Point(0, 10), new Point(0, 0)]),
     'name',
     'description',
     'professional',
@@ -21,7 +22,7 @@ export let functionalMap1: Map = new Map(
 );
 
 export let functionalMap2: Map = new Map(
-    new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 0}, {'x': 0, 'y': 10}]),
+    new Path([new Point(0, 0), new Point(10, 0), new Point(0, 10), new Point(0, 0)]),
     'name',
     'description',
     'professional',
@@ -33,7 +34,7 @@ export let functionalMap2: Map = new Map(
 );
 
 export let functionalMap3: Map = new Map(
-    new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 0}, {'x': 0, 'y': 10}]),
+    new Path([new Point(0, 0), new Point(10, 0), new Point(0, 10), new Point(0, 0)]),
     'name',
     'description',
     'professional',
@@ -45,7 +46,7 @@ export let functionalMap3: Map = new Map(
 );
 
 export let disfunctionalMap: Map = new Map (
-    new Path([{'x': 0, 'y': 2}, {'x': 10, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
+    new Path([new Point(0, 2), new Point(10, 2), new Point(0, 10), new Point(2, 1), new Point(0, 2)]),
     'name',
     'description',
     'sdljhgso',
@@ -59,7 +60,7 @@ export let disfunctionalMap: Map = new Map (
 );
 
 export let disfunctionalMap2: Map = new Map (
-    new Path([{'x': 0, 'y': 0}, {'x': 10, 'y': 2}, {'x': 0, 'y': 10}, {'x': 2, 'y': 1}]),
+    new Path([new Point(0, 0), new Point(10, 2), new Point(0, 10), new Point(2, 1), new Point(0, 0)]),
     'name',
     'description',
     'sdljhgso',

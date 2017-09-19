@@ -85,13 +85,8 @@ export class Map {
     }
 
     public isClosed(): boolean {
-        let finished = false;
-
-        if (this.path.points.length >= 3) {
-            finished = true;
-        }
-
-        return finished;
+        return this.path.points[0].equals(
+               this.path.points[this.path.points.length - 1]);
     }
 
     public computeCrossingLines(): [Line, Line][] {
@@ -101,7 +96,6 @@ export class Map {
         for (let i = 0; i < POINTS.length - 1; i++) {
             LINES.push(new Line(POINTS[i], POINTS[i + 1]));
         }
-        LINES.push(new Line(POINTS[POINTS.length - 1], POINTS[0]));
 
         for (let i = 0; i < LINES.length - 1; i++) {
             for (let j = i + 1; j < LINES.length; j++) {
