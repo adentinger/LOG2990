@@ -44,18 +44,20 @@ export class Map {
         this.width = width;
     }
 
-    public computeLength(): [number, number] {
+    public computeLength(): number {
         const POINTS = this.path.points;
-        let vector = Vector.fromPoints(POINTS[0], POINTS[0 + 1]);
-        const FIRST_STRETCH = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-
-        const LENGTH: [number, number] = [0, 0];
-        LENGTH[0] += FIRST_STRETCH;
+        const LENGTH = 0;
         for (let i = 0; i < this.path.points.length - 1; i++) {
-            vector = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
-            LENGTH[1] += Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+            const VECTOR = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
+            LENGTH[1] += VECTOR.norm();
         }
         return LENGTH;
+    }
+
+    public firstStretchLength(): number {
+        const POINT1 = this.path.points[0];
+        const POINT2 = this.path.points[1];
+        return Vector.fromPoints(POINT1, POINT2).norm();
     }
 
     public computeBadAngles(): [Point, Point, Point][] {

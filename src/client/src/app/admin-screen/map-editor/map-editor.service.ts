@@ -62,14 +62,15 @@ export class MapEditorService {
     }
 
     private addItem(item: Item): void {
+        const FIRST_STRETCH_LENGTH = this.map.firstStretchLength();
         const MAP_LENGTH = this.map.computeLength();
-        if (item.type === 'puddle' && MAP_LENGTH[0] < item.position && item.position < MAP_LENGTH[1]) {
+        if (item.type === 'puddle' && FIRST_STRETCH_LENGTH < item.position && item.position < MAP_LENGTH) {
             this.map.puddles.push(item);
         }
-        else if (item.type === 'pothole' && MAP_LENGTH[0] < item.position && item.position < MAP_LENGTH[1]) {
+        else if (item.type === 'pothole' && FIRST_STRETCH_LENGTH < item.position && item.position < MAP_LENGTH) {
             this.map.potholes.push(item);
         }
-        else if (item.type === 'speedBoost' && item.position < MAP_LENGTH[1]) {
+        else if (item.type === 'speedBoost' && item.position < MAP_LENGTH) {
             this.map.speedBoosts.push(item);
         }
     }
