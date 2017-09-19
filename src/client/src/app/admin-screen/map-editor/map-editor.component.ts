@@ -28,7 +28,6 @@ export class MapEditorComponent implements OnInit {
     }
 
     public clicked(event: MouseEvent): void {
-        console.log('clicked', event.button);
         event.preventDefault();
         switch (event.button) {
             case LEFT_MOUSE_BUTTON: {
