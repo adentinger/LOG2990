@@ -4,9 +4,10 @@ import { SpyLocation } from '@angular/common/testing';
 
 import { ConfigMenuComponent } from './config-menu.component';
 import { MENU_PAGES } from './menu-pages';
-import { ConfigMenuService } from './config-menu.service';
+import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -15,14 +16,13 @@ describe('ConfigMenuComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientModule
+                HttpClientTestingModule
             ],
             declarations: [ConfigMenuComponent],
             providers: [
                 ConfigMenuService,
-                HttpClient,
                 {provide: Location, useClass: SpyLocation},
-                {provide: 'menuPages', useValue: MENU_PAGES}
+                { provide: MENU_CONFIG_URL, useValue: '/crossword/games/pending/10' }
             ]
         })
             .compileComponents();
