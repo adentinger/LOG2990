@@ -5,7 +5,6 @@ import { Point } from './point';
 import { Puddle } from './puddle';
 import { Pothole } from './pothole';
 import { SpeedBoost } from './speed-boost';
-import { Vector } from './vector';
 import { Line } from './line';
 
 describe('MapEditorService', () => {

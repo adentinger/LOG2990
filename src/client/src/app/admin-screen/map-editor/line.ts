@@ -15,7 +15,6 @@ export class Line {
     }
 
     public get translation(): Vector {
-        const foo = Vector.fromPoints(this.origin, this.destination);
         return Vector.fromPoints(this.origin, this.destination);
     }
 
