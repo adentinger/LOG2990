@@ -133,13 +133,13 @@ describe('MapEditorService', () => {
         const PUDDLE = new Puddle(12);
         const POTHOLE = new Pothole(18);
         const SPEED_BOOST = new SpeedBoost(23);
-        service.addItem(PUDDLE);
+        service['addItem'](PUDDLE);
         expect(service['currentMap'].puddles.length).toBeGreaterThan(0);
         expect(service['currentMap'].puddles[0]).toBe(PUDDLE);
-        service.addItem(POTHOLE);
+        service['addItem'](POTHOLE);
         expect(service['currentMap'].potholes.length).toBeGreaterThan(0);
         expect(service['currentMap'].potholes[0]).toBe(POTHOLE);
-        service.addItem(SPEED_BOOST);
+        service['addItem'](SPEED_BOOST);
         expect(service['currentMap'].speedBoosts.length).toBeGreaterThan(0);
         expect(service['currentMap'].speedBoosts[0]).toBe(SPEED_BOOST);
 
@@ -147,17 +147,17 @@ describe('MapEditorService', () => {
         const INVALID_PUDDLE = new Puddle(0);
         const INVALID_POTHOLE = new Pothole(0);
         const INVALID_SPEED_BOOST = new SpeedBoost(1000);
-        service.addItem(INVALID_PUDDLE);
+        service['addItem'](INVALID_PUDDLE);
         expect(service['currentMap'].puddles.length).toEqual(0);
-        service.addItem(INVALID_POTHOLE);
+        service['addItem'](INVALID_POTHOLE);
         expect(service['currentMap'].potholes.length).toEqual(0);
-        service.addItem(INVALID_SPEED_BOOST);
+        service['addItem'](INVALID_SPEED_BOOST);
         expect(service['currentMap'].speedBoosts.length).toEqual(0);
     });
 
     it('can provide points', () => {
         service['currentMap'] = Object.create(functionalMap1);
 
-        expect(service.getPath()).toBe(functionalMap1.path);
+        expect(service.path).toBe(functionalMap1.path);
     });
 });

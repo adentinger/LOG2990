@@ -75,7 +75,7 @@ export class MapEditorService {
         return LENGTH;
     }
 
-    public addItem(item: Item): void {
+    private addItem(item: Item): void {
         const MAP_LENGTH = this.findMapLength();
         if (item.type === 'puddle' && MAP_LENGTH[0] < item.position && item.position < MAP_LENGTH[1]) {
             this.currentMap.puddles.push(item);
