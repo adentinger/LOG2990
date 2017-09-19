@@ -58,7 +58,7 @@ describe('Map', () => {
         const CROSSING_LINES3: [Line, Line][] = [
             [
                 new Line(new Point(0, 2),  new Point(10, 2)),
-                new Line(new Point(4, 5), new Point(5,  0))
+                new Line(new Point(5, 5), new Point(5,  0))
             ]
         ];
         expect(MAP3.computeCrossingLines()).toEqual(CROSSING_LINES3);
