@@ -42,7 +42,7 @@ describe('Line', () => {
 
         it('should return that identical lines are intersecting', () => {
             const LINE = makeLine(0, 0, 1, 1);
-            expect(() => LINE.intersectsWith(LINE)).toBe(true);
+            expect(LINE.intersectsWith(LINE)).toBe(true);
         });
 
         it('should return that crossing lines are intersecting', () => {
