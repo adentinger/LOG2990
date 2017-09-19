@@ -4,6 +4,9 @@ import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
 import { Point } from './point';
 
+const LEFT_MOUSE_BUTTON = 0;
+const RIGHT_MOUSE_BUTTON = 2;
+
 @Component({
     selector: 'app-map-editor',
     templateUrl: './map-editor.component.html',
@@ -24,12 +27,27 @@ export class MapEditorComponent implements OnInit {
         this.mapRenderer.canvas = CANVAS;
     }
 
-    public addPoint(event: MouseEvent): void {
-        this.mapEditor.pushPoint(new Point(event.offsetX, event.offsetY));
+    public clicked(event: MouseEvent): void {
+        console.log('clicked', event.button);
+        event.preventDefault();
+        switch (event.button) {
+            case LEFT_MOUSE_BUTTON: {
+                this.addPoint(event.offsetX, event.offsetY);
+                break;
+            }
+            case RIGHT_MOUSE_BUTTON: {
+                this.undoLastPoint();
+                break;
+            }
+        }
+    }
+
+    private addPoint(x: number, y: number): void {
+        this.mapEditor.pushPoint(new Point(x, y));
         this.mapRenderer.draw();
     }
 
-    public undoLastPoint(): void {
+    private undoLastPoint(): void {
         this.mapEditor.popPoint();
         this.mapRenderer.draw();
     }
