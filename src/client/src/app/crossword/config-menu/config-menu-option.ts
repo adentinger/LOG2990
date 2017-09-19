@@ -13,7 +13,7 @@ export interface FetchableOptionList {
     fetchedOptions?: string[];
 }
 
-export function isOptionList(object: any): boolean {
+export function isOptionList(object: any): object is FetchableOptionList | ConfigMenuOption[] {
     if (Array.isArray(object)) {
         for (const option of (object as any[])) {
             if (!('name' in option && typeof option.name === 'string') ||

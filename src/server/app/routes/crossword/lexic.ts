@@ -6,11 +6,11 @@ export class Lexic {
 }
 
 export class LexicMiddleWare {
-    @Route('/crossword/lexic/filter')
+    @Route('get', '/crossword/lexic/filter')
     public filter(req: express.Request, res: express.Response, next: express.NextFunction): void {
     }
 
-    @Route('/crossword/lexic/definition')
+    @Route('get', '/crossword/lexic/definition')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
     }
 }
