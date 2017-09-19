@@ -54,16 +54,16 @@ describe('MapEditorService', () => {
         service['currentMap'] = Object.create(functionalMap1);
         expect(service['calculateAngle']({x: 1, y: 0}, {x: 0, y: 1})).toBeCloseTo(Math.PI / 2);
         expect(service['calculateAngle']({x: 1, y: 0}, {x: 1, y: 1})).toBeCloseTo(Math.PI / 4);
-        expect(service['checkAngles']().length).toEqual(0);
+        expect(service['currentMap'].checkAngles().length).toEqual(0);
         service['currentMap'] = Object.create(disfunctionalMap);
-        expect(service['checkAngles']().length).toBeGreaterThan(0);
+        expect(service['currentMap'].checkAngles().length).toBeGreaterThan(0);
     });
 
     it('should be able to check if a path loops back', () => {
         service['currentMap'] = Object.create(functionalMap1);
-        expect(service['checkPathLoopBack']()).toBe(true);
+        expect(service['currentMap'].checkPathLoopBack()).toBe(true);
         service['currentMap'] = Object.create(emptyMap);
-        expect(service['checkPathLoopBack']()).toBe(false);
+        expect(service['currentMap'].checkPathLoopBack()).toBe(false);
     });
 
     it('should be able to check if lines cross', () => {
