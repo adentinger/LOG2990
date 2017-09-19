@@ -1,5 +1,6 @@
 import { Point } from './point';
 import { Vector } from './vector';
+import { Interval } from './interval';
 
 const MAX_SLOPE = 999999999;
 
@@ -56,19 +57,12 @@ export class Line {
         }
         else {
             const X = (B2 - B1) / (A1 - A2);
-            intersect = this.isInBetween(this.origin.x, this.destination.x, X);
+            const THIS_DOMAIN = new Interval(this.origin.x, this.destination.x);
+            const THAT_DOMAIN = new Interval(that.origin.x, that.destination.x);
+            intersect = (THIS_DOMAIN.contains(X) && THAT_DOMAIN.contains(X));
         }
 
         return intersect;
-    }
-
-    private isInBetween(value1: number, value2: number, valueInBetween: number): boolean {
-        if (value1 > value2) {
-            return value1 > valueInBetween && value2 < valueInBetween;
-        }
-        else {
-            return value1 < valueInBetween && value2 > valueInBetween;
-        }
     }
 
 }
