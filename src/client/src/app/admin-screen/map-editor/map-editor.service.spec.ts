@@ -80,21 +80,21 @@ describe('MapEditorService', () => {
         service['currentMap']['width'] = 500;
 
         expect(service['currentMap'].path.points.length).toBe(0);
-        const validPoint: Point = {x: 3, y: 4};
-        service.pushPoint(validPoint);
+        const VALID_POINT: Point = {x: 3, y: 4};
+        service.pushPoint(VALID_POINT);
         expect(service['currentMap'].path.points.length).toBe(1);
-        expect(service['currentMap'].path.points).toContain(validPoint);
+        expect(service['currentMap'].path.points).toContain(VALID_POINT);
 
-        const invalidPoint: Point = {x: -1, y: 10000};
-        service.pushPoint(invalidPoint);
+        const INVALID_POINT: Point = {x: -1, y: 10000};
+        service.pushPoint(INVALID_POINT);
         expect(service['currentMap'].path.points.length).toBe(1);
-        expect(service['currentMap'].path.points).not.toContain(invalidPoint);
+        expect(service['currentMap'].path.points).not.toContain(INVALID_POINT);
     });
 
     it('should be able to delete a point', () => {
         service['currentMap'] = Object.create(emptyMap2);
-        const point: Point = {x: 3, y: 4};
-        service['currentMap'].path.points.push(point);
+        const POINT: Point = {x: 3, y: 4};
+        service['currentMap'].path.points.push(POINT);
 
         expect(service['currentMap'].path.points.length).toBe(1);
         service.popPoint();
@@ -114,28 +114,28 @@ describe('MapEditorService', () => {
 
     it('should be able to place valid items', () => {
         service['currentMap'] = Object.create(functionalMap2);
-        const puddle = new Puddle(12);
-        const pothole = new Pothole(18);
-        const speedBoost = new SpeedBoost(23);
-        service.addItem(puddle);
+        const PUDDLE = new Puddle(12);
+        const POTHOLE = new Pothole(18);
+        const SPEED_BOOST = new SpeedBoost(23);
+        service.addItem(PUDDLE);
         expect(service['currentMap'].puddles.length).toBeGreaterThan(0);
-        expect(service['currentMap'].puddles[0]).toBe(puddle);
-        service.addItem(pothole);
+        expect(service['currentMap'].puddles[0]).toBe(PUDDLE);
+        service.addItem(POTHOLE);
         expect(service['currentMap'].potholes.length).toBeGreaterThan(0);
-        expect(service['currentMap'].potholes[0]).toBe(pothole);
-        service.addItem(speedBoost);
+        expect(service['currentMap'].potholes[0]).toBe(POTHOLE);
+        service.addItem(SPEED_BOOST);
         expect(service['currentMap'].speedBoosts.length).toBeGreaterThan(0);
-        expect(service['currentMap'].speedBoosts[0]).toBe(speedBoost);
+        expect(service['currentMap'].speedBoosts[0]).toBe(SPEED_BOOST);
 
         service['currentMap'] = Object.create(functionalMap3);
-        const invalidPuddle = new Puddle(0);
-        const invalidPothole = new Pothole(0);
-        const invalidSpeedBoost = new SpeedBoost(1000);
-        service.addItem(invalidPuddle);
+        const INVALID_PUDDLE = new Puddle(0);
+        const INVALID_POTHOLE = new Pothole(0);
+        const INVALID_SPEED_BOOST = new SpeedBoost(1000);
+        service.addItem(INVALID_PUDDLE);
         expect(service['currentMap'].puddles.length).toEqual(0);
-        service.addItem(invalidPothole);
+        service.addItem(INVALID_POTHOLE);
         expect(service['currentMap'].potholes.length).toEqual(0);
-        service.addItem(invalidSpeedBoost);
+        service.addItem(INVALID_SPEED_BOOST);
         expect(service['currentMap'].speedBoosts.length).toEqual(0);
     });
 
