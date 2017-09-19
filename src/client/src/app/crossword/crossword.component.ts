@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
 
 export class CrosswordComponent implements OnInit {
 
-    constructor ( ) {}
+    public gameIsBeingConfigured = true;
+    constructor() { }
 
     public ngOnInit(): void {
     }

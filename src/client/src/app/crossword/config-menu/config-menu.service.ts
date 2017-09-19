@@ -30,6 +30,7 @@ export class ConfigMenuService {
             {name: 'Start', nextPage: ConfigMenuService.STATE_SEND}
         ]
     };
+    public isConfiguringGame = true;
 
     private states: ConfigMenuState[] = [];
     private currentStateId: PageId;
@@ -116,5 +117,6 @@ export class ConfigMenuService {
     }
 
     public sendGameConfiguration(): void {
+        this.isConfiguringGame = false;
     }
 }

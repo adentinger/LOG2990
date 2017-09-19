@@ -28,6 +28,14 @@ export class ConfigMenuComponent implements OnInit {
         }
     }
 
+    get isConfiguringGame(): boolean {
+        return this.configMenuService.isConfiguringGame;
+    }
+
+    set isConfiguringGame(flag: boolean) {
+        this.configMenuService.isConfiguringGame = flag;
+    }
+
     public getObjectEntries(object: any): [any, any][] {
         return Object.entries(object);
     }

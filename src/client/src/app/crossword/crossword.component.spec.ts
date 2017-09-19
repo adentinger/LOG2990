@@ -4,6 +4,8 @@ import { SpyLocation } from '@angular/common/testing';
 
 import { CrosswordComponent } from './crossword.component';
 import { ConfigMenuComponent } from './config-menu/config-menu.component';
+import { BoardComponent } from './board/board.component';
+import { DefinitionFieldComponent } from './definition-field/definition-field.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 describe('CrosswordComponent', () => {
@@ -13,7 +15,7 @@ describe('CrosswordComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            declarations: [CrosswordComponent, ConfigMenuComponent],
+            declarations: [CrosswordComponent, ConfigMenuComponent, BoardComponent, DefinitionFieldComponent],
             providers: [HttpClient, {provide: Location, useClass: SpyLocation}]
         })
             .compileComponents();
