@@ -1,6 +1,8 @@
 import { Point } from './point';
 import { Vector } from './vector';
 
+const MAX_SLOPE = 999999999;
+
 export class Line {
 
     public origin: Point;
@@ -13,57 +15,61 @@ export class Line {
     }
 
     public get translation(): Vector {
+        const foo = Vector.fromPoints(this.origin, this.destination);
         return Vector.fromPoints(this.origin, this.destination);
     }
 
+    public get slope(): number {
+        const TRANSLATION = this.translation;
+        if (TRANSLATION.x !== 0) {
+            return TRANSLATION.y / TRANSLATION.x;
+        }
+        else {
+            return MAX_SLOPE;
+        }
+    }
+
+    public get intercept(): number {
+        return this.origin.y - this.slope * this.origin.x;
+    }
+
     public intersectsWith(that: Line): boolean {
-        if (this.translation.x === 0) {
-            const PARAMETRIC_CONSTANT = (this.origin.x - that.origin.x) / that.translation.x;
-            const X = that.origin.x + PARAMETRIC_CONSTANT * that.translation.x;
-            const Y = that.origin.y + PARAMETRIC_CONSTANT * that.translation.y;
-            if (X === this.origin.x && this.isInBetween(this.origin.y, this.origin.y + this.translation.y, Y)) {
-                return true;
-            }
-            return false;
-        }
-        if (this.translation.y === 0) {
-            const PARAMETRIC_CONSTANT = (this.origin.y - that.origin.y) / that.translation.y;
-            const X = that.origin.x + PARAMETRIC_CONSTANT * that.translation.x;
-            const Y = that.origin.y + PARAMETRIC_CONSTANT * that.translation.y;
-            if (this.isInBetween(this.origin.x, this.origin.x + this.translation.x, X) && Y === this.origin.y) {
-                return true;
-            }
-            return false;
-        }
-        const DENOMINATOR = that.translation.x / this.translation.x - that.translation.y / this.translation.y;
+        // Not taking line width into account:
+        // this: y1(x) = a1 * x + b1;
+        // that: y2(x) = a2 * x + b2;
 
-        if (DENOMINATOR !== 0) {
-            const NUMERATOR =   ((that.origin.y - this.origin.y) / this.translation.y)
-                              - ((that.origin.x - this.origin.x) / this.translation.x);
+        //    a1 * x + b1 = a2 * x + b2
+        // => a1 * x - a2 * x = b2 - b1
+        // => x * (a1 - a2) = b2 - b1
+        //    _____________________________
+        // => | x = (b2 - b1) / (a1 - a2) | (a1 ≠ a2)
+        //    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-            const PARAMETRIC_CONSTANT = NUMERATOR / DENOMINATOR;
-            const X = that.origin.x + PARAMETRIC_CONSTANT * that.translation.x;
-            const Y = that.origin.y + PARAMETRIC_CONSTANT * that.translation.y;
-            if (   this.isInBetween(this.origin.x, this.origin.x + this.translation.x, X)
-                && this.isInBetween(this.origin.y, this.origin.y + this.translation.y, Y)) {
-                return true;
-            }
+        const A1 = this.slope;
+        const B1 = this.intercept;
+        const A2 = that.slope;
+        const B2 = that.intercept;
+
+        let intersect;
+
+        if (A1 === A2) {
+            intersect = (B1 === B2);
         }
-        return false;
+        else {
+            const X = (B2 - B1) / (A1 - A2);
+            intersect = this.isInBetween(this.origin.x, this.destination.x, X);
+        }
+
+        return intersect;
     }
 
     private isInBetween(value1: number, value2: number, valueInBetween: number): boolean {
         if (value1 > value2) {
-            if (value1 > valueInBetween && value2 < valueInBetween) {
-                return true;
-            }
+            return value1 > valueInBetween && value2 < valueInBetween;
         }
         else {
-            if (value1 < valueInBetween && value2 > valueInBetween) {
-                return true;
-            }
+            return value1 < valueInBetween && value2 > valueInBetween;
         }
-        return false;
     }
 
 }

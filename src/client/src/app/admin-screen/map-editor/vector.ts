@@ -6,7 +6,10 @@ export class Vector {
     public y: number;
 
     constructor(x: number,
-                y: number) { }
+                y: number) {
+        this.x = x;
+        this.y = y;
+    }
 
     public static fromPoints(origin: Point, destination: Point): Vector {
         return new Vector(destination.x - origin.x, destination.y - origin.y);
