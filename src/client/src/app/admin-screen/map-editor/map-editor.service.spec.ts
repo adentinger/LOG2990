@@ -7,8 +7,6 @@ import { Pothole } from './pothole';
 import { SpeedBoost } from './speed-boost';
 import { Vector } from './vector';
 
-type Line = [Point, Vector];
-
 describe('MapEditorService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
