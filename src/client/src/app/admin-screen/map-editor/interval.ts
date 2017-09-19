@@ -1,7 +1,7 @@
 export class Interval {
 
-    public lowerBound: number;
-    public upperBound: number;
+    private lowerBound: number;
+    private upperBound: number;
 
     constructor(firstBound: number, secondBound: number) {
         if (firstBound < secondBound) {
