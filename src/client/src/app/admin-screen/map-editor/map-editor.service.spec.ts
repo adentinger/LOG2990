@@ -121,7 +121,7 @@ describe('MapEditorService', () => {
         expect(service['map'].speedBoosts.length).toEqual(0);
     });
 
-    it('can provide points', () => {
+    it('should provide points', () => {
         service['map'] = Object.create(functionalMap1);
 
         expect(service.path).toBe(functionalMap1.path);
