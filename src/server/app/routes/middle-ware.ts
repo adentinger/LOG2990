@@ -21,6 +21,6 @@ export function registerMiddleWares(router: express.Router) {
         const route = Reflect.getMetadata(middlewareRoutes, middleWare);
         const container = Reflect.getMetadata(middlewareContainers, middleWare);
         router.get(route, middleWare.bind(middleWare));
-        console.log('@MiddleWare[run]', 'Routed ' + container.constructor.name + '.' + middleWare.name + ' to "' + route + '"');
+        console.log('Routed ' + container.constructor.name + '.' + middleWare.name + ' to "' + route + '"');
     }
 }
