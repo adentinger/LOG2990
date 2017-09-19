@@ -129,9 +129,8 @@ export class MapEditorService {
             LINES.push(new Line(POINTS[i], POINTS[i + 1]));
         }
         LINES.push(new Line(POINTS[POINTS.length - 1], POINTS[0]));
-
         for (let i = 0; i < LINES.length - 1; i++) {
-            for (let j = i + 2; j < LINES.length - i; j++) {
+            for (let j = i + 1; j < LINES.length; j++) {
                 if (this.checkTwoLinesCross(LINES[i], LINES[j])) {
                     LINES_THAT_CROSS.push([LINES[i], LINES[j]]);
                 }
