@@ -6,6 +6,8 @@ import { Point } from './point';
 import { Vector } from './vector';
 import { Line } from './line';
 
+const MIN_ANGLE = Math.PI / 4;
+
 export class Map {
     public path: Path;
     public potholes: Pothole[] = [];
@@ -46,12 +48,12 @@ export class Map {
 
     public computeLength(): number {
         const POINTS = this.path.points;
-        const LENGTH = 0;
-        for (let i = 0; i < this.path.points.length - 1; i++) {
+        let length = 0;
+        for (let i = 0; i < POINTS.length - 1; i++) {
             const VECTOR = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
-            LENGTH[1] += VECTOR.norm();
+            length += VECTOR.norm();
         }
-        return LENGTH;
+        return length;
     }
 
     public firstStretchLength(): number {
@@ -61,7 +63,6 @@ export class Map {
     }
 
     public computeBadAngles(): [Point, Point, Point][] {
-        const MIN_ANGLE = Math.PI / 4;
         const POINTS = [];
         POINTS.push.apply(POINTS, this.path.points);
         POINTS.push(POINTS[0], POINTS[1]);
@@ -75,6 +76,7 @@ export class Map {
             const VECTOR2 = Vector.fromPoints(POINT3, POINT2);
             const ANGLE =
                 Math.min(VECTOR1.angleTo(VECTOR2), VECTOR2.angleTo(VECTOR1));
+
             if (Math.abs(ANGLE) < MIN_ANGLE) {
                 BAD_ANGLES.push([POINT1, POINT2, POINT3]);
             }
