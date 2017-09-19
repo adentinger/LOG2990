@@ -7,7 +7,10 @@ import { Item } from './item';
 export class MapEditorService {
 
     private currentMap: Map;
-    constructor() { }
+
+    constructor() {
+        this.newMap();
+    }
 
     public newMap(): boolean {
         let mapCreated = false;
@@ -29,7 +32,11 @@ export class MapEditorService {
     public deleteMap(): void {
     }
 
-    public calculateAngle(vector1: {x: number, y: number}, vector2: {x: number, y: number}): number {
+    public get points(): Point[] {
+        return this.currentMap.path.points;
+    }
+
+    private calculateAngle(vector1: {x: number, y: number}, vector2: {x: number, y: number}): number {
         const scalarProduct = (vector1.x * vector2.x + vector1.y * vector2.y);
         const productOfNormOfVectors = (Math.sqrt((vector1.x * vector1.x + vector1.y * vector1.y))) *
                                        (Math.sqrt((vector2.x * vector2.x + vector2.y * vector2.y)));
@@ -74,7 +81,8 @@ export class MapEditorService {
     public pushPoint(point: Point): void {
     }
 
-    public popPoint(): void {
+    public popPoint(): Point {
+        return null;
     }
 
     public editPoint(): void {

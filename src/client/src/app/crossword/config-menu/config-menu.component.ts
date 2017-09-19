@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ConfigMenuService } from './config-menu.service';
-import { MENU_PAGES } from './menu-pages';
+import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 import { ConfigMenuState } from './config-menu-state';
 import { ConfigMenuOption } from './config-menu-option';
 
@@ -11,7 +10,7 @@ import { ConfigMenuOption } from './config-menu-option';
     styleUrls: ['./config-menu.component.css'],
     providers: [
         ConfigMenuService,
-        { provide: 'menuPages', useValue: MENU_PAGES }
+        { provide: MENU_CONFIG_URL, useValue: '/assets/crossword/config-menu-pages.json' }
     ]
 })
 export class ConfigMenuComponent implements OnInit {

@@ -1,12 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
+import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 
-import { ConfigMenuService } from './config-menu.service';
-import { MENU_PAGES } from './menu-pages';
+import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 import { ConfigMenuState } from './config-menu-state';
 import { ConfigMenuOption } from './config-menu-option';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 const mockStates1: ConfigMenuState[] = [
     {
@@ -28,18 +28,21 @@ const mockStates1: ConfigMenuState[] = [
 ];
 
 describe('ConfigMenuService', () => {
+    const MOCK_MENU_CONFIG_URL = '/mock-config-url.json';
+    let httpController: HttpTestingController;
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientModule
+                HttpClientTestingModule
             ],
             providers: [
                 ConfigMenuService,
                 HttpClient,
                 { provide: Location, useClass: SpyLocation },
-                { provide: 'menuPages', useValue: MENU_PAGES }
+                { provide: MENU_CONFIG_URL, useValue: MOCK_MENU_CONFIG_URL }
             ]
         });
+        httpController = TestBed.get(HttpTestingController);
     });
 
     let service: ConfigMenuService;
@@ -49,44 +52,55 @@ describe('ConfigMenuService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+        expect(service['currentStateId']).toBeUndefined();
+        httpController.expectOne(MOCK_MENU_CONFIG_URL).flush(mockStates1);
+        expect(service['currentStateId']).toEqual(0);
     });
 
     it('should be in the right default state', () => {
+        httpController.expectOne(MOCK_MENU_CONFIG_URL).flush(mockStates1);
+
         const state: ConfigMenuState = service.getCurrentState();
         expect(state).toBeDefined();
         expect(state.id).toBe(0);
-        expect(state.name).toBe(MENU_PAGES[0].name);
-        for (const option of (MENU_PAGES[0].options as ConfigMenuOption[])) {
+        expect(state.name).toBe(mockStates1[0].name);
+        for (const option of (mockStates1[0].options as ConfigMenuOption[])) {
             expect(state.options).toContain(option);
         }
     });
 
     it('should change state when a valid option is selected', () => {
-        service['states'] = mockStates1;
+        httpController.expectOne(MOCK_MENU_CONFIG_URL).flush(mockStates1);
+        const setting0 = 0;
+
         expect(service['currentStateId']).toBe(0);
-        expect('Setting0' in service['gameConfiguration']).toBeFalsy();
+        expect(setting0 in service['gameConfiguration']).toBeFalsy();
         service.selectOption(1);
         expect(service['currentStateId']).toBe(1);
-        expect('Setting0' in service['gameConfiguration']).toBeTruthy();
-        expect(service['gameConfiguration']['Setting0']).toBe('Option1');
+        expect(setting0 in service['gameConfiguration']).toBeTruthy();
+        expect(service['gameConfiguration'][0]).toBe(1);
     });
 
     it('should not change state when an invalid option is selected', () => {
-        service['states'] = mockStates1;
+        httpController.expectOne(MOCK_MENU_CONFIG_URL).flush(mockStates1);
+        const setting0 = 0;
+
         expect(service['currentStateId']).toBe(0);
-        expect('Setting0' in service['gameConfiguration']).toBeFalsy();
+        expect(setting0 in service['gameConfiguration']).toBeFalsy();
         service.selectOption(2); // invalid option
         expect(service['currentStateId']).toBe(0);
-        expect('Setting0' in service['gameConfiguration']).toBeFalsy();
+        expect(setting0 in service['gameConfiguration']).toBeFalsy();
     });
 
-    it('should be able to go back to it previous state', () => {
-        service['states'] = mockStates1;
+    it('should be able to go back to a previous state', () => {
+        httpController.expectOne(MOCK_MENU_CONFIG_URL).flush(mockStates1);
+        const setting0 = 0;
+
         service['currentStateId'] = 1;
-        service['gameConfiguration']['Setting0'] = 'Option1';
+        service['gameConfiguration'][0] = 1;
         service['stateStack'].push(0);
         service.goBackState();
         expect(service['currentStateId']).toBe(0);
-        expect('Setting0' in service['gameConfiguration']).toBeFalsy();
+        expect(setting0 in service['gameConfiguration']).toBeFalsy();
     });
 });
