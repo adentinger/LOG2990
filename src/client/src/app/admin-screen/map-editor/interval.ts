@@ -10,7 +10,7 @@ export class Interval {
         }
         else {
             this.lowerBound = secondBound;
-            this.lowerBound = firstBound;
+            this.upperBound = firstBound;
         }
     }
 
@@ -23,8 +23,8 @@ export class Interval {
     }
 
     public contains(value: number): boolean {
-        return value >= this.lowerBound
-            && value <= this.upperBound;
+        return value > this.lowerBound
+            && value < this.upperBound;
     }
 
 }

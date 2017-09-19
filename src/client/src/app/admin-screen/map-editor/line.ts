@@ -59,7 +59,7 @@ export class Line {
             const X = (B2 - B1) / (A1 - A2);
             const THIS_DOMAIN = new Interval(this.origin.x, this.destination.x);
             const THAT_DOMAIN = new Interval(that.origin.x, that.destination.x);
-            console.log(THAT_DOMAIN.lowerBound, THAT_DOMAIN.upperBound);
+            console.log(THAT_DOMAIN.lower, THAT_DOMAIN.upper);
             intersect = (THIS_DOMAIN.contains(X) && THAT_DOMAIN.contains(X));
         }
 
