@@ -2,32 +2,45 @@ import 'reflect-metadata';
 import * as express from 'express';
 
 type RequestHandler = (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
+type RouteType = 'get' | 'post' | 'put' | 'delete' | 'head';
+interface Constructible {
+    new (...args: any[]): {};
+}
 
-type RouteTypes = 'get' | 'post' | 'put' | 'delete' | 'head';
+const registerSymbole = Symbol('register');
+const middlewareRoutes = Symbol('routes');
+const middleWares: Function[] = [];
 
-const middlewareRoutes = Symbol('middlewareRoutes');
-const middlewareContainers = Symbol('middlewareContainers');
-const middlewareRequestType = Symbol('middlewareRequestType');
-const middleWares: RequestHandler[] = [];
+interface RouteEntry {
+    type: RouteType;
+    value: string;
+    handler: RequestHandler;
+}
+
+export function MiddleWare<T extends Constructible>(constructor: T) {
+    constructor.prototype[registerSymbole] = (router: express.Router): void => {
+        const routes: RouteEntry[] = Reflect.getOwnMetadata(middlewareRoutes, constructor) || [];
+        for (const route of routes) {
+            router[route.type](route.value, route.handler);
+            console.log('Routed ' + route.type.toUpperCase() +
+                        ' requests at "' + route.value +
+                        '" to ' + constructor.name + '.' + route.handler.name);
+        }
+    };
+    middleWares.push(constructor);
+}
 
 // Decorator factory
-export function Route(type: RouteTypes, route: string) {
+export function Route(type: RouteType, route: string) {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        Reflect.defineMetadata(middlewareContainers, target, target[propertyKey]);
-        Reflect.defineMetadata(middlewareRoutes, route, target[propertyKey]);
-        Reflect.defineMetadata(middlewareRequestType, type, target[propertyKey]);
-        middleWares.push(target[propertyKey]);
+        const routes: RouteEntry[] = Reflect.getOwnMetadata(middlewareRoutes, target.constructor) || [];
+        routes.push({type: type, value: route, handler: target[propertyKey]} as RouteEntry);
+        Reflect.defineMetadata(middlewareRoutes, routes, target.constructor);
     };
 }
 
 export function registerMiddleWares(router: express.Router) {
     for (const middleWare of middleWares) {
-        const route = Reflect.getMetadata(middlewareRoutes, middleWare);
-        const container = Reflect.getMetadata(middlewareContainers, middleWare);
-        const requestType = Reflect.getMetadata(middlewareRequestType, middleWare) as RequestType;
-        router[requestType](route, middleWare.bind(middleWare));
-        console.log('Routed ' + requestType.toUpperCase() +
-                    ' requests at "' + route +
-                    '" to ' + container.constructor.name + '.' + middleWare.name);
+        Reflect.construct(middleWare, [])[registerSymbole](router);
     }
 }

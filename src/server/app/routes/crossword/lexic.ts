@@ -1,10 +1,11 @@
 import * as express from 'express';
-import { Route } from '../middle-ware';
+import { Route, MiddleWare } from '../middle-ware';
 
 export class Lexic {
     constructor() {}
 }
 
+@MiddleWare
 export class LexicMiddleWare {
     @Route('get', '/crossword/lexic/filter')
     public filter(req: express.Request, res: express.Response, next: express.NextFunction): void {

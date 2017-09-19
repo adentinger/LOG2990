@@ -1,6 +1,7 @@
 import * as express from 'express';
-import { Route } from '../middle-ware';
+import { Route, MiddleWare } from '../middle-ware';
 
+@MiddleWare
 export class CrosswordGamesMiddleWare {
     @Route('get', '/crossword/games/pending/:count')
     public pending(req: express.Request, res: express.Response, next: express.NextFunction): void {
