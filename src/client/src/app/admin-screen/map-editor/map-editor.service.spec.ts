@@ -60,7 +60,7 @@ describe('MapEditorService', () => {
         service['map'] = Object.create(disfunctionalMap);
         const CROSSING_LINES1: [Line, Line][] = [
             [
-                new Line(new Point(0, 2),  new Point(10, 0)),
+                new Line(new Point(0, 2),  new Point(10, 2)),
                 new Line(new Point(0, 10), new Point(2,  1))
             ]
         ];
@@ -73,8 +73,8 @@ describe('MapEditorService', () => {
         service['map'] = Object.create(disfunctionalMap2);
         const CROSSING_LINES3: [Line, Line][] = [
             [
-                new Line(new Point(0, 0),  new Point(10, 2)),
-                new Line(new Point(0, 10), new Point(2,  1))
+                new Line(new Point(0, 2),  new Point(10, 2)),
+                new Line(new Point(5, 5), new Point(5,  0))
             ]
         ];
         expect(service['map'].computeCrossingLines()).toEqual(CROSSING_LINES3);

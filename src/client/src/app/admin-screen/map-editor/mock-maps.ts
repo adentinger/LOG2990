@@ -60,7 +60,7 @@ export let disfunctionalMap: Map = new Map (
 );
 
 export let disfunctionalMap2: Map = new Map (
-    new Path([new Point(0, 0), new Point(10, 2), new Point(0, 10), new Point(2, 1), new Point(0, 0)]),
+    new Path([new Point(0, 2), new Point(10, 2), new Point(5, 5), new Point(5, 0), new Point(0, 0)]),
     'name',
     'description',
     'sdljhgso',
