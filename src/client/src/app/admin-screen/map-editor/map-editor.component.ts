@@ -35,7 +35,7 @@ export class MapEditorComponent implements OnInit {
                 break;
             }
             case RIGHT_MOUSE_BUTTON: {
-                this.undoLastPoint();
+                this.removePoint();
                 break;
             }
         }
@@ -46,7 +46,7 @@ export class MapEditorComponent implements OnInit {
         this.mapRenderer.draw();
     }
 
-    private undoLastPoint(): void {
+    private removePoint(): void {
         this.mapEditor.popPoint();
         this.mapRenderer.draw();
     }
