@@ -22,18 +22,18 @@ describe('MapRendererService', () => {
         expect(service).toBeTruthy();
     }));
 
-    it('should accept a context',
+    it('should accept a canvas',
        inject([MapRendererService, CanvasFactory],
               (service: MapRendererService, canvasFactory: CanvasFactory) => {
-                  service.context = canvasFactory.make().getContext('2d');
+                  service.canvas = canvasFactory.make();
               }));
 
     it('should refuse overriding existing context',
        inject([MapRendererService, CanvasFactory],
               (service: MapRendererService, canvasFactory: CanvasFactory) => {
-                  service.context = canvasFactory.make().getContext('2d');
+                  service.canvas = canvasFactory.make();
                   expect(() => {
-                      service.context = canvasFactory.make().getContext('2d');
+                      service.canvas = canvasFactory.make();
                   }).toThrowError(new RegExp('.*context.*'));
               }));
 

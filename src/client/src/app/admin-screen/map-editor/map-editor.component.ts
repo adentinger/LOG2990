@@ -11,7 +11,6 @@ import { Point } from './point';
     providers: [MapEditorService, MapRendererService]
 })
 export class MapEditorComponent implements OnInit {
-    private ctxt: CanvasRenderingContext2D;
     @ViewChild('editingArea') private editingArea: ElementRef;
 
     public width = 500;
@@ -21,16 +20,18 @@ export class MapEditorComponent implements OnInit {
                 private mapRenderer: MapRendererService) { }
 
     public ngOnInit(): void {
-        this.ctxt = this.editingArea.nativeElement.getContext('2d');
-        this.mapRenderer.context = this.ctxt;
+        const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
+        this.mapRenderer.canvas = CANVAS;
     }
 
     public addPoint(event: MouseEvent): void {
         this.mapEditor.pushPoint(new Point(event.offsetX, event.offsetY));
+        this.mapRenderer.draw();
     }
 
     public undoLastPoint(): void {
         this.mapEditor.popPoint();
+        this.mapRenderer.draw();
     }
 
     public mouseMoved(event: MouseEvent): void {
