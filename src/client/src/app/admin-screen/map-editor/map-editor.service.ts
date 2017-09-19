@@ -40,7 +40,7 @@ export class MapEditorService {
         return this.currentMap.path.points;
     }
 
-    public checkAngles(): [Point, Point, Point][] {
+    private checkAngles(): [Point, Point, Point][] {
         const MIN_ANGLE = Math.PI / 4;
         const POINTS = [];
         POINTS.push.apply(POINTS, this.currentMap.path.points);
@@ -61,7 +61,7 @@ export class MapEditorService {
         return BAD_ANGLES;
     }
 
-    public checkPathLoopBack(): boolean {
+    private checkPathLoopBack(): boolean {
         let finished = false;
 
         if (this.currentMap.path.points.length >= 3) {
@@ -121,7 +121,7 @@ export class MapEditorService {
         return false;
     }
 
-    public checkLinesCross(): [Line, Line][] {
+    private checkLinesCross(): [Line, Line][] {
         const POINTS = this.currentMap.path.points;
         const LINES_THAT_CROSS: [Line, Line][] = [];
         const LINES: Line[] = [];

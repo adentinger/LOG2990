@@ -54,16 +54,16 @@ describe('MapEditorService', () => {
         service['currentMap'] = Object.create(functionalMap1);
         expect(service['calculateAngle']({x: 1, y: 0}, {x: 0, y: 1})).toBeCloseTo(Math.PI / 2);
         expect(service['calculateAngle']({x: 1, y: 0}, {x: 1, y: 1})).toBeCloseTo(Math.PI / 4);
-        expect(service.checkAngles().length).toEqual(0);
+        expect(service['checkAngles']().length).toEqual(0);
         service['currentMap'] = Object.create(disfunctionalMap);
-        expect(service.checkAngles().length).toBeGreaterThan(0);
+        expect(service['checkAngles']().length).toBeGreaterThan(0);
     });
 
     it('should be able to check if a path loops back', () => {
         service['currentMap'] = Object.create(functionalMap1);
-        expect(service.checkPathLoopBack()).toBe(true);
+        expect(service['checkPathLoopBack']()).toBe(true);
         service['currentMap'] = Object.create(emptyMap);
-        expect(service.checkPathLoopBack()).toBe(false);
+        expect(service['checkPathLoopBack']()).toBe(false);
     });
 
     it('should be able to check if lines cross', () => {
@@ -74,11 +74,11 @@ describe('MapEditorService', () => {
                 new Line(new Point(0, 10), new Point(2,  1))
             ]
         ];
-        expect(service.checkLinesCross()).toEqual(CROSSING_LINES1);
+        expect(service['checkLinesCross']()).toEqual(CROSSING_LINES1);
 
         service['currentMap'] = Object.create(functionalMap1);
         const CROSSING_LINES2: [Line, Line][] = [];
-        expect(service.checkLinesCross()).toEqual(CROSSING_LINES2);
+        expect(service['checkLinesCross']()).toEqual(CROSSING_LINES2);
 
         service['currentMap'] = Object.create(disfunctionalMap2);
         const CROSSING_LINES3: [Line, Line][] = [
@@ -87,7 +87,7 @@ describe('MapEditorService', () => {
                 new Line(new Point(0, 10), new Point(2,  1))
             ]
         ];
-        expect(service.checkLinesCross()).toEqual(CROSSING_LINES3);
+        expect(service['checkLinesCross']()).toEqual(CROSSING_LINES3);
     });
 
     it('should be able to add a valid point', () => {
