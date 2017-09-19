@@ -17,6 +17,7 @@ export class MapRendererService implements Drawable {
     public set context(context: CanvasRenderingContext2D) {
         if (this.canvasContext === undefined) {
             this.canvasContext = context;
+            this.path = new MapPath(this.canvasContext, []);
         }
         else {
             throw new Error('Cannot change context of MapRendererService ' +

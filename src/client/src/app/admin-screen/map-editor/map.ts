@@ -14,8 +14,8 @@ export class Map {
     private type: string;
     private rating: number;
     private plays: number;
-    private height: number;
-    private width: number;
+    public height: number;
+    public width: number;
 
     constructor(path: Path = new Path(),
                 name: string = '',
