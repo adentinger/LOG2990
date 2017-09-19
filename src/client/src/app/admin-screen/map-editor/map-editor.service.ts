@@ -46,6 +46,7 @@ export class MapEditorService {
         const POINTS = [];
         POINTS.push.apply(POINTS, this.currentMap.path.points);
         POINTS.push(POINTS[0], POINTS[1]);
+
         const BAD_ANGLES: Array<[Point, Point, Point]> = [];
         for (let i = 0; i < POINTS.length - 2; i++) {
             const POINT1 = POINTS[i];
