@@ -1,17 +1,21 @@
-import { LexicMiddleWare } from './lexic';
+import { Lexic } from './lexic';
 import { expect } from 'chai';
 
 describe('The lexic MicroService', () => {
-
     it('should be created', () => {
-        expect(new LexicMiddleWare).toBeTruthy();
+        expect(new Lexic).to.not.throw().and.to.not.be.null('allo');
+    });
+
+    let lexic: Lexic;
+    beforeEach(() => {
+        lexic = new Lexic();
     });
 
     it('should filter', () => {
-        expect(component).toBeTruthy();
+        expect(lexic);
     });
 
     it('should seach definitions', () => {
-        expect(component).toBeTruthy();
+        expect(lexic);
     });
 });
