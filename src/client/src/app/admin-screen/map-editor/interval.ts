@@ -10,7 +10,7 @@ export class Interval {
         }
         else {
             this.lowerBound = secondBound;
-            this.lowerBound = firstBound;
+            this.upperBound = firstBound;
         }
     }
 
