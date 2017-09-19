@@ -61,22 +61,8 @@ export class MapEditorService {
         }
     }
 
-    private findMapLength(): [number, number] {
-        const POINTS = this.map.path.points;
-        let vector = Vector.fromPoints(POINTS[0], POINTS[0 + 1]);
-        const FIRST_STRETCH = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-
-        const LENGTH: [number, number] = [0, 0];
-        LENGTH[0] += FIRST_STRETCH;
-        for (let i = 0; i < this.map.path.points.length - 1; i++) {
-            vector = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
-            LENGTH[1] += Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-        }
-        return LENGTH;
-    }
-
     private addItem(item: Item): void {
-        const MAP_LENGTH = this.findMapLength();
+        const MAP_LENGTH = this.map.computeLength();
         if (item.type === 'puddle' && MAP_LENGTH[0] < item.position && item.position < MAP_LENGTH[1]) {
             this.map.puddles.push(item);
         }
