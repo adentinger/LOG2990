@@ -23,16 +23,16 @@ export class Map {
     public width: number;
 
     constructor(path: Path = new Path(),
-                name: string = '',
-                description: string = '',
-                type: string = 'Amateur',
-                potholes: Pothole[] = [],
-                puddles: Puddle[] = [],
-                speedBoosts: SpeedBoost[] = [],
-                rating: number = 0,
-                plays: number = 0,
-                height: number = 500,
-                width: number = 500) {
+        name: string = '',
+        description: string = '',
+        type: string = 'Amateur',
+        potholes: Pothole[] = [],
+        puddles: Puddle[] = [],
+        speedBoosts: SpeedBoost[] = [],
+        rating: number = 0,
+        plays: number = 0,
+        height: number = 500,
+        width: number = 500) {
         this.path = path;
         this.name = name;
         this.description = description;
@@ -57,9 +57,14 @@ export class Map {
     }
 
     public firstStretchLength(): number {
-        const POINT1 = this.path.points[0];
-        const POINT2 = this.path.points[1];
-        return Vector.fromPoints(POINT1, POINT2).norm();
+        if (this.path.points.length >= 2) {
+            const POINT1 = this.path.points[0];
+            const POINT2 = this.path.points[1];
+            return Vector.fromPoints(POINT1, POINT2).norm();
+        }
+        else {
+            throw new Error('Insufficient points');
+        }
     }
 
     public computeBadAngles(): [Point, Point, Point][] {

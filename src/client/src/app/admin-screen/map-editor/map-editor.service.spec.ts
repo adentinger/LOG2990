@@ -56,30 +56,6 @@ describe('MapEditorService', () => {
         expect(service['map'].isClosed()).toBe(false);
     });
 
-    it('should be able to check if lines cross', () => {
-        service['map'] = Object.create(disfunctionalMap);
-        const CROSSING_LINES1: [Line, Line][] = [
-            [
-                new Line(new Point(0, 2),  new Point(10, 2)),
-                new Line(new Point(0, 10), new Point(2,  1))
-            ]
-        ];
-        expect(service['map'].computeCrossingLines()).toEqual(CROSSING_LINES1);
-
-        service['map'] = Object.create(functionalMap1);
-        const CROSSING_LINES2: [Line, Line][] = [];
-        expect(service['map'].computeCrossingLines()).toEqual(CROSSING_LINES2);
-
-        service['map'] = Object.create(disfunctionalMap2);
-        const CROSSING_LINES3: [Line, Line][] = [
-            [
-                new Line(new Point(0, 2),  new Point(10, 2)),
-                new Line(new Point(5, 5), new Point(5,  0))
-            ]
-        ];
-        expect(service['map'].computeCrossingLines()).toEqual(CROSSING_LINES3);
-    });
-
     it('should be able to add a valid point', () => {
         service['map'] = Object.create(emptyMap);
         service['map']['height'] = 500;
