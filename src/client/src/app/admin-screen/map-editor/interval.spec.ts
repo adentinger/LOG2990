@@ -32,4 +32,14 @@ describe('Interval', () => {
         expect(INTERVAL.contains(NUMBER_IN_BOUND)).toBe(true);
         expect(INTERVAL.contains(NUMBER_OUT_OF_BOUND)).toBe(false);
     });
+
+    it('should verify is number is in bound', () => {
+        const LOWER_BOUND = 10;
+        const UPPER_BOUND = 100;
+        const NUMBER_IN_BOUND = 50;
+        const NUMBER_OUT_OF_BOUND = 1000;
+        const INTERVAL = new Interval(UPPER_BOUND, LOWER_BOUND);
+        expect(INTERVAL.contains(NUMBER_IN_BOUND)).toBe(true);
+        expect(INTERVAL.contains(NUMBER_OUT_OF_BOUND)).toBe(false);
+    });
 });

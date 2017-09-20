@@ -22,10 +22,6 @@ export class Interval {
         }
     }
 
-    public toString(): string {
-        return '[' + this.lowerBound + '; ' + this.upperBound + ']';
-    }
-
     public get lower(): number {
         return this.lowerBound;
     }
@@ -40,7 +36,6 @@ export class Interval {
     }
 
     public intersect(that: Interval): Interval {
-        console.log(this.toString(), that.toString());
         if (this.lower > that.upper || that.lower > this.upper) {
             return Interval.EMPTY;
         }
