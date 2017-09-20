@@ -61,10 +61,6 @@ export class MapEditorService {
         }
     }
 
-    public pointWithCoordinates(point: Point): Point {
-        return null;
-    }
-
     private addItem(item: Item): void {
         const FIRST_STRETCH_LENGTH = this.map.firstStretchLength();
         const MAP_LENGTH = this.map.computeLength();

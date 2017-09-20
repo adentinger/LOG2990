@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MapEditorService } from '../map-editor.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
+import { Point } from '../point';
 
 @Injectable()
 export class MapRendererService implements Drawable {
@@ -23,7 +24,7 @@ export class MapRendererService implements Drawable {
         }
         else {
             throw new Error('Cannot change context of MapRendererService ' +
-                            'once set.');
+                'once set.');
         }
     }
 
@@ -36,6 +37,13 @@ export class MapRendererService implements Drawable {
         else {
             throw new Error('Cannot draw map: context not set.');
         }
+    }
+
+    private pointWithCoordinates(point: Point): Point {
+        return null;
+    }
+
+    public moveCursorTo(point: Point): void {
     }
 
     private clear(): void {

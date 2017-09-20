@@ -127,36 +127,4 @@ describe('MapEditorService', () => {
         expect(service.path).toBe(functionalMap1.path);
     });
 
-    describe('pointWithCoordinates', () => {
-
-        const POINTS: Point[] = [
-            new Point(50,   50),
-            new Point(100, 100),
-            new Point(150, 150),
-            new Point(151, 149)
-        ];
-
-        beforeEach(() => {
-            POINTS.forEach((point: Point) => {
-                service.pushPoint(point);
-            });
-        });
-
-        it('should be able to find a point with given coordinates', () => {
-            const COORDINATES = new Point(98, 102);
-            expect(service.pointWithCoordinates(COORDINATES)).toEqual(POINTS[1]);
-        });
-
-        it('should not find a point when there is none around given coordinates', () => {
-            const COORDINATES = new Point(20, 50);
-            expect(service.pointWithCoordinates(COORDINATES)).toEqual(null);
-        });
-
-        it('should find the above point when two points ovrelap', () => {
-            const COORDINATES = new Point(150, 150);
-            expect(service.pointWithCoordinates(COORDINATES)).toEqual(POINTS[3]);
-        });
-
-    });
-
 });

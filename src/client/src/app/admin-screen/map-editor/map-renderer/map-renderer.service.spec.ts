@@ -2,6 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MapRendererService } from './map-renderer.service';
 import { MapEditorService } from '../map-editor.service';
+import { Point } from '../point';
 
 class CanvasFactory {
     constructor() {}
@@ -17,6 +18,14 @@ describe('MapRendererService', () => {
             providers: [MapRendererService, MapEditorService, CanvasFactory]
         });
     });
+
+    let mapRenderer: MapRendererService;
+    let mapEditor: MapEditorService;
+    beforeEach(inject([MapRendererService, MapEditorService],
+                      (renderer: MapRendererService, editor: MapEditorService) => {
+        mapRenderer = renderer;
+        mapEditor = editor;
+    }));
 
     it('should be created', inject([MapRendererService], (service: MapRendererService) => {
         expect(service).toBeTruthy();
@@ -42,4 +51,36 @@ describe('MapRendererService', () => {
             (service: MapRendererService) => {
                 expect(() => service.draw()).toThrowError(new RegExp('.*context.*'));
             }));
+
+    describe('moveCursorTo', () => {
+
+                const POINTS: Point[] = [
+                    new Point(50,   50),
+                    new Point(100, 100),
+                    new Point(150, 150),
+                    new Point(151, 149)
+                ];
+
+                beforeEach(() => {
+                    POINTS.forEach((point: Point) => {
+                        mapEditor.pushPoint(point);
+                    });
+                });
+
+                it('should be able to find a point with given coordinates', () => {
+                    const COORDINATES = new Point(98, 102);
+                    expect(mapRenderer.moveCursorTo(COORDINATES)).toEqual(POINTS[1]);
+                });
+
+                it('should not find a point when there is none around given coordinates', () => {
+                    const COORDINATES = new Point(20, 50);
+                    expect(mapRenderer.moveCursorTo(COORDINATES)).toEqual(null);
+                });
+
+                it('should find the above point when two points ovrelap', () => {
+                    const COORDINATES = new Point(150, 150);
+                    expect(mapRenderer.moveCursorTo(COORDINATES)).toEqual(POINTS[3]);
+                });
+
+            });
 });
