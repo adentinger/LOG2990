@@ -68,8 +68,19 @@ export class MapPath implements Drawable {
         });
     }
 
-    public pointWithCoordinates(coordinates: Point): Point {
-        return null;
+    public pointWithCoordinates(coordinates: Point): AbstractMapPoint {
+        let foundPoint: AbstractMapPoint = null;
+
+        this.points.slice().reverse().forEach((point: AbstractMapPoint) => {
+            const FOUND = (foundPoint != null);
+            if (point.isUnder(coordinates)) {
+                if (!FOUND) {
+                    foundPoint = point;
+                }
+            }
+        });
+        console.log('ret:', foundPoint);
+        return foundPoint;
     }
 
 }

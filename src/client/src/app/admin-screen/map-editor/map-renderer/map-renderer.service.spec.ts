@@ -2,7 +2,6 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MapRendererService } from './map-renderer.service';
 import { MapEditorService } from '../map-editor.service';
-import { Point } from '../point';
 
 class CanvasFactory {
     constructor() {}

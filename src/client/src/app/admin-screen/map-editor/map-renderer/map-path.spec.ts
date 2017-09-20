@@ -36,7 +36,7 @@ describe('MapPath', () => {
 
         it('should be able to find a point with given coordinates', () => {
             const COORDINATES = new Point(98, 102);
-            expect(mapPath.pointWithCoordinates(COORDINATES)).toEqual(POINTS[1]);
+            expect(mapPath.pointWithCoordinates(COORDINATES).equals(POINTS[1]));
         });
 
         it('should not find a point when there is none around given coordinates', () => {
@@ -46,7 +46,7 @@ describe('MapPath', () => {
 
         it('should find the above point when two points ovrelap', () => {
             const COORDINATES = new Point(150, 150);
-            expect(mapPath.pointWithCoordinates(COORDINATES)).toEqual(POINTS[3]);
+            expect(mapPath.pointWithCoordinates(COORDINATES).equals(POINTS[3]));
         });
 
     });
