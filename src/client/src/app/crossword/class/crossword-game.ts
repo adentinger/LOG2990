@@ -1,6 +1,6 @@
 export class CrosswordGame {
-    player1: string;
-    player2: string;
-    gameMode: string;
-    difficulty: string;
+    public player1: string;
+    public player2: string;
+    public gameMode: string;
+    public difficulty: string;
 }

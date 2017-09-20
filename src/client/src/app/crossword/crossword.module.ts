@@ -10,6 +10,7 @@ import { GameDetailsComponent } from './game-details/game-details.component';
 import { PlayerInfoComponent } from './game-details/player-info/player-info.component';
 import { FormsModule } from '@angular/forms';
 import { ConfigMenuService } from './config-menu/config-menu.service';
+import { SimpleTimer } from 'ng2-simple-timer'
 
 @NgModule({
     imports: [
@@ -27,7 +28,8 @@ import { ConfigMenuService } from './config-menu/config-menu.service';
     ],
     providers: [
         HttpClient,
-        ConfigMenuService
+        ConfigMenuService,
+        SimpleTimer,
     ],
     exports: [
         CrosswordComponent
