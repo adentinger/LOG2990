@@ -18,40 +18,76 @@ class Grid {
     }
 
     public putWordVertical(word: string, column: number) {
-        this.temporaryGridForVertical.push(word);
 
         let rowToWriteOn: number;
         if ((column >= 0) && (column <= 2)) {
             rowToWriteOn = 0;
-        }else if ((column >= 3) && (column <= 6)) {
+        } else if ((column >= 3) && (column <= 5)) {
             rowToWriteOn = 3;
-        }else if ((column >= 7) && (column <= 9)) {
+        }else if ((column >= 6) && (column <= 8)) {
             rowToWriteOn = 7;
+        }else if (column === 9) {
+            rowToWriteOn = 2;
         }
 
         for (let i = 0; i < word.length; i++) {
-            this.grid[rowToWriteOn + i][column] = this.temporaryGridForVertical[this.temporaryGridForVertical.length - 1][i];
+            this.grid[rowToWriteOn + i][column] = word[i];
         }
-        this.grid[rowToWriteOn + word.length][column] = '0';
     }
 
     public putWordAcross(word: string, row: number) {
-        this.temporaryGridForAcross.push(word);
-        for (let i = 0; i < word.length; i++) {
-            this.grid[row][i] = this.temporaryGridForAcross[this.temporaryGridForAcross.length - 1][i];
+
+        let columnToWriteOn: number;
+        if ((row >= 0) && (row <= 2)) {
+            columnToWriteOn = 0;
+        }else if ((row >= 3) && (row <= 6)) {
+            columnToWriteOn = 3;
+        }else if ((row >= 7) && (row <= 9)) {
+            columnToWriteOn = 8;
         }
-        this.grid[row][word.length] = '0';
+        if (row < 7) {
+            for (let i = 0; i < word.length; i++) {
+                this.grid[row][columnToWriteOn + i] = word[i];
+            }
+        }else {
+            let wordIndex = word.length - 1;
+            for (let i = 0; i < word.length; i++) {
+                this.grid[row][columnToWriteOn - i] = word[wordIndex];
+                wordIndex--;
+            }
+        }
     }
 
     public pushOnTheGridAndReinitialiseTemporaryGrid() {
-        for (let i = 0; i < this.temporaryGridForAcross.length; i ++) {
-            this.gridForAcross.push(this.temporaryGridForAcross[i]);
+        if (this.gridForVertical.length === 6) { // when on case 3
+            this.temporaryGridForVertical.reverse();
         }
         for (let i = 0; i < this.temporaryGridForVertical.length; i ++) {
             this.gridForVertical.push(this.temporaryGridForVertical[i]);
         }
+        for (let i = 0; i < this.temporaryGridForAcross.length; i ++) {
+            this.gridForAcross.push(this.temporaryGridForAcross[i]);
+        }
+
         this.temporaryGridForAcross = [];
         this.temporaryGridForVertical = [];
+    }
+
+    public alreadyChoosen(wordToCheck: string) {
+        let alreadyChoosen = false;
+
+        for (let i = 0; i < this.gridForAcross.length; i++) {
+            if (this.gridForVertical[i] === wordToCheck) {
+                alreadyChoosen = true;
+            }
+        }
+        for (let i = 0; i < this.gridForVertical.length; i++) {
+            if (this.gridForVertical[i] === wordToCheck) {
+                alreadyChoosen = true;
+            }
+        }
+
+        return alreadyChoosen;
     }
 
     public returnArrayOfWordsThatFitsAcrossCaseOne(onColumnNow: number) { // on veu mettre un mot la, prend la colonne
@@ -109,7 +145,7 @@ class Grid {
 
             firstLettersWordsArray.push(returnedWord);
 
-            console.log(beginningOfTheWordOnAcrossString + ' ' + returnedWord);
+            console.log(beginningOfTheWordOnAcrossString + '  ' + returnedWord);
         }
         return firstLettersWordsArray;
     }
@@ -148,7 +184,7 @@ class Grid {
         return returnedWord;
     }
 
-    public  returnARandomWordFromSuggestionsCaseTwo(beginningOfTheWordAcross: string, row: number) {
+    public returnARandomWordFromSuggestionsCaseTwo(beginningOfTheWordAcross: string, row: number) {
         let returnedWord;
         const theWords: string[] = [];
         for (let i = 0; i < lexicon.length; i++) {
@@ -159,7 +195,7 @@ class Grid {
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 1) {
-                        if (lexicon[i].length <= 3) {  // coordonnée (4,3) ---->
+                        if (lexicon[i].length <= 3) {
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 2) {
@@ -175,6 +211,7 @@ class Grid {
             }
         }
 
+        // retourne un mot random parmi ceux trouvés
         returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
@@ -195,7 +232,7 @@ class Grid {
                         if (lexicon[i].length <= 3) { // ici on parle du mot quon veut placer en horizontal (7,7) ---->
                             theWords.push(lexicon[i]);
                         }
-                    } else if (row === 1) {
+                    }else if (row === 1) {
                         if (lexicon[i].length <= 4 && lexicon[i].length >= 3) {   // coordonnée (8,7) <----
                             theWords.push(lexicon[i]);
                         }
@@ -228,58 +265,25 @@ function suggestionsContainsNothing(arrayOfSuggestions: string[]) {
     return false;
 }
 
-
-
-
-// cree un puzzle
+// create a puzzle
 const puzzle = new Grid();
 let threeWordsSuggestionsOut: string[] = [];
 
-initialisation();
-for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
-    puzzle.putWordAcross(threeWordsSuggestionsOut[i], i);
-}
-puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
-
-
-threeWordsSuggestionsOut = [];
-initialisationCaseTwo();
-for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
-    puzzle.putWordAcross(threeWordsSuggestionsOut[i], i);
-}
-puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
-
-
-threeWordsSuggestionsOut = [];
-initialisationCaseThree();
-for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
-    puzzle.putWordAcross(threeWordsSuggestionsOut[i], i);
-}
-puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
-
-
-// finalement on push un dernier mot en vertical
-puzzle.gridForVertical.push((getWordOfDesiredLength(4, 5)));
-
-console.dir(puzzle.gridForVertical);
-console.dir(puzzle.gridForAcross);
-
-
 function initialisation() {
     const word = getWordOfLengthThreeToSix();
-    puzzle.putWordVertical(word, 0);
+    puzzle.temporaryGridForVertical.push(word);
     findSecondWord(word);
 }
 
 function initialisationCaseTwo() {
     const word = getWordOfLengthFour();
-    puzzle.putWordVertical(word, 0);
+    puzzle.temporaryGridForVertical.push(word);
     findSecondWordCaseTwo(word);
 }
 
-function initialisationCaseThree()  {
+function initialisationCaseThree() {
     const word = getWordOfLengthThree();
-    puzzle.putWordVertical(word, 2);
+    puzzle.temporaryGridForVertical.push(word);
     findSecondWordCaseThree(word);
 }
 
@@ -288,7 +292,7 @@ function findSecondWord(word: string) {
     let counter = 25;
     while (counter !== 0) {
         word = getWordOfLengthFour();
-        puzzle.putWordVertical(word, 1);
+        puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(1);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
@@ -311,7 +315,7 @@ function findSecondWordCaseTwo(word: string) {
     let counter = 25;
     while (counter !== 0) {
         word = getWordOfLengthFour();
-        puzzle.putWordVertical(word, 1);
+        puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseTwo(1);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
@@ -334,13 +338,13 @@ function findSecondWordCaseThree(word: string) {
     let counter = 25;
     while (counter !== 0) {
         word = getWordOfLengthThree();
-        puzzle.putWordVertical(word, 1);
+        puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseThree(1);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        }else {
+        } else {
             break;
         }
     }
@@ -357,7 +361,7 @@ function findThirdWord(word: string, threeWordsSuggestions: string[]) {
     let counter = 25;
     while (counter !== 0) {
         word = getWordOfLengthThree();
-        puzzle.putWordVertical(word, 2);
+        puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(2);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
@@ -380,13 +384,13 @@ function findThirdWordCaseTwo(word: string, threeWordsSuggestions: string[]) {
     let counter = 25;
     while (counter !== 0) {
         word = getWordOfLengthFour();
-        puzzle.putWordVertical(word, 2);
+        puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseTwo(2);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        }else {
+        } else {
             break;
         }
     }
@@ -403,13 +407,13 @@ function findThirdWordCaseThree(word: string, threeWordsSuggestions: string[]) {
     let counter = 25;
     while (counter !== 0) {
         word = getWordOfLengthThree();
-        puzzle.putWordVertical(word, 0);
+        puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseThree(2);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        }else {
+        } else {
             break;
         }
     }
@@ -428,10 +432,6 @@ function getWordOfLengthThreeToSix() {
     return getWordOfDesiredLength(3, 6);
 }
 
-// pour le cas 1
-/*function getWordOfLengthThreeToFour() {
-    return getWordOfDesiredLength(3, 4);
-}*/
 
 // pour le cas 1 et 3
 function getWordOfLengthThree() {
@@ -460,7 +460,7 @@ function getRandomIndex(min: number, max: number) {
     return (Math.floor(Math.random() * (max - min)) + min);
 }
 
-/*function formatGrid(puzzle:Grid){
+function formatGrid(crossword: Grid) {
     for (let index = 0; index < puzzle.grid.length; index++) {
         for (let j = 0; j < puzzle.grid[index].length; j++) {
             if (!puzzle.grid[index][j]) {
@@ -468,10 +468,49 @@ function getRandomIndex(min: number, max: number) {
             }
         }
     }
-}*/
+}
 
 function reverseString(str: string) {
-    const  splitString = str.split('');
-    const  reverseArray = splitString.reverse();
+    const splitString = str.split('');
+    const reverseArray = splitString.reverse();
     return reverseArray.join('');
 }
+
+initialisation();
+for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
+    puzzle.temporaryGridForAcross.push(threeWordsSuggestionsOut[i]);
+}
+puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
+
+
+threeWordsSuggestionsOut = [];
+initialisationCaseTwo();
+for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
+    puzzle.temporaryGridForAcross.push(threeWordsSuggestionsOut[i]);
+}
+puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
+
+
+threeWordsSuggestionsOut = [];
+initialisationCaseThree();
+for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
+    puzzle.temporaryGridForAcross.push(threeWordsSuggestionsOut[i]);
+}
+puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
+
+// finaly we push a word on last column
+puzzle.gridForVertical.push((getWordOfDesiredLength(4, 5)));
+
+console.dir(puzzle.gridForVertical);
+console.dir(puzzle.gridForAcross);
+
+for (let i = 0; i < puzzle.gridForVertical.length; i++) {
+    puzzle.putWordVertical(puzzle.gridForVertical[i], i);
+}
+
+for (let i = 0; i < puzzle.gridForAcross.length; i++) {
+    puzzle.putWordAcross(puzzle.gridForAcross[i], i);
+}
+
+formatGrid(puzzle);
+console.dir(puzzle.grid);
