@@ -28,9 +28,7 @@ class Grid {
         }
 
         for (let i = 0; i < word.length; i++) {
-            if (word[i] !== '\r') {
-                this.grid[rowToWriteOn + i][column] = this.gridForVertical[this.gridForVertical.length - 1][i];
-            }
+            this.grid[rowToWriteOn + i ][column] = this.gridForVertical[this.gridForVertical.length - 1][i];
         }
         this.grid[word.length][column] = '0';
     }
@@ -38,14 +36,13 @@ class Grid {
     public putWordAcross(word: string, row: number) {
         this.gridForAcross.push(word);
         for (let i = 0; i < word.length; i++) {
-            if (word[i] !== '\r') {
-                this.grid[row][i] = this.gridForAcross[this.gridForAcross.length - 1][i];
-            }
+            this.grid[row][i] = this.gridForAcross[this.gridForAcross.length - 1][i];
         }
         this.grid[row][word.length] = '0';
     }
 
     public returnArrayOfWordsThatFitsAcrossCaseOne(onColumnNow: number) {
+
         const threeWordsArray: string[] = [];
         let beginningOfTheWordOnAcross: string[] = [];
         for (let row = 0; row < 3; row++) { // pour les trois premieres rangées
@@ -53,16 +50,17 @@ class Grid {
                 beginningOfTheWordOnAcross.push(this.gridForVertical[column][row]);
             }
             const beginningOfTheWordOnAcrossString: string = beginningOfTheWordOnAcross.join('');
-
             beginningOfTheWordOnAcross = [];
 
             const returnedWord = this.returnARandomWordFromSuggestionsCaseOne(beginningOfTheWordOnAcrossString, row);
 
             threeWordsArray.push(returnedWord);
+
             console.log(beginningOfTheWordOnAcrossString + ' ' + returnedWord);
         }
         return threeWordsArray;
     }
+
 
     public returnARandomWordFromSuggestionsCaseOne(beginningOfTheWordAcross: string, row: number) {
         let returnedWord;
@@ -71,21 +69,22 @@ class Grid {
             if (lexicon[i].substring(0, beginningOfTheWordAcross.length) === beginningOfTheWordAcross) {
                 if (((lexicon[i].substring(0, beginningOfTheWordAcross.length).length)) > 0) {
                     if (row === 0) {
-                        if (lexicon[i].length <= 10) {
+                        if (lexicon[i].length <= 10 && lexicon[i].length >= 3) {
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 1) {
-                        if (lexicon[i].length <= 4) {
+                        if (lexicon[i].length <= 4 && lexicon[i].length >= 3) {
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 2) {
-                        if (lexicon[i].length <= 3) {
+                        if (lexicon[i].length === 3) {
                             theWords.push(lexicon[i]);
                         }
                     }
                 }
             }
         }
+
         returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
@@ -107,77 +106,84 @@ function suggestionsContainsNothing(arrayOfSuggestions: string[]) {
 }
 
 
+
 const puzzle = new Grid();
 
+let threeWordsSuggestionsOut: string[] = [];
 
-let word = getWordOfLengthThreeToSix();
-puzzle.putWordVertical(word, 0);
+initialisation();
 
-let threeWordsSuggestions: string[] = [];
-let completed = false;
-while (!completed) {
-    word = getWordOfLengthFour();
-    puzzle.putWordVertical(word, 1);
-    threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(1);
-
-    if (suggestionsContainsNothing(threeWordsSuggestions)) {
-        puzzle.gridForVertical.pop();
-    }else {
-        completed = true;
-    }
+function initialisation() {
+    const word = getWordOfLengthThreeToSix();
+    puzzle.putWordVertical(word, 0);
+    findSecondWord(word);
 }
 
+function findSecondWord(word: string) {
+    let threeWordsSuggestions: string[] = [];
+    let counter = 25;
+    while (counter !== 0) {
+        word = getWordOfLengthFour();
+        console.log('--------------------------' + word);
+        puzzle.putWordVertical(word, 1);
+        threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(1);
 
-threeWordsSuggestions = [];
-completed = false;
-while (!completed) {
-    word = getWordOfLengthThree();
-    puzzle.putWordVertical(word, 2);
-    threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(2);
-
-    if (suggestionsContainsNothing(threeWordsSuggestions)) {
-        puzzle.gridForVertical.pop();
-    }else {
-        completed = true;
-    }
-}
-
-for (let i = 0; i < threeWordsSuggestions.length; i++) {
-    puzzle.gridForAcross.push(threeWordsSuggestions[i]);
-}
-
-function formatGrid(crossword: Grid) {
-    for (let index = 0; index < crossword.grid.length; index++) {
-        for (let j = 0; j < crossword.grid[index].length; j++) {
-            if (!crossword.grid[index][j]) {
-                crossword.grid[index][j] = ' ';
-            }
+        if (suggestionsContainsNothing(threeWordsSuggestions)) {
+            puzzle.gridForVertical.pop();
+            counter--;
+        }else {
+            break;
         }
     }
+    if (counter === 0) {
+        puzzle.gridForVertical.pop();
+        initialisation();
+    }else {
+        findThirdWord(word, threeWordsSuggestions);
+    }
 }
+
+
+function findThirdWord(word: string, threeWordsSuggestions: string[]) {
+    threeWordsSuggestions = [];
+    let counter = 25;
+    while (counter !== 0) {
+        word = getWordOfLengthThree();
+        console.log('-------------------------------------------' + word);
+        puzzle.putWordVertical(word, 2);
+        threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(2);
+
+        if (suggestionsContainsNothing(threeWordsSuggestions)) {
+            puzzle.gridForVertical.pop();
+            counter--;
+        }else {
+
+            break;
+        }
+    }
+    if (counter === 0) {
+        puzzle.gridForVertical.pop();
+        findSecondWord(word);
+    }else {
+        threeWordsSuggestionsOut = threeWordsSuggestions;
+    }
+}
+
+
+for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
+    puzzle.putWordAcross(threeWordsSuggestionsOut[i], i);
+}
+
 
 formatGrid(puzzle);
 console.dir(puzzle);
 
-
-
-
-
-/* function getWordComparaison(beginningOfWord:string[]){
-    for (let i = 0; i < lexicon.length; i++) {
-        for (let j = 0; j < beginningOfWord.length; j++) {
-            if (lexicon[i][j] == beginningOfWord[j]){
-                return true;
-            }
-        }
-    }
-} */
-
+//  pour le cas 1
 function getWordOfLengthThreeToSix() {
     return getWordOfDesiredLength(3, 6);
 }
 
-// pour le cas 1
+//  pour le cas 1
 /* function getWordOfLengthThreeToFour() {
     return getWordOfDesiredLength(3, 4);
 } */
@@ -209,3 +215,12 @@ function getRandomIndex(min: number, max: number) {
     return (Math.floor(Math.random() * (max - min)) + min);
 }
 
+function formatGrid(crossword: Grid) {
+    for (let index = 0; index < crossword.grid.length; index++) {
+        for (let j = 0; j < crossword.grid[index].length; j++) {
+            if (!crossword.grid[index][j]) {
+                 crossword.grid[index][j] = ' ';
+            }
+        }
+    }
+}
