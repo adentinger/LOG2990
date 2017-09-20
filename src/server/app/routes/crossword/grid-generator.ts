@@ -22,7 +22,7 @@ class Grid {
         let rowToWriteOn: number;
         if ((column >= 0) && (column <= 2)) {
             rowToWriteOn = 0;
-        } else if ((column >= 3) && (column <= 5)) {
+        }else if ((column >= 3) && (column <= 5)) {
             rowToWriteOn = 3;
         }else if ((column >= 6) && (column <= 8)) {
             rowToWriteOn = 7;
@@ -45,6 +45,7 @@ class Grid {
         }else if ((row >= 7) && (row <= 9)) {
             columnToWriteOn = 8;
         }
+
         if (row < 7) {
             for (let i = 0; i < word.length; i++) {
                 this.grid[row][columnToWriteOn + i] = word[i];
@@ -131,7 +132,6 @@ class Grid {
     }
 
     public returnArrayOfWordsThatFitsAcrossCaseThree(onColumnNow: number) {
-
         const firstLettersWordsArray: string[] = [];
         let beginningOfTheWordOnAcross: string[] = [];
         for (let row = 0; row < 3; row++) { // pour les trois premieres rangées
@@ -145,11 +145,10 @@ class Grid {
 
             firstLettersWordsArray.push(returnedWord);
 
-            console.log(beginningOfTheWordOnAcrossString + '  ' + returnedWord);
+            console.log(beginningOfTheWordOnAcrossString + ' ' + returnedWord);
         }
         return firstLettersWordsArray;
     }
-
 
     public returnARandomWordFromSuggestionsCaseOne(beginningOfTheWordAcross: string, row: number) {
         let returnedWord;
@@ -162,10 +161,10 @@ class Grid {
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 1) {
-                        if (lexicon[i].length <= 4 && lexicon[i].length >= 3) {  // coordonnée (1,0) ---->
+                        if (lexicon[i].length <= 4 && lexicon[i].length >= 3) {  //  coordonnée (1,0) ---->
                             theWords.push(lexicon[i]);
                         }
-                    }else if (row === 2) {
+                    } else if (row === 2) {
                         if (lexicon[i].length === 3) {   // coordonnée (2,0) ---->
                             theWords.push(lexicon[i]);
                         }
@@ -195,7 +194,7 @@ class Grid {
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 1) {
-                        if (lexicon[i].length <= 3) {
+                        if (lexicon[i].length <= 3) {  // coordonnée (4,3) ---->
                             theWords.push(lexicon[i]);
                         }
                     }else if (row === 2) {
@@ -254,6 +253,27 @@ class Grid {
 
         return returnedWord;
     }
+
+    public getWordOfDesiredLength(lengthMin: number, lengthMax: number) {
+        const desiredWords: string[] = [];
+        for (let i = 0 ; i < lexicon.length; i++) {
+            if ((lexicon[i].length >= lengthMin) && (lexicon[i].length <= lengthMax)) {
+                desiredWords.push(lexicon[i]);
+            }
+        }
+
+        let desiredWordVerified: string;
+        let alreadyChosen = false;
+        do {
+            desiredWordVerified = desiredWords[getRandomIndex(0, desiredWords.length - 1)];
+            alreadyChosen = wordVerification(desiredWordVerified, this);
+
+        }while (alreadyChosen === true);
+        desiredWordVerified =  wordFormatting(desiredWordVerified);
+        return desiredWords[getRandomIndex(0, desiredWords.length - 1)];
+
+        // à remplacé par envoie et reception de requête du service lexicale
+    }
 }
 
 function suggestionsContainsNothing(arrayOfSuggestions: string[]) {
@@ -270,7 +290,7 @@ const puzzle = new Grid();
 let threeWordsSuggestionsOut: string[] = [];
 
 function initialisation() {
-    const word = getWordOfLengthThreeToSix();
+    const word = getWordOfLengthThreeToSix(puzzle);
     puzzle.temporaryGridForVertical.push(word);
     findSecondWord(word);
 }
@@ -282,7 +302,7 @@ function initialisationCaseTwo() {
 }
 
 function initialisationCaseThree() {
-    const word = getWordOfLengthThree();
+    const word = getWordOfLengthThree(puzzle);
     puzzle.temporaryGridForVertical.push(word);
     findSecondWordCaseThree(word);
 }
@@ -337,21 +357,21 @@ function findSecondWordCaseThree(word: string) {
     let threeWordsSuggestions: string[] = [];
     let counter = 25;
     while (counter !== 0) {
-        word = getWordOfLengthThree();
+        word = getWordOfLengthThree(puzzle);
         puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseThree(1);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        } else {
+        }else {
             break;
         }
     }
     if (counter === 0) {
         puzzle.temporaryGridForVertical.pop();
         initialisationCaseThree();
-    }else {
+    } else {
         findThirdWordCaseThree(word, threeWordsSuggestions);
     }
 }
@@ -360,14 +380,14 @@ function findThirdWord(word: string, threeWordsSuggestions: string[]) {
     threeWordsSuggestions = [];
     let counter = 25;
     while (counter !== 0) {
-        word = getWordOfLengthThree();
+        word = getWordOfLengthThree(puzzle);
         puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseOne(2);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        }else {
+        } else {
             break;
         }
     }
@@ -390,14 +410,14 @@ function findThirdWordCaseTwo(word: string, threeWordsSuggestions: string[]) {
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        } else {
+        }else {
             break;
         }
     }
     if (counter === 0) {
         puzzle.temporaryGridForVertical.pop();
         findSecondWordCaseTwo(word);
-    }else {
+    } else {
         threeWordsSuggestionsOut = threeWordsSuggestions;
     }
 }
@@ -406,14 +426,14 @@ function findThirdWordCaseThree(word: string, threeWordsSuggestions: string[]) {
     threeWordsSuggestions = [];
     let counter = 25;
     while (counter !== 0) {
-        word = getWordOfLengthThree();
+        word = getWordOfLengthThree(puzzle);
         puzzle.temporaryGridForVertical.push(word);
         threeWordsSuggestions = puzzle.returnArrayOfWordsThatFitsAcrossCaseThree(2);
 
         if (suggestionsContainsNothing(threeWordsSuggestions)) {
             puzzle.temporaryGridForVertical.pop();
             counter--;
-        } else {
+        }else {
             break;
         }
     }
@@ -428,31 +448,20 @@ function findThirdWordCaseThree(word: string, threeWordsSuggestions: string[]) {
 // les fonctions suivantes c'est pour trouver les mots en vertical
 
 // pour le cas 1
-function getWordOfLengthThreeToSix() {
-    return getWordOfDesiredLength(3, 6);
+function getWordOfLengthThreeToSix(crossword: Grid) {
+    return crossword.getWordOfDesiredLength(3, 6);
 }
 
-
 // pour le cas 1 et 3
-function getWordOfLengthThree() {
-    return getWordOfDesiredLength(3, 3);
+function getWordOfLengthThree(crossword: Grid) {
+    return crossword.getWordOfDesiredLength(3, 3);
 }
 
 // pour le cas 2
 function getWordOfLengthFour() {
-    return getWordOfDesiredLength(4, 4);
+    return puzzle.getWordOfDesiredLength(4, 4);
 }
 
-function getWordOfDesiredLength(lengthMin: number, lengthMax: number) {
-    const desiredWords: string[] = [];
-    for (let i = 0 ; i < lexicon.length; i++) {
-        if ((lexicon[i].length >= lengthMin) && (lexicon[i].length <= lengthMax)) {
-            desiredWords.push(lexicon[i]);
-        }
-    }
-
-    return desiredWords[getRandomIndex(0, desiredWords.length - 1)];
-}
 
 function getRandomIndex(min: number, max: number) {
     min = Math.ceil(min);
@@ -461,10 +470,10 @@ function getRandomIndex(min: number, max: number) {
 }
 
 function formatGrid(crossword: Grid) {
-    for (let index = 0; index < puzzle.grid.length; index++) {
-        for (let j = 0; j < puzzle.grid[index].length; j++) {
-            if (!puzzle.grid[index][j]) {
-                puzzle.grid[index][j] = ' ';
+    for (let index = 0; index < crossword.grid.length; index++) {
+        for (let j = 0; j < crossword.grid[index].length; j++) {
+            if (!crossword.grid[index][j]) {
+                crossword.grid[index][j] = ' ';
             }
         }
     }
@@ -499,7 +508,7 @@ for (let i = 0; i < threeWordsSuggestionsOut.length; i++) {
 puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
 
 // finaly we push a word on last column
-puzzle.gridForVertical.push((getWordOfDesiredLength(4, 5)));
+puzzle.gridForVertical.push((puzzle.getWordOfDesiredLength(4, 5)));
 
 console.dir(puzzle.gridForVertical);
 console.dir(puzzle.gridForAcross);
@@ -514,3 +523,42 @@ for (let i = 0; i < puzzle.gridForAcross.length; i++) {
 
 formatGrid(puzzle);
 console.dir(puzzle.grid);
+
+function noAccent(word: string) {
+    const accent = [
+        /[\300-\306]/g, /[\340-\346]/g, // A, a
+        /[\310-\313]/g, /[\350-\353]/g, // E, e
+        /[\314-\317]/g, /[\354-\357]/g, // I, i
+        /[\322-\330]/g, /[\362-\370]/g, // O, o
+        /[\331-\334]/g, /[\371-\374]/g, // U, u
+        /[\321]/g, /[\361]/g, // N, n
+        /[\307]/g, /[\347]/g, // C, c
+    ];
+    const noAccent = ['A', 'a', 'E', 'e', 'I', 'i', 'O', 'o', 'U', 'u', 'N', 'n', 'C', 'c'];
+
+    for (let i = 0; i < accent.length; i++) {
+        word = word.replace(accent[i], noAccent[i]);
+    }
+
+    return word;
+}
+
+function noApostropheAndDash(word: string) {
+    word = word.replace(/-/g, '');
+    word = word.replace(/'/g, '');
+    return word;
+}
+
+function wordFormatting(word: string) {
+    word = noAccent(word);
+    word = noApostropheAndDash(word);
+    return word;
+}
+
+function wordVerification(word: string, crossword: Grid) {
+    if (crossword.gridForVertical.indexOf(word) > -1 && crossword.gridForAcross.indexOf(word) > -1) {
+        return true;
+    }else if (crossword.gridForVertical.indexOf(word) === -1 && crossword.gridForAcross.indexOf(word) === -1) {
+        return false;
+    }
+}
