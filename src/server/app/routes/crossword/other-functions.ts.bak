@@ -1,0 +1,78 @@
+import { writeFileSync, readFileSync } from "fs";
+/*import {Word, Difficulty, Grid} from './grid'*/
+
+export let lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
+for (var i = 0; i < lexicon.length; i++) {
+    lexicon[i] = lexicon[i].slice(0, -1);
+}
+
+/*export function formatGrid(puzzle:Grid){
+    for (let index = 0; index < puzzle.grid.length; index++) {
+        for (let j = 0; j < puzzle.grid[index].length; j++) {
+            if (!puzzle.grid[index][j]) {
+                puzzle.grid[index][j] = ' ';
+            }
+        }
+    }
+}*/
+
+export function getRandomIndex(min:number, max:number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    let randomNumber:number = 0;
+
+    return randomNumber = Math.floor(Math.random() * (max - min)) + min;       
+}
+
+export function getRandomWord(columnIndex: number){
+    let random:number;
+    let completed = false;
+
+    do {
+        random = getRandomIndex(0, lexicon.length-1);
+        if (columnIndex === 0) {
+            if ((lexicon[random].length > 3) && (lexicon[random].length < 7)) {
+                completed = true;                
+            }
+        }
+        else if (columnIndex === 1) {
+            if (lexicon[random].length === (4)) {
+                completed = true;                
+            }
+        }
+        else if (columnIndex === 2) {
+            if (lexicon[random].length === 3) {
+                completed = true;                
+            }
+        }
+
+    } while (!completed);
+
+    return lexicon[random];
+}
+
+export function searchWordSuggestionsFixedLength(length:number){
+    for (let i = 0 ; i < lexicon.length; i++){
+        if (lexicon[i].length == length){
+            return lexicon[i];
+        }
+    }
+}
+
+export function getWord (availableSpace:number){
+    for (let i = 0; i < lexicon.length; i++) {
+        if (lexicon[i].length == availableSpace){
+             return lexicon[i];
+        }
+    }
+}
+
+export function getWordComparaison(beginningOfWord:string[]){
+    for (let i = 0; i < lexicon.length; i++) {
+        for (let j = 0; j < beginningOfWord.length; j++) {
+            if (lexicon[i][j] == beginningOfWord[j]){
+                return true;
+            }
+        }
+    }
+}
