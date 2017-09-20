@@ -7,7 +7,7 @@ import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { BoardComponent } from './board/board.component';
 import { DefinitionFieldComponent } from './definition-field/definition-field.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { GameDetailsComponent } from "./game-details/game-details.component";
+import { GameDetailsComponent } from './game-details/game-details.component';
 
 describe('CrosswordComponent', () => {
     let component: CrosswordComponent;
