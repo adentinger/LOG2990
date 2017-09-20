@@ -63,10 +63,8 @@ describe('Line', () => {
             const VERTICAL_LINE_XING = makeLine(2, 1, 2, 3);
             const VERTICAL_LINE_NOT_XING = makeLine(2, 1, 2, 1.99);
 
-            HORIZONTAL_LINE.print = VERTICAL_LINE_XING.print = console.log;
             expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).toBe(IntersectionType.INTERSECT_POINT);
             expect(VERTICAL_LINE_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_POINT);
-            HORIZONTAL_LINE.print = VERTICAL_LINE_XING.print = () => {};
             expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_NOT_XING)).toBe(IntersectionType.INTERSECT_NONE);
             expect(VERTICAL_LINE_NOT_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_NONE);
         });
