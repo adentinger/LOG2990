@@ -40,12 +40,8 @@ export class MapRendererService implements Drawable {
         }
     }
 
-    private pointWithCoordinates(coordinates: Point): Point {
-        return null;
-    }
-
     public moveCursorTo(coordinates: Point): void {
-        this.activePoint = this.pointWithCoordinates(coordinates);
+        this.activePoint = this.path.pointWithCoordinates(coordinates);
     }
 
     private clear(): void {

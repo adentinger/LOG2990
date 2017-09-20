@@ -68,4 +68,8 @@ export class MapPath implements Drawable {
         });
     }
 
+    public pointWithCoordinates(coordinates: Point): Point {
+        return null;
+    }
+
 }
