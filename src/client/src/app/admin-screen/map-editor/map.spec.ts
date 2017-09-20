@@ -1,4 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
 import { emptyMap3, functionalMap4, disfunctionalMap3, disfunctionalMap4 } from './mock-maps';
 import { Map } from './map';
 import { Path } from './path';

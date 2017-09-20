@@ -4,7 +4,7 @@ import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
 import { Point } from './point';
 import { Vector } from './vector';
-import { Line } from './line';
+import { Line, IntersectionType } from './line';
 
 const MIN_ANGLE = Math.PI / 4;
 
@@ -105,7 +105,9 @@ export class Map {
 
         for (let i = 0; i < LINES.length - 1; i++) {
             for (let j = i + 1; j < LINES.length; j++) {
-                if (LINES[i].intersectsWith(LINES[j])) {
+                const intersection = LINES[i].intersectsWith(LINES[j]);
+                if (intersection !== IntersectionType.INTERSECT_NONE &&
+                   (intersection === IntersectionType.INTERSECT_POINT && j !== i + 1 && j !== LINES.length - 1)) {
                     LINES_THAT_CROSS.push([LINES[i], LINES[j]]);
                 }
             }

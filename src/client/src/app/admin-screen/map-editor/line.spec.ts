@@ -1,5 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { Line } from './line';
+import { Line, IntersectionType } from './line';
 import { Point } from './point';
 import { Vector } from './vector';
 
@@ -42,32 +41,34 @@ describe('Line', () => {
 
         it('should return that identical lines are intersecting', () => {
             const LINE = makeLine(0, 0, 1, 1);
-            expect(LINE.intersectsWith(LINE)).toBe(true);
+            expect(LINE.intersectsWith(LINE)).toBe(IntersectionType.INTERSECT_LINE);
         });
 
         it('should return that crossing lines are intersecting', () => {
             const LINE1 = makeLine(1, 1, 2, 2);
             const LINE2 = makeLine(1, 2, 2, 1);
-            expect(LINE1.intersectsWith(LINE2)).toBe(true);
-            expect(LINE2.intersectsWith(LINE1)).toBe(true);
+            expect(LINE1.intersectsWith(LINE2)).toBe(IntersectionType.INTERSECT_POINT);
+            expect(LINE2.intersectsWith(LINE1)).toBe(IntersectionType.INTERSECT_POINT);
         });
 
         it('should return that non-crossing lines are not intersecting', () => {
             const LINE1 = makeLine(1, 1, 10, 1);
-            const LINE2 = makeLine(1, 2,  2, 1.01);
-            expect(LINE1.intersectsWith(LINE2)).toBe(false);
-            expect(LINE2.intersectsWith(LINE1)).toBe(false);
+            const LINE2 = makeLine(1, 2, 2, 1.01);
+            expect(LINE1.intersectsWith(LINE2)).toBe(IntersectionType.INTERSECT_NONE);
+            expect(LINE2.intersectsWith(LINE1)).toBe(IntersectionType.INTERSECT_NONE);
         });
 
         it('should work with vertical and horizontal lines', () => {
-            const HORIZONTAL_LINE        = makeLine(1, 2, 3, 2);
-            const VERTICAL_LINE_XING     = makeLine(2, 1, 2, 3);
+            const HORIZONTAL_LINE = makeLine(1, 2, 3, 2);
+            const VERTICAL_LINE_XING = makeLine(2, 1, 2, 3);
             const VERTICAL_LINE_NOT_XING = makeLine(2, 1, 2, 1.99);
 
-            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).toBe(true);
-            expect(VERTICAL_LINE_XING.intersectsWith(HORIZONTAL_LINE)).toBe(true);
-            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_NOT_XING)).toBe(false);
-            expect(VERTICAL_LINE_NOT_XING.intersectsWith(HORIZONTAL_LINE)).toBe(false);
+            HORIZONTAL_LINE.print = VERTICAL_LINE_XING.print = console.log;
+            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).toBe(IntersectionType.INTERSECT_POINT);
+            expect(VERTICAL_LINE_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_POINT);
+            HORIZONTAL_LINE.print = VERTICAL_LINE_XING.print = () => {};
+            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_NOT_XING)).toBe(IntersectionType.INTERSECT_NONE);
+            expect(VERTICAL_LINE_NOT_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_NONE);
         });
 
     });
