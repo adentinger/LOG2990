@@ -77,10 +77,10 @@ describe('MapEditorService', () => {
     it('should be able to edit a point', () => {
         service['map'] = Object.create(functionalMap1);
 
-        service.editPoint(0, 3, 3);
+        service.editPoint(0, new Point(3, 3));
         expect(service['map'].path.points[0].x).toBe(3);
         expect(service['map'].path.points[0].y).toBe(3);
-        service.editPoint(0, -100, 10000);
+        service.editPoint(0, new Point(-100, 10000));
         expect(service['map'].path.points[0].x).not.toBe(-100);
         expect(service['map'].path.points[0].y).not.toBe(10000);
     });
@@ -112,9 +112,10 @@ describe('MapEditorService', () => {
         expect(service['map'].speedBoosts.length).toEqual(0);
     });
 
-    it('can provide points', () => {
+    it('should provide points', () => {
         service['map'] = Object.create(functionalMap1);
 
         expect(service.path).toBe(functionalMap1.path);
     });
+
 });

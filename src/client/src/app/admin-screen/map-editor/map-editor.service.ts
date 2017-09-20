@@ -53,10 +53,11 @@ export class MapEditorService {
         return this.map.path.points.pop();
     }
 
-    public editPoint(index: number, x: number, y: number): void {
-        if (x < this.map.width && y < this.map.height && x > 0 && y > 0) {
-            this.map.path.points[index].x = x;
-            this.map.path.points[index].y = y;
+    public editPoint(index: number, point: Point): void {
+        if (point.x < this.map.width && point.y < this.map.height &&
+            point.x > 0 && point.y > 0) {
+            this.map.path.points[index].x = point.x;
+            this.map.path.points[index].y = point.y;
         }
     }
 
