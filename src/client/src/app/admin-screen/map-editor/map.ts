@@ -107,7 +107,9 @@ export class Map {
             for (let j = i + 1; j < LINES.length; j++) {
                 const intersection = LINES[i].intersectsWith(LINES[j]);
                 if (intersection !== IntersectionType.INTERSECT_NONE &&
-                   (intersection === IntersectionType.INTERSECT_POINT && j !== i + 1 && j !== LINES.length - 1)) {
+                   (intersection === IntersectionType.INTERSECT_POINT &&
+                    j !== i + 1 &&
+                    j !== LINES.length - 1)) {
                     LINES_THAT_CROSS.push([LINES[i], LINES[j]]);
                 }
             }

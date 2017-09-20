@@ -8,8 +8,6 @@ export enum IntersectionType {
     INTERSECT_LINE
 }
 
-const MAX_SLOPE = 999999999;
-
 export class Line {
 
     public origin: Point;
@@ -29,9 +27,6 @@ export class Line {
         const TRANSLATION = this.translation;
         if (TRANSLATION.x !== 0) {
             return TRANSLATION.y / TRANSLATION.x;
-        }
-        else {
-            return MAX_SLOPE;
         }
     }
 
@@ -82,6 +77,7 @@ export class Line {
                             IntersectionType.INTERSECT_LINE : IntersectionType.INTERSECT_NONE;
             }
         }
+
 
         if (numerator !== undefined && denominator !== undefined) {
             const PARAMETRIC_CONSTANT = numerator / denominator;

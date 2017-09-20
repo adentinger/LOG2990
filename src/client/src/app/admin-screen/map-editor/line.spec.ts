@@ -26,10 +26,6 @@ describe('Line', () => {
             const SLOPE = makeLine(0, 0, 1, 2).slope;
             expect(SLOPE).toBeCloseTo(2);
         });
-        it('should compute a very high slope for a vertical line', () => {
-            const SLOPE = makeLine(0, 0, 0, 1).slope;
-            expect(SLOPE).toBeGreaterThan(1000000);
-        });
     });
 
     it('should compute its intercept', () => {
@@ -67,6 +63,16 @@ describe('Line', () => {
             expect(VERTICAL_LINE_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_POINT);
             expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_NOT_XING)).toBe(IntersectionType.INTERSECT_NONE);
             expect(VERTICAL_LINE_NOT_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_NONE);
+            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).toBe(IntersectionType.INTERSECT_POINT);
+        });
+
+        it('should work with intersecting points', () => {
+            const LINE_WITH_NO_VECTOR_1 = makeLine(1, 1, 1, 1);
+            const LINE_WITH_NO_VECTOR_2 = makeLine(1, 1, 1, 1);
+            const LINE_WITH_NO_VECTOR_3 = makeLine(1, 2, 1, 2);
+
+            expect(LINE_WITH_NO_VECTOR_1.intersectsWith(LINE_WITH_NO_VECTOR_2)).toBe(IntersectionType.INTERSECT_LINE);
+            expect(LINE_WITH_NO_VECTOR_1.intersectsWith(LINE_WITH_NO_VECTOR_3)).toBe(IntersectionType.INTERSECT_NONE);
         });
 
     });
