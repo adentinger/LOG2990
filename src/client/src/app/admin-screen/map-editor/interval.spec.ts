@@ -1,8 +1,3 @@
-import { emptyMap3, functionalMap4, disfunctionalMap3, disfunctionalMap4 } from './mock-maps';
-import { Map } from './map';
-import { Path } from './path';
-import { Point } from './point';
-import { Line } from './line';
 import { Interval } from './interval';
 
 describe('Interval', () => {
