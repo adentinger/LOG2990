@@ -4,6 +4,7 @@ import { Point } from './point';
 import { Item } from './item';
 import { Path } from './path';
 import { Puddle } from './puddle';
+import { PointIndex } from './point-index';
 
 @Injectable()
 export class MapEditorService {
@@ -53,19 +54,11 @@ export class MapEditorService {
         return this.map.path.points.pop();
     }
 
-    public editPoint(oldCoordinates: Point, newCoordinates: Point): void {
-        if (this.areValidCoordinates(newCoordinates)) {
-            const MATCHES = this.points.filter(oldCoordinates.equals);
-            if (MATCHES.length > 0) {
-                MATCHES[0].x = newCoordinates.x;
-                MATCHES[0].y = newCoordinates.y;
-            }
-            else {
-                const ERROR_MESSAGE = 'Point (' + oldCoordinates.x + ', ' +
-                                      oldCoordinates.y + ') cannot be modified ' +
-                                      'because it does not exist';
-                throw new Error(ERROR_MESSAGE);
-            }
+    public editPoint(index: PointIndex, coordinates: Point): void {
+        if (this.areValidCoordinates(coordinates)) {
+            const POINT = this.points[index];
+            POINT.x = coordinates.x;
+            POINT.y = coordinates.y;
         }
     }
 

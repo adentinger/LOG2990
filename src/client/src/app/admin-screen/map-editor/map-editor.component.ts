@@ -48,8 +48,7 @@ export class MapEditorComponent implements OnInit {
         const MOUSE_COORDINATES = new Point(event.offsetX, event.offsetY);
 
         if (this.isDragging) {
-            // Move point.
-            console.log('dragging');
+            this.mapEditor.editPoint(this.hoveredPoint, MOUSE_COORDINATES);
         }
         else {
             this.hoveredPoint = this.mapRenderer.activePoint;
