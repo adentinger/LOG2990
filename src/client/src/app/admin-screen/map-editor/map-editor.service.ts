@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Map } from './map';
 import { Point } from './point';
-import { Item } from './item';
 import { Path } from './path';
-import { Puddle } from './puddle';
 import { PointIndex } from './point-index';
 
 @Injectable()

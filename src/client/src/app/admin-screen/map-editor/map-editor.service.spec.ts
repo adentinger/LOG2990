@@ -85,33 +85,6 @@ describe('MapEditorService', () => {
         expect(service['map'].path.points[0].y).not.toBe(10000);
     });
 
-    it('should be able to place valid items', () => {
-        service['map'] = Object.create(functionalMap2);
-        const PUDDLE = new Puddle(12);
-        const POTHOLE = new Pothole(18);
-        const SPEED_BOOST = new SpeedBoost(23);
-        service['addItem'](PUDDLE);
-        expect(service['map'].puddles.length).toBeGreaterThan(0);
-        expect(service['map'].puddles[0]).toBe(PUDDLE);
-        service['addItem'](POTHOLE);
-        expect(service['map'].potholes.length).toBeGreaterThan(0);
-        expect(service['map'].potholes[0]).toBe(POTHOLE);
-        service['addItem'](SPEED_BOOST);
-        expect(service['map'].speedBoosts.length).toBeGreaterThan(0);
-        expect(service['map'].speedBoosts[0]).toBe(SPEED_BOOST);
-
-        service['map'] = Object.create(functionalMap3);
-        const INVALID_PUDDLE = new Puddle(0);
-        const INVALID_POTHOLE = new Pothole(0);
-        const INVALID_SPEED_BOOST = new SpeedBoost(1000);
-        service['addItem'](INVALID_PUDDLE);
-        expect(service['map'].puddles.length).toEqual(0);
-        service['addItem'](INVALID_POTHOLE);
-        expect(service['map'].potholes.length).toEqual(0);
-        service['addItem'](INVALID_SPEED_BOOST);
-        expect(service['map'].speedBoosts.length).toEqual(0);
-    });
-
     it('should provide points', () => {
         service['map'] = Object.create(functionalMap1);
 
