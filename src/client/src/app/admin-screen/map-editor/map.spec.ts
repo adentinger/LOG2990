@@ -30,7 +30,8 @@ describe('Map', () => {
         expect(functionalMap4.computeBadAngles()).toEqual([]);
         expect(emptyMap3.computeBadAngles()).toEqual([]);
         expect(disfunctionalMap3.computeBadAngles()).toEqual([[new Point(0, 2), new Point(10, 2), new Point(0, 10)],
-                                                              [new Point(10, 2), new Point(0, 10), new Point(2, 1)]]);
+                                                              [new Point(10, 2), new Point(0, 10), new Point(2, 1)],
+                                                              [new Point(2, 1), new Point(0, 2), new Point(10, 2)]]);
     });
 
     it('should check if map is finished', () => {

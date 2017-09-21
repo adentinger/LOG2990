@@ -7,7 +7,6 @@ import { AbstractMapLine } from './abstract-map-line';
 import { NormalMapLine } from './normal-map-line';
 import { Map } from '../map';
 import { Line } from '../line';
-import { Path } from '../path';
 import { FaultyMapLine } from './faulty-map-line';
 
 export class MapPath implements Drawable {
@@ -42,7 +41,6 @@ export class MapPath implements Drawable {
 
     private generateLinesFrom(points: Point[]): void {
         const MAP: Map = new Map();
-        const LINES: AbstractMapLine[] = [];
         this.lines = [];
 
         if (this.points.length < 2) {
@@ -50,9 +48,12 @@ export class MapPath implements Drawable {
         }
 
         let erroneousLines: [Line, Line][] = [];
+        let erroneousAngles: [Point, Point, Point][] = [];
 
         MAP.path.points.push.apply(MAP.path.points, points);
         erroneousLines = MAP.computeCrossingLines();
+
+        erroneousAngles = MAP.computeBadAngles();
 
         this.lines = points.map((point: Point, index: number): AbstractMapLine => {
             if (index < points.length - 1) {
@@ -67,7 +68,15 @@ export class MapPath implements Drawable {
                        (line.origin.equals(badLines[1].origin) &&
                        line.destination.equals(badLines[1].destination));
             };
-            if (erroneousLines.findIndex(isBadLinePredicate) >= 0) {
+            const isBadAnglePredicate = (badAngles: [Point, Point, Point]) => {
+                if (this.lines.length > 1) {
+                    return ((line.origin.equals(badAngles[0]) &&
+                            line.destination.equals(badAngles[1])) ||
+                            (line.origin.equals(badAngles[1]) &&
+                            line.destination.equals(badAngles[2])));
+                }
+            };
+            if (erroneousLines.findIndex(isBadLinePredicate) >= 0 || erroneousAngles.findIndex(isBadAnglePredicate) >= 0) {
                 this.lines[index] = new FaultyMapLine(this.context, line.origin, line.destination);
             }
         });
