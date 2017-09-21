@@ -9,6 +9,8 @@ import { NormalMapLine } from './normal-map-line';
 export class MapPath implements Drawable {
 
     private context: CanvasRenderingContext2D;
+    private cursorCoordinates: Point = new Point(-100, -100);
+    private activePoint: AbstractMapPoint = null;
     private points: AbstractMapPoint[];
     private lines: AbstractMapLine[];
 
@@ -52,6 +54,7 @@ export class MapPath implements Drawable {
     }
 
     public draw(): void {
+        this.updateActivePoint();
         this.drawLines();
         this.drawPoints();
     }
@@ -68,6 +71,17 @@ export class MapPath implements Drawable {
         });
     }
 
+    public moveCursorTo(coordinates: Point): void {
+        this.cursorCoordinates = coordinates;
+    }
+
+    private updateActivePoint(): void {
+        this.activePoint = this.pointWithCoordinates(this.cursorCoordinates);
+        if (this.activePoint !== null) {
+            this.activePoint.isActive = true;
+        }
+    }
+
     public pointWithCoordinates(coordinates: Point): AbstractMapPoint {
         let foundPoint: AbstractMapPoint = null;
 
@@ -79,7 +93,6 @@ export class MapPath implements Drawable {
                 }
             }
         });
-        console.log('ret:', foundPoint);
         return foundPoint;
     }
 
