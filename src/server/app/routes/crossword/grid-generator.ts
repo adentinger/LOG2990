@@ -12,6 +12,7 @@ Crossword - minimal black cases X.
 |X|X|X|X|X|_|_|_|_|X|
 |X|_|_|_|_|_|_|_|_|X|
 --------------------------------*/
+// For no confusion : Case = State, there is 3 Cases in the following code; one for each part of the grid.
 
 import { readFileSync } from 'fs';
 //export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
@@ -114,7 +115,7 @@ export class Grid {
     }
 
     public pushOnTheGridAndReinitialiseTemporaryGrid() {
-        if (this.gridForVertical.length === 6) { // when on case 3
+        if (this.gridForVertical.length === 6) { // for Case three
             this.temporaryGridForVertical.reverse();
         }
         for (let i = 0; i < this.temporaryGridForVertical.length; i ++) {
@@ -136,7 +137,7 @@ export class Grid {
 
     public alreadyChoosen(wordToCheck: string) {
         let alreadyChoosen = false;
-        const allWords: string[] = [];
+        let allWords: string[] = [];
 
             for (let i = 0; i < this.gridForAcross.length; i++) {
                 allWords.push(this.gridForAcross[i].value);

@@ -20,9 +20,8 @@ describe('#Grid is squared and 10x10', () => {
     });
 });
 
-
-describe('#Each column contains 1 or 2 words', () => {
-    it('Each row contains 1 or 2 words', () => {
+describe('#Each row and column contains 1 word', () => {
+    it('Each row contains 1 words', () => {
         let oneWordPerRow = true;
         for (let i = 1; i < puzzle.gridForAcross.length; i++) {
             if (puzzle.gridForAcross[i][0] === puzzle.gridForAcross[i - 1][0]) {
@@ -31,7 +30,7 @@ describe('#Each column contains 1 or 2 words', () => {
         }
         expect(oneWordPerRow === true);
     });
-    it('Each columns contains 1 or 2 words', () => {
+    it('Each columns contains 1 words', () => {
         let oneWordPerColumn = true;
         for (let i = 1; i < puzzle.gridForVertical.length; i++) {
             if (puzzle.gridForVertical[i][0] === puzzle.gridForVertical[i - 1][0]) {
@@ -41,7 +40,6 @@ describe('#Each column contains 1 or 2 words', () => {
         expect(oneWordPerColumn === true);
     });
 });
-
 
 describe('#Grid-generator put words on the right position', () => {
 
@@ -109,7 +107,7 @@ describe('#Return random word from suggestions case one', () => {
         const word = crossword.returnARandomWordFromSuggestionsCaseOne('a', 2);
         expect(word.length === 3);
     });
-    it ('Return a word of undefined', () => {
+    it ('Return a word of undefined (no word starts with "cc")', () => {
         const word = crossword.returnARandomWordFromSuggestionsCaseOne('cc', 0);
         expect(word === 'nothing found');
     });
@@ -139,7 +137,7 @@ describe('#Return random word from suggestions case two', () => {
             const word = crossword.returnARandomWordFromSuggestionsCaseTwo('a', 3);
             expect(word.length === 3);
         });
-        it ('Return a word of undefined', () => {
+        it ('Return a word of undefined (no word starts with "cc")', () => {
             const word = crossword.returnARandomWordFromSuggestionsCaseTwo('cc', 0);
             expect(word === 'nothing found');
         });
@@ -154,28 +152,24 @@ describe('#Return random word from suggestions case three', () => {
         });
 
         it ('Return a word of length between 3 in first row', () => {
-            const word = crossword.returnARandomWordFromSuggestionsCaseTwo('a', 0);
+            const word = crossword.returnARandomWordFromSuggestionsCaseThree('a', 0);
             expect(word.length === 3);
         });
         it ('Return a word of length between 5 and 3 in second row', () => {
-            const word = crossword.returnARandomWordFromSuggestionsCaseTwo('a', 1);
+            const word = crossword.returnARandomWordFromSuggestionsCaseThree('a', 1);
             expect(word.length <= 5 && word.length >= 3);
         });
         it ('Return a word of a length between 8 and 3 in third row', () => {
-            const word = crossword.returnARandomWordFromSuggestionsCaseTwo('a', 2);
+            const word = crossword.returnARandomWordFromSuggestionsCaseThree('a', 2);
             expect(word.length <= 8 && word.length >= 3);
         });
-        it ('Return a word of undefined', () => {
-            const word = crossword.returnARandomWordFromSuggestionsCaseTwo('cc', 0);
+        it ('Return a word of undefined (no word ends with "cc")', () => {
+            const word = crossword.returnARandomWordFromSuggestionsCaseThree('cc', 0);
             expect(word === 'nothing found');
         });
     });
 
-describe('Get the right word of desired lenght', () => {
-    it ('get word of length between 1 and 3', () => {
-        const word = puzzle.getWordOfDesiredLength(1, 3);
-        expect(word.value.length <= 3 && word.value.length >= 1);
-    });
+describe('#Get the right word of desired lenght', () => {
     it ('get word of length between 4 and 6', () => {
         const word = puzzle.getWordOfDesiredLength(4, 6);
         expect(word.value.length <= 6 && word.value.length >= 4);
@@ -187,38 +181,59 @@ describe('Get the right word of desired lenght', () => {
 
     });
 
-    it ('get word with no accent, apostrophe and dash', () => {
+    it ('get word of length between 3 and 6', () => {
+        const word = puzzle.getWordOfLengthThreeToSix();
+        expect(word.value.length <= 6 && word.value.length >= 3);
+    });
+    it ('get word of length 3', () => {
+        const word = puzzle.getWordOfLengthThree();
+        expect(word.value.length === 3);
+
+    });
+    it ('get word of length 4', () => {
+        const word = puzzle.getWordOfLengthFour();
+        expect(word.value.length === 4);
+
+    });
+
+    it ('get word with no accent, apostrophe or dash', () => {
         const word = "éÏû-t'";
         const correctedWord = puzzle.wordFormatting(word);
         expect(correctedWord === 'eIut');
     });
 
-    it ('word is already in the grid case 1', ()  => {
-        const crossword = new Grid(10);
-        crossword.gridForAcross = [];
-        crossword.gridForVertical = [];
-        crossword.gridForAcross.push(new Word('test'));
-        const verification = crossword.alreadyChoosen('test');
-        expect(verification === true);
-    });
-    it ('word is already in the grid case 2', ()  => {
-        const crossword = new Grid(10);
-        crossword.gridForAcross = [];
-        crossword.gridForVertical = [];
-        crossword.gridForVertical.push(new Word('test'));
-        const verification = crossword.alreadyChoosen('test');
-        expect(verification === true);
-    });
-    it ('word is not in the grid', () => {
-        const crossword = new Grid(10);
-        crossword.gridForAcross = [];
-        crossword.gridForVertical = [];
-        crossword.gridForAcross.push(new Word('test1'));
-        crossword.gridForVertical.push(new Word('test2'));
-        const verification = crossword.alreadyChoosen('test');
-        expect(verification === false);
+    it ('word is already on the grid', ()  => {
+        puzzle.gridForAcross = [];
+        puzzle.gridForVertical = [];
+        puzzle.gridForAcross.push(new Word('test'));
+        let verification = puzzle.alreadyChoosen('test');
+        expect(verification).to.be.true;
     });
 
+    it ('word is not on the grid', () => {
+        puzzle.gridForAcross = [];
+        puzzle.gridForVertical = [];
+        puzzle.gridForAcross.push(new Word('test1'));
+        puzzle.gridForVertical.push(new Word('test2'));
+        let verification = puzzle.alreadyChoosen('test');
+        expect(verification).to.be.false;
     });
+});
 
-
+describe('#Misc', () => {
+    it('Sucessfully empty the temporary grids on the real grids', () => {
+        puzzle.gridForAcross = [];
+        puzzle.gridForVertical = [];
+        puzzle.temporaryGridForAcross.push(new Word('a'));
+        puzzle.temporaryGridForAcross.push(new Word('b'));
+        puzzle.temporaryGridForVertical.push(new Word('c'));
+        puzzle.temporaryGridForVertical.push(new Word('d'));
+        puzzle.pushOnTheGridAndReinitialiseTemporaryGrid();
+        let verification = false
+        if (!puzzle.temporaryGridForAcross.length && !puzzle.temporaryGridForVertical.length
+        && puzzle.gridForAcross.length === 2 && puzzle.gridForVertical.length === 2) {
+            verification = true;
+        }
+        expect(verification).to.be.true;
+    });
+});
