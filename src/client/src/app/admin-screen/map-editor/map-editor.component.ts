@@ -20,6 +20,7 @@ export class MapEditorComponent implements OnInit {
     public width = 500;
     public height = 500;
     public isDragging = false;
+    private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
@@ -32,15 +33,20 @@ export class MapEditorComponent implements OnInit {
 
     public clicked(event: MouseEvent): void {
         event.preventDefault();
-        switch (event.button) {
-            case LEFT_MOUSE_BUTTON: {
-                this.leftClick(event);
-                break;
+        if (!this.isDragging) {
+            switch (event.button) {
+                case LEFT_MOUSE_BUTTON: {
+                    this.leftClick(event);
+                    break;
+                }
+                case RIGHT_MOUSE_BUTTON: {
+                    this.rightClick(event);
+                    break;
+                }
             }
-            case RIGHT_MOUSE_BUTTON: {
-                this.rightClick(event);
-                break;
-            }
+        }
+        else {
+            this.isDragging = false;
         }
     }
 
@@ -54,18 +60,20 @@ export class MapEditorComponent implements OnInit {
             this.hoveredPoint = this.mapRenderer.activePoint;
         }
 
+        if (this.isMouseDown && this.isHoveringPoint()) {
+            this.isDragging = true;
+        }
+
         this.mapRenderer.moveCursorTo(MOUSE_COORDINATES);
         this.mapRenderer.draw();
     }
 
     public mouseDown(): void {
-        if (this.isHoveringPoint()) {
-            this.isDragging = true;
-        }
+        this.isMouseDown = true;
     }
 
-    public mouseUp(): void {
-        this.isDragging = false;
+    public mouseUp(event: MouseEvent): void {
+        this.isMouseDown = false;
     }
 
     private isHoveringPoint(): boolean {

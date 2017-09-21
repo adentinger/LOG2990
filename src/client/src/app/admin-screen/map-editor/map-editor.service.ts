@@ -57,9 +57,24 @@ export class MapEditorService {
 
     public editPoint(index: PointIndex, coordinates: Point): void {
         if (this.areValidCoordinates(coordinates)) {
-            const POINT = this.points[index];
-            POINT.x = coordinates.x;
-            POINT.y = coordinates.y;
+            const POINTS_TO_EDIT = [];
+            const EDITING_FIRST_POINT = (index === 0);
+            const IS_PATH_CLOSED =
+                (this.points[0].equals(this.points[this.points.length - 1]));
+
+            if (EDITING_FIRST_POINT && IS_PATH_CLOSED) {
+                console.log('editing first point');
+                POINTS_TO_EDIT.push(this.points[0],
+                                    this.points[this.points.length - 1]);
+            }
+            else {
+                POINTS_TO_EDIT.push(this.points[index]);
+            }
+
+            POINTS_TO_EDIT.forEach((point: Point) => {
+                point.x = coordinates.x;
+                point.y = coordinates.y;
+            });
         }
     }
 
