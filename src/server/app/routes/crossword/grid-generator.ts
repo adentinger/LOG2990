@@ -1,5 +1,5 @@
-/*
-Crossword minimal black cases X.
+/*--------------------------------
+Crossword - minimal black cases X.
  _ _ _ _ _ _ _ _ _ _
 |_|_|_|_|_|_|_|_|_|X|
 |_|_|_|_|X|X|X|X|X|X|
@@ -11,17 +11,10 @@ Crossword minimal black cases X.
 |X|X|X|X|X|X|_|_|_|X|
 |X|X|X|X|X|_|_|_|_|X|
 |X|_|_|_|_|_|_|_|_|X|
-*/
-
-/*
-import { readFileSync } from 'fs';
-export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
-for (let i = 0; i < lexicon.length; i++) {
-    lexicon[i] = lexicon[i].slice(0, -1);
-}
-*/
+--------------------------------*/
 
 import { readFileSync } from 'fs';
+//export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
 for (let i = 0; i < lexicon.length; i++) {
     lexicon[i] = lexicon[i].slice(0, -1);
@@ -50,12 +43,11 @@ export class Grid {
         for (let i = 0; i < size; i++) {
             this.gridForPosition[i] = new Array<[number, number]>(size);
         }
-        //console.dir(this.gridForPosition);
         this.gridGeneration();
     }
 
     public gridGeneration() {
-        // the grid is separate in three (3 cases) + a final
+        // the grid is separated in three cases + a final word push
         this.initialisation(1);
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
         this.initialisation(2);
@@ -219,7 +211,6 @@ export class Grid {
             }
         }
 
-        // retourne un mot random parmi ceux trouvés
         returnedWord = theWords[this.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
@@ -256,7 +247,6 @@ export class Grid {
             }
         }
 
-        // retourne un mot random parmi ceux trouvés
         returnedWord = theWords[this.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
@@ -290,7 +280,6 @@ export class Grid {
             }
         }
 
-        // retourne un mot random parmi ceux trouvés
         returnedWord = theWords[this.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
@@ -411,20 +400,18 @@ export class Grid {
         return false;
     }
 
-
-    // les fonctions suivantes c'est pour trouver les mots en vertical
-
-    // pour le cas 1
+    // theses three functions are used to get a vertical word
+    // for case one
     public getWordOfLengthThreeToSix() {
         return this.getWordOfDesiredLength(3, 6);
     }
 
-    // pour le cas 1 et 3
+    // for case one and three
     public getWordOfLengthThree() {
         return  this.getWordOfDesiredLength(3, 3);
     }
 
-    // pour le cas 2
+    // for case two
     public getWordOfLengthFour() {
         return this.getWordOfDesiredLength(4, 4);
     }
@@ -484,7 +471,7 @@ export class Grid {
     }
 
     public generateGridTenByTenContainingWordStartingPosition() {
-        // tuple > [across, vertical]
+        // tuple --> [across word number, vertical word number]
         this.gridForPosition[0][0] = [1, 1];
         this.gridForPosition[0][1] = [0, 2];
         this.gridForPosition[0][2] = [0, 3];
