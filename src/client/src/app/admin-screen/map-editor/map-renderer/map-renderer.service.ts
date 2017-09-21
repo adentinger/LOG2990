@@ -23,8 +23,7 @@ export class MapRendererService implements Drawable {
             this.path = new MapPath(this.context, []);
         }
         else {
-            throw new Error('Cannot change context of MapRendererService ' +
-                'once set.');
+            throw new Error('Cannot change canvas once set.');
         }
     }
 

@@ -37,19 +37,19 @@ describe('MapRendererService', () => {
                   service.canvas = canvasFactory.make();
               }));
 
-    it('should refuse overriding existing context',
+    it('should refuse overriding existing canvas',
        inject([MapRendererService, CanvasFactory],
               (service: MapRendererService, canvasFactory: CanvasFactory) => {
                   service.canvas = canvasFactory.make();
                   expect(() => {
                       service.canvas = canvasFactory.make();
-                  }).toThrowError(new RegExp('.*context.*'));
+                  }).toThrowError(new RegExp('.*canvas.*'));
               }));
 
-    it ('should refuse drawing when canvas context is not set',
+    it ('should refuse drawing when canvas canvas is not set',
         inject([MapRendererService],
             (service: MapRendererService) => {
-                expect(() => service.draw()).toThrowError(new RegExp('.*context.*'));
+                expect(() => service.draw()).toThrowError(new RegExp('.*canvas.*'));
             }));
 
 });
