@@ -1,4 +1,3 @@
-
 export class Definition {
     public text: string;
     constructor(text: string) {

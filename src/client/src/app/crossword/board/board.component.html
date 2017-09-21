@@ -1,7 +1,10 @@
-<div class="crossword-board-container">
-  <div id="crossword board">
-    <div *ngFor="let row of crossword">
-      <input *ngFor="let square of row" class="crossword-board__item " [class.black-square]='square==="0"' [disabled]='square==="0"'>
+<div id="crossword-board-container">
+  <div id="crossword-board">
+    <div *ngFor="let row of crosswordGrid">
+      <input *ngFor="let square of row" 
+        class="crossword-board-item " 
+        [class.black-square]='square==="0"' 
+        [disabled]='square==="0"' maxlength="1">
     </div>
   </div>
 </div>

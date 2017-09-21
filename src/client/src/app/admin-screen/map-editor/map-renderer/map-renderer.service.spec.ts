@@ -12,34 +12,44 @@ class CanvasFactory {
 }
 
 describe('MapRendererService', () => {
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [MapRendererService, MapEditorService, CanvasFactory]
         });
     });
 
+    let mapRenderer: MapRendererService;
+    let mapEditor: MapEditorService;
+    beforeEach(inject([MapRendererService, MapEditorService],
+                      (renderer: MapRendererService, editor: MapEditorService) => {
+        mapRenderer = renderer;
+        mapEditor = editor;
+    }));
+
     it('should be created', inject([MapRendererService], (service: MapRendererService) => {
         expect(service).toBeTruthy();
     }));
 
-    it('should accept a context',
+    it('should accept a canvas',
        inject([MapRendererService, CanvasFactory],
               (service: MapRendererService, canvasFactory: CanvasFactory) => {
-                  service.context = canvasFactory.make().getContext('2d');
+                  service.canvas = canvasFactory.make();
               }));
 
-    it('should refuse overriding existing context',
+    it('should refuse overriding existing canvas',
        inject([MapRendererService, CanvasFactory],
               (service: MapRendererService, canvasFactory: CanvasFactory) => {
-                  service.context = canvasFactory.make().getContext('2d');
+                  service.canvas = canvasFactory.make();
                   expect(() => {
-                      service.context = canvasFactory.make().getContext('2d');
-                  }).toThrowError(new RegExp('.*context.*'));
+                      service.canvas = canvasFactory.make();
+                  }).toThrowError(new RegExp('.*canvas.*'));
               }));
 
-    it ('should refuse drawing when canvas context is not set',
+    it ('should refuse drawing when canvas canvas is not set',
         inject([MapRendererService],
             (service: MapRendererService) => {
-                expect(() => service.draw()).toThrowError(new RegExp('.*context.*'));
+                expect(() => service.draw()).toThrowError(new RegExp('.*canvas.*'));
             }));
+
 });

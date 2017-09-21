@@ -7,6 +7,7 @@ import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { BoardComponent } from './board/board.component';
 import { DefinitionFieldComponent } from './definition-field/definition-field.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { GameDetailsComponent } from './game-details/game-details.component';
 
 describe('CrosswordComponent', () => {
     let component: CrosswordComponent;
@@ -15,7 +16,7 @@ describe('CrosswordComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            declarations: [CrosswordComponent, ConfigMenuComponent, BoardComponent, DefinitionFieldComponent],
+            declarations: [CrosswordComponent, ConfigMenuComponent, BoardComponent, DefinitionFieldComponent, GameDetailsComponent],
             providers: [HttpClient, {provide: Location, useClass: SpyLocation}]
         })
             .compileComponents();

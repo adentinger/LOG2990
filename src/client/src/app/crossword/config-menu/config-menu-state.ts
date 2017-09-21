@@ -1,4 +1,5 @@
-import { ConfigMenuOption, FetchableOptionList } from './config-menu-option';
+import { ConfigMenuOption, FetchableOptionList, isOptionList, fetchOptions } from './config-menu-option';
+import { HttpClient } from '@angular/common/http';
 
 export type PageId = number;
 
@@ -7,50 +8,46 @@ type ConfigMenuOptions = ConfigMenuOption[] | FetchableOptionList;
 export class ConfigMenuState {
     public readonly options: ConfigMenuOptions = [];
 
-    private static isState(object: any): boolean {
+    public static isState(object: any): boolean {
         if (typeof object['id'] === 'number' &&
             typeof object['name'] === 'string' &&
             object['options'] !== undefined) {
-            if (Array.isArray(object['options'])) {
-                for (const option of (object['options'] as any[])) {
-                    if (!('name' in option && typeof option.name === 'string') ||
-                        !('nextPage' in option && typeof option.nextPage === 'number')) {
-                        return false;
-                    }
-                }
-                return true;
-            } else if (('url' in object['options'] &&
-                        typeof object['options'].url === 'string') &&
-                       ('nextPage' in object['options'] &&
-                        typeof object['options'].nextPage === 'number')) {
+            if (isOptionList(object['options'])) {
                 return true;
             }
         }
         return false;
     }
 
-    public static fromJson(json: any): ConfigMenuState[] {
+    public static fromJson(json: any, http: HttpClient): ConfigMenuState[] {
         const parsedStates: ConfigMenuState[] = [];
         if (Array.isArray(json)) {
             for (const state of (json as any[])) {
                 if (!ConfigMenuState.isState(state)) {
                     throw new TypeError('Not a ConfigMenuState');
                 } else {
-                    parsedStates.push(new ConfigMenuState(state.id, state.name, state.options));
+                    parsedStates.push(new ConfigMenuState(state.id, state.name, state.options, http));
                 }
             }
         } else if (!ConfigMenuState.isState(json)) {
             throw new TypeError('Not a ConfigMenuState');
         } else {
-            parsedStates.push(new ConfigMenuState(json.id, json.name, json.options));
+            parsedStates.push(new ConfigMenuState(json.id, json.name, json.options, http));
         }
         return parsedStates;
+    }
+
+    public static hasFetchableOptions(state: ConfigMenuState): boolean {
+        return state !== undefined &&
+            state.options !== undefined &&
+            !Array.isArray(state.options);
     }
 
     constructor(
         public readonly id: PageId,
         public readonly name: string,
-        options: ConfigMenuOptions = []) {
+        options: ConfigMenuOptions = [],
+        http: HttpClient) {
         if (id < 0) {
             throw new RangeError('Bad id');
         }
@@ -58,6 +55,7 @@ export class ConfigMenuState {
             (this.options as ConfigMenuOption[]).push.apply(this.options, options);
         } else {
             this.options = options;
+            fetchOptions(this.options, http);
         }
     }
 }

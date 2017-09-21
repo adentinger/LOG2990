@@ -1,38 +1,20 @@
 $crossword-item-size: 50px;
 $crossword-dimension: 10;
 
-$color-valid-item: #9AFF67;
-$color-focus-item: #FFFF74;
+$color-valid-item: #76C84B;
+$color-focus-item: #EDFF71;
 
-.center {
+#crossword-board-container {
+  margin: 10px;
+  height: 100%;
   text-align: center;
   vertical-align: center;
 }
-.crossword-board-container {
-  height:100%;
-  text-align: center;
-  vertical-align: center;
-}
 
-.crossword-board {
-	position: relative;
-	z-index: 1;
-	background: transparent;
-	border: 1px solid #000000;
-	width: ($crossword-item-size * $crossword-dimension);
-	height: ($crossword-item-size * $crossword-dimension);
-	display: grid;
-	grid-template: repeat(13,7.6923076923076925%) / repeat(13,7.6923076923076925%);
-	list-style-type: none;
-	padding: 0;
-	margin: 0 auto;
-}
-
-.crossword-board__item {
+.crossword-board-item {
 	border: 1px solid #000000;
 	background: transparent;
 	position: relative;
-	//z-index: 100;
 	text-align: center;
 	font-size: 20px;
 	font-weight: bold;
@@ -47,67 +29,7 @@ $color-focus-item: #FFFF74;
 		outline: 1px solid #000000;
 	}
 }
-.crossword-board__item--blank {
-	background: #000000;
-	border: 1px solid #000000;
-	outline: 1px solid #000000;
-}
-
-.crossword-board--labels {
-	position: absolute;
-	z-index: 60;
-}
-.crossword-board__item-label {
-	position: relative;
-}
-.crossword-board__item-label-text {
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	font-size: 14px;
-	line-height: 1;
-}
 
 .black-square {
   background: black;
-
 }
-  div {
-    contentEditable: true;  
-  }
-  
-  .filled {
-    width: 38px;
-    height: 38px;
-    background: black;
-    border: 1px solid black;
-    padding: 0;
-    margin: 0;
-    float: left;
-    color: black;
-  }
-  
-  .square {
-    font-size: 25px;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: center;
-  }
-  .empty {
-    width: 38px;
-    height: 38px;
-    border: 1px solid black;
-    padding: 0;
-    margin: 0;
-    float: left;
-  }
-  
-  .numbered {
-    counter-increment: value;
-  }
-  
-  .numbered:nth-of-type(n)::before {
-    content: counter(value);
-    font-size: 10px;
-    position: absolute;
-  }

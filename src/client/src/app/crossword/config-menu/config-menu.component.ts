@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ConfigMenuService } from './config-menu.service';
-import { MENU_PAGES } from './menu-pages';
+import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 import { ConfigMenuState } from './config-menu-state';
-import { ConfigMenuOption } from './config-menu-option';
+import { ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 
 @Component({
     selector: 'app-config-menu',
@@ -11,7 +10,7 @@ import { ConfigMenuOption } from './config-menu-option';
     styleUrls: ['./config-menu.component.css'],
     providers: [
         ConfigMenuService,
-        { provide: 'menuPages', useValue: MENU_PAGES }
+        { provide: MENU_CONFIG_URL, useValue: '/assets/crossword/config-menu-pages.json' }
     ]
 })
 export class ConfigMenuComponent implements OnInit {
@@ -24,7 +23,8 @@ export class ConfigMenuComponent implements OnInit {
         if (Array.isArray(this.currentState.options)) {
             return this.currentState.options.map((value: ConfigMenuOption) => value.name);
         } else {
-            return this.currentState.options.fetchedOptions;
+            return this.currentState.options.fetchedOptions.map((option: FetchedPendingGame) =>
+                FetchedPendingGame.prototype.toString.apply(option));
         }
     }
 

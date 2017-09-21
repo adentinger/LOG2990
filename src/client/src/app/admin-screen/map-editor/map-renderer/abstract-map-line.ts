@@ -5,8 +5,8 @@ import { AbstractMapLineColors } from './abstract-map-line-colors';
 export abstract class AbstractMapLine implements Drawable {
 
     private context: CanvasRenderingContext2D;
-    private origin: Point;
-    private destination: Point;
+    public readonly origin: Point;
+    public readonly destination: Point;
     private colors: AbstractMapLineColors;
     private width: number;
 

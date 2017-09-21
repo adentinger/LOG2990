@@ -7,10 +7,10 @@ import { BoardComponent } from './board/board.component';
 import { DefinitionFieldComponent } from './definition-field/definition-field.component';
 import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { GameDetailsComponent } from './game-details/game-details.component';
-import { PlayerInfoComponent } from './game-details/player-info/player-info.component';
 import { FormsModule } from '@angular/forms';
 import { ConfigMenuService } from './config-menu/config-menu.service';
-import { MENU_PAGES } from './config-menu/menu-pages';
+import { SimpleTimer } from 'ng2-simple-timer';
+import { DefinitionsService } from './definition-field/definitions.service';
 
 @NgModule({
     imports: [
@@ -24,12 +24,12 @@ import { MENU_PAGES } from './config-menu/menu-pages';
         DefinitionFieldComponent,
         ConfigMenuComponent,
         GameDetailsComponent,
-        PlayerInfoComponent,
     ],
     providers: [
         HttpClient,
         ConfigMenuService,
-        {provide: 'menuPages', useValue: MENU_PAGES}
+        SimpleTimer,
+        DefinitionsService,
     ],
     exports: [
         CrosswordComponent

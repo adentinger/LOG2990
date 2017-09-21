@@ -12,7 +12,9 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 
-import * as indexRoute from './routes/index';
+import { registerMiddleWares } from './routes/middle-ware';
+import './routes/crossword/games';
+import './routes/crossword/lexic';
 
 export class Application {
 
@@ -75,10 +77,7 @@ export class Application {
     router = express.Router();
 
     // create routes
-    const index: indexRoute.Index = new indexRoute.Index();
-
-    // home page
-    router.get('/basic', index.index.bind(index.index));
+    registerMiddleWares(router);
 
     // use router middleware
     this.app.use(router);
