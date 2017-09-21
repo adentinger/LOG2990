@@ -7,6 +7,7 @@ import { Vector } from './vector';
 import { Line, IntersectionType } from './line';
 
 const MIN_ANGLE = Math.PI / 4;
+export const MAP_TYPES = ['Amateur', 'Professional'];
 
 export class Map {
     public path: Path;
@@ -14,11 +15,11 @@ export class Map {
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
 
-    private name: string;
-    private description: string;
-    private type: string;
-    private rating: number;
-    private plays: number;
+    public name: string;
+    public description: string;
+    public type: string;
+    public rating: number;
+    public plays: number;
     public height: number;
     public width: number;
 

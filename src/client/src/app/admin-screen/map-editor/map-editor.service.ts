@@ -13,6 +13,10 @@ export class MapEditorService {
         this.newMap();
     }
 
+    public get currentMap(): Map {
+        return this.map;
+    }
+
     public newMap(): boolean {
         let mapCreated = false;
 

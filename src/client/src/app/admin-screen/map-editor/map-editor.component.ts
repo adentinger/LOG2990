@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
+import { Map as RacingMap, MAP_TYPES } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
 
@@ -29,6 +30,13 @@ export class MapEditorComponent implements OnInit {
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
+    }
+
+    public get mapTypes(): string[] {
+        return  MAP_TYPES;
+    }
+    public get currentMap(): RacingMap {
+        return this.mapEditor.currentMap;
     }
 
     public get isMapValid(): boolean {
