@@ -103,13 +103,16 @@ export class Map {
             LINES.push(new Line(POINTS[i], POINTS[i + 1]));
         }
 
+        const logicImplies = (p: boolean, q: boolean): boolean => ((!p) || q);
         for (let i = 0; i < LINES.length - 1; i++) {
             for (let j = i + 1; j < LINES.length; j++) {
-                const intersection = LINES[i].intersectsWith(LINES[j]);
-                if (intersection !== IntersectionType.INTERSECT_NONE &&
-                   (intersection === IntersectionType.INTERSECT_POINT &&
-                    j !== i + 1 &&
-                    j !== LINES.length - 1)) {
+                const INTERSECTION = LINES[i].intersectsWith(LINES[j]);
+                const IS_INTERSECTING = (INTERSECTION !== IntersectionType.INTERSECT_NONE);
+                const PATH_CLOSED = this.isClosed();
+                const NOT_NEIGHBORS = (j !== i + 1 && logicImplies(PATH_CLOSED, logicImplies(i === 0, j !== LINES.length - 1)));
+                const INTERSECTION_IS_POINT = (INTERSECTION === IntersectionType.INTERSECT_POINT);
+                const NOT_LAST_LINE = (j !== LINES.length - 1);
+                if (IS_INTERSECTING && logicImplies(INTERSECTION_IS_POINT, NOT_NEIGHBORS)) {
                     LINES_THAT_CROSS.push([LINES[i], LINES[j]]);
                 }
             }

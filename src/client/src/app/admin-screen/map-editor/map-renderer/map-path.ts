@@ -5,14 +5,18 @@ import { NormalMapPoint } from './normal-map-point';
 import { FirstMapPoint } from './first-map-point';
 import { AbstractMapLine } from './abstract-map-line';
 import { NormalMapLine } from './normal-map-line';
+import { Map } from '../map';
+import { Line } from '../line';
+import { Path } from '../path';
+import { FaultyMapLine } from './faulty-map-line';
 
 export class MapPath implements Drawable {
 
     private context: CanvasRenderingContext2D;
     private cursorCoordinates: Point = new Point(-100, -100);
     private activePoint: AbstractMapPoint = null;
-    private points: AbstractMapPoint[];
-    private lines: AbstractMapLine[];
+    private points: AbstractMapPoint[] = [];
+    private lines: AbstractMapLine[] = [];
 
     constructor(context: CanvasRenderingContext2D, points: Point[]) {
         this.context = context;
@@ -37,20 +41,36 @@ export class MapPath implements Drawable {
     }
 
     private generateLinesFrom(points: Point[]): void {
-        let lastPoint: Point = null;
+        const MAP: Map = new Map();
         const LINES: AbstractMapLine[] = [];
-        points.forEach((point: Point, index: number) => {
+        this.lines = [];
 
-            // TODO Erroneous lines ?
+        if (this.points.length < 2) {
+            return;
+        }
 
-            const IS_FIRST_ITERATION = (lastPoint === null);
-            if (!IS_FIRST_ITERATION) {
-                LINES.push(new NormalMapLine(this.context, lastPoint, point));
+        let erroneousLines: [Line, Line][] = [];
+
+        MAP.path.points.push.apply(MAP.path.points, points);
+        erroneousLines = MAP.computeCrossingLines();
+
+        this.lines = points.map((point: Point, index: number): AbstractMapLine => {
+            if (index < points.length - 1) {
+                return new NormalMapLine (this.context, point, points[index + 1]);
             }
-            lastPoint = point;
-        });
+        }).filter((value) => value !== undefined);
 
-        this.lines = LINES;
+        this.lines.forEach((line: NormalMapLine, index: number) => {
+            const isBadLinePredicate = (badLines: [Line, Line]) => {
+                return (line.origin.equals(badLines[0].origin) &&
+                       line.destination.equals(badLines[0].destination)) ||
+                       (line.origin.equals(badLines[1].origin) &&
+                       line.destination.equals(badLines[1].destination));
+            };
+            if (erroneousLines.findIndex(isBadLinePredicate) >= 0) {
+                this.lines[index] = new FaultyMapLine(this.context, line.origin, line.destination);
+            }
+        });
     }
 
     public draw(): void {
