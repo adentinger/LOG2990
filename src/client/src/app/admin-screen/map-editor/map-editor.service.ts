@@ -63,7 +63,6 @@ export class MapEditorService {
                 (this.points[0].equals(this.points[this.points.length - 1]));
 
             if (EDITING_FIRST_POINT && IS_PATH_CLOSED) {
-                console.log('editing first point');
                 POINTS_TO_EDIT.push(this.points[0],
                                     this.points[this.points.length - 1]);
             }
@@ -96,4 +95,12 @@ export class MapEditorService {
         }
     }
 
+    public isValid(): boolean {
+        if (this.map.isClosed() && this.map.computeBadAngles().length === 0 && this.map.computeCrossingLines().length === 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

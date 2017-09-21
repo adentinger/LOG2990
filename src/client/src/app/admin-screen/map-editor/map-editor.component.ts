@@ -31,6 +31,10 @@ export class MapEditorComponent implements OnInit {
         this.mapRenderer.canvas = CANVAS;
     }
 
+    public get isMapValid(): boolean {
+        return this.mapEditor.isValid();
+    }
+
     public clicked(event: MouseEvent): void {
         event.preventDefault();
         if (!this.isDragging) {

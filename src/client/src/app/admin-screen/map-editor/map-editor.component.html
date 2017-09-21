@@ -1,6 +1,7 @@
 <div class= "mapEditionScreen">
   <h2>Map size</h2>
   <h3>This is the space to edit your map</h3>
+  <button [disabled]="!isMapValid">Save Map</button>
   <div>
     <canvas class="creationSpace" #editingArea
       [width]="width" 
