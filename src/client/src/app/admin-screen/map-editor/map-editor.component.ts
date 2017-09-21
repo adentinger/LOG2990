@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
 import { Point } from './point';
+import { PointIndex } from './point-index';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
@@ -19,6 +20,7 @@ export class MapEditorComponent implements OnInit {
     public width = 500;
     public height = 500;
     public isDragging = false;
+    private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
                 private mapRenderer: MapRendererService) { }
@@ -46,13 +48,15 @@ export class MapEditorComponent implements OnInit {
         const MOUSE_COORDINATES = new Point(event.offsetX, event.offsetY);
 
         if (this.isDragging) {
-            this.mapEditor.editPoint(this.mapRenderer.activePoint,
-                                     MOUSE_COORDINATES);
+            // Move point.
+            console.log('dragging');
+        }
+        else {
+            this.hoveredPoint = this.mapRenderer.activePoint;
         }
 
         this.mapRenderer.moveCursorTo(MOUSE_COORDINATES);
         this.mapRenderer.draw();
-        console.log(this.isDragging);
     }
 
     public mouseDown(): void {
@@ -66,7 +70,7 @@ export class MapEditorComponent implements OnInit {
     }
 
     private isHoveringPoint(): boolean {
-        return this.mapRenderer.activePoint !== null;
+        return this.hoveredPoint >= 0;
     }
 
     private leftClick(event: MouseEvent): void {

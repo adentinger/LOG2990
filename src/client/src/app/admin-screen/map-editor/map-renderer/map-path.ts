@@ -3,6 +3,7 @@ import { Point } from '../point';
 import { AbstractMapPoint } from './abstract-map-point';
 import { NormalMapPoint } from './normal-map-point';
 import { FirstMapPoint } from './first-map-point';
+import { PointIndex } from '../point-index';
 import { AbstractMapLine } from './abstract-map-line';
 import { NormalMapLine } from './normal-map-line';
 import { Map } from '../map';
@@ -13,7 +14,7 @@ export class MapPath implements Drawable {
 
     private context: CanvasRenderingContext2D;
     private cursorCoordinates: Point = new Point(-100, -100);
-    private currentActivePoint: AbstractMapPoint = null;
+    private currentActivePoint: PointIndex = null;
     private points: AbstractMapPoint[] = [];
     private lines: AbstractMapLine[] = [];
 
@@ -105,9 +106,10 @@ export class MapPath implements Drawable {
     }
 
     private updateActivePoint(): void {
-        this.currentActivePoint = this.pointWithCoordinates(this.cursorCoordinates);
-        if (this.activePoint !== null) {
-            this.currentActivePoint.isActive = true;
+        const ACTIVE_POINT = this.pointWithCoordinates(this.cursorCoordinates);
+        this.currentActivePoint = this.points.lastIndexOf(ACTIVE_POINT);
+        if (this.activePoint !== -1) {
+            ACTIVE_POINT.isActive = true;
         }
     }
 
@@ -125,7 +127,7 @@ export class MapPath implements Drawable {
         return foundPoint;
     }
 
-    public get activePoint(): Point {
+    public get activePoint(): PointIndex {
         return this.currentActivePoint;
     }
 

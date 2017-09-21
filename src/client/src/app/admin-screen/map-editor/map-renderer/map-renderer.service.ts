@@ -4,6 +4,7 @@ import { MapEditorService } from '../map-editor.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
 import { Point } from '../point';
+import { PointIndex } from '../point-index';
 
 @Injectable()
 export class MapRendererService implements Drawable {
@@ -39,7 +40,7 @@ export class MapRendererService implements Drawable {
         this.path.moveCursorTo(coordinates);
     }
 
-    public get activePoint(): Point {
+    public get activePoint(): PointIndex {
         this.checkIfCanvasSet();
         return this.path.activePoint;
     }
