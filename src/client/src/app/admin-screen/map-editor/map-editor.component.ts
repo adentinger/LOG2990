@@ -46,7 +46,6 @@ export class MapEditorComponent implements OnInit {
         const COORDINATES = new Point(event.offsetX, event.offsetY);
         this.mapRenderer.moveCursorTo(COORDINATES);
         this.mapRenderer.draw();
-        console.log(this.isDragging);
     }
 
     public mouseDown(): void {
@@ -66,6 +65,9 @@ export class MapEditorComponent implements OnInit {
     private leftClick(event: MouseEvent): void {
         if (!this.isHoveringPoint()) {
             this.addPoint(event.offsetX, event.offsetY);
+        }
+        else if (this.mapEditor.isFirstPoint(this.mapRenderer.activePoint)) {
+            this.addPoint(this.mapRenderer.activePoint.x, this.mapRenderer.activePoint.y);
         }
     }
 

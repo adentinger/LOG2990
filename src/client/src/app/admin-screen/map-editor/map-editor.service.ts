@@ -44,6 +44,9 @@ export class MapEditorService {
     }
 
     public pushPoint(point: Point): void {
+        if (this.map.isClosed()) {
+            return;
+        }
         if (point.x < this.map.width && point.y < this.map.height && point.x > 0 && point.y > 0) {
             this.map.path.points.push(point);
         }
@@ -79,6 +82,10 @@ export class MapEditorService {
         this.addItem(new Puddle(0));
         throw new Error('Please do not use me again or I will call Chuck ' +
                         'Norris.');
+    }
+
+    public isFirstPoint(point: Point): boolean {
+        return point.equals(this.map.path.points[0]);
     }
 
 }
