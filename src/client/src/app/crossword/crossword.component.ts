@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
-import { DefinitionsService } from "./definition-field/definitions.service";
+import { DefinitionsService } from './definition-field/definitions.service';
 
 @Component({
     selector: 'app-crossword',
