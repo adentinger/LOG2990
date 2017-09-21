@@ -1,10 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, functionalMap1, functionalMap2, emptyMap2, functionalMap3 } from './mock-maps';
+import { emptyMap, functionalMap1, emptyMap2 } from './mock-maps';
 import { MapEditorService } from './map-editor.service';
 import { Point } from './point';
-import { Puddle } from './puddle';
-import { Pothole } from './pothole';
-import { SpeedBoost } from './speed-boost';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
