@@ -44,7 +44,7 @@ export class MapEditorService {
     }
 
     public pushPoint(point: Point): void {
-        if (point.x < this.map.width && point.y < this.map.height && point.x > 0 && point.y > 0) {
+        if (this.areValidCoordinates(point)) {
             this.map.path.points.push(point);
         }
     }
@@ -53,12 +53,25 @@ export class MapEditorService {
         return this.map.path.points.pop();
     }
 
-    public editPoint(index: number, point: Point): void {
-        if (point.x < this.map.width && point.y < this.map.height &&
-            point.x > 0 && point.y > 0) {
-            this.map.path.points[index].x = point.x;
-            this.map.path.points[index].y = point.y;
+    public editPoint(oldCoordinates: Point, newCoordinates: Point): void {
+        if (this.areValidCoordinates(newCoordinates)) {
+            const MATCHES = this.points.filter(oldCoordinates.equals);
+            if (MATCHES.length > 0) {
+                MATCHES[0].x = newCoordinates.x;
+                MATCHES[0].y = newCoordinates.y;
+            }
+            else {
+                const ERROR_MESSAGE = 'Point (' + oldCoordinates.x + ', ' +
+                                      oldCoordinates.y + ') cannot be modified ' +
+                                      'because it does not exist';
+                throw new Error(ERROR_MESSAGE);
+            }
         }
+    }
+
+    private areValidCoordinates(coordinates: Point): boolean {
+        return coordinates.x < this.map.width && coordinates.y < this.map.height &&
+               coordinates.x > 0              && coordinates.y > 0;
     }
 
     private addItem(item: Item): void {
