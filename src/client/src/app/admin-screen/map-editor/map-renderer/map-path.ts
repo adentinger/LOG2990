@@ -31,13 +31,18 @@ export class MapPath implements Drawable {
     private generatePointsFrom(points: Point[]): void {
         this.points = points.map((point: Point, index: number) => {
             if (index !== 0) {
-                return new NormalMapPoint(this.context, point.x, point.y);
+                if (!point.equals(points[0])) {
+                    return new NormalMapPoint(this.context, point.x, point.y);
+                }
+                else {
+                    return null;
+                }
             }
             else { // I prefer a good ol' if-else, even though the else is not
                    // necessary.
                 return new FirstMapPoint(this.context, point.x, point.y);
             }
-        });
+        }).filter(value => value !== null);
     }
 
     private generateLinesFrom(points: Point[]): void {

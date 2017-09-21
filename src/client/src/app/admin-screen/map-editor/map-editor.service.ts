@@ -43,6 +43,9 @@ export class MapEditorService {
     }
 
     public pushPoint(point: Point): void {
+        if (this.map.isClosed()) {
+            return;
+        }
         if (this.areValidCoordinates(point)) {
             this.map.path.points.push(point);
         }
@@ -63,6 +66,19 @@ export class MapEditorService {
     private areValidCoordinates(coordinates: Point): boolean {
         return coordinates.x < this.map.width && coordinates.y < this.map.height &&
                coordinates.x > 0              && coordinates.y > 0;
+    }
+
+    public isFirstPoint(pointIndex: PointIndex): boolean {
+        return pointIndex === 0;
+    }
+
+    public get firstPoint(): Point {
+        if (this.points.length > 0) {
+            return this.points[0];
+        }
+        else {
+            throw new Error('Cannot get first map point: map is empty.');
+        }
     }
 
 }

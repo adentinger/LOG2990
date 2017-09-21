@@ -76,6 +76,10 @@ export class MapEditorComponent implements OnInit {
         if (!this.isHoveringPoint()) {
             this.addPoint(event.offsetX, event.offsetY);
         }
+        else if (this.mapEditor.isFirstPoint(this.hoveredPoint)) {
+            const FIRST_POINT = this.mapEditor.firstPoint;
+            this.addPoint(FIRST_POINT.x, FIRST_POINT.y);
+        }
     }
 
     private rightClick(event: MouseEvent): void {
