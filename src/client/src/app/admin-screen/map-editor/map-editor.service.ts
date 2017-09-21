@@ -96,4 +96,12 @@ export class MapEditorService {
         }
     }
 
+    public isValid(): boolean {
+        if (this.map.isClosed() && this.map.computeBadAngles().length === 0 && this.map.computeCrossingLines().length === 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

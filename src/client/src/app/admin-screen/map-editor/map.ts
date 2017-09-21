@@ -93,7 +93,7 @@ export class Map {
     }
 
     public isClosed(): boolean {
-        return this.path.points.length >= 2
+        return this.path.points.length > 2
             && this.path.points[0].equals(
                this.path.points[this.path.points.length - 1]);
     }

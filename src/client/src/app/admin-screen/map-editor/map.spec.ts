@@ -34,7 +34,7 @@ describe('Map', () => {
                                                               [new Point(2, 1), new Point(0, 2), new Point(10, 2)]]);
     });
 
-    it('should check if map is finished', () => {
+    it('should check if map is closed', () => {
         expect(functionalMap4.isClosed()).toBeTruthy();
         expect(emptyMap3.isClosed()).toBe(false);
         expect(disfunctionalMap4.isClosed()).toBe(false);
