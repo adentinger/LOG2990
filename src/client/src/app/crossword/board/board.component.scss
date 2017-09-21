@@ -1,0 +1,35 @@
+$crossword-item-size: 50px;
+$crossword-dimension: 10;
+
+$color-valid-item: #76C84B;
+$color-focus-item: #EDFF71;
+
+#crossword-board-container {
+  margin: 10px;
+  height: 100%;
+  text-align: center;
+  vertical-align: center;
+}
+
+.crossword-board-item {
+	border: 1px solid #000000;
+	background: transparent;
+	position: relative;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+  width: $crossword-item-size;
+  height: $crossword-item-size;
+
+	&:active:not(.black-square),
+	&:focus:not(.black-square) {
+		background: $color-focus-item;
+		border: 1px solid #000000;
+		outline: 1px solid #000000;
+	}
+}
+
+.black-square {
+  background: black;
+}

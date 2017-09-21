@@ -1,0 +1,6 @@
+#definition-box {
+    padding: 18px;
+    background: lightblue;
+    height: 60vh;
+    overflow-y: scroll;
+}

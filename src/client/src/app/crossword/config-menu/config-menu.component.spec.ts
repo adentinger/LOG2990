@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ConfigMenuComponent } from './config-menu.component';
+import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -10,8 +12,15 @@ describe('ConfigMenuComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [
+                HttpClientTestingModule
+            ],
             declarations: [ConfigMenuComponent],
-            providers: [{provide: Location, useClass: SpyLocation}]
+            providers: [
+                ConfigMenuService,
+                {provide: Location, useClass: SpyLocation},
+                { provide: MENU_CONFIG_URL, useValue: '/crossword/games/pending/10' }
+            ]
         })
             .compileComponents();
     }));
