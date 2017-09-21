@@ -11,6 +11,7 @@ export class MapRendererService implements Drawable {
     private canvasElement: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private path: MapPath;
+    private activePoint: Point = null;
 
     constructor(private mapEditor: MapEditorService) {
         this.path = new MapPath(this.context, []);
@@ -39,12 +40,8 @@ export class MapRendererService implements Drawable {
         }
     }
 
-    private pointWithCoordinates(point: Point): Point {
-        return null;
-    }
-
-    public moveCursorTo(point: Point): void {
-        this.pointWithCoordinates(point);
+    public moveCursorTo(coordinates: Point): void {
+        this.activePoint = this.path.pointWithCoordinates(coordinates);
     }
 
     private clear(): void {
