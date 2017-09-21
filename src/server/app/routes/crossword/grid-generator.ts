@@ -13,8 +13,16 @@ Crossword minimal black cases X.
 |X|_|_|_|_|_|_|_|_|X|
 */
 
+/*
 import { readFileSync } from 'fs';
 export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
+for (let i = 0; i < lexicon.length; i++) {
+    lexicon[i] = lexicon[i].slice(0, -1);
+}
+*/
+
+import { readFileSync } from 'fs';
+import { lexicon } from './englishWords';
 for (let i = 0; i < lexicon.length; i++) {
     lexicon[i] = lexicon[i].slice(0, -1);
 }
@@ -24,13 +32,39 @@ export class Grid {
     public temporaryGridForVertical: string[] = [];
     public gridForAcross: string[] = [];
     public gridForVertical: string[] = [];
-    public grid = new Array(10);
+    public grid: string[][] = [];
+    public gridForPosition : Array<[number,number]>[] = [];
 
-    constructor() {
-        for (let i = 0; i < 10; i++) {
-            this.grid[i] = new Array(10);
+    constructor(private size: number) {
+        for (let i = 0; i < size; i++) {
+            this.grid[i] = new Array<string>(size);
         }
+        for (let i = 0; i < size; i++) {
+            this.gridForPosition[i] = new Array<[number, number]>(size);
+        }
+        console.dir(this.gridForPosition);
         this.gridGeneration();
+    }
+    
+    public gridGeneration() {
+        // the grid is separate in three (3 cases) + a final
+        this.initialisation(1);
+        this.pushOnTheGridAndReinitialiseTemporaryGrid();
+        this.initialisation(2);
+        this.pushOnTheGridAndReinitialiseTemporaryGrid();
+        this.initialisation(3);
+        this.pushOnTheGridAndReinitialiseTemporaryGrid();
+        // finaly we push a word on last column
+        this.gridForVertical.push((this.getWordOfDesiredLength(4, 5)));
+    
+        this.generateGridTenByTenContainingWordStartingPosition()
+        console.info(this.gridForPosition);
+        this.putWordAcrossAndVerticalOnGridForPrintingOut();
+        // prints out
+        console.dir(this.gridForVertical);
+        console.dir(this.gridForAcross);
+        this.formatGrid(this);
+        console.dir(this.grid);
     }
 
     public putWordVertical(word: string, column: number) {
@@ -146,8 +180,6 @@ export class Grid {
             }
 
             firstLettersWordsArray.push(returnedWord);
-
-            console.log(beginningOfTheWordOnAcrossString + ' ' + returnedWord);
         }
         return firstLettersWordsArray;
     }
@@ -285,27 +317,6 @@ export class Grid {
         for (let i = 0; i < this.gridForAcross.length; i++) {
             this.putWordAcross(this.gridForAcross[i], i);
         }
-    }
-
-    public gridGeneration() {
-        // the grid is separate in three (3 cases) + a final
-        this.initialisation(1);
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
-        this.initialisation(2);
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
-        this.initialisation(3);
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
-        // finaly we push a word on last column
-        this.gridForVertical.push((this.getWordOfDesiredLength(4, 5)));
-    
-        /////////////////////////////////////////////////////////////////////////////
-        this.putWordAcrossAndVerticalOnGridForPrintingOut();
-        // prints out
-        console.dir(this.gridForVertical);
-        console.dir(this.gridForAcross);
-        this.formatGrid(this);
-        console.dir(this.grid);
-        /////////////////////////////////////////////////////////////////////////////
     }
 
     public initialisation(caseNumber: number) {
@@ -473,6 +484,35 @@ export class Grid {
             return false;
         }
     }
+    public generateGridTenByTenContainingWordStartingPosition(){
+        // tuple > [across, vertical]
+        this.gridForPosition[0][0] = [1,1];
+        this.gridForPosition[0][1] = [0,2];
+        this.gridForPosition[0][2] = [0,3];
+        this.gridForPosition[3][3] = [4,4];
+        this.gridForPosition[3][4] = [0,5];
+        this.gridForPosition[3][5] = [0,6];
+        this.gridForPosition[7][6] = [8,7];
+        this.gridForPosition[7][7] = [0,8];
+        this.gridForPosition[7][8] = [0,9];
+        this.gridForPosition[2][9] = [0,10];
+        this.gridForPosition[1][0] = [2,0];
+        this.gridForPosition[2][0] = [3,0];
+        this.gridForPosition[4][3] = [5,0];
+        this.gridForPosition[5][3] = [6,0];
+        this.gridForPosition[6][3] = [7,0];
+        this.gridForPosition[8][8] = [9,0]; //end of the word
+        this.gridForPosition[9][8] = [10,1];//end of the word
+
+        //other cases are black
+        for (let i = 0; i < this.gridForPosition.length; i++) {
+            for (let j = 0; j < this.gridForPosition[i].length; j++) {
+                if (!this.gridForPosition[i][j]) {
+                    this.gridForPosition[i][j] = [0,0];
+                }
+            }
+        }
+    }
 }
 
-let puzzle = new Grid();
+let puzzle = new Grid(10);
