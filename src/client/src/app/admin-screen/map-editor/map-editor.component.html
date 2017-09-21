@@ -1,12 +1,14 @@
 <div class= "mapEditionScreen">
   <h2>Map size</h2>
-  <h2>This is the space to edit your map</h2>
-  <button type="button" (click)="undoLastPoint()">Undo</button>
+  <h3>This is the space to edit your map</h3>
   <div>
     <canvas class="creationSpace" #editingArea
       [width]="width" 
       [height]="height" 
-      (click)="addPoint($event)" 
+      (click)="clicked($event)"
+      (mousedown)="mouseDown($event)"
+      (mouseup)="mouseUp($event)"
+      (contextmenu)="clicked($event)"
       (mousemove)="mouseMoved($event)">
     </canvas>
   </div>

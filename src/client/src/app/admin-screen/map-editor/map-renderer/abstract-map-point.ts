@@ -25,6 +25,8 @@ export abstract class AbstractMapPoint extends Point implements Drawable {
 
     public abstract draw(): void;
 
+    public abstract isUnder(coordinates: Point): boolean;
+
     protected currentColors(): MapColors {
         return this.isActive ? this.activeColors : this.inactiveColors;
     }

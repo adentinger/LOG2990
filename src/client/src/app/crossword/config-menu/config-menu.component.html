@@ -1,8 +1,7 @@
 <div class="disclaimer" *ngIf="this.isConfiguringGame"></div>
-<div [ngClass]="['outer-menu']" *ngIf="this.isConfiguringGame">
+<div class="outer-menu" *ngIf="this.isConfiguringGame">
   <div class="menu">
-    <button style="float: right" (click)="this.isConfiguringGame = false">X</button>
-    <h2 class="text-center">New game</h2>
+    <h2 class="text-center">Make a Choice!</h2>
     <div class="menu-page-container">
       <div
         *ngIf="currentState"
@@ -18,8 +17,8 @@
           </tbody>
         </table>
         <button
-          *ngFor="let option of currentOptions"
-          (click)="selectOption(currentOptions.indexOf(option))">{{option}}</button>
+          *ngFor="let option of currentOptions; let optionId = index"
+          (click)="selectOption(optionId)">{{option}}</button>
         <button (click)="stateBack()">Back</button>
       </div>
     </div>

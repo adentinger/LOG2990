@@ -35,7 +35,7 @@ function normalizePort(val: number|string): number|string|boolean {
   if  (isNaN(port)) {
     return val;
   } else if (port >= 0) {
-    return port;  
+    return port;
   } else {
     return false;
   }
