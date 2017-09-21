@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Map } from './map';
 import { Point } from './point';
-import { Item } from './item';
+import { Path } from './path';
+import { PointIndex } from './point-index';
 
 @Injectable()
 export class MapEditorService {
 
-    private currentMap: Map;
+    private map: Map;
 
     constructor() {
         this.newMap();
@@ -17,8 +18,8 @@ export class MapEditorService {
 
         this.deleteMap();
 
-        this.currentMap = new Map();
-        if (this.currentMap !== null) {
+        this.map = new Map();
+        if (this.map !== null) {
             mapCreated = true;
         }
 
@@ -30,65 +31,69 @@ export class MapEditorService {
     }
 
     public deleteMap(): void {
+        this.map = null;
     }
 
     public get points(): Point[] {
-        return this.currentMap.path.points;
+        return this.map.path.points;
     }
 
-    private calculateAngle(vector1: {x: number, y: number}, vector2: {x: number, y: number}): number {
-        const scalarProduct = (vector1.x * vector2.x + vector1.y * vector2.y);
-        const productOfNormOfVectors = (Math.sqrt((vector1.x * vector1.x + vector1.y * vector1.y))) *
-                                       (Math.sqrt((vector2.x * vector2.x + vector2.y * vector2.y)));
-        const angle = Math.acos(scalarProduct / productOfNormOfVectors);
-        return angle;
-    }
-
-    public checkAngles(): Array<[Point, Point, Point]> {
-        const MIN_ANGLE = Math.PI / 4;
-        const points = [];
-        points.push.apply(points, this.currentMap.path.points);
-        points.push(points[0], points[1]);
-        const badAngles: Array<[Point, Point, Point]> = [];
-        for (let i = 0; i < points.length - 2; i++) {
-            const point1 = points[i];
-            const point2 = points[i + 1];
-            const point3 = points[i + 2];
-            const vector1 = {x: (point2.x - point1.x), y: (point2.y - point1.y)};
-            const vector2 = {x: (point2.x - point3.x), y: (point2.y - point3.y)};
-            const angle = this.calculateAngle (vector1, vector2);
-            if (Math.abs(angle) < MIN_ANGLE) {
-                badAngles.push([point1, point2, point3]);
-            }
-        }
-        return badAngles;
-    }
-
-    public checkPathLoopBack(): boolean {
-        let finished = false;
-
-        if (this.currentMap.path.points.length >= 3) {
-            finished = true;
-        }
-
-        return finished;
-    }
-
-    public checkLinesCross(): Array<[[Point, Point], [Point, Point]]> {
-        return null;
+    public get path(): Path {
+        return this.map.path;
     }
 
     public pushPoint(point: Point): void {
+        if (this.map.isClosed()) {
+            return;
+        }
+        if (this.areValidCoordinates(point)) {
+            this.map.path.points.push(point);
+        }
     }
 
     public popPoint(): Point {
-        return null;
+        return this.map.path.points.pop();
     }
 
-    public editPoint(): void {
+    public editPoint(index: PointIndex, coordinates: Point): void {
+        if (this.areValidCoordinates(coordinates)) {
+            const POINTS_TO_EDIT = [];
+            const EDITING_FIRST_POINT = (index === 0);
+            const IS_PATH_CLOSED =
+                (this.points[0].equals(this.points[this.points.length - 1]));
+
+            if (EDITING_FIRST_POINT && IS_PATH_CLOSED) {
+                console.log('editing first point');
+                POINTS_TO_EDIT.push(this.points[0],
+                                    this.points[this.points.length - 1]);
+            }
+            else {
+                POINTS_TO_EDIT.push(this.points[index]);
+            }
+
+            POINTS_TO_EDIT.forEach((point: Point) => {
+                point.x = coordinates.x;
+                point.y = coordinates.y;
+            });
+        }
     }
 
-    public addItem(item: Item): boolean {
-        return false;
+    private areValidCoordinates(coordinates: Point): boolean {
+        return coordinates.x < this.map.width && coordinates.y < this.map.height &&
+               coordinates.x > 0              && coordinates.y > 0;
     }
+
+    public isFirstPoint(pointIndex: PointIndex): boolean {
+        return pointIndex === 0;
+    }
+
+    public get firstPoint(): Point {
+        if (this.points.length > 0) {
+            return this.points[0];
+        }
+        else {
+            throw new Error('Cannot get first map point: map is empty.');
+        }
+    }
+
 }

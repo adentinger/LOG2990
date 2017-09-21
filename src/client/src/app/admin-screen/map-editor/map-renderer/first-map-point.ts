@@ -1,6 +1,8 @@
 import { AbstractMapPoint } from './abstract-map-point';
 import { FirstMapPointColorsActive } from './first-map-point-colors-active';
 import { FirstMapPointColorsInactive } from './first-map-point-colors-inactive';
+import { Point } from '../point';
+import { Vector } from '../vector';
 
 const INNER_RADIUS = 5.0;
 const RIM_RADIUS   = 10.0;
@@ -61,6 +63,11 @@ export class FirstMapPoint extends AbstractMapPoint {
                              this.context.lineTo(this.x, this.y);
             this.context.fill();
         }
+    }
+
+    public isUnder(coordinates: Point): boolean {
+        const TRANSLATION = Vector.fromPoints(this, coordinates);
+        return TRANSLATION.norm() < RIM_RADIUS;
     }
 
 }
