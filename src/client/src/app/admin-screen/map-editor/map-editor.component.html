@@ -5,7 +5,9 @@
     <canvas class="creationSpace" #editingArea
       [width]="width" 
       [height]="height" 
-      (click)="clicked($event)" 
+      (click)="clicked($event)"
+      (mousedown)="mouseDown($event)"
+      (mouseup)="mouseUp($event)"
       (contextmenu)="clicked($event)"
       (mousemove)="mouseMoved($event)">
     </canvas>
