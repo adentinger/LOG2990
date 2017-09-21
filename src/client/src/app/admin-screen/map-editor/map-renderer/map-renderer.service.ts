@@ -29,22 +29,31 @@ export class MapRendererService implements Drawable {
     }
 
     public draw(): void {
-        if (this.canvasElement !== undefined) {
-            this.clear();
-            this.path.updatePoints(this.mapEditor.points);
-            this.path.draw();
-        }
-        else {
-            throw new Error('Cannot draw map: context not set.');
-        }
+        this.checkIfCanvasSet();
+        this.clear();
+        this.path.updatePoints(this.mapEditor.points);
+        this.path.draw();
     }
 
     public moveCursorTo(coordinates: Point): void {
+        this.checkIfCanvasSet();
         this.path.moveCursorTo(coordinates);
     }
 
+    public get activePoint(): Point {
+        this.checkIfCanvasSet();
+        return this.path.activePoint;
+    }
+
     private clear(): void {
+        this.checkIfCanvasSet();
         this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+    }
+
+    private checkIfCanvasSet(): void {
+        if (this.canvasElement === undefined) {
+            throw new Error('Invalid operation: canvas not set.');
+        }
     }
 
 }

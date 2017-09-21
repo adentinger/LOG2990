@@ -14,7 +14,7 @@ export class MapPath implements Drawable {
 
     private context: CanvasRenderingContext2D;
     private cursorCoordinates: Point = new Point(-100, -100);
-    private activePoint: AbstractMapPoint = null;
+    private currentActivePoint: AbstractMapPoint = null;
     private points: AbstractMapPoint[] = [];
     private lines: AbstractMapLine[] = [];
 
@@ -96,9 +96,9 @@ export class MapPath implements Drawable {
     }
 
     private updateActivePoint(): void {
-        this.activePoint = this.pointWithCoordinates(this.cursorCoordinates);
+        this.currentActivePoint = this.pointWithCoordinates(this.cursorCoordinates);
         if (this.activePoint !== null) {
-            this.activePoint.isActive = true;
+            this.currentActivePoint.isActive = true;
         }
     }
 
@@ -114,6 +114,10 @@ export class MapPath implements Drawable {
             }
         });
         return foundPoint;
+    }
+
+    public get activePoint(): Point {
+        return this.currentActivePoint;
     }
 
 }
