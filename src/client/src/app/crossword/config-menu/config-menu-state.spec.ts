@@ -1,5 +1,5 @@
 import { ConfigMenuState } from './config-menu-state';
-import { FetchableOptionList } from './config-menu-option';
+import { FetchableOptionList, FetchedPendingGame } from './config-menu-option';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
@@ -40,7 +40,10 @@ describe('ConfigMenuState', () => {
         expect((state.options as FetchableOptionList).fetchedOptions.length).toEqual(0);
         expect(ConfigMenuState.hasFetchableOptions(state)).toBeTruthy();
 
-        const gameList: string[] = ['MockGame 1', 'MockGame 2'];
+        const gameList: FetchedPendingGame[] = [
+            {player: 'MockPlayer1', mode: 'classic', difficulty: 'easy'},
+            {player: 'MockPlayer2', mode: 'dynamic', difficulty: 'normal'}
+        ];
         httpController.expectOne(gameListUrl).flush(gameList);
 
         expect((state.options as FetchableOptionList).fetchedOptions.length).toEqual(2);

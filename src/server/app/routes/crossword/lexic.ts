@@ -9,9 +9,11 @@ export class Lexic {
 export class LexicMiddleWare {
     @Route('get', '/crossword/lexic/filter')
     public filter(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        res.send('Not Implemented');
     }
 
-    @Route('get', '/crossword/lexic/definition')
+    @Route('get', '/crossword/lexic/definitions')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        res.send('Not Implemented');
     }
 }

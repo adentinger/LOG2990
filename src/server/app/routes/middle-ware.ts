@@ -7,9 +7,9 @@ interface Constructible {
     new (...args: any[]): {};
 }
 
-const registerSymbole = Symbol('register');
-const middlewareRoutes = Symbol('routes');
-const middleWares: Function[] = [];
+const REGISTER_FUNCTION = Symbol('registerFunction');
+const MIDDLEWARE_ROUTES = Symbol('routes');
+const MIDDLEWARES: Function[] = [];
 
 interface RouteEntry {
     type: RouteType;
@@ -18,8 +18,8 @@ interface RouteEntry {
 }
 
 export function MiddleWare<T extends Constructible>(constructor: T) {
-    constructor.prototype[registerSymbole] = (router: express.Router): void => {
-        const routes: RouteEntry[] = Reflect.getOwnMetadata(middlewareRoutes, constructor) || [];
+    constructor.prototype[REGISTER_FUNCTION] = (router: express.Router): void => {
+        const routes: RouteEntry[] = Reflect.getOwnMetadata(MIDDLEWARE_ROUTES, constructor) || [];
         for (const route of routes) {
             router[route.type](route.value, route.handler);
             console.log('Routed ' + route.type.toUpperCase() +
@@ -27,20 +27,21 @@ export function MiddleWare<T extends Constructible>(constructor: T) {
                         '" to ' + constructor.name + '.' + route.handler.name);
         }
     };
-    middleWares.push(constructor);
+    MIDDLEWARES.push(constructor);
 }
 
 // Decorator factory
 export function Route(type: RouteType, route: string) {
     return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        const routes: RouteEntry[] = Reflect.getOwnMetadata(middlewareRoutes, target.constructor) || [];
+        const routes: RouteEntry[] = Reflect.getOwnMetadata(MIDDLEWARE_ROUTES, target.constructor) || [];
         routes.push({type: type, value: route, handler: target[propertyKey]} as RouteEntry);
-        Reflect.defineMetadata(middlewareRoutes, routes, target.constructor);
+        Reflect.defineMetadata(MIDDLEWARE_ROUTES, routes, target.constructor);
     };
 }
 
 export function registerMiddleWares(router: express.Router) {
-    for (const middleWare of middleWares) {
-        Reflect.construct(middleWare, [])[registerSymbole](router);
+    const EMPTY_ARGUMENT_LIST = [] as ArrayLike<any>;
+    for (const middleWare of MIDDLEWARES) {
+        Reflect.construct(middleWare, EMPTY_ARGUMENT_LIST)[REGISTER_FUNCTION](router);
     }
 }

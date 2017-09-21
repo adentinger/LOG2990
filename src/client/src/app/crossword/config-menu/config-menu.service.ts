@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConfigMenuState, PageId } from './config-menu-state';
-import { FetchableOptionList, ConfigMenuOption } from './config-menu-option';
+import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
 
@@ -76,7 +76,9 @@ export class ConfigMenuService {
                 const state = this.states.find((value: ConfigMenuState) => value.id === +setting);
                 let options: string[];
                 if (ConfigMenuState.hasFetchableOptions(state)) {
-                    options = (state.options as FetchableOptionList).fetchedOptions;
+                    options = (state.options as FetchableOptionList).fetchedOptions
+                        .map((option: FetchedPendingGame) =>
+                        FetchedPendingGame.prototype.toString.apply(option));
                 } else {
                     options = (state.options as ConfigMenuOption[])
                         .map((option: ConfigMenuOption) => option.name);

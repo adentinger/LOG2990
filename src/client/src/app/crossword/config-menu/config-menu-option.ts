@@ -10,7 +10,35 @@ export interface ConfigMenuOption {
 export interface FetchableOptionList {
     url: string;
     nextPage: PageId;
-    fetchedOptions?: string[];
+    fetchedOptions?: FetchedPendingGame[];
+}
+
+type CrosswordGameMode = 'classic' | 'dynamic';
+type CrosswordGameDifficulty = 'easy' | 'normal' | 'brutal';
+
+export class FetchedPendingGame {
+    public player: string;
+    public mode: CrosswordGameMode;
+    public difficulty: CrosswordGameDifficulty;
+    public toString(): string {
+        return this.player + ' [' + this.mode + ' - ' + this.difficulty + ']';
+    }
+}
+
+export function isPendingGame(game: any): game is FetchedPendingGame {
+    const MODES: CrosswordGameMode[] = ['classic', 'dynamic'];
+    const DIFFICULTIES: CrosswordGameDifficulty[] = ['easy', 'normal', 'brutal'];
+
+    const IS_IN_ARRAY = <T>(valueToCheck: T, array: T[]) =>
+        array.findIndex((valueInArray: T): boolean => valueToCheck === valueInArray) >= 0;
+
+    return  game !== null && (
+                'player' in game && typeof game['player'] === 'string' &&
+                'mode' in game && typeof game['mode'] === 'string' &&
+                    IS_IN_ARRAY(game['mode'], MODES) &&
+                'difficulty' in game && typeof game['difficulty'] === 'string' &&
+                    IS_IN_ARRAY(game['difficulty'], DIFFICULTIES)
+            );
 }
 
 export function isOptionList(object: any): object is FetchableOptionList | ConfigMenuOption[] {
@@ -39,10 +67,8 @@ export function fetchOptions(options: FetchableOptionList, http: HttpClient): Ob
     observable.subscribe((json: Object) => {
         if (Array.isArray(json)) {
             json.forEach((value: any) => {
-                if (!(typeof value === 'string')) {
-                    options.fetchedOptions.push(JSON.stringify(value));
-                } else {
-                    options.fetchedOptions.push(value);
+                if (isPendingGame(value)) {
+                    options.fetchedOptions.push(value as FetchedPendingGame);
                 }
             });
         }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 import { ConfigMenuState } from './config-menu-state';
-import { ConfigMenuOption } from './config-menu-option';
+import { ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 
 @Component({
     selector: 'app-config-menu',
@@ -23,7 +23,8 @@ export class ConfigMenuComponent implements OnInit {
         if (Array.isArray(this.currentState.options)) {
             return this.currentState.options.map((value: ConfigMenuOption) => value.name);
         } else {
-            return this.currentState.options.fetchedOptions;
+            return this.currentState.options.fetchedOptions.map((option: FetchedPendingGame) =>
+                FetchedPendingGame.prototype.toString.apply(option));
         }
     }
 
