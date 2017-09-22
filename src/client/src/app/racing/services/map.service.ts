@@ -1,27 +1,30 @@
 import { Injectable } from '@angular/core';
 
 import { Map } from '../../admin-screen/map-editor/map';
+import { MAPS } from './mock-maps';
 
 @Injectable()
 export class MapService {
 
-    private readonly MAP_RESOURCE_URL = 'api/maps';
+    public maps: Map[];
 
-    constructor() { }
+    constructor() {
+        this.maps = MAPS.slice();
+    }
 
-    public getByName(name: string): Promise<Map> {
+    public getById(id: number): Promise<Map> {
         return Promise.reject('Not yet implemented');
     }
 
-    public getMapNames(howMany: number): Promise<string[]> {
+    public getMapIds(howMany: number): Promise<number[]> {
         return Promise.reject('Not yet implemented');
     }
 
-    public putMap(map: Map): Promise<void> {
+    public putMap(map: Map): Promise<number> {
         return Promise.reject('Not yet implemented');
     }
 
-    public postMap(map: Map): Promise<void> {
+    public postMap(map: Map): Promise<number> {
         return Promise.reject('Not yet implemented');
     }
 
