@@ -29,10 +29,11 @@ describe('MapService', () => {
         TestBed.configureTestingModule({
             providers: [MapService]
         });
-        inject([MapService], (injectedService: MapService) => {
-            mapService = injectedService;
-        });
     });
+
+    beforeEach(inject([MapService], (injectedService: MapService) => {
+        mapService = injectedService;
+    }));
 
     it('should be created', inject([MapService], (service: MapService) => {
         expect(service).toBeTruthy();
@@ -45,8 +46,8 @@ describe('MapService', () => {
             expect(gottenMap).toEqual(MAP0);
         });
 
-        it('should throw an error when map does not exist', () => {
-            expect(mapService.getById(123456)).toThrowError();
+        it('should reject promise when map does not exist', () => {
+            mapService.getById(123456).then(fail).catch();
         });
 
     });
@@ -68,9 +69,9 @@ describe('MapService', () => {
             expect(gottenMapIds.length).toEqual(MAPS.length);
         });
 
-        it('should throw an error when more than 100 map names are required.', () => {
+        it('should reject promise when more than 100 map names are required.', () => {
             mapService.getMapIds(100);
-            expect(mapService.getMapIds(101)).toThrowError();
+            mapService.getMapIds(101).then(fail).catch();
         });
 
     });
