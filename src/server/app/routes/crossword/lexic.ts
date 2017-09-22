@@ -2,7 +2,7 @@ import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
 
 export class Lexic {
-    constructor() {}
+    constructor() { }
 }
 
 @MiddleWare
