@@ -8,11 +8,13 @@ import { CrosswordGridService } from './crossword-grid.service';
     providers: [CrosswordGridService]
 })
 export class BoardComponent implements OnInit {
-    public crosswordGrid: string[][];
+    public get crosswordGrid(): string[][] {
+        return this.crosswordGridService.getGrid(); 
+    }
 
     constructor(private crosswordGridService: CrosswordGridService) { }
 
     public ngOnInit(): void {
-        this.crosswordGrid = this.crosswordGridService.getGrid();
+        this.crosswordGridService.fetchGrid();
     }
 }

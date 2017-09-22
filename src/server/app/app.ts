@@ -15,6 +15,7 @@ import * as cors from 'cors';
 import { registerMiddleWares } from './routes/middle-ware';
 import './routes/crossword/games';
 import './routes/crossword/lexic';
+import './routes/crossword/grid-generator';
 
 export class Application {
 

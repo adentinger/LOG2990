@@ -17,6 +17,18 @@ Crossword - minimal black cases X.
 import { readFileSync } from 'fs';
 //export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
+
+import * as express from 'express';
+import { Route, MiddleWare } from '../middle-ware';
+
+@MiddleWare
+export class GridGeneratorMiddleWare {
+    @Route('get', '/crossword/grid')
+    public pending(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        res.send(new Grid(10));
+    }
+}
+
 for (let i = 0; i < lexicon.length; i++) {
     lexicon[i] = lexicon[i].slice(0, -1);
 }
