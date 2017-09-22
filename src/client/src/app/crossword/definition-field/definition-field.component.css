@@ -2,5 +2,5 @@
     padding: 18px;
     background: lightblue;
     height: 60vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
