@@ -13,6 +13,10 @@ export class MapService {
         return Promise.reject('Not yet implemented');
     }
 
+    public getMapNames(howMany: number): Promise<string[]> {
+        return Promise.reject('Not yet implemented');
+    }
+
     public putByName(name: string): Promise<void> {
         return Promise.reject('Not yet implemented');
     }
