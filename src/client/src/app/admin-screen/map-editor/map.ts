@@ -14,7 +14,7 @@ export class Map {
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
 
-    private name: string;
+    public name: string;
     private description: string;
     private type: string;
     private rating: number;
