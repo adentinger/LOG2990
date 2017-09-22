@@ -2,10 +2,11 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MapService } from './map.service';
 import { Map } from '../../admin-screen/map-editor/map';
-import { MAP0, MAP1, MAP2, MAPS } from './mock-maps';
+import { MAP0, MAP1, MAP2, MAPS, NEW_MAP3 } from './mock-maps';
 
 let gottenMap: Map;
 let gottenMapIds: number[];
+let gottenId: number;
 
 function setMap(map: Map) {
     gottenMap = map;
@@ -13,6 +14,10 @@ function setMap(map: Map) {
 
 function setMapIds(names: number[]) {
     gottenMapIds = names;
+}
+
+function setId(id: number) {
+    gottenId = id;
 }
 
 
@@ -71,21 +76,16 @@ describe('MapService', () => {
     });
 
     it('should allow creating a map', () => {
-        mapService.postMap(MAP0);
-        mapService.getById(0).then(setMap);
-        expect(gottenMap).toEqual(MAP0);
+        mapService.postMap(NEW_MAP3).then(setId);
+        expect(gottenId).toBeGreaterThanOrEqual(MAPS.length);
+        mapService.getById(gottenId).then(setMap);
+        expect(gottenMap).toEqual(NEW_MAP3);
     });
 
     it('should allow updating an existing map', () => {
-        mapService.postMap(MAP0);
-        const OLD_NAME = MAP1.name;
-        MAP1.name = MAP0.name;
-        mapService.putMap(MAP1);
-
+        mapService.putMap(NEW_MAP3, 0);
         mapService.getById(0).then(setMap);
-        expect(gottenMap).toEqual(MAP1);
-
-        MAP1.name = OLD_NAME;
+        expect(gottenMap).toEqual(NEW_MAP3);
     });
 
 });

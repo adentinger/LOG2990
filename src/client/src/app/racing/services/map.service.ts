@@ -20,11 +20,11 @@ export class MapService {
         return Promise.reject('Not yet implemented');
     }
 
-    public putMap(map: Map): Promise<number> {
+    public postMap(map: Map): Promise<number> {
         return Promise.reject('Not yet implemented');
     }
 
-    public postMap(map: Map): Promise<number> {
+    public putMap(map: Map, id: number): Promise<void> {
         return Promise.reject('Not yet implemented');
     }
 
