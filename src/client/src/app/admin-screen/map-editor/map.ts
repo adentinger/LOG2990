@@ -15,10 +15,10 @@ export class Map {
     public speedBoosts: SpeedBoost[] = [];
 
     public name: string;
-    private description: string;
-    private type: string;
-    private rating: number;
-    private plays: number;
+    public description: string;
+    public type: string;
+    public rating: number;
+    public plays: number;
     public height: number;
     public width: number;
 

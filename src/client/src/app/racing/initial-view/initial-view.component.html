@@ -1,3 +1,8 @@
-<p>
-  initial-view works!
-</p>
+<div>
+  <table>
+    <tr><th>Map name</th><th>Map type</th><th>Map description</th></tr>
+    <ng-container *ngFor="let map of maps">
+      <tr><td>{{map.name}}</td><td>{{map.type}}</td><td>{{map.description}}</td><tr>
+    </ng-container>
+  </table>
+</div>
