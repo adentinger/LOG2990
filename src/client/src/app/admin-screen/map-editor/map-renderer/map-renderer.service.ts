@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MapEditorService } from '../map-editor.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
 import { Point } from '../point';
@@ -13,7 +14,8 @@ export class MapRendererService implements Drawable {
     private context: CanvasRenderingContext2D;
     private path: MapPath;
 
-    constructor(private mapEditor: MapEditorService) {
+    constructor(private mapEditor: MapEditorService,
+                private converter: RacingUnitConversionService) {
         this.path = new MapPath(this.context, []);
     }
 

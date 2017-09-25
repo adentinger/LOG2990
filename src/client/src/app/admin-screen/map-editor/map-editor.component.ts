@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
+import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
+import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
 import { Map as RacingMap, MAP_TYPES } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
@@ -13,7 +15,15 @@ const RIGHT_MOUSE_BUTTON = 2;
     selector: 'app-map-editor',
     templateUrl: './map-editor.component.html',
     styleUrls: ['./map-editor.component.css'],
-    providers: [MapEditorService, MapRendererService]
+    providers: [
+        MapEditorService,
+        MapRendererService,
+        RacingUnitConversionService,
+        {
+            provide: AbstractRacingUnitConversionService,
+            useExisting: RacingUnitConversionService
+        }
+    ]
 })
 export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;

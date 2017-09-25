@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+
+import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
 import { Map } from './map';
 import { Point } from './point';
 import { Path } from './path';
@@ -9,7 +11,7 @@ export class MapEditorService {
 
     private map: Map;
 
-    constructor() {
+    constructor(private converter: AbstractRacingUnitConversionService) {
         this.newMap();
     }
 
