@@ -1,12 +1,20 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { emptyMap, functionalMap1, emptyMap2 } from './mock-maps';
 import { MapEditorService } from './map-editor.service';
+import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
+import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
 import { Point } from './point';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [MapEditorService]
+            providers: [
+                MapEditorService,
+                {
+                    provide: AbstractRacingUnitConversionService,
+                    useClass: RacingUnitConversionService
+                }
+            ]
         });
     });
 
