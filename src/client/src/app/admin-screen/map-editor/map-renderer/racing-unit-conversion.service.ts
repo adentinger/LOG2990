@@ -36,12 +36,13 @@ export class RacingUnitConversionService extends AbstractRacingUnitConversionSer
     }
 
     public set windowWidth(width: number) {
-        if (this.width > 0) {
+        if (width > 0) {
             this.width = width;
             this.height = width / RacingUnitConversionService.ASPECT_RATIO;
             this.lengthPerMeter = this.width / Track.WIDTH_MAX;
         }
         else {
+            console.log('ERROR:', width);
             throw new Error('Cannot set window width: negative value or zero passed.');
         }
     }
@@ -56,7 +57,7 @@ export class RacingUnitConversionService extends AbstractRacingUnitConversionSer
     }
 
     public set windowHeight(height: number) {
-        if (this.height > 0) {
+        if (height > 0) {
             this.height = height;
             this.width = height * RacingUnitConversionService.ASPECT_RATIO;
             this.lengthPerMeter = this.width / Track.WIDTH_MAX;
