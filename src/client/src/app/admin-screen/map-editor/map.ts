@@ -127,4 +127,8 @@ export class Map {
         return LINES_THAT_CROSS;
     }
 
+    public findSmallSegments(): Line[] {
+        return null;
+    }
+
 }
