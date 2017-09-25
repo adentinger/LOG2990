@@ -130,7 +130,16 @@ export class Map {
     }
 
     public computeSmallSegments(): Line[] {
-        return null;
+        const SMALL_SEGMENTS = [];
+        let lastPoint = this.path.points[0];
+        this.path.points.slice(1).forEach((point: Point) => {
+            const LINE = new Line(lastPoint, point);
+            if (LINE.translation.norm() < MIN_LINE_LENGTH) {
+                SMALL_SEGMENTS.push(LINE);
+            }
+            lastPoint = point;
+        });
+        return SMALL_SEGMENTS;
     }
 
 }
