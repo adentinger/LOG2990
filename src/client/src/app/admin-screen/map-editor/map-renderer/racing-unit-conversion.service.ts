@@ -19,11 +19,11 @@ export class RacingUnitConversionService extends AbstractRacingUnitConversionSer
     }
 
     public lengthFromGameUnits(length: Meters): number {
-        return -1;
+        return length * this.lengthPerMeter;
     }
 
     public lengthToGameUnits(length: number): Meters {
-        return -1;
+        return length / this.lengthPerMeter;
     }
 
     public get windowWidth(): number {
