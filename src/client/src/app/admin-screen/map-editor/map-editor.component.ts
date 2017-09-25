@@ -40,7 +40,7 @@ export class MapEditorComponent implements OnInit {
     }
 
     public get isMapValid(): boolean {
-        return this.mapEditor.isValid();
+        return this.mapEditor.isMapValid();
     }
 
     public clicked(event: MouseEvent): void {

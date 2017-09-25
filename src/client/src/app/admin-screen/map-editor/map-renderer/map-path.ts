@@ -54,8 +54,7 @@ export class MapPath implements Drawable {
         }
 
         MAP.path.points.push.apply(MAP.path.points, points);
-        const ERRONEOUS_LINES: [Line, Line][] = MAP.computeCrossingLines();
-        const ERRONEOUS_ANGLES: [Point, Point, Point][] = MAP.computeBadAngles();
+        const ERRONEOUS_LINES: Line[] = MAP.computeErroneousLines();
 
         this.lines = points.map((point: Point, index: number): AbstractMapLine => {
             if (index < points.length - 1) {
@@ -64,21 +63,10 @@ export class MapPath implements Drawable {
         }).filter((value) => value !== undefined);
 
         this.lines.forEach((line: NormalMapLine, index: number) => {
-            const isBadLinePredicate = (badLines: [Line, Line]) => {
-                return (line.origin.equals(badLines[0].origin) &&
-                       line.destination.equals(badLines[0].destination)) ||
-                       (line.origin.equals(badLines[1].origin) &&
-                       line.destination.equals(badLines[1].destination));
+            const isBadLinePredicate = (badLine: Line) => {
+                return line.equals(badLine);
             };
-            const isBadAnglePredicate = (badAngles: [Point, Point, Point]) => {
-                if (this.lines.length > 1) {
-                    return ((line.origin.equals(badAngles[0]) &&
-                            line.destination.equals(badAngles[1])) ||
-                            (line.origin.equals(badAngles[1]) &&
-                            line.destination.equals(badAngles[2])));
-                }
-            };
-            if (ERRONEOUS_LINES.findIndex(isBadLinePredicate) >= 0 || ERRONEOUS_ANGLES.findIndex(isBadAnglePredicate) >= 0) {
+            if (ERRONEOUS_LINES.findIndex(isBadLinePredicate) >= 0) {
                 this.lines[index] = new FaultyMapLine(this.context, line.origin, line.destination);
             }
         });

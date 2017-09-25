@@ -27,11 +27,11 @@ describe('Map', () => {
     });
 
     it('should check bad angles', () => {
-        expect(functionalMap4.computeBadAngles()).toEqual([]);
-        expect(emptyMap3.computeBadAngles()).toEqual([]);
-        expect(disfunctionalMap3.computeBadAngles()).toEqual([[new Point(0, 2), new Point(10, 2), new Point(0, 10)],
-                                                              [new Point(10, 2), new Point(0, 10), new Point(2, 1)],
-                                                              [new Point(2, 1), new Point(0, 2), new Point(10, 2)]]);
+        expect(functionalMap4['computeBadAngles']()).toEqual([]);
+        expect(emptyMap3['computeBadAngles']()).toEqual([]);
+        expect(disfunctionalMap3['computeBadAngles']()).toEqual([[new Point(0, 2), new Point(10, 2), new Point(0, 10)],
+                                                                 [new Point(10, 2), new Point(0, 10), new Point(2, 1)],
+                                                                 [new Point(2, 1), new Point(0, 2), new Point(10, 2)]]);
     });
 
     it('should check if map is closed', () => {
@@ -48,11 +48,11 @@ describe('Map', () => {
                 new Line(new Point(0, 10), new Point(2,  1))
             ]
         ];
-        expect(MAP1.computeCrossingLines()).toEqual(CROSSING_LINES1);
+        expect(MAP1['computeCrossingLines']()).toEqual(CROSSING_LINES1);
 
         const MAP2: Map = Object.create(functionalMap4);
         const CROSSING_LINES2: [Line, Line][] = [];
-        expect(MAP2.computeCrossingLines()).toEqual(CROSSING_LINES2);
+        expect(MAP2['computeCrossingLines']()).toEqual(CROSSING_LINES2);
 
         const MAP3: Map = Object.create(disfunctionalMap4);
         const CROSSING_LINES3: [Line, Line][] = [
@@ -61,7 +61,7 @@ describe('Map', () => {
                 new Line(new Point(5, 5), new Point(5,  0))
             ]
         ];
-        expect(MAP3.computeCrossingLines()).toEqual(CROSSING_LINES3);
+        expect(MAP3['computeCrossingLines']()).toEqual(CROSSING_LINES3);
     });
 
     describe('computeSmallSegments', () => {
@@ -99,7 +99,7 @@ describe('Map', () => {
             ];
             const pathData = new PolarPathData(new Point(10, 15), DATA);
             const MAP1 = new Map(pathData.toPath());
-            expect(MAP1.computeSmallSegments().length).toEqual(0);
+            expect(MAP1['computeSmallSegments']().length).toEqual(0);
         });
 
         it('should find small lines if there are', () => {
@@ -112,7 +112,7 @@ describe('Map', () => {
             ];
             const pathData = new PolarPathData(new Point(10, 15), DATA);
             const MAP1 = new Map(pathData.toPath());
-            expect(MAP1.computeSmallSegments().length).toEqual(3);
+            expect(MAP1['computeSmallSegments']().length).toEqual(3);
         });
 
     });

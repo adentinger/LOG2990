@@ -70,7 +70,31 @@ export class Map {
         }
     }
 
-    public computeBadAngles(): [Point, Point, Point][] {
+    public computeErroneousLines(): Line[] {
+        const ERRONEOUS_LINES: Line[] = [];
+
+        const BAD_ANGLES: [Point, Point, Point][] = this.computeBadAngles();
+        BAD_ANGLES.forEach((angle: [Point, Point, Point]) => {
+            ERRONEOUS_LINES.push(new Line(angle[0], angle[1]), new Line(angle[1], angle[2]));
+        });
+        const CROSSING_LINES: [Line, Line][] = this.computeCrossingLines();
+        CROSSING_LINES.forEach((lines: [Line, Line]) => {
+            ERRONEOUS_LINES.push(lines[0], lines[1]);
+        });
+        const SMALL_SEGMENTS: Line[] = this.computeSmallSegments();
+        ERRONEOUS_LINES.concat(SMALL_SEGMENTS);
+
+        return ERRONEOUS_LINES;
+    }
+
+    public isValid(): boolean {
+        return this.isClosed() &&
+               this.computeBadAngles().length === 0 &&
+               this.computeCrossingLines().length === 0 &&
+               this.computeSmallSegments().length === 0;
+    }
+
+    private computeBadAngles(): [Point, Point, Point][] {
         const POINTS = [];
         POINTS.push.apply(POINTS, this.path.points);
 
@@ -101,7 +125,7 @@ export class Map {
                this.path.points[this.path.points.length - 1]);
     }
 
-    public computeCrossingLines(): [Line, Line][] {
+    private computeCrossingLines(): [Line, Line][] {
         const POINTS = this.path.points;
         const LINES_THAT_CROSS: [Line, Line][] = [];
         const LINES: Line[] = [];
@@ -129,7 +153,7 @@ export class Map {
         return LINES_THAT_CROSS;
     }
 
-    public computeSmallSegments(): Line[] {
+    private computeSmallSegments(): Line[] {
         const SMALL_SEGMENTS = [];
         let lastPoint = this.path.points[0];
         this.path.points.slice(1).forEach((point: Point) => {

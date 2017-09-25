@@ -99,9 +99,8 @@ export class MapEditorService {
         }
     }
 
-    public isValid(): boolean {
-        return this.map.isClosed() &&
-               this.map.computeBadAngles().length === 0 &&
-               this.map.computeCrossingLines().length === 0;
+    public isMapValid(): boolean {
+        return this.map.isValid();
     }
+
 }
