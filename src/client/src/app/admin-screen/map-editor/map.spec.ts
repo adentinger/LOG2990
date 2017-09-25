@@ -1,5 +1,5 @@
 import { emptyMap3, functionalMap4, disfunctionalMap3, disfunctionalMap4 } from './mock-maps';
-import { Map } from './map';
+import { Map, MIN_LINE_LENGTH } from './map';
 import { Path } from './path';
 import { Point } from './point';
 import { Line } from './line';
@@ -63,4 +63,57 @@ describe('Map', () => {
         ];
         expect(MAP3.computeCrossingLines()).toEqual(CROSSING_LINES3);
     });
+
+    describe('computeSmallSegments', () => {
+
+        interface PolarData {
+            length: number;
+            angle: number;
+        }
+
+        class PolarPathData {
+            private origin: Point;
+            private data: PolarData[];
+
+            public constructor(origin: Point, data: PolarData[]) {
+                this.origin = origin;
+                this.data = data;
+            }
+
+            public toPath(): Path {
+                const POINTS: Point[] = [this.origin];
+                this.data.forEach((data: PolarData) => {
+                    const LAST_POINT = POINTS[POINTS.length - 1];
+                    POINTS.push(
+                        new Point(LAST_POINT.x + data.length * Math.cos(data.angle),
+                                  LAST_POINT.y + data.length * Math.sin(data.angle)));
+                });
+                return new Path(POINTS);
+            }
+        }
+
+        it('should not find small lines if there are none', () => {
+            const DATA: PolarData[] = [
+                {length: 0, angle: 52.1},
+                {length: MIN_LINE_LENGTH * 0.99, angle: 87.2}
+            ];
+            const pathData = new PolarPathData(new Point(10, 15), DATA);
+            const MAP1 = new Map(pathData.toPath());
+            expect(MAP1.computeSmallSegments().length).toEqual(0);
+        });
+
+        it('should find small lines if there are', () => {
+            const DATA: PolarData[] = [
+                {length: 0, angle: 52.1},
+                {length: MIN_LINE_LENGTH * 1.01, angle: 14.7},
+                {length: MIN_LINE_LENGTH * 20.4, angle: 128.3},
+                {length: MIN_LINE_LENGTH * 0.99, angle: 59.1}
+            ];
+            const pathData = new PolarPathData(new Point(10, 15), DATA);
+            const MAP1 = new Map(pathData.toPath());
+            expect(MAP1.computeSmallSegments().length).toEqual(2);
+        });
+
+    });
+
 });

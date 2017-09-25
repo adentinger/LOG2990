@@ -6,8 +6,10 @@ import { Point } from './point';
 import { Vector } from './vector';
 import { Line, IntersectionType } from './line';
 
-const MIN_ANGLE = Math.PI / 4;
+export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
+
+export const MIN_LINE_LENGTH = 10.0;
 
 export class Map {
     public path: Path;
@@ -127,7 +129,7 @@ export class Map {
         return LINES_THAT_CROSS;
     }
 
-    public findSmallSegments(): Line[] {
+    public computeSmallSegments(): Line[] {
         return null;
     }
 
