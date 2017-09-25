@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
 
+import { AbstractRacingUnitConversionService } from '../abstract-racing-unit-conversion.service';
+import { Meters } from '../../../racing/types';
+
 @Injectable()
-export class RacingUnitConversionService {
+export class RacingUnitConversionService extends AbstractRacingUnitConversionService {
 
     private width = -1;
     private height = -1;
 
     constructor() {
+        super();
     }
 
-    public lengthFromGameUnit(length: number): number {
+    public lengthFromGameUnits(length: Meters): number {
         return -1;
     }
 
-    public lengthToGameUnit(length: number): number {
+    public lengthToGameUnits(length: number): Meters {
         return -1;
     }
 
