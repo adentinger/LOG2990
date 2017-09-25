@@ -53,17 +53,13 @@ export class MapPath implements Drawable {
             return;
         }
 
-        let erroneousLines: [Line, Line][] = [];
-        let erroneousAngles: [Point, Point, Point][] = [];
-
         MAP.path.points.push.apply(MAP.path.points, points);
-        erroneousLines = MAP.computeCrossingLines();
-
-        erroneousAngles = MAP.computeBadAngles();
+        const ERRONEOUS_LINES: [Line, Line][] = MAP.computeCrossingLines();
+        const ERRONEOUS_ANGLES: [Point, Point, Point][] = MAP.computeBadAngles();
 
         this.lines = points.map((point: Point, index: number): AbstractMapLine => {
             if (index < points.length - 1) {
-                return new NormalMapLine (this.context, point, points[index + 1]);
+                return new NormalMapLine(this.context, point, points[index + 1]);
             }
         }).filter((value) => value !== undefined);
 
@@ -82,7 +78,7 @@ export class MapPath implements Drawable {
                             line.destination.equals(badAngles[2])));
                 }
             };
-            if (erroneousLines.findIndex(isBadLinePredicate) >= 0 || erroneousAngles.findIndex(isBadAnglePredicate) >= 0) {
+            if (ERRONEOUS_LINES.findIndex(isBadLinePredicate) >= 0 || ERRONEOUS_ANGLES.findIndex(isBadAnglePredicate) >= 0) {
                 this.lines[index] = new FaultyMapLine(this.context, line.origin, line.destination);
             }
         });
