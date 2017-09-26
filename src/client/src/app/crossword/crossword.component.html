@@ -1,4 +1,13 @@
-<p>
-  I am the crossword game. I am sad right now, please implement me soon :(
-</p>
-<app-config-menu></app-config-menu>
+<div class="container" id="crossword-container">
+  <div class="row">
+    <div class="col-md-8">
+      <app-board></app-board>
+    </div>
+    <div class="col-md-4">
+      <app-game-details></app-game-details>
+      <app-definition-field></app-definition-field>
+    </div>
+  </div>
+</div>
+
+<app-config-menu *ngIf="gameIsBeingConfigured===true"></app-config-menu>

@@ -1,13 +1,47 @@
-<div class= "mapEditionScreen">
-  <h2>Map size</h2>
-  <h2>This is the space to edit your map</h2>
-  <button type="button" (click)="undoLastPoint()">Undo</button>
-  <div>
-    <canvas class="creationSpace" #editingArea
-      [width]="width" 
-      [height]="height" 
-      (click)="addPoint($event)" 
-      (mousemove)="mouseMoved($event)">
-    </canvas>
+<div class="mapEditionScreen-outer">
+  <div class="mapEditionScreen">
+    <div class="mapParameters">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <button [disabled]="!isMapValid">Save Map</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Name:</label>
+            </td>
+            <td>
+              <input [(ngModel)]="currentMap.name" placeholder="name" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Type:</label>
+            </td>
+            <td>
+              <select [(ngModel)]="currentMap.type">
+                <option *ngFor="let type of mapTypes" value="{{type}}">{{type}}</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Description:</label>
+            </td>
+            <td>
+              <textarea rows=10 cols=50 [(ngModel)]="currentMap.description" placeholder="name"></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="editionArea">
+      <h3>This is the space to edit your map</h3>
+      <canvas class="creationSpace" #editingArea [width]="width" [height]="height" (click)="clicked($event)" (mousedown)="mouseDown($event)"
+        (mouseup)="mouseUp($event)" (contextmenu)="clicked($event)" (mousemove)="mouseMoved($event)">
+      </canvas>
+    </div>
   </div>
 </div>

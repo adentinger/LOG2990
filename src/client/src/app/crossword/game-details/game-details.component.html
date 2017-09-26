@@ -1,3 +1,8 @@
-<p>
-  game-details works!
-</p>
+  <ul class="list-group">
+    <li class="list-group-item">Player: {{player1}}</li>
+    <li class="list-group-item">Game Mode: {{gameMode}}</li>
+    <li class="list-group-item">Difficulty: {{difficulty}}</li>
+    <li class="list-group-item">
+      Game Time: {{gameTimeMinutes | number : '2.0'}}:{{gameTimeSeconds | number : '2.0'}}
+    </li>
+  </ul>
