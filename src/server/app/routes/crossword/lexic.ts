@@ -3,7 +3,7 @@ import { Db } from 'mongodb';
 
 import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
-import { WordConstraint, isWordConstraint } from './lexic/word-constraint';
+import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
 
 export const LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
@@ -26,28 +26,20 @@ export class LexicMiddleWare {
 
     @Route('get', '/crossword/lexic/words')
     public words(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        let constraint: WordConstraint;
-        try {
-            if (('constraint' in req.query) &&
-                (constraint = JSON.parse(req.query.constraint)) &&
-                isWordConstraint(constraint)) {
-                LexicMiddleWare.LEXIC.getWords(constraint).then((words) => {
-                    res.json(words);
-                }).catch((reason: any) => {
-                    console.warn('Warning:', reason);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                    res.json(reason);
-                });
-                return;
-            }
+        if (isWordConstraint(req.query)) {
+            const CONSTRAINT: WordConstraint = parseWordConstraint(req.query);
+            console.log(CONSTRAINT);
+            LexicMiddleWare.LEXIC.getWords(CONSTRAINT).then((words) => {
+                res.json(words);
+            }).catch((reason: any) => {
+                console.warn('Warning:', reason);
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+                res.json(reason);
+            });
+        } else {
             console.log('Bad query string:', req.query);
-        } catch (e) {
-            console.warn('Warning:', (e as Error).message);
-            res.status(HttpStatus.UNKNOWN_ERROR);
-            res.send(e.toString());
-            return;
+            res.sendStatus(HttpStatus.BAD_REQUEST);
         }
-        res.sendStatus(HttpStatus.BAD_REQUEST);
     }
 
     @Route('get', '/crossword/lexic/definitions')
