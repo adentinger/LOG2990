@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { SerializedMap } from '../../../../../common/communication/serialized-map';
+import { SerializedMap } from './serialized-map';
 
 import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
 import { Map } from './map';
