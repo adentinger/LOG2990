@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 describe('The lexic MicroService', () => {
     it('should be created', () => {
-        expect(new Lexic).to.not.throw().and.to.not.be.null('allo');
+        expect(new Lexic()).to.not.be.null;
     });
 
     let lexic: Lexic;
