@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RacingComponent } from './racing.component';
 import { InitialViewComponent } from './initial-view/initial-view.component';
 import { MapService } from './services/map.service';
+import { RacingGameComponent } from './racing-game/racing-game.component';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import { MapService } from './services/map.service';
     ],
     declarations: [
         RacingComponent,
-        InitialViewComponent
+        InitialViewComponent,
+        RacingGameComponent
     ],
     providers: [
         MapService
