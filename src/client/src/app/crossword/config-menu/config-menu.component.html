@@ -1,7 +1,7 @@
 <div class="disclaimer" *ngIf="this.isConfiguringGame"></div>
 <div class="outer-menu" *ngIf="this.isConfiguringGame">
   <div class="menu">
-    <h2 class="text-center">Make a Choice!</h2>
+    <h2 class="text-center">Make a Choice!</h2><button (click)="isConfiguringGame = false">X</button>
     <div class="menu-page-container">
       <div
         *ngIf="currentState"
