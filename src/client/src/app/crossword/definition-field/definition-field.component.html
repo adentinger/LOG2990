@@ -1,3 +1,7 @@
-<div id="definition-box" >
-  <p *ngFor="let definition of definitions">{{definition.text}}</p>
+<div id="definition-box">
+  <div *ngFor="let definition of definitions">
+    <div [ngClass]='{ "selected" : selectedDefinition===definition}' (click)='onSelect(definition)'>
+      {{definition.text}}
+    </div>
+  </div>
 </div>

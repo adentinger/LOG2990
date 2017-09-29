@@ -11,10 +11,18 @@ import { DefinitionsService } from './definitions.service';
 export class DefinitionFieldComponent implements OnInit {
 
     public definitions: Definition[] = [];
+    public selectedDefinition: Definition;
 
     constructor(private service: DefinitionsService) { }
 
     public ngOnInit(): void {
         this.definitions = this.service.getDefinitions();
     }
+
+    public onSelect(definition: Definition): void {
+        this.selectedDefinition = definition;
+        console.log(definition);
+    }
+
+
 }

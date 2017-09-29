@@ -6,8 +6,8 @@ const N_STORED_GRID = 5;
 export class GridStore {
 
     private gridArray: Grid[];
-    public getGrid(): Grid {
-        return this.gridArray.pop();
+    public getGrid(): Promise<Grid> {
+        return new Promise(resolve => this.gridArray.pop()) ;
     }
     constructor() {
         for (let i = 0; i < N_STORED_GRID; i++) {

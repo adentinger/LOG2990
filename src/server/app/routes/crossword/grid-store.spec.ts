@@ -16,11 +16,13 @@ describe('Grid store service', () => {
     });
 
     it('getGrid() should return a grid', () => {
-        // expect(gridStore.getGrid()).to.be.
-        assert.typeOf(gridStore.getGrid(), Grid);
+        gridStore.getGrid().then(grids => {
+            assert.typeOf(grids, 'Grid')
+
+        });
     });
 
-    it('should be created', inject([BasicService], (service: BasicService) => {
-        expect(service).toBeTruthy();
-    }));
+    it('getGrid() should contains 5 grids', ()=> {
+        expect(gridStore['gridArray.length']).to.be.equal(5);
+    });
 });
