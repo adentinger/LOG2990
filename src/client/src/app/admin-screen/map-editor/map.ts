@@ -20,7 +20,8 @@ export class Map {
     public name: string;
     public description: string;
     public type: string;
-    public rating: number;
+    public sumRatings: number;
+    public numberOfRatings: number;
     public plays: number;
     public height: number;
     public width: number;
@@ -32,6 +33,8 @@ export class Map {
                 potholes: Pothole[] = [],
                 puddles: Puddle[] = [],
                 speedBoosts: SpeedBoost[] = [],
+                sumRatings: number = 0,
+                numberOfRatings: number = 0,
                 rating: number = 0,
                 plays: number = 0,
                 height: number = 500,
@@ -43,10 +46,22 @@ export class Map {
         this.potholes.push.apply(this.potholes, potholes);
         this.puddles.push.apply(this.puddles, puddles);
         this.speedBoosts.push.apply(this.speedBoosts, speedBoosts);
-        this.rating = rating;
+        this.sumRatings = sumRatings;
+        this.numberOfRatings = numberOfRatings;
         this.plays = plays;
         this.height = height;
         this.width = width;
+    }
+
+    public get rating(): number {
+        let rating: number;
+        if (this.numberOfRatings !== 0) {
+            rating = this.sumRatings / this.numberOfRatings;
+        }
+        else {
+            rating = 0;
+        }
+        return rating;
     }
 
     public computeLength(): number {
