@@ -20,21 +20,19 @@ export class Lexic {
     }
 }
 
-@MiddleWare
+@MiddleWare('/crossword/lexic')
 export class LexicMiddleWare {
     private static readonly LEXIC = new Lexic(provideDatabase());
 
-    @Route('get', '/crossword/lexic/words')
+    @Route('get', '/words')
     public words(req: express.Request, res: express.Response, next: express.NextFunction): void {
         if (isWordConstraint(req.query)) {
             const CONSTRAINT: WordConstraint = parseWordConstraint(req.query);
-            console.log(CONSTRAINT);
             LexicMiddleWare.LEXIC.getWords(CONSTRAINT).then((words) => {
                 res.json(words);
             }).catch((reason: any) => {
-                console.warn('Warning:', reason);
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                res.json(reason);
+                console.warn(reason instanceof Error ? reason.message : reason);
+                res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
             });
         } else {
             console.log('Bad query string:', req.query);
@@ -42,8 +40,9 @@ export class LexicMiddleWare {
         }
     }
 
-    @Route('get', '/crossword/lexic/definitions')
+    @Route('get', '/definitions/:word')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        console.warn('Not Implemented');
         res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
     }
 }
