@@ -10,6 +10,9 @@ import { PointIndex } from './point-index';
 @Injectable()
 export class MapEditorService {
 
+    public mapWidth = 0;
+    public mapHeight = 0;
+
     private map: Map;
 
     constructor(private converter: AbstractRacingUnitConversionService) {
