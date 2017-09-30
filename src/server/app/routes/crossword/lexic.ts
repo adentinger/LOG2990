@@ -5,6 +5,7 @@ import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
 import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
+import { PrefixLogWith } from '../../../../common/utils';
 
 export const LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
 
@@ -25,6 +26,7 @@ export class LexicMiddleWare {
     private static readonly LEXIC = new Lexic(provideDatabase());
 
     @Route('get', '/words')
+    @PrefixLogWith('[lexic/words]')
     public words(req: express.Request, res: express.Response, next: express.NextFunction): void {
         if (isWordConstraint(req.query)) {
             const CONSTRAINT: WordConstraint = parseWordConstraint(req.query);
@@ -41,6 +43,7 @@ export class LexicMiddleWare {
     }
 
     @Route('get', '/definitions/:word')
+    @PrefixLogWith('[lexic/definitions]')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
         console.warn('Not Implemented');
         res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
