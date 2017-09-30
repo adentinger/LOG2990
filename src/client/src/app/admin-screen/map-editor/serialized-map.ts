@@ -9,8 +9,6 @@ import { SpeedBoost } from './speed-boost';
 
 export class SerializedMap {
 
-    // TODO Move the classes here, instead of using 'any'.
-
     public name: string;
     public description: string;
     public type: string;
@@ -22,5 +20,26 @@ export class SerializedMap {
     public potholes: Pothole[];
     public puddles: Puddle[];
     public speedBoosts: SpeedBoost[];
+
+    public constructor(name: string = '',
+                       description: string = '',
+                       type: string = 'Amateur',
+                       sumRatings: number = 0,
+                       numberOfRatings: number = 0,
+                       numberOfPlays: number = 0,
+                       points: Point[] = [],
+                       potholes: Pothole[] = [],
+                       puddles: Puddle[] = [],
+                       speedBoosts: SpeedBoost[] = []) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.sumRatings = sumRatings;
+        this.numberOfRatings = numberOfRatings;
+        this.numberOfPlays = numberOfPlays;
+        this.points = points;
+        this.potholes = potholes;
+        this.speedBoosts = speedBoosts;
+    }
 
 }
