@@ -28,7 +28,18 @@ export class MapEditorService {
     }
 
     public serializeMap(): SerializedMap {
-        return null;
+        return new SerializedMap(
+            this.map.name,
+            this.map.description,
+            this.map.type,
+            this.map.sumRatings,      // Reset rating?
+            this.map.numberOfRatings, // Reset rating?
+            0,                        // Reset number of plays?
+            this.map.path.points,
+            this.map.potholes,
+            this.map.puddles,
+            this.map.speedBoosts
+        );
     }
 
     public deserializeMap(serializedMap: SerializedMap): void {
