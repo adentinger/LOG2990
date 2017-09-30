@@ -24,8 +24,6 @@ describe('Map', () => {
 
     it('should be created', () => {
         expect(mockMaps.emptyMap1()).toBeTruthy();
-        expect(mockMaps.emptyMap1().height).toEqual(500);
-        expect(mockMaps.emptyMap1().width).toEqual(500);
         expect(mockMaps.emptyMap1().path).toEqual(new Path());
         expect(mockMaps.emptyMap1().potholes).toEqual([]);
         expect(mockMaps.emptyMap1().puddles).toEqual([]);

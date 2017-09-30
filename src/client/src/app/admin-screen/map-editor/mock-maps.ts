@@ -44,9 +44,7 @@ export class MockMaps {
                        [],
                        [],
                        9,
-                       -1,
-                       -2,
-                       -2);
+                       -1);
     }
 
     public disfunctionalMap2(): Map {
@@ -58,9 +56,7 @@ export class MockMaps {
                        [],
                        [],
                        9,
-                       -1,
-                       -2,
-                       -2);
+                       -1);
     }
 
 }

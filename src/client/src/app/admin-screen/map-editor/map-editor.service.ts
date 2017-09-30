@@ -101,8 +101,8 @@ export class MapEditorService {
     }
 
     private areValidCoordinates(coordinates: Point): boolean {
-        return coordinates.x < this.map.width && coordinates.y < this.map.height &&
-               coordinates.x > 0              && coordinates.y > 0;
+        return coordinates.x < this.mapWidth && coordinates.y < this.mapHeight &&
+               coordinates.x > 0             && coordinates.y > 0;
     }
 
     public isFirstPoint(pointIndex: PointIndex): boolean {

@@ -35,7 +35,10 @@ export class MapEditorComponent implements OnInit {
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService) { }
+                private mapRenderer: MapRendererService) {
+        mapEditor.mapWidth = this.width;
+        mapEditor.mapHeight = this.height;
+    }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;

@@ -23,8 +23,6 @@ export class Map {
     public sumRatings: number;
     public numberOfRatings: number;
     public plays: number;
-    public height: number;
-    public width: number;
 
     constructor(path: Path = new Path(),
                 name: string = '',
@@ -35,9 +33,7 @@ export class Map {
                 speedBoosts: SpeedBoost[] = [],
                 sumRatings: number = 0,
                 numberOfRatings: number = 0,
-                plays: number = 0,
-                height: number = 500,
-                width: number = 500) {
+                plays: number = 0) {
         this.path = path;
         this.name = name;
         this.description = description;
@@ -48,8 +44,6 @@ export class Map {
         this.sumRatings = sumRatings;
         this.numberOfRatings = numberOfRatings;
         this.plays = plays;
-        this.height = height;
-        this.width = width;
     }
 
     public get rating(): number {
