@@ -45,13 +45,6 @@ describe('MapEditorService', () => {
         expect(INITIAL_MAP).not.toBe(NEW_MAP);
     });
 
-    it('should be able to delete a map', () => {
-        service['map'] = mockMaps.emptyMap1();
-        expect(service['map']).not.toBeFalsy();
-        service.deleteMap();
-        expect(service['map']).toBeNull();
-    });
-
     it('should be able to check if a path loops back', () => {
         service['map'] = mockMaps.functionalMap1();
         expect(service['map'].isClosed()).toBe(true);

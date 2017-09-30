@@ -23,8 +23,6 @@ export class MapEditorService {
     public newMap(): boolean {
         let mapCreated = false;
 
-        this.deleteMap();
-
         this.map = new Map();
         if (this.map !== null) {
             mapCreated = true;
@@ -39,10 +37,6 @@ export class MapEditorService {
 
     public deserializeMap(): SerializedMap {
         return null;
-    }
-
-    public deleteMap(): void {
-        this.map = null;
     }
 
     public get points(): Point[] {
