@@ -1,5 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, functionalMap1, emptyMap2 } from './mock-maps';
+
+import { MockMaps } from './mock-maps';
 import { MapEditorService } from './map-editor.service';
 import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
 import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
@@ -10,17 +11,23 @@ describe('MapEditorService', () => {
         TestBed.configureTestingModule({
             providers: [
                 MapEditorService,
-                {
-                    provide: AbstractRacingUnitConversionService,
-                    useClass: RacingUnitConversionService
-                }
+                AbstractRacingUnitConversionService,
+                    {
+                        provide: AbstractRacingUnitConversionService,
+                        useClass: RacingUnitConversionService
+                    },
+                MockMaps
             ]
         });
     });
 
     let service: MapEditorService;
-    beforeEach(inject([MapEditorService], (injectedService: MapEditorService) => {
+    let mockMaps: MockMaps;
+
+    beforeEach(inject([MapEditorService, MockMaps],
+                      (injectedService: MapEditorService, mockMapFactory: MockMaps) => {
         service = injectedService;
+        mockMaps = mockMapFactory;
     }));
 
     it('should be created', () => {
@@ -39,21 +46,21 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to delete a map', () => {
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         expect(service['map']).not.toBeFalsy();
         service.deleteMap();
         expect(service['map']).toBeNull();
     });
 
     it('should be able to check if a path loops back', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
         expect(service['map'].isClosed()).toBe(true);
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         expect(service['map'].isClosed()).toBe(false);
     });
 
     it('should be able to add a valid point', () => {
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         service['map']['height'] = 500;
         service['map']['width'] = 500;
 
@@ -70,7 +77,7 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to delete a point', () => {
-        service['map'] = Object.create(emptyMap2);
+        service['map'] = mockMaps.emptyMap1();
         const POINT: Point = new Point(3, 4);
         service['map'].path.points.push(POINT);
 
@@ -80,7 +87,7 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to edit a point', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
 
         service.editPoint(0, new Point(3, 3));
         expect(service['map'].path.points[0].x).toBe(3);
@@ -91,9 +98,9 @@ describe('MapEditorService', () => {
     });
 
     it('should provide points', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
 
-        expect(service.path).toBe(functionalMap1.path);
+        expect(service.path).toEqual(mockMaps.functionalMap1().path);
     });
 
 });
