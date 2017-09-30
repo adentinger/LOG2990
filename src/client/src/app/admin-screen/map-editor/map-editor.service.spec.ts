@@ -39,7 +39,7 @@ describe('MapEditorService', () => {
         const INITIAL_MAP = service['map'];
         expect(INITIAL_MAP).toBeTruthy();
 
-        expect(service.newMap()).toBe(true);
+        service.newMap();
         const NEW_MAP = service['map'];
         expect(NEW_MAP).toBeTruthy();
         expect(INITIAL_MAP).not.toBe(NEW_MAP);

@@ -20,15 +20,8 @@ export class MapEditorService {
         return this.map;
     }
 
-    public newMap(): boolean {
-        let mapCreated = false;
-
+    public newMap(): void {
         this.map = new Map();
-        if (this.map !== null) {
-            mapCreated = true;
-        }
-
-        return mapCreated;
     }
 
     public serializeMap(): void {
