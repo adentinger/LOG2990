@@ -35,7 +35,6 @@ export class Map {
                 speedBoosts: SpeedBoost[] = [],
                 sumRatings: number = 0,
                 numberOfRatings: number = 0,
-                rating: number = 0,
                 plays: number = 0,
                 height: number = 500,
                 width: number = 500) {
