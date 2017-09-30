@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
 import { Map } from './map';
+import { SerializedMap } from './serialized-map';
 import { Point } from './point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
@@ -30,6 +31,14 @@ export class MapEditorService {
         }
 
         return mapCreated;
+    }
+
+    public serializeMap(): void {
+
+    }
+
+    public deserializeMap(): SerializedMap {
+        return null;
     }
 
     public deleteMap(): void {
