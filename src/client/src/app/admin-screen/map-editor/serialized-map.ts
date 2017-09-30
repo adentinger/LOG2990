@@ -39,6 +39,7 @@ export class SerializedMap {
         this.numberOfPlays = numberOfPlays;
         this.points = points;
         this.potholes = potholes;
+        this.puddles = puddles;
         this.speedBoosts = speedBoosts;
     }
 
