@@ -9,3 +9,5 @@ export function isJson(pseudoJson: string): boolean {
         throw error;
     }
 }
+
+export * from './prefixable-console';
