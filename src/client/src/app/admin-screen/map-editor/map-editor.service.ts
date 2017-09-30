@@ -35,22 +35,22 @@ export class MapEditorService {
             this.map.sumRatings,      // Reset rating?
             this.map.numberOfRatings, // Reset rating?
             0,                        // Reset number of plays?
-            this.map.path.points,
-            this.map.potholes,
-            this.map.puddles,
-            this.map.speedBoosts
+            this.map.path.points.slice(),
+            this.map.potholes.slice(),
+            this.map.puddles.slice(),
+            this.map.speedBoosts.slice()
         );
     }
 
     public deserializeMap(serializedMap: SerializedMap): void {
         this.map = new Map(
-            new Path(serializedMap.points),
+            new Path(serializedMap.points.slice()),
             serializedMap.name,
             serializedMap.description,
             serializedMap.type,
-            serializedMap.potholes,
-            serializedMap.puddles,
-            serializedMap.speedBoosts,
+            serializedMap.potholes.slice(),
+            serializedMap.puddles.slice(),
+            serializedMap.speedBoosts.slice(),
             serializedMap.sumRatings,
             serializedMap.numberOfRatings,
             serializedMap.numberOfPlays
