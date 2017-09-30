@@ -43,7 +43,18 @@ export class MapEditorService {
     }
 
     public deserializeMap(serializedMap: SerializedMap): void {
-
+        this.map = new Map(
+            new Path(serializedMap.points),
+            serializedMap.name,
+            serializedMap.description,
+            serializedMap.type,
+            serializedMap.potholes,
+            serializedMap.puddles,
+            serializedMap.speedBoosts,
+            serializedMap.sumRatings,
+            serializedMap.numberOfRatings,
+            serializedMap.numberOfPlays
+        );
     }
 
     public get points(): Point[] {
