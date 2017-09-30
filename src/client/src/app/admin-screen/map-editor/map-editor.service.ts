@@ -24,12 +24,12 @@ export class MapEditorService {
         this.map = new Map();
     }
 
-    public serializeMap(): void {
-
+    public serializeMap(): SerializedMap {
+        return null;
     }
 
-    public deserializeMap(): SerializedMap {
-        return null;
+    public deserializeMap(serializedMap: SerializedMap): void {
+
     }
 
     public get points(): Point[] {
