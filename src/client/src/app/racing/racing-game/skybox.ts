@@ -53,4 +53,5 @@ export class Skybox extends THREE.Mesh {
         }
         (this.cube.material as THREE.Material).update();
     }
+
 }
