@@ -119,7 +119,7 @@
       "check-type"
     ],
     
-    // rules added by Dylan
+    "__comment" : "rules added by Dylan",
     "no-sparse-arrays": true,
     "no-irregular-whitespace": true
   }

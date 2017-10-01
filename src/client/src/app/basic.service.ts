@@ -3,8 +3,6 @@ import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { Message } from '../../../common/communication/message';
-
 @Injectable()
 export class BasicService {
 
@@ -12,10 +10,10 @@ export class BasicService {
 
     private url = 'http://localhost:3000/basic';
 
-    public basicGet(): Promise<Message> {
+    public basicGet(): Promise<any> {
         return this.http.get(this.url)
             .toPromise()
-            .then(response => response.json() as Message)
+            .then(response => response.json() as any)
             .catch(this.handleError);
     }
 
