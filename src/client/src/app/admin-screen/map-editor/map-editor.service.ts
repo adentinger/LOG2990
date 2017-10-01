@@ -10,8 +10,8 @@ import { PointIndex } from './point-index';
 @Injectable()
 export class MapEditorService {
 
-    public mapWidth = 0;
-    public mapHeight = 0;
+    public width = 0;
+    public height = 0;
 
     private map: Map;
 
@@ -21,6 +21,14 @@ export class MapEditorService {
 
     public get currentMap(): Map {
         return this.map;
+    }
+
+    public get mapWidth(): number {
+        return this.width;
+    }
+
+    public get mapHeight(): number {
+        return this.height;
     }
 
     public newMap(): void {
