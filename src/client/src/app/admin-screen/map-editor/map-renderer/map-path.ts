@@ -20,12 +20,12 @@ export class MapPath implements Drawable {
 
     constructor(context: CanvasRenderingContext2D, points: Point[]) {
         this.context = context;
-        this.updatePoints(points);
+        this.updatePoints(points, 0);
     }
 
-    public updatePoints(points: Point[]): void {
+    public updatePoints(points: Point[], minimumDistanceBetweenPoints: number): void {
         this.generatePointsFrom(points);
-        this.generateLinesFrom(points);
+        this.generateLinesFrom(points, minimumDistanceBetweenPoints);
     }
 
     private generatePointsFrom(points: Point[]): void {
@@ -45,8 +45,10 @@ export class MapPath implements Drawable {
         }).filter(value => value !== null);
     }
 
-    private generateLinesFrom(points: Point[]): void {
+    private generateLinesFrom(points: Point[], minimumDistanceBetweenPoints: number): void {
         const MAP: Map = new Map();
+        MAP.minimumSegmentLength = minimumDistanceBetweenPoints;
+
         this.lines = [];
 
         if (this.points.length < 2) {

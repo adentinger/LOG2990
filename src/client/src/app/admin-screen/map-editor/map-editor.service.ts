@@ -6,6 +6,7 @@ import { SerializedMap } from './serialized-map';
 import { Point } from './point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
+import { Track } from '../../racing/track';
 
 @Injectable()
 export class MapEditorService {
@@ -43,6 +44,11 @@ export class MapEditorService {
 
     public newMap(): void {
         this.map = new Map();
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
+
+    public get minimumDistanceBetweenPoints(): number {
+        return this.converter.lengthFromGameUnits(2 * Track.SEGMENT_WIDTH);
     }
 
     public serializeMap(): SerializedMap {
@@ -89,6 +95,7 @@ export class MapEditorService {
             });
             const NEW_MAP = new Map(
                 new Path(POINTS),
+                this.minimumDistanceBetweenPoints,
                 serializedMap.name,
                 serializedMap.description,
                 serializedMap.type,

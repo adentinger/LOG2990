@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { MockMaps } from './mock-maps';
-import { Map, MIN_LINE_LENGTH } from './map';
+import { Map } from './map';
 import { Path } from './path';
 import { Point } from './point';
 import { Line } from './line';
@@ -108,24 +108,24 @@ describe('Map', () => {
 
         it('should not find small lines if there are none', () => {
             const DATA: PolarData[] = [
-                {length: MIN_LINE_LENGTH * 1.01,  angle: 52.1},
-                {length: MIN_LINE_LENGTH * 154.8, angle: 87.2}
+                {length: MockMaps.MIN_LINE_LENGTH * 1.01,  angle: 52.1},
+                {length: MockMaps.MIN_LINE_LENGTH * 154.8, angle: 87.2}
             ];
             const pathData = new PolarPathData(new Point(10, 15), DATA);
-            const MAP1 = new Map(pathData.toPath());
+            const MAP1 = new Map(pathData.toPath(), MockMaps.MIN_LINE_LENGTH);
             expect(MAP1['computeSmallSegments']().length).toEqual(0);
         });
 
         it('should find small lines if there are', () => {
             const DATA: PolarData[] = [
                 {length: 0.0, angle: 52.1},
-                {length: MIN_LINE_LENGTH * 1.01, angle: 14.7},
-                {length: MIN_LINE_LENGTH * 20.4, angle: 128.3},
-                {length: MIN_LINE_LENGTH * 0.99, angle: 59.1},
-                {length: MIN_LINE_LENGTH * 0.0,  angle: 48.6}
+                {length: MockMaps.MIN_LINE_LENGTH * 1.01, angle: 14.7},
+                {length: MockMaps.MIN_LINE_LENGTH * 20.4, angle: 128.3},
+                {length: MockMaps.MIN_LINE_LENGTH * 0.99, angle: 59.1},
+                {length: MockMaps.MIN_LINE_LENGTH * 0.0,  angle: 48.6}
             ];
             const pathData = new PolarPathData(new Point(10, 15), DATA);
-            const MAP1 = new Map(pathData.toPath());
+            const MAP1 = new Map(pathData.toPath(), MockMaps.MIN_LINE_LENGTH);
             expect(MAP1['computeSmallSegments']().length).toEqual(3);
         });
 

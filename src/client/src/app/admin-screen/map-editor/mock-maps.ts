@@ -7,12 +7,15 @@ import { Point } from './point';
 
 export class MockMaps {
 
+    public static readonly MIN_LINE_LENGTH = 10.0;
+
     public emptyMap1(): Map {
-        return new Map();
+        return new Map(new Path(), MockMaps.MIN_LINE_LENGTH);
     }
 
     public functionalMap1(): Map {
         return new Map(new Path([new Point(0, 0), new Point(10, 0), new Point(0, 10), new Point(0, 0)]),
+                       MockMaps.MIN_LINE_LENGTH,
                        'name',
                        'description',
                        'professional',
@@ -25,6 +28,7 @@ export class MockMaps {
 
     public functionalMap2(): Map {
         return new Map(new Path([new Point(0, 0), new Point(10, 0), new Point(0, 10), new Point(0, 0)]),
+                       MockMaps.MIN_LINE_LENGTH,
                        'name',
                        'description',
                        'professional',
@@ -37,6 +41,7 @@ export class MockMaps {
 
     public disfunctionalMap1(): Map {
         return new Map(new Path([new Point(0, 2), new Point(10, 2), new Point(0, 10), new Point(2, 1), new Point(0, 2)]),
+                       MockMaps.MIN_LINE_LENGTH,
                        'name',
                        'description',
                        'sdljhgso',
@@ -49,6 +54,7 @@ export class MockMaps {
 
     public disfunctionalMap2(): Map {
         return new Map(new Path([new Point(0, 2), new Point(10, 2), new Point(5, 5), new Point(5, 0), new Point(0, 0)]),
+                       MockMaps.MIN_LINE_LENGTH,
                        'name',
                        'description',
                        'sdljhgso',

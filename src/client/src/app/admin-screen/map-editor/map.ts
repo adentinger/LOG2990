@@ -9,8 +9,6 @@ import { Line, IntersectionType } from './line';
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
 
-export const MIN_LINE_LENGTH = 10.0;
-
 export enum MapError {
     NONE = 0,       // No error
     NOT_CLOSED,     // Map path is not closed
@@ -20,7 +18,9 @@ export enum MapError {
 }
 
 export class Map {
+
     public path: Path;
+    public minimumSegmentLength: number;
     public potholes: Pothole[] = [];
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
@@ -33,6 +33,7 @@ export class Map {
     public plays: number;
 
     constructor(path: Path = new Path(),
+                minimumSegmentLength: number = Infinity,
                 name: string = '',
                 description: string = '',
                 type: string = 'Amateur',
@@ -43,6 +44,7 @@ export class Map {
                 numberOfRatings: number = 0,
                 plays: number = 0) {
         this.path = path;
+        this.minimumSegmentLength = minimumSegmentLength;
         this.name = name;
         this.description = description;
         this.type = type;
@@ -188,7 +190,7 @@ export class Map {
         let lastPoint = this.path.points[0];
         this.path.points.slice(1).forEach((point: Point) => {
             const LINE = new Line(lastPoint, point);
-            if (LINE.translation.norm() < MIN_LINE_LENGTH) {
+            if (LINE.translation.norm() < this.minimumSegmentLength) {
                 SMALL_SEGMENTS.push(LINE);
             }
             lastPoint = point;
