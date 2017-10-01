@@ -30,6 +30,12 @@ export class MapEditorService {
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
             if (this.map.isValid()) {
+                const POINTS: Point[] =
+                    this.map.path.points.map((point: Point) => {
+                        const X = this.converter.lengthToGameUnits(point.x);
+                        const Y = this.converter.lengthToGameUnits(point.y);
+                        return new Point(X, Y);
+                    });
                 return new SerializedMap(
                     this.map.name,
                     this.map.description,
@@ -37,7 +43,7 @@ export class MapEditorService {
                     this.map.sumRatings,      // Reset rating?
                     this.map.numberOfRatings, // Reset rating?
                     0,                        // Reset number of plays?
-                    this.map.path.points.slice(),
+                    POINTS,
                     this.map.potholes.slice(),
                     this.map.puddles.slice(),
                     this.map.speedBoosts.slice()
@@ -58,8 +64,13 @@ export class MapEditorService {
 
     public deserializeMap(serializedMap: SerializedMap): void {
         if (this.areWidthAndHeightSet()) {
+            const POINTS: Point[] = serializedMap.points.map((point: Point) => {
+                const X = this.converter.lengthFromGameUnits(point.x);
+                const Y = this.converter.lengthFromGameUnits(point.y);
+                return new Point(X, Y);
+            });
             const NEW_MAP = new Map(
-                new Path(serializedMap.points.slice()),
+                new Path(POINTS),
                 serializedMap.name,
                 serializedMap.description,
                 serializedMap.type,
