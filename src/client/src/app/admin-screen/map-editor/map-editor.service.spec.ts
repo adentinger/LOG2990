@@ -93,28 +93,28 @@ describe('MapEditorService', () => {
             service.mapWidth = 500;
             service.mapHeight = 300;
             service['map'] = mockMaps.disfunctionalMap1();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
             service['map'] = mockMaps.disfunctionalMap2();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
             service['map'] = mockMaps.emptyMap1();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
         });
 
         it('should not serialize maps if either width or height is not set', () => {
             service['map'] = mockMaps.functionalMap1();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
             service['map'] = mockMaps.disfunctionalMap1();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
 
             const INITIAL_WIDTH = service.mapWidth;
             service.mapWidth = 500;
             service['map'] = mockMaps.functionalMap1();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
 
             service.mapWidth = INITIAL_WIDTH;
             service.mapHeight = 300;
             service['map'] = mockMaps.functionalMap1();
-            expect(service.serializeMap()).toThrow();
+            expect(() => service.serializeMap()).toThrow();
         });
 
     });
@@ -147,25 +147,25 @@ describe('MapEditorService', () => {
             ];
 
             DISFUNCTIONAL_MAPS.forEach((map: SerializedMap) => {
-                expect(service.deserializeMap(map)).toThrow();
+                expect(() => service.deserializeMap(map)).toThrow();
             });
         });
 
         it('should not deserialize maps if either width or height is not set', () => {
             let functional = mockSerializedMaps.functional1();
-            expect(service.deserializeMap(functional)).toThrow();
+            expect(() => service.deserializeMap(functional)).toThrow();
             const DISFUNCTIONAL = mockSerializedMaps.disfunctional1();
-            expect(service.deserializeMap(DISFUNCTIONAL)).toThrow();
+            expect(() => service.deserializeMap(DISFUNCTIONAL)).toThrow();
 
             const INITIAL_WIDTH = service.mapWidth;
             service.mapWidth = 500;
             functional = mockSerializedMaps.functional1();
-            expect(service.deserializeMap(functional)).toThrow();
+            expect(() => service.deserializeMap(functional)).toThrow();
 
             service.mapWidth = INITIAL_WIDTH;
             service.mapHeight = 300;
             functional = mockSerializedMaps.functional1();
-            expect(service.deserializeMap(functional)).toThrow();
+            expect(() => service.deserializeMap(functional)).toThrow();
         });
 
     });
