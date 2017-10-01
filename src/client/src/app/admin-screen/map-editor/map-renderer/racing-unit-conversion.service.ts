@@ -39,7 +39,6 @@ export class RacingUnitConversionService {
             this.lengthPerMeter = this.width / Track.WIDTH_MAX;
         }
         else {
-            console.log('ERROR:', width);
             throw new Error('Cannot set window width: negative value or zero passed.');
         }
     }

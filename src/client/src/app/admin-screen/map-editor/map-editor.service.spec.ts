@@ -93,8 +93,8 @@ describe('MapEditorService', () => {
         });
 
         it('should not serialize maps if either width or height is not set', () => {
-            service.mapWidth = -1;
-            service.mapHeight = -1;
+            service['width'] = -1;
+            service['height'] = -1;
 
             service['map'] = mockMaps.functionalMap1();
             expect(() => service.serializeMap()).toThrow();
@@ -106,8 +106,8 @@ describe('MapEditorService', () => {
             service['map'] = mockMaps.functionalMap1();
             expect(() => service.serializeMap()).toThrow();
 
-            service.mapWidth = INITIAL_WIDTH;
-            service.mapHeight = 300;
+            service['width'] = INITIAL_WIDTH;
+            service['height'] = 300;
             service['map'] = mockMaps.functionalMap1();
             expect(() => service.serializeMap()).toThrow();
         });
@@ -125,10 +125,9 @@ describe('MapEditorService', () => {
                 mockSerializedMaps.functional2()
             ];
 
-            MAPS.forEach((map: SerializedMap) => {
-                const FUNCTIONAL1 = mockSerializedMaps.functional1();
-                service.deserializeMap(FUNCTIONAL1);
-                CHECK_SERIALIZATION(service.currentMap, FUNCTIONAL1);
+            MAPS.forEach((map: SerializedMap, idx) => {
+                service.deserializeMap(map);
+                CHECK_SERIALIZATION(service.currentMap, map);
             });
         });
 
@@ -144,8 +143,8 @@ describe('MapEditorService', () => {
         });
 
         it('should not deserialize maps if either width or height is not set', () => {
-            service.mapWidth = -1;
-            service.mapHeight = -1;
+            service['width'] = -1;
+            service['height'] = -1;
 
             const FUNCTIONAL = mockSerializedMaps.functional1();
             expect(() => service.deserializeMap(FUNCTIONAL)).toThrow();
