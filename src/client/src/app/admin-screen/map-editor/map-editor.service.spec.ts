@@ -5,7 +5,6 @@ import { Map } from './map';
 import { SerializedMap } from './serialized-map';
 import { MockMaps } from './mock-maps';
 import { MockSerializedMaps } from './mock-serialized-maps';
-import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
 import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
 import { Point } from './point';
 
@@ -14,11 +13,7 @@ describe('MapEditorService', () => {
         TestBed.configureTestingModule({
             providers: [
                 MapEditorService,
-                AbstractRacingUnitConversionService,
-                    {
-                        provide: AbstractRacingUnitConversionService,
-                        useClass: RacingUnitConversionService
-                    },
+                RacingUnitConversionService,
                 MockMaps,
                 MockSerializedMaps
             ]

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { AbstractRacingUnitConversionService } from '../abstract-racing-unit-conversion.service';
 import { Meters } from '../../../racing/types';
 import { Track } from '../../../racing/track';
 
 @Injectable()
-export class RacingUnitConversionService extends AbstractRacingUnitConversionService {
+export class RacingUnitConversionService {
 
     private static readonly ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
 
@@ -14,9 +13,7 @@ export class RacingUnitConversionService extends AbstractRacingUnitConversionSer
     private width = -1;
     private height = -1;
 
-    constructor() {
-        super();
-    }
+    constructor() { }
 
     public lengthFromGameUnits(length: Meters): number {
         return length * this.lengthPerMeter;
