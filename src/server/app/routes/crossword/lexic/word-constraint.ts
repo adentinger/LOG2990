@@ -14,10 +14,10 @@ function isCharConstraintArray(object: any): object is CharConstraint[] {
 }
 
 export function isWordConstraint(object: any): boolean {
-    return ('minLength' in object && Number.isInteger(object['minLength'])) && // minlength exists and is number
-        ('isCommon' in object) && (                                   //is common exists
-            'charConstraints' in object && (                          //char constraints exists
-                isCharConstraintArray(object['charConstraints']) || (   //char constraints is array
+    return ('minLength' in object && Number.isInteger(object['minLength'])) &&
+        ('isCommon' in object) && (
+            'charConstraints' in object && (
+                isCharConstraintArray(object['charConstraints']) || (
                     typeof object['charConstraints'] === 'string' &&
                     isJson(object['charConstraints']) &&
                     isCharConstraintArray(JSON.parse(object['charConstraints']))
