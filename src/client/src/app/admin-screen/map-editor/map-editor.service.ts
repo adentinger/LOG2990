@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
+import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
 import { Map } from './map';
 import { SerializedMap } from './serialized-map';
 import { Point } from './point';
@@ -15,7 +15,7 @@ export class MapEditorService {
 
     private map: Map;
 
-    constructor(private converter: AbstractRacingUnitConversionService) {
+    constructor(private converter: RacingUnitConversionService) {
         this.newMap();
     }
 
@@ -27,8 +27,18 @@ export class MapEditorService {
         return this.width;
     }
 
+    public set mapWidth(mapWidth: number) {
+        this.converter.windowWidth = mapWidth;
+        this.width = mapWidth;
+    }
+
     public get mapHeight(): number {
         return this.height;
+    }
+
+    public set mapHeight(mapHeight: number) {
+        this.converter.windowHeight = mapHeight;
+        this.height = mapHeight;
     }
 
     public newMap(): void {
