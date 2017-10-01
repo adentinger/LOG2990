@@ -28,47 +28,61 @@ export class MapEditorService {
     }
 
     public serializeMap(): SerializedMap {
-        if (this.map.isValid()) {
-            return new SerializedMap(
-                this.map.name,
-                this.map.description,
-                this.map.type,
-                this.map.sumRatings,      // Reset rating?
-                this.map.numberOfRatings, // Reset rating?
-                0,                        // Reset number of plays?
-                this.map.path.points.slice(),
-                this.map.potholes.slice(),
-                this.map.puddles.slice(),
-                this.map.speedBoosts.slice()
-            );
+        if (this.areWidthAndHeightSet()) {
+            if (this.map.isValid()) {
+                return new SerializedMap(
+                    this.map.name,
+                    this.map.description,
+                    this.map.type,
+                    this.map.sumRatings,      // Reset rating?
+                    this.map.numberOfRatings, // Reset rating?
+                    0,                        // Reset number of plays?
+                    this.map.path.points.slice(),
+                    this.map.potholes.slice(),
+                    this.map.puddles.slice(),
+                    this.map.speedBoosts.slice()
+                );
+            }
+            else {
+                throw new Error('Serialization failed: ' +
+                                'The map is currently not valid. ' +
+                                'Fix map problems before attempting serialization');
+            }
         }
         else {
-            throw new Error('Serialization failed: ' +
-                            'The map is currently not valid. ' +
-                            'Fix map problems before attempting serialization');
+            throw new Error('Serializing map failed: ' +
+                            'Please set map width and height to a value ' +
+                            'that is >0 before attempting to deserialize.');
         }
     }
 
     public deserializeMap(serializedMap: SerializedMap): void {
-        const NEW_MAP = new Map(
-            new Path(serializedMap.points.slice()),
-            serializedMap.name,
-            serializedMap.description,
-            serializedMap.type,
-            serializedMap.potholes.slice(),
-            serializedMap.puddles.slice(),
-            serializedMap.speedBoosts.slice(),
-            serializedMap.sumRatings,
-            serializedMap.numberOfRatings,
-            serializedMap.numberOfPlays
-        );
+        if (this.areWidthAndHeightSet()) {
+            const NEW_MAP = new Map(
+                new Path(serializedMap.points.slice()),
+                serializedMap.name,
+                serializedMap.description,
+                serializedMap.type,
+                serializedMap.potholes.slice(),
+                serializedMap.puddles.slice(),
+                serializedMap.speedBoosts.slice(),
+                serializedMap.sumRatings,
+                serializedMap.numberOfRatings,
+                serializedMap.numberOfPlays
+            );
 
-        if (NEW_MAP.isValid()) {
-            this.map = NEW_MAP;
+            if (NEW_MAP.isValid()) {
+                this.map = NEW_MAP;
+            }
+            else {
+                throw new Error('Deserializing map failed: ' +
+                                'The serialized map is not valid.');
+            }
         }
         else {
             throw new Error('Deserializing map failed: ' +
-                            'The serialized map is not valid.');
+                            'Please set map width and height to a value ' +
+                            'that is >0 before attempting to deserialize.');
         }
     }
 
@@ -135,6 +149,10 @@ export class MapEditorService {
 
     public isMapValid(): boolean {
         return this.map.isValid();
+    }
+
+    private areWidthAndHeightSet(): boolean {
+        return this.mapWidth > 0 && this.mapHeight > 0;
     }
 
 }
