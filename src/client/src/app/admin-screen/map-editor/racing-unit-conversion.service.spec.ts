@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
-import { Track } from '../../../racing/track';
+import { Track } from '../../racing/track';
 
 describe('RacingUnitConversionService', () => {
 

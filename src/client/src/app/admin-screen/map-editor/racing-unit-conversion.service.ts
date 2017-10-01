@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Meters } from '../../../racing/types';
-import { Track } from '../../../racing/track';
+import { Meters } from '../../racing/types';
+import { Track } from '../../racing/track';
 
 @Injectable()
 export class RacingUnitConversionService {

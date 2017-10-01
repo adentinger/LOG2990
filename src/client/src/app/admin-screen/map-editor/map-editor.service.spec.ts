@@ -5,7 +5,7 @@ import { Map } from './map';
 import { SerializedMap } from './serialized-map';
 import { MockMaps } from './mock-maps';
 import { MockSerializedMaps } from './mock-serialized-maps';
-import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from './point';
 
 describe('MapEditorService', () => {

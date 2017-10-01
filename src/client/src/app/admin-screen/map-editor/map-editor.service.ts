@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map, MapError } from './map';
 import { SerializedMap } from './serialized-map';
 import { Point } from './point';
