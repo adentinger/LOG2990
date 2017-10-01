@@ -28,22 +28,29 @@ export class MapEditorService {
     }
 
     public serializeMap(): SerializedMap {
-        return new SerializedMap(
-            this.map.name,
-            this.map.description,
-            this.map.type,
-            this.map.sumRatings,      // Reset rating?
-            this.map.numberOfRatings, // Reset rating?
-            0,                        // Reset number of plays?
-            this.map.path.points.slice(),
-            this.map.potholes.slice(),
-            this.map.puddles.slice(),
-            this.map.speedBoosts.slice()
-        );
+        if (this.map.isValid()) {
+            return new SerializedMap(
+                this.map.name,
+                this.map.description,
+                this.map.type,
+                this.map.sumRatings,      // Reset rating?
+                this.map.numberOfRatings, // Reset rating?
+                0,                        // Reset number of plays?
+                this.map.path.points.slice(),
+                this.map.potholes.slice(),
+                this.map.puddles.slice(),
+                this.map.speedBoosts.slice()
+            );
+        }
+        else {
+            throw new Error('Serialization failed: ' +
+                            'The map is currently not valid. ' +
+                            'Fix map problems before attempting serialization');
+        }
     }
 
     public deserializeMap(serializedMap: SerializedMap): void {
-        this.map = new Map(
+        const NEW_MAP = new Map(
             new Path(serializedMap.points.slice()),
             serializedMap.name,
             serializedMap.description,
@@ -55,6 +62,14 @@ export class MapEditorService {
             serializedMap.numberOfRatings,
             serializedMap.numberOfPlays
         );
+
+        if (NEW_MAP.isValid()) {
+            this.map = NEW_MAP;
+        }
+        else {
+            throw new Error('Deserializing map failed: ' +
+                            'The serialized map is not valid.');
+        }
     }
 
     public get points(): Point[] {
