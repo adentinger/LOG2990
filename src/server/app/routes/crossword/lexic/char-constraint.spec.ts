@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { isCharConstraint } from './char-constraint';
 
-function itShould(passOrFail: 'pass' | 'fail', message: string, ...objectsToTest: any[]){
+function itShould(passOrFail: 'pass' | 'fail', message: string, ...objectsToTest: any[]) {
     it(`should ${passOrFail} ${message}`, (done) => {
         for (const OBJECT_TO_TEST of objectsToTest) {
             const FAIL_MESSAGE = `expected "${OBJECT_TO_TEST}" to ${passOrFail}`;
@@ -21,6 +21,6 @@ describe('CharConstraint', () => {
         itShouldFail('an object without a char or definition feild', {}, {foo: 'bar'}, {char: 'a'}, {position: 0});
         itShouldFail('an object with a number in its "char" feild', {char: 1, position: 0});
         itShouldFail('an object without a number in its position feild', {char: 'a', position: NaN}, {char: 'p', postion: 'lacasse'});
-    })
+    });
 
 });
