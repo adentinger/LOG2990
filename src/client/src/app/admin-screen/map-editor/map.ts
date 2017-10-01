@@ -124,10 +124,18 @@ export class Map {
                 BAD_ANGLES.push([POINT1, POINT2, POINT3]);
             }
         }
+        if (BAD_ANGLES.length !== 0) {
+            console.log('---BAD_ANGLES---');
+        }
         return BAD_ANGLES;
     }
 
     public isClosed(): boolean {
+        if (!(this.path.points.length > 2
+            && this.path.points[0].equals(
+               this.path.points[this.path.points.length - 1]))) {
+            console.log('---NOT CLOSED---');
+        }
         return this.path.points.length > 2
             && this.path.points[0].equals(
                this.path.points[this.path.points.length - 1]);
@@ -157,7 +165,9 @@ export class Map {
                 }
             }
         }
-
+        if (LINES_THAT_CROSS.length !== 0) {
+            console.log('---LINES CROSS---');
+        }
         return LINES_THAT_CROSS;
     }
 
@@ -171,6 +181,9 @@ export class Map {
             }
             lastPoint = point;
         });
+        if (SMALL_SEGMENTS.length !== 0) {
+            console.log('---SMALL SEGMENTS---', SMALL_SEGMENTS.length);
+        }
         return SMALL_SEGMENTS;
     }
 
