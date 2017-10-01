@@ -28,11 +28,9 @@ export class RacingGameService {
         this.racingGameRendering.setupScene();
     }
 
-    private renderGame(): void {
-        this.animationRequestId = requestAnimationFrame(() => {
-            this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
-            this.renderGame();
-        });
+    public renderGame(): void {
+        this.animationRequestId = requestAnimationFrame(this.renderGame.bind(this));
+        this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
     }
 
     private startRendering(): void {

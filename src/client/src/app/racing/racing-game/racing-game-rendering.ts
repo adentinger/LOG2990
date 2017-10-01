@@ -10,7 +10,7 @@ export class RacingGameRendering {
     public readonly ASPECT: number = this.WIDTH / this.HEIGHT;
 
     public readonly NEAR: number = 1;
-    public readonly FAR: number = 100000;
+    public readonly FAR: number = 1000000;
 
     public SCENE: THREE.Scene;
     public CAMERA: THREE.PerspectiveCamera;
@@ -20,6 +20,7 @@ export class RacingGameRendering {
     private readonly LIGHTS: THREE.Light[] = [];
 
     constructor() {
+        console.log('allo');
         this.SCENE = new THREE.Scene();
         this.RENDERER = new THREE.WebGLRenderer();
         this.CAMERA = new THREE.PerspectiveCamera(
@@ -38,7 +39,7 @@ export class RacingGameRendering {
 
         this.setupCamera();
         this.SCENE.add(this.CAMERA);
-        this.SCENE.add(this.FLOOR);
+        // this.SCENE.add(this.FLOOR);
         this.SCENE.add(this.SKYBOX);
     }
 
