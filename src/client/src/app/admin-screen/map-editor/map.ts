@@ -11,6 +11,15 @@ export const MAP_TYPES = ['Amateur', 'Professional'];
 
 export const MIN_LINE_LENGTH = 10.0;
 
+
+enum MapError {
+    NONE = 0,       // No error
+    NOT_CLOSED,     // Map path is not closed
+    SMALL_ANGLE,    // An angle is < 45°
+    SEGMENT_LENGTH, // A segment is to small
+    LINES_CROSS     // Two lines cross
+}
+
 export class Map {
     public path: Path;
     public potholes: Pothole[] = [];
