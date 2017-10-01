@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
 import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
-import { Map as RacingMap, MAP_TYPES } from './map';
+import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
 
@@ -48,7 +48,7 @@ export class MapEditorComponent implements OnInit {
     }
 
     public get isMapValid(): boolean {
-        return this.mapEditor.isMapValid();
+        return this.mapEditor.computeMapErrors() === MapError.NONE;
     }
 
     public clicked(event: MouseEvent): void {

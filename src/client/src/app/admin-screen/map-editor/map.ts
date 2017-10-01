@@ -11,8 +11,7 @@ export const MAP_TYPES = ['Amateur', 'Professional'];
 
 export const MIN_LINE_LENGTH = 10.0;
 
-
-enum MapError {
+export enum MapError {
     NONE = 0,       // No error
     NOT_CLOSED,     // Map path is not closed
     SMALL_ANGLE,    // An angle is < 45°
@@ -104,11 +103,24 @@ export class Map {
         return ERRONEOUS_LINES;
     }
 
-    public isValid(): boolean {
-        return this.isClosed() &&
-               this.computeBadAngles().length === 0 &&
-               this.computeCrossingLines().length === 0 &&
-               this.computeSmallSegments().length === 0;
+    public computeErrors(): MapError {
+        let error: MapError;
+        if (!this.isClosed()) {
+             error = MapError.NOT_CLOSED;
+        }
+        else if (this.computeBadAngles().length !== 0) {
+            error = MapError.SMALL_ANGLE;
+        }
+        else if (this.computeCrossingLines().length !== 0) {
+            error = MapError.LINES_CROSS;
+        }
+        else if (this.computeSmallSegments().length !== 0) {
+            error = MapError.SEGMENT_LENGTH;
+        }
+        else {
+            error = MapError.NONE;
+        }
+        return error;
     }
 
     private computeBadAngles(): [Point, Point, Point][] {
@@ -133,18 +145,11 @@ export class Map {
                 BAD_ANGLES.push([POINT1, POINT2, POINT3]);
             }
         }
-        if (BAD_ANGLES.length !== 0) {
-            console.log('---BAD_ANGLES---');
-        }
+
         return BAD_ANGLES;
     }
 
     public isClosed(): boolean {
-        if (!(this.path.points.length > 2
-            && this.path.points[0].equals(
-               this.path.points[this.path.points.length - 1]))) {
-            console.log('---NOT CLOSED---');
-        }
         return this.path.points.length > 2
             && this.path.points[0].equals(
                this.path.points[this.path.points.length - 1]);
@@ -174,9 +179,7 @@ export class Map {
                 }
             }
         }
-        if (LINES_THAT_CROSS.length !== 0) {
-            console.log('---LINES CROSS---');
-        }
+
         return LINES_THAT_CROSS;
     }
 
@@ -190,9 +193,6 @@ export class Map {
             }
             lastPoint = point;
         });
-        if (SMALL_SEGMENTS.length !== 0) {
-            console.log('---SMALL SEGMENTS---', SMALL_SEGMENTS.length);
-        }
         return SMALL_SEGMENTS;
     }
 

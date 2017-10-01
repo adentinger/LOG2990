@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
-import { Map } from './map';
+import { Map, MapError } from './map';
 import { SerializedMap } from './serialized-map';
 import { Point } from './point';
 import { Path } from './path';
@@ -47,7 +47,7 @@ export class MapEditorService {
 
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
-            if (this.map.isValid()) {
+            if (this.map.computeErrors() === MapError.NONE) {
                 const POINTS: Point[] =
                     this.map.path.points.map((point: Point) => {
                         const X = this.converter.lengthToGameUnits(point.x);
@@ -100,7 +100,7 @@ export class MapEditorService {
                 serializedMap.numberOfPlays
             );
 
-            if (NEW_MAP.isValid()) {
+            if (NEW_MAP.computeErrors() === MapError.NONE) {
                 this.map = NEW_MAP;
             }
             else {
@@ -176,8 +176,8 @@ export class MapEditorService {
         }
     }
 
-    public isMapValid(): boolean {
-        return this.map.isValid();
+    public computeMapErrors(): MapError {
+        return this.map.computeErrors();
     }
 
     private areWidthAndHeightSet(): boolean {
