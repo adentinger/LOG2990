@@ -6,11 +6,15 @@ import { HttpStatus } from '../../http-response-status';
 import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
 import { PrefixLogWith } from 'common/utils';
+import { RegexBuilder } from './lexic/regex-builder';
+import { ExternalWordApiService } from './lexic/external-word-api.service';
 
 export const LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
 
 export class Lexic {
-    constructor(private databaseProvider: Promise<Db>) { }
+    constructor(private databaseProvider: Promise<Db>,
+        private regexBuilder: RegexBuilder,
+        private externalWordApiService: ExternalWordApiService) { }
 
     public getWords(constraint: WordConstraint): Promise<string[]> {
         return Promise.reject(new Error('Not implemented'));
@@ -23,7 +27,7 @@ export class Lexic {
 
 @MiddleWare('/crossword/lexic')
 export class LexicMiddleWare {
-    private static readonly LEXIC = new Lexic(provideDatabase());
+    private static readonly LEXIC = new Lexic(provideDatabase(), new RegexBuilder(), new ExternalWordApiService());
 
     @Route('get', '/words')
     @PrefixLogWith('[lexic/words]')
