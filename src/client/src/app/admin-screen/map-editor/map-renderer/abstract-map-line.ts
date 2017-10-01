@@ -1,8 +1,9 @@
+import { Line } from '../line';
 import { Drawable } from './drawable';
 import { Point } from '../point';
 import { AbstractMapLineColors } from './abstract-map-line-colors';
 
-export abstract class AbstractMapLine implements Drawable {
+export abstract class AbstractMapLine extends Line implements Drawable {
 
     private context: CanvasRenderingContext2D;
     public readonly origin: Point;
@@ -15,9 +16,8 @@ export abstract class AbstractMapLine implements Drawable {
                 destination: Point,
                 colors: AbstractMapLineColors,
                 width: number) {
+        super(origin, destination);
         this.context = context;
-        this.origin = origin;
-        this.destination = destination;
         this.colors = colors;
         this.width = width;
     }

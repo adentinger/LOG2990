@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
-import { Map as RacingMap, MAP_TYPES } from './map';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
+import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
 
@@ -13,7 +14,11 @@ const RIGHT_MOUSE_BUTTON = 2;
     selector: 'app-map-editor',
     templateUrl: './map-editor.component.html',
     styleUrls: ['./map-editor.component.css'],
-    providers: [MapEditorService, MapRendererService]
+    providers: [
+        MapEditorService,
+        MapRendererService,
+        RacingUnitConversionService
+    ]
 })
 export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
@@ -25,7 +30,10 @@ export class MapEditorComponent implements OnInit {
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService) { }
+                private mapRenderer: MapRendererService) {
+        mapEditor.mapWidth = this.width;
+        mapEditor.mapHeight = this.height;
+    }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
@@ -40,7 +48,7 @@ export class MapEditorComponent implements OnInit {
     }
 
     public get isMapValid(): boolean {
-        return this.mapEditor.isValid();
+        return this.mapEditor.computeMapErrors() === MapError.NONE;
     }
 
     public clicked(event: MouseEvent): void {

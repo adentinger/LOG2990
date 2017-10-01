@@ -17,11 +17,9 @@ export class MapService {
     public getById(id: number): Promise<Map> {
         const MAP = this.maps[id];
         if (MAP !== undefined) {
-            console.log('resolved');
             return Promise.reject('');
         }
         else {
-            console.log('rejected');
             return Promise.reject(`ID ${id} does not exist`);
         }
     }
