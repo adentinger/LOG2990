@@ -18,7 +18,7 @@ export class MockSerializedMaps {
             145,
             35,
             1000,
-            [new Point(0, 0), new Point(10, 5), new Point(5, 10), new Point(0, 0)],
+            [new Point(0, 0), new Point(10, 5), new Point(0, 10), new Point(0, 0)],
             [new Pothole(10), new Pothole(20), new Pothole(50)],
             [new Puddle(15), new Puddle(25), new Puddle(55)],
             [new SpeedBoost(5), new SpeedBoost(15), new SpeedBoost(45)]
@@ -33,7 +33,7 @@ export class MockSerializedMaps {
             0,
             0,
             0,
-            [new Point(0, 0), new Point(10, 5), new Point(5, 10), new Point(0, 0)],
+            [new Point(0, 0), new Point(10, 5), new Point(0, 10), new Point(0, 0)],
             [],
             [],
             []
