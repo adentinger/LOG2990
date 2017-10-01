@@ -21,16 +21,19 @@ describe('MapEditorService', () => {
     });
 
     let service: MapEditorService;
+    let converter: RacingUnitConversionService;
     let mockMaps: MockMaps;
     let mockSerializedMaps: MockSerializedMaps;
 
-    beforeEach(inject([MapEditorService, MockMaps, MockSerializedMaps],
+    beforeEach(inject([MapEditorService, RacingUnitConversionService, MockMaps, MockSerializedMaps],
                       (injectedService: MapEditorService,
+                       converterService: RacingUnitConversionService,
                        mockMapFactory: MockMaps,
                        mockSerializedMapFactory: MockSerializedMaps) => {
         service = injectedService;
         service.mapWidth = 500;
         service.mapHeight = 300;
+        converter = converterService;
         mockMaps = mockMapFactory;
         mockSerializedMaps = mockSerializedMapFactory;
     }));
@@ -55,6 +58,16 @@ describe('MapEditorService', () => {
         expect(map.description).toEqual(serializedMap.description);
 
         expect(map.path.points.length).toEqual(serializedMap.points.length);
+        for (let i = 0; i < map.path.points.length; ++i) {
+            const MAP_POINT = map.path.points[i];
+            const SMAP_POINT = serializedMap.points[i];
+            const X = converter.lengthToGameUnits(MAP_POINT.x);
+            const Y = converter.lengthToGameUnits(MAP_POINT.y);
+            const CONVERTED_MAP_POINT = new Point(X, Y);
+            expect(CONVERTED_MAP_POINT.x).toBeCloseTo(SMAP_POINT.x);
+            expect(CONVERTED_MAP_POINT.y).toBeCloseTo(SMAP_POINT.y);
+        }
+
         expect(map.plays).toEqual(serializedMap.numberOfPlays);
         expect(map.potholes).toEqual(serializedMap.potholes);
         expect(map.puddles).toEqual(serializedMap.puddles);
