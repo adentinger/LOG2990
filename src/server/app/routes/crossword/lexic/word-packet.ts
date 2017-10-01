@@ -1,4 +1,4 @@
-import { Packet } from '../../../../../common/communication/packet';
+import { Packet } from 'common/communication/packet';
 import { WordConstraint } from './word-constraint';
 import { CharConstraint } from './char-constraint';
 

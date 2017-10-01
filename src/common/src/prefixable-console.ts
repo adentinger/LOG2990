@@ -1,4 +1,4 @@
-declare interface PrefixableConsole extends Console {
+export declare interface PrefixableConsole extends Console {
     pushPrefix: (prefix: string) => void;
     popPrefix: () => string;
 }
@@ -15,7 +15,9 @@ CONSOLE_PROTOTYPE.popPrefix = LOG_PREFIXES.pop.bind(LOG_PREFIXES);
 type Logger = (message?: any, ...optionalParams: any[]) => void;
 const LOGGER_TO_BIND = function (this: Console, originalFunction: Logger, message?: any, ...optionalParams: any[]): void {
     const ARGV: any[] = Array.from(LOG_PREFIXES);
-    if (message) ARGV.push(message);
+    if (message) {
+        ARGV.push(message);
+    }
     ARGV.push.apply(ARGV, optionalParams);
 
     originalFunction.apply(console, ARGV);
@@ -40,5 +42,5 @@ export function PrefixLogWith(prefix: string): MethodDecorator {
             console.popPrefix();
             return returnedValue;
         };
-    }
+    };
 };

@@ -12,7 +12,7 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 
-import { PrefixLogWith } from '../../common/utils';
+import { PrefixLogWith } from 'common/utils';
 import { registerMiddleWares } from './routes/middle-ware';
 import './routes';
 
