@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import * as express from 'express';
-import { console } from '../../../common/utils';
+import { console } from 'common/utils';
 
 type RequestHandler = (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
 export type RouteType = 'get' | 'post' | 'put' | 'delete' | 'head' | 'all';

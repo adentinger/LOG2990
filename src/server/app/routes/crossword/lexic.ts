@@ -5,7 +5,7 @@ import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
 import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
-import { PrefixLogWith } from '../../../../common/utils';
+import { PrefixLogWith } from 'common/utils';
 
 export const LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
 

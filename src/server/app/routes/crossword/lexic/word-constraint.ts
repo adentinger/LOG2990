@@ -1,5 +1,5 @@
 import { CharConstraint, isCharConstraint } from './char-constraint';
-import { isJson } from '../../../../../common/utils';
+import { isJson } from 'common/utils';
 
 export interface WordConstraint {
     readonly charConstraints: CharConstraint[];
