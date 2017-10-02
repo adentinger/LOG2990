@@ -3,7 +3,7 @@ import { Db } from 'mongodb';
 
 import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
-import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
+import { WordConstraint, isWordConstraint, parseWordConstraint } from 'common/lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
 import { PrefixLogWith } from 'common/utils';
 

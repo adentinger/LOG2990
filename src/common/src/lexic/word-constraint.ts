@@ -1,11 +1,11 @@
 import { CharConstraint, isCharConstraint } from './char-constraint';
-import { isJson } from 'common/utils';
+import { isJson } from '../utils';
 
-export interface WordConstraint {
-    readonly charConstraints: CharConstraint[];
-    readonly isCommon: boolean;
-    readonly minLength: number;
-    readonly maxLength?: number;
+export class WordConstraint {
+    public readonly charConstraints: CharConstraint[];
+    public readonly isCommon: boolean;
+    public readonly minLength: number;
+    public readonly maxLength?: number;
 }
 
 function isCharConstraintArray(object: any): object is CharConstraint[] {

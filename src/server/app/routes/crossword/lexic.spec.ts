@@ -1,7 +1,7 @@
 import { Lexic } from './lexic';
 import { expect } from 'chai';
 import { Db } from 'mongodb';
-import { WordConstraint } from './lexic/word-constraint';
+import { WordConstraint } from 'common/lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
 
 const DB_PROVIDER: Promise<Db> = provideDatabase();
