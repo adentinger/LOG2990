@@ -53,7 +53,7 @@ export class MapEditorService {
 
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
-            if (this.map.computeErrors() === MapError.NONE) {
+            if (this.computeMapErrors() === MapError.NONE) {
                 const POINTS: Point[] =
                     this.map.path.points.map((point: Point) => {
                         const X = this.converter.lengthToGameUnits(point.x);

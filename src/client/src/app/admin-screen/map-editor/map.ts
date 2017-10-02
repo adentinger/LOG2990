@@ -100,7 +100,7 @@ export class Map {
             ERRONEOUS_LINES.push(lines[0], lines[1]);
         });
         const SMALL_SEGMENTS: Line[] = this.computeSmallSegments();
-        ERRONEOUS_LINES.concat(SMALL_SEGMENTS);
+        ERRONEOUS_LINES.push.apply(ERRONEOUS_LINES, SMALL_SEGMENTS);
 
         return ERRONEOUS_LINES;
     }
