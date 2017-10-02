@@ -21,7 +21,8 @@ export class Lexic {
     }
 
     public getDefinitions(word: string): Promise<string[]> {
-        return Promise.reject(new Error('Not implemented'));
+        console.log('word:', word);
+        return this.externalWordApiService.getDefinitions(word);
     }
 }
 
@@ -49,7 +50,12 @@ export class LexicMiddleWare {
     @Route('get', '/definitions/:word')
     @PrefixLogWith('[lexic/definitions]')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        console.warn('Not Implemented');
-        res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
+        console.log(req.params);
+        LexicMiddleWare.LEXIC.getDefinitions(req.params.word).then((definitions: string[]) => {
+            res.json(definitions);
+        }).catch((error: any) => {
+            console.warn(error instanceof Error ? error.message : error);
+            res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
     }
 }
