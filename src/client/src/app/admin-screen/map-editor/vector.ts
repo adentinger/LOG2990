@@ -27,6 +27,10 @@ export class Vector {
         return this.x * that.x + this.y * that.y;
     }
 
+    public normalized(): Vector {
+        return null;
+    }
+
     public norm(): number {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }

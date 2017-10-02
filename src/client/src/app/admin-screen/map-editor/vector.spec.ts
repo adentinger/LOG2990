@@ -49,6 +49,25 @@ describe('Vector', () => {
         expect(VECTOR2.scalar(VECTOR1)).toBe(1 * 2 + 2 * 3);
     });
 
+    describe('normalized', () => {
+
+        it('should build a normalized vector when norm is greater than zero', () => {
+            const NORM = 4.87;
+            const ANGLE = 43.5;
+            const V1 = new Vector(NORM * Math.cos(ANGLE), NORM * Math.sin(ANGLE));
+            const V_N = new Vector(Math.cos(ANGLE), Math.sin(ANGLE));
+            const V1_N = V1.normalized();
+            expect(V1_N.x).toBeCloseTo(V1.x);
+            expect(V1_N.y).toBeCloseTo(V1.y);
+        });
+
+        it('should throw an error when norm is zero', () => {
+            const V1 = new Vector(0, 0);
+            expect(V1.normalized).toThrow();
+        });
+
+    });
+
     it('should compute an angle with a peer', () => {
         const VECTOR11 = new Vector(2 * Math.cos(Math.PI / 6), 2 * Math.sin(Math.PI / 6));
         const VECTOR12 = new Vector(2 * Math.cos(Math.PI / 4), 2 * Math.sin(Math.PI / 4));
