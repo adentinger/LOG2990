@@ -1,14 +1,10 @@
 import { Point } from './point';
 
-export class Vector {
-
-    public x: number;
-    public y: number;
+export class Vector extends Point {
 
     constructor(x: number,
                 y: number) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
     }
 
     public static fromPoint(point: Point): Vector {
@@ -17,10 +13,6 @@ export class Vector {
 
     public static fromPoints(origin: Point, destination: Point): Vector {
         return new Vector(destination.x - origin.x, destination.y - origin.y);
-    }
-
-    public toPoint(): Point {
-        return new Point(this.x, this.y);
     }
 
     public plus(that: Vector): Vector {

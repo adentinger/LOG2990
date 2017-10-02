@@ -26,15 +26,6 @@ describe('Vector', () => {
         expect(VECTOR.y).toBe(10);
     });
 
-    it('should create a point', () => {
-        const X = 10.4;
-        const Y = -5.2;
-        const VECTOR = new Vector(X, Y);
-        const POINT = VECTOR.toPoint();
-        expect(POINT.x).toBeCloseTo(X);
-        expect(POINT.y).toBeCloseTo(Y);
-    });
-
     it('should compute its norm', () => {
         const VECTOR = new Vector(3, 4);
         expect(VECTOR.norm()).toBe(5);
