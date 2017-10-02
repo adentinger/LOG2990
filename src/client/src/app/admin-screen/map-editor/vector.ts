@@ -15,6 +15,10 @@ export class Vector {
         return new Vector(destination.x - origin.x, destination.y - origin.y);
     }
 
+    public toPoint(): Point {
+        return new Point(this.x, this.y);
+    }
+
     public scalar(that: Vector): number {
         return this.x * that.x + this.y * that.y;
     }
