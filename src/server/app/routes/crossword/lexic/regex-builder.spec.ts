@@ -9,7 +9,7 @@ describe('RegexBuilder', () => {
     });
 
     describe('buildFromConstraint', () => {
-        xit('should create an empty Regexp from an empty word constraint', (done) => {
+        it('should create an empty Regexp from an empty word constraint', (done) => {
             const emptyWordConstraint: WordConstraint = { charConstraints: [], isCommon: true, minLength: 0 };
             expect(regexBuilder.buildFromConstraint(emptyWordConstraint)).to.have.property('source', '^$')
                 .and.to.have.property('flags', 'i');
