@@ -23,8 +23,9 @@ export class InitialViewComponent implements OnInit {
         this.mapService.getMaps().then(maps => this.maps = maps);
     }
 
-    public mapSelected(): void {
-        return null;
+    public mapSelected(map: Map): void {
+        this.selectedMap = map;
+        console.log('test');
     }
 
 }

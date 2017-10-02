@@ -1,0 +1,9 @@
+.selected {
+    background-color: #CFD8DC !important;
+    color: white;
+  }
+
+  .maps td.selected:hover {
+    background-color: #BBD8DC !important;
+    color: white;
+  }
