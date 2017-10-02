@@ -31,6 +31,17 @@ describe('Vector', () => {
         expect(VECTOR.norm()).toBe(5);
     });
 
+    it('should compute the sum with a peer', () => {
+        const X1 = 1.4,  Y1 = -8.4;
+        const X2 = 15.7, Y2 = 9.78;
+        const V1 = new Vector(X1, Y1);
+        const V2 = new Vector(X2, Y2);
+        const V3 = new Vector(X1 + X2, Y1 + Y2);
+        const V1P2 = V1.plus(V2);
+        expect(V1P2.x).toBeCloseTo(V3.x);
+        expect(V1P2.y).toBeCloseTo(V3.y);
+    });
+
     it('should compute a scalar product', () => {
         const VECTOR1 = new Vector(1, 2);
         const VECTOR2 = new Vector(2, 3);

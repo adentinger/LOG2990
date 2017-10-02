@@ -19,6 +19,10 @@ export class Vector {
         return new Point(this.x, this.y);
     }
 
+    public plus(that): Vector {
+        return new Vector(this.x + that.x, this.y + that.y);
+    }
+
     public scalar(that: Vector): number {
         return this.x * that.x + this.y * that.y;
     }
