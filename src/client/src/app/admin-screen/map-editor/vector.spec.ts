@@ -66,8 +66,8 @@ describe('Vector', () => {
             const V1 = new Vector(NORM * Math.cos(ANGLE), NORM * Math.sin(ANGLE));
             const V_N = new Vector(Math.cos(ANGLE), Math.sin(ANGLE));
             const V1_N = V1.normalized();
-            expect(V1_N.x).toBeCloseTo(V1.x);
-            expect(V1_N.y).toBeCloseTo(V1.y);
+            expect(V1_N.x).toBeCloseTo(V_N.x);
+            expect(V1_N.y).toBeCloseTo(V_N.y);
         });
 
         it('should throw an error when norm is zero', () => {
