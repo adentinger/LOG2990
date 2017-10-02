@@ -11,8 +11,8 @@ describe('RegexBuilder', () => {
     describe('buildFromConstraint', () => {
         it('should create an empty Regexp from an empty word constraint', (done) => {
             const emptyWordConstraint: WordConstraint = { charConstraints: [], isCommon: true, minLength: 0 };
-            expect(regexBuilder.buildFromConstraint(emptyWordConstraint)).to.have.property('source', '^$')
-                .and.to.have.property('flags', 'i');
+            expect(regexBuilder.buildFromConstraint(emptyWordConstraint).source).include('^$');
+            expect(regexBuilder.buildFromConstraint(emptyWordConstraint).flags).include('i');
             done();
         });
         xit('should create a valid Regexp from a valid word constraint', (done) => {

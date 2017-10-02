@@ -51,8 +51,10 @@ export class RegexBuilder {
             } else {
                 regularExpression += '$';
             }
+            const flags = 'i';
+            let REG_EXP: RegExp;
+            REG_EXP = new RegExp(regularExpression, flags);
 
-            const REG_EXP: RegExp = new RegExp(regularExpression, 'i');
             return REG_EXP;
         } else {
             return null;
