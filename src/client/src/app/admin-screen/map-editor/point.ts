@@ -1,5 +1,3 @@
-import { Vector } from './vector';
-
 export class Point {
 
     public x: number;
@@ -12,10 +10,6 @@ export class Point {
 
     public equals(that: Point): boolean {
         return this.x === that.x && this.y === that.y;
-    }
-
-    public toVector(): Vector {
-        return new Vector(this.x, this.y);
     }
 
 }
