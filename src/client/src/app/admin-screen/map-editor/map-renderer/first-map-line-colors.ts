@@ -11,6 +11,8 @@ export class FirstMapLineColors extends AbstractMapLineColors {
 
     constructor() {
         super(LINE_EXTENTION_COLOR);
+        this.line1 = LINE1_COLOR;
+        this.line2 = LINE2_COLOR;
     }
 
 }
