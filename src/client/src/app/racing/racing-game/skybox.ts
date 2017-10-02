@@ -4,7 +4,7 @@ export class Skybox extends THREE.Mesh {
 
     private static textureDayPromise: Promise<THREE.CubeTexture> = new Promise((resolve: Function, reject: (error: any) => void) => {
         const loader = new THREE.CubeTextureLoader();
-        loader.setPath('/assets/racing/skybox/textures/');
+        loader.setPath('/assets/racing/skybox/');
         const day = loader.load(Skybox.findTextures('Day'), (texture: THREE.CubeTexture) => {
             resolve(texture);
         }, () => {}, reject);
