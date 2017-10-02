@@ -1,6 +1,7 @@
 import { AbstractMapLine } from './abstract-map-line';
 import { Point } from '../point';
 import { FirstMapLineColors } from './first-map-line-colors';
+import { Vector } from '../vector';
 
 const WIDTH = 5;
 
@@ -28,7 +29,7 @@ export class FirstMapLine extends AbstractMapLine {
         this.context.beginPath();
         if (this.translation.norm() > STARTING_GRID_LENGTH) {
             const EXTENSION_START =
-                this.origin.toVector()
+                Vector.fromPoint(this.origin)
                     .plus(this.translation.normalized().times(STARTING_GRID_LENGTH));
             this.context.moveTo(EXTENSION_START.x, EXTENSION_START.y);
             this.context.lineTo(this.destination.x, this.destination.y);
