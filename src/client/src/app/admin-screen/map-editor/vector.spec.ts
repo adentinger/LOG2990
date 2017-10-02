@@ -9,7 +9,16 @@ describe('Vector', () => {
         expect(VECTOR.y).toBe(10);
     });
 
-    it('should be created with points', () => {
+    it('should be created with one point', () => {
+        const X = 40.4;
+        const Y = -8.45;
+        const POINT = new Point(X, Y);
+        const V = Vector.fromPoint(POINT);
+        expect(V.x).toBeCloseTo(POINT.x);
+        expect(V.y).toBeCloseTo(POINT.y);
+    });
+
+    it('should be created with two points', () => {
         const POINT1 = new Point(1, 1);
         const POINT2 = new Point(6, 11);
         const VECTOR = Vector.fromPoints(POINT1, POINT2);

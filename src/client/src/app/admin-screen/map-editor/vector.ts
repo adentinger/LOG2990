@@ -11,6 +11,10 @@ export class Vector {
         this.y = y;
     }
 
+    public static fromPoint(point: Point): Vector {
+        return new Vector(point.x, point.y);
+    }
+
     public static fromPoints(origin: Point, destination: Point): Vector {
         return new Vector(destination.x - origin.x, destination.y - origin.y);
     }
