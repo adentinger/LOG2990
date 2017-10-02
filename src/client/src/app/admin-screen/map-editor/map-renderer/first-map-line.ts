@@ -5,7 +5,8 @@ import { Vector } from '../vector';
 
 const WIDTH = 5;
 
-const STARTING_GRID_LENGTH = 30.0;
+const STARTING_GRID_LENGTH = 50.0;
+const COLOR_CHANGE_LENGTH = 5.0;
 
 export class FirstMapLine extends AbstractMapLine {
 
@@ -21,8 +22,27 @@ export class FirstMapLine extends AbstractMapLine {
     }
 
     private drawStartingGrid(): void {
-        this.context.beginPath();
-        this.context.lineWidth = WIDTH;
+        const LENGTH_TO_DRAW_STARTING_GRID =
+            Math.min(this.translation.norm(), STARTING_GRID_LENGTH);
+        const NUM_COLOR_CHANGES =
+            Math.ceil(LENGTH_TO_DRAW_STARTING_GRID / COLOR_CHANGE_LENGTH);
+        const POSITION_INCREMENT = this.translation.normalized().times(COLOR_CHANGE_LENGTH);
+        let currentPosition = Vector.fromPoint(this.origin);
+        let currentColor = 'line1';
+
+        currentPosition = currentPosition.plus(POSITION_INCREMENT);
+        for (let i = 0; i < NUM_COLOR_CHANGES - 1; ++i) {
+            this.context.beginPath();
+            this.context.moveTo(currentPosition.x, currentPosition.y);
+            currentPosition = currentPosition.plus(POSITION_INCREMENT);
+            this.context.lineTo(currentPosition.x, currentPosition.y);
+            this.context.lineWidth = WIDTH;
+            this.context.strokeStyle = this.colors.getColorOf(currentColor);
+            this.context.stroke();
+            currentColor = (currentColor === 'line1') ? 'line2' : 'line1';
+        }
+        // No need to draw the last line ; we assume there is a point
+        // that covers it anyway.
     }
 
     private drawLineExtension(): void {
