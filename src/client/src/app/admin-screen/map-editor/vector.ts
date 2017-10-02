@@ -19,8 +19,12 @@ export class Vector {
         return new Point(this.x, this.y);
     }
 
-    public plus(that): Vector {
+    public plus(that: Vector): Vector {
         return new Vector(this.x + that.x, this.y + that.y);
+    }
+
+    public times(scalar: number): Vector {
+        return new Vector(this.x * scalar, this.y * scalar);
     }
 
     public scalar(that: Vector): number {

@@ -42,6 +42,15 @@ describe('Vector', () => {
         expect(V1P2.y).toBeCloseTo(V3.y);
     });
 
+    it('should compute a product with a scalar', () => {
+        const X1 = 1.4, Y1 = -52.4;
+        const V1 = new Vector(X1, Y1);
+        const SCALAR = -1.98;
+        const V_S = V1.times(SCALAR);
+        expect(V_S.x).toBeCloseTo(V1.x * SCALAR);
+        expect(V_S.y).toBeCloseTo(V1.y * SCALAR);
+    });
+
     it('should compute a scalar product', () => {
         const VECTOR1 = new Vector(1, 2);
         const VECTOR2 = new Vector(2, 3);
