@@ -19,6 +19,7 @@ export let functionalMap1: Map = new Map(
     [new Pothole(11), new Pothole(17), new Pothole(22)],
     [new Puddle(15)],
     [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)],
+    [12, 24, 48],
     4,
     12
 );
@@ -28,6 +29,7 @@ export let functionalMap2: Map = new Map(
     'name',
     'description',
     'professional',
+    [],
     [],
     [],
     [],
@@ -43,6 +45,7 @@ export let functionalMap3: Map = new Map(
     [],
     [],
     [],
+    [],
     4,
     12
 );
@@ -55,6 +58,7 @@ export let functionalMap4: Map = new Map(
     [new Pothole(11), new Pothole(17), new Pothole(22)],
     [new Puddle(15)],
     [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)],
+    [12, 24, 48],
     4,
     12
 );
@@ -64,6 +68,7 @@ export let disfunctionalMap: Map = new Map (
     'name',
     'description',
     'sdljhgso',
+    [],
     [],
     [],
     [],
@@ -81,6 +86,7 @@ export let disfunctionalMap2: Map = new Map (
     [],
     [],
     [],
+    [],
     9,
     -1,
     -2,
@@ -95,6 +101,7 @@ export let disfunctionalMap3: Map = new Map (
     [],
     [],
     [],
+    [],
     9,
     -1,
     -2,
@@ -106,6 +113,7 @@ export let disfunctionalMap4: Map = new Map (
     'name',
     'description',
     'sdljhgso',
+    [],
     [],
     [],
     [],

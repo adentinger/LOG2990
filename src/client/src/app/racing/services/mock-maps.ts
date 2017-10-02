@@ -6,24 +6,25 @@ export const MAP0 = new Map(new Path([
     new Point( 0,  0),
     new Point(10,  0),
     new Point(10, 10),
-    new Point( 0,  0)]), 'map0', 'description0', 'Amateur', [], [], [], 0,  0,  10, 10);
+    new Point( 0,  0)]), 'map0', 'description0', 'Amateur', [], [], [], [ 1, 2, 3], 0,  0,  10, 10);
 
 export const MAP1 = new Map(new Path([
     new Point(  0,   0),
     new Point(100,   0),
     new Point(100, 100),
-    new Point(  0,   0)]), 'map1', 'description1', 'Amateur', [], [], [], 1, 10, 100, 100);
+    new Point(  0,   0)]), 'map1', 'description1', 'Amateur', [], [], [], [4, 5, 6], 1, 10, 100, 100);
 
 export const MAP2 = new Map(new Path([
     new Point(  0,   0),
     new Point(200,   0),
     new Point(200, 200),
-    new Point(  0,   0)]), 'map2', 'description2', 'Amateur', [], [], [], 2, 20, 200, 200);
+    new Point(  0,   0)]), 'map2', 'description2', 'Amateur', [], [], [], [7, 8, 9], 2, 20, 200, 200);
 
-export const MAPS = [MAP0, MAP1, MAP2];
+export const MAPS: Map[] = [MAP0, MAP1, MAP2];
 
 export const NEW_MAP3 = new Map(new Path([
     new Point(  0,   0),
     new Point(300,   0),
     new Point(300, 300),
-    new Point(  0,   0)]), 'map3', 'description3', 'Amateur', [], [], [], 3, 30, 300, 300);
+    new Point(  0,   0)]), 'map3', 'description3', 'Amateur', [], [], [], [10, 11, 12], 3, 30, 300, 300);
+
