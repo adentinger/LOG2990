@@ -51,6 +51,10 @@ export class MapEditorComponent implements OnInit {
         return this.mapEditor.computeMapErrors() === MapError.NONE;
     }
 
+    public saveMap(): void {
+        console.log('Map "Saved": ', this.mapEditor.serializeMap());
+    }
+
     public clicked(event: MouseEvent): void {
         event.preventDefault();
         if (!this.isDragging) {
