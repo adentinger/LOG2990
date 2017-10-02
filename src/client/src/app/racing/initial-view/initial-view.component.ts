@@ -11,11 +11,20 @@ import { Map } from '../../admin-screen/map-editor/map';
 export class InitialViewComponent implements OnInit {
 
     public maps: Map[];
+    public selectedMap: Map;
 
     constructor(private mapService: MapService) { }
 
     public ngOnInit(): void {
-        this.maps = this.mapService.maps;
+        this.getMaps();
+    }
+
+    public getMaps(): void {
+        this.mapService.getMaps().then(maps => this.maps = maps);
+    }
+
+    public mapSelected(): void {
+        return null;
     }
 
 }

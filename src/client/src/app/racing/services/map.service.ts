@@ -8,6 +8,7 @@ const MAX_IDS_PER_REQUEST = 100;
 @Injectable()
 export class MapService {
 
+    /*
     public maps: Map[];
 
     constructor() {
@@ -45,6 +46,11 @@ export class MapService {
 
     public putMap(map: Map, id: number): Promise<void> {
         return Promise.reject('Not yet implemented');
+    }
+    */
+
+    public getMaps(): Promise<Map[]> {
+        return Promise.resolve(MAPS);
     }
 
 }
