@@ -21,7 +21,9 @@ export class AdminScreenComponent implements OnInit {
         this.socket = io('http://localhost:3030', {transports: ['websocket']});
         this.socket.on('message', (...argv: any[]) => {
             console.log.apply(console, argv);
-            this.data = this.parser.parse(PacketManager.prototype['toArrayBuffer'](argv[1]));
+            if (argv[1]) {
+                this.data = this.parser.parse(PacketManager.prototype['toArrayBuffer'](argv[1]));
+            }
         });
     }
 

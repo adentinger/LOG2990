@@ -1,7 +1,6 @@
 import 'socket.io';
-import * as ClientIO from 'socket.io-client';
+import 'socket.io-client';
 import { PacketParser } from './packet-parser';
-import { EventEmitter } from 'events';
 import { PacketEvent } from './packet-event';
 
 export type Server = SocketIO.Server | SocketIOClient.Socket;
@@ -11,7 +10,6 @@ export type PacketHandler<T> = (socket: Socket, event: PacketEvent<T>) => void;
 
 export class PacketManager {
     private static readonly PACKET_MESSAGE_MATCHER = /^packet:([a-zA-Z_][a-zA-Z0-9_$]*)$/i;
-    public readonly events: EventEmitter = new EventEmitter();
     private parsers: Map<Function, PacketParser<any>> = new Map();
     private knownSockets: Map<string, Socket> = new Map();
     private handlers: Map<Function, PacketHandler<any>[]> = new Map();
@@ -59,7 +57,8 @@ export class PacketManager {
     private toArrayBuffer(str: string): ArrayBuffer {
         const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
         const bufView = new Uint16Array(buf);
-        for (let i = 0, strLen = str.length; i < strLen; i++) {
+        const strLen = str.length;
+        for (let i = 0; i < strLen; i++) {
             bufView[i] = str.charCodeAt(i);
         }
         return buf;
