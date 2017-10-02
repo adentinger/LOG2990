@@ -28,7 +28,13 @@ export class Vector {
     }
 
     public normalized(): Vector {
-        return null;
+        const NORM = this.norm();
+        if (NORM > 0) {
+            return new Vector(this.x / NORM, this.y / NORM);
+        }
+        else {
+            throw new Error('Cannot normalize Vector of norm zero.');
+        }
     }
 
     public norm(): number {
