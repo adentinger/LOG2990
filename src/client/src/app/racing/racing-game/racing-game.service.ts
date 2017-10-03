@@ -17,7 +17,6 @@ export class RacingGameService {
 
         this.racingGameRendering = new RacingGameRendering();
         if (this.racingGameRendering !== null) {
-            console.log('allo');
             gameCreated = true;
         }
 
@@ -47,9 +46,10 @@ export class RacingGameService {
         }
         this.isRendering = false;
     }
-
+/*
     public updateRenderer(): void {
         this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
         this.startRendering();
     }
+    */
 }

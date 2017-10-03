@@ -20,7 +20,6 @@ export class RacingGameRendering {
     private readonly LIGHTS: THREE.Light[] = [];
 
     constructor() {
-        console.log('allo');
         this.SCENE = new THREE.Scene();
         this.RENDERER = new THREE.WebGLRenderer();
         this.CAMERA = new THREE.PerspectiveCamera(
@@ -28,7 +27,6 @@ export class RacingGameRendering {
             this.ASPECT,
             this.NEAR,
             this.FAR);
-        // this.FLOOR = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000, 20, 20), new THREE.MeshBasicMaterial({ wireframe: true }));
         this.SKYBOX = new Skybox('Day');
 
         this.SCENE.add(this.SKYBOX);

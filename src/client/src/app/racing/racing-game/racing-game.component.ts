@@ -27,7 +27,7 @@ export class RacingGameComponent implements OnInit {
     private addRenderer(): void {
         this.racingGame.nativeElement.appendChild(this.racingGameRenderer.racingGameRendering.RENDERER.domElement);
     }
-
+/*
     public onMouseMove(e) {
         this.mouseX = (e.clientX - this.windowHalfX) * 10;
         this.mouseY = (e.clientY - this.windowHalfY) * 10;
@@ -44,5 +44,5 @@ export class RacingGameComponent implements OnInit {
         this.racingGameRenderer.racingGameRendering.CAMERA.lookAt(this.racingGameRenderer.racingGameRendering.SCENE.position);
         this.racingGameRenderer.updateRenderer();
     }
-
+*/
 }
