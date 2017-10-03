@@ -30,18 +30,16 @@ describe('Map', () => {
         expect(mockMaps.emptyMap1().speedBoosts).toEqual([]);
     });
 
-    describe('checkClockwise', () => {
+    describe('isClockwise', () => {
 
         it('should mark the map as clockwise if it is so', () => {
             const MAP = mockMaps.clockwise();
-            MAP.checkClockwise();
-            expect(MAP.isClockwise).toBe(true);
+            expect(MAP.isClockwise()).toBe(true);
         });
 
         it('should mark the map as counter-clockwise if it is so', () => {
             const MAP = mockMaps.counterClockwise();
-            MAP.checkClockwise();
-            expect(MAP.isClockwise).toBe(false);
+            expect(MAP.isClockwise()).toBe(false);
         });
 
     });

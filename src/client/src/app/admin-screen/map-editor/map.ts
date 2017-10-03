@@ -32,8 +32,6 @@ export class Map {
     public numberOfRatings: number;
     public plays: number;
 
-    private isClockwiseInternal = true;
-
     constructor(path: Path = new Path(),
                 minimumSegmentLength: number = Infinity,
                 name: string = '',
@@ -69,12 +67,8 @@ export class Map {
         return rating;
     }
 
-    public get isClockwise(): boolean {
-        return this.isClockwiseInternal;
-    }
-
-    public checkClockwise(): void {
-
+    public isClockwise(): boolean {
+        return false;
     }
 
     public computeLength(): number {
