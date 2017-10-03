@@ -39,7 +39,7 @@
     </div>
     <div class="editionArea">
       <h3>This is the space to edit your map</h3>
-      <canvas class="creationSpace" #editingArea [width]="width" [height]="height" (click)="clicked($event)" (mousedown)="mouseDown($event)"
+      <canvas class="creationSpace" #editingArea [width]="mapEditor.mapWidth" [height]="mapEditor.mapHeight" (click)="clicked($event)" (mousedown)="mouseDown($event)"
         (mouseup)="mouseUp($event)" (contextmenu)="clicked($event)" (mousemove)="mouseMoved($event)">
       </canvas>
     </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
@@ -9,6 +9,8 @@ import { PointIndex } from './point-index';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
+
+const INITIAL_WIDTH = 500;
 
 @Component({
     selector: 'app-map-editor',
@@ -23,16 +25,17 @@ const RIGHT_MOUSE_BUTTON = 2;
 export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
-    public width = 500;
-    public height = 500;
+    @Input() public set width(width: number) {
+        this.mapEditor.mapWidth = width;
+    }
+
     public isDragging = false;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
                 private mapRenderer: MapRendererService) {
-        mapEditor.mapWidth = this.width;
-        mapEditor.mapHeight = this.height;
+        this.width = INITIAL_WIDTH;
     }
 
     public ngOnInit(): void {

@@ -29,9 +29,12 @@ export class MapEditorService {
     }
 
     public set mapWidth(mapWidth: number) {
-        this.converter.windowWidth = mapWidth;
-        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+        const ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
         this.width = mapWidth;
+        this.height = mapWidth / ASPECT_RATIO;
+        this.converter.windowWidth = this.width;
+        this.converter.windowHeight = this.height;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
     }
 
     public get mapHeight(): number {
@@ -39,9 +42,12 @@ export class MapEditorService {
     }
 
     public set mapHeight(mapHeight: number) {
-        this.converter.windowHeight = mapHeight;
-        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+        const ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
+        this.width = ASPECT_RATIO * mapHeight;
         this.height = mapHeight;
+        this.converter.windowWidth = this.width;
+        this.converter.windowHeight = this.height;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
     }
 
     public newMap(): void {
