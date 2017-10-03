@@ -39,6 +39,20 @@ export class MockMaps {
                        12);
     }
 
+    public counterClockwise(): Map {
+        return new Map(new Path([new Point(0, 0), new Point(0, 10), new Point(10, 0), new Point(0, 0)]),
+            MockMaps.MIN_LINE_LENGTH,
+            'counter-clockwise',
+            'desc. counter-clockwise',
+            'Amateur',
+            [],
+            [],
+            [],
+            4,
+            12
+        );
+    }
+
     public disfunctionalMap1(): Map {
         return new Map(new Path([new Point(0, 2), new Point(10, 2), new Point(0, 10), new Point(2, 1), new Point(0, 2)]),
                        MockMaps.MIN_LINE_LENGTH,
