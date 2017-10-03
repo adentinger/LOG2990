@@ -67,6 +67,10 @@ export class Map {
         return rating;
     }
 
+    public makeClockwise(): void {
+
+    }
+
     public computeLength(): number {
         const POINTS = this.path.points;
         let length = 0;
