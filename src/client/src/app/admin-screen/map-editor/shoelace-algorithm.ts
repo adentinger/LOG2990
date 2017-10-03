@@ -5,6 +5,9 @@ import { Point } from './point';
 // Algebraic area >0 when visiting points counter-clockwise,
 // <0 for clockwise.
 
+// WARNING: Canvas uses an inverted Y-axis. Thus we will get
+// opposite results: >0 for clockwise, <0 for counter-clockwise.
+
 export class ShoelaceAlgorithm {
 
     constructor() { }
