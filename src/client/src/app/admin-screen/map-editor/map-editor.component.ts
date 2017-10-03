@@ -25,10 +25,6 @@ const INITIAL_WIDTH = 500;
 export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
-    @Input() public set width(width: number) {
-        this.mapEditor.mapWidth = width;
-    }
-
     public isDragging = false;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
@@ -41,6 +37,22 @@ export class MapEditorComponent implements OnInit {
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
+    }
+
+    @Input() public set width(width: number) {
+        this.mapEditor.mapWidth = width;
+    }
+
+    public get width(): number {
+        return this.mapEditor.mapWidth;
+    }
+
+    @Input() public set height(height: number) {
+        this.mapEditor.mapHeight = height;
+    }
+
+    public get height(): number {
+        return this.mapEditor.mapHeight;
     }
 
     public get mapTypes(): string[] {
