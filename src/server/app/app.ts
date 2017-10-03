@@ -24,7 +24,7 @@ import { Server } from 'http';
 export class Application {
 
     public app: express.Application;
-    public packetManager: PacketAPI.PacketManager;
+    public packetManager: PacketAPI.PacketManagerServer;
 
     /**
      * Bootstrap the application.
@@ -71,11 +71,11 @@ export class Application {
         this.app.use(express.static(path.join(__dirname, '../client')));
         this.app.use(cors());
 
-        this.packetManager = new PacketAPI.PacketManager(ServerIO(new Server()).attach(3030));
+        this.packetManager = new PacketAPI.PacketManagerServer(ServerIO(new Server()).attach(3030));
         this.packetManager.registerParser(WordConstraint, new WordConstraintPacketParser);
-        this.packetManager.registerHandler(WordConstraint, (socket, event: PacketAPI.PacketEvent<WordConstraint>) => {
-            console.log('[TEST TEST]', event.value);
-            this.packetManager.sendPacket(socket.id, WordConstraint, event.value);
+        this.packetManager.registerHandler(WordConstraint, (event: PacketAPI.PacketEvent<WordConstraint>) => {
+            console.log('[TEST]', event.value);
+            this.packetManager.sendPacket(event.socketid, WordConstraint, event.value);
         });
     }
 
