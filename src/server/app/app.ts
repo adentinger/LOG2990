@@ -15,11 +15,12 @@ import { PrefixLogWith } from 'common/utils';
 import * as PacketAPI from 'common/communication/packet-api';
 import * as ServerIO from 'socket.io';
 
-import { registerMiddleWares } from './routes/middle-ware';
-import './routes';
-import { WordConstraintPacketParser } from 'common/lexic/word-packet';
 import { WordConstraint } from 'common/lexic/word-constraint';
 import { Server } from 'http';
+
+import { registerMiddleWares } from './routes/middle-ware';
+import './routes';
+import 'common/lexic/word-packet';
 
 export class Application {
 
@@ -72,11 +73,12 @@ export class Application {
         this.app.use(cors());
 
         this.packetManager = new PacketAPI.PacketManagerServer(ServerIO(new Server()).attach(3030));
-        this.packetManager.registerParser(WordConstraint, new WordConstraintPacketParser);
-        this.packetManager.registerHandler(WordConstraint, (event: PacketAPI.PacketEvent<WordConstraint>) => {
-            console.log('[TEST]', event.value);
-            this.packetManager.sendPacket(event.socketid, WordConstraint, event.value);
-        });
+        this.packetManager.registerHandler(WordConstraint, this.wordConstraintHandler.bind(this));
+    }
+
+    public wordConstraintHandler(event: PacketAPI.PacketEvent<WordConstraint>): void {
+        console.log('[TEST Handler]', event.value);
+        this.packetManager.sendPacket(WordConstraint, event.value, event.socketid);
     }
 
     /**

@@ -13,6 +13,7 @@ export function isJson(pseudoJson: string): boolean {
 export interface Constructor<T> extends Function {
     new(...argv: any[]): T;
 }
+export declare type Class<T> = Constructor<T>; // For comprehention's sake
 
 export function toArrayBuffer(str: string): ArrayBuffer {
     const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char

@@ -1,8 +1,10 @@
 import { PacketParser } from '../communication/packet-api';
 import { WordConstraint } from './word-constraint';
 import { CharConstraint } from './char-constraint';
+import { Parser } from '../communication/packet-api/packet-handler';
 
 // Example of an implementation of a Packet for the class WorkConstraint
+@Parser(WordConstraint)
 export class WordConstraintPacketParser extends PacketParser<WordConstraint> {
     public serialize(value: WordConstraint): ArrayBuffer {
         const SIZE_UINT8 = 1, SIZE_UINT32 = 4;

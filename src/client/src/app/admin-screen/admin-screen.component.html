@@ -1,4 +1,4 @@
 <h1>Admin page</h1>
 <button routerLink="map-editor">map editor</button>
 <button (click)="sendSocket()">Send word constraint</button>
-<input [value]="JSON.stringify(data)"/>
+<span>{{JSON.stringify(data)}}</span>
