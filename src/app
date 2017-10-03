@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage() {
-	echo "usage: app start|stop"
+	echo "usage: app start|stop|update"
 }
 
 if [ "$#" -ne 1 ]; then
@@ -14,6 +14,12 @@ elif [ $1 = "start" ]; then
 	cd ..
 elif [ $1 = "stop" ]; then
 	kill `pidof @angular/cli`; kill `pidof node`
+elif [ $1 = "update" ]; then
+	cd ./server/
+	npm install&
+	cd ../client/
+	npm install&
+	cd ..
 else
 	usage 
 fi
