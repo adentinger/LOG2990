@@ -1,50 +1,49 @@
 //across
-
-var word1: [number,number,string] = [0,0, "aaaaaa"];
-var word2: [number,number,string] = [1,0, "aaaa"];
-var word3: [number,number,string] = [2,0, "aaa"];
-var word4: [number,number,string] = [3,3, "aaaaa"];
-var word5: [number,number,string] = [4,3, "aaa"];
-var word6: [number,number,string] = [5,3, "aaaaa"];
-var word7: [number,number,string] = [6,3, "aaa"];
-var word8: [number,number,string] = [7,6, "aaa"];
-var word9: [number,number,string] = [8,5, "aaaa"];
-var word10: [number,number,string] = [9,3, "aaaaaa"];
+var wordA1: [number,number,string] = [0,0, "aaaaaa"];
+var wordA2: [number,number,string] = [1,0, "aaaa"];
+var wordA3: [number,number,string] = [2,0, "aaa"];
+var wordA4: [number,number,string] = [3,3, "aaaaa"];
+var wordA5: [number,number,string] = [4,3, "aaa"];
+var wordA6: [number,number,string] = [5,3, "aaaaa"];
+var wordA7: [number,number,string] = [6,3, "aaa"];
+var wordA8: [number,number,string] = [7,6, "aaa"];
+var wordA9: [number,number,string] = [8,5, "aaaa"];
+var wordA10: [number,number,string] = [9,3, "aaaaaa"];
 //vertical
-var word1: [number,number,string] = [0,0, "aaaaaa"];
-var word2: [number,number,string] = [0,1, "aaaa"];
-var word3: [number,number,string] = [0,2, "aaa"];
-var word4: [number,number,string] = [3,3, "aaaa"];
-var word5: [number,number,string] = [3,4, "aaaa"];
-var word6: [number,number,string] = [3,5, "aaaa"];
-var word7: [number,number,string] = [7,6, "aaa"];
-var word8: [number,number,string] = [7,7, "aaa"];
-var word9: [number,number,string] = [7,8, "aaa"];
-var word10: [number,number,string] = [2,9, "aaaaa"];
+var wordV1: [number,number,string] = [0,0, "aaaaaa"];
+var wordV2: [number,number,string] = [0,1, "aaaa"];
+var wordV3: [number,number,string] = [0,2, "aaa"];
+var wordV4: [number,number,string] = [3,3, "aaaa"];
+var wordV5: [number,number,string] = [3,4, "aaaa"];
+var wordV6: [number,number,string] = [3,5, "aaaa"];
+var wordV7: [number,number,string] = [7,6, "aaa"];
+var wordV8: [number,number,string] = [7,7, "aaa"];
+var wordV9: [number,number,string] = [7,8, "aaa"];
+var wordV10: [number,number,string] = [2,9, "aaaaa"];
 
 export var CROSSWORD: string[][];
 fill();
-fillAcross(word1);
-fillAcross(word2);/*
-fillAcross(word3);
-fillAcross(word4);
-fillAcross(word5);
-fillAcross(word6);
-fillAcross(word7);
-fillAcross(word8);
-fillAcross(word9);
-fillAcross(word10);
-fillVertical(word1);
-fillVertical(word2);
-fillVertical(word3);
-fillVertical(word4);
-fillVertical(word5);
-fillVertical(word6);
-fillVertical(word7);
-fillVertical(word8);
-fillVertical(word9);
-fillVertical(word10);
-*/
+fillAcross(wordA1);
+fillAcross(wordA2);
+fillAcross(wordA3);
+fillAcross(wordA4);
+fillAcross(wordA5);
+fillAcross(wordA6);
+fillAcross(wordA7);
+fillAcross(wordA8);
+fillAcross(wordA9);
+fillAcross(wordA10);
+fillVertical(wordV1);
+fillVertical(wordV2);
+fillVertical(wordV3);
+fillVertical(wordV4);
+fillVertical(wordV5);
+fillVertical(wordV6);
+fillVertical(wordV7);
+fillVertical(wordV8);
+fillVertical(wordV9);
+fillVertical(wordV10);
+
 function fill() {
     CROSSWORD = [
         ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],

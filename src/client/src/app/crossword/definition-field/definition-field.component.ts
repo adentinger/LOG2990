@@ -21,9 +21,13 @@ export class DefinitionFieldComponent implements OnInit {
     public ngOnInit(): void {
         this.definitions = this.service.getDefinitions();
     }
-
-    public onSelect(e: Event): void {
-        //this.selectedDefinition = definition;
-        console.log('hi', e);
-    }
+/*
+    //send definition on click
+    public selected(): void {
+        for (let i = 0; i < this.definitions.length; i++) {
+            if (this.selectedDefinition === this.definitions[i]) {
+                this.service.
+            }
+        }
+    }*/
 }
