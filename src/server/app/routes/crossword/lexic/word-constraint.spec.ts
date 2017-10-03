@@ -18,7 +18,7 @@ function itShouldFail(message: string, ...objectsToTest: any[]) { itShould('fail
 describe('WordConstraint', () => {
     describe('has a function "isWordConstraint" that', () => {
         itShouldPass('a valid word',
-            {minLength: 1, isCommon: true, charConstraints: '[]'},
+            {minLength: 1, isCommon: true, charConstraints: []},
             {minLength: 1, isCommon: true, charConstraints: [{char: 'a', position: 0}, {char: 'z', position: 100000}]}
         );
         itShouldFail('an object without minLength', {isCommon: true, charConstraints: '[]'});

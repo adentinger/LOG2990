@@ -5,7 +5,7 @@ import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
 import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
-import { PrefixLogWith } from 'common/utils';
+import { PrefixLogWith, isJson } from 'common/utils';
 import { RegexBuilder } from './lexic/regex-builder';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
 
@@ -21,7 +21,8 @@ export class Lexic {
     }
 
     public getDefinitions(word: string): Promise<string[]> {
-        return Promise.reject(new Error('Not implemented'));
+        console.log('word:', word);
+        return this.externalWordApiService.getDefinitions(word);
     }
 }
 
@@ -32,13 +33,25 @@ export class LexicMiddleWare {
     @Route('get', '/words')
     @PrefixLogWith('[lexic/words]')
     public words(req: express.Request, res: express.Response, next: express.NextFunction): void {
+        if (req.query && 'charConstraints' in req.query &&
+            typeof req.query['charConstraints'] === 'string' &&
+            isJson(req.query['charConstraints'])) {
+            req.query.charConstraints = JSON.parse(req.query.charConstraints);
+        }
+        req.query.isCommon = Boolean(req.query.isCommon);
+        req.query.minLength = Number(req.query.minLength);
+        if (req.query.maxLength) {
+            req.query.maxLength = Number(req.query.maxLength);
+        }
         if (isWordConstraint(req.query)) {
             const CONSTRAINT: WordConstraint = parseWordConstraint(req.query);
             LexicMiddleWare.LEXIC.getWords(CONSTRAINT).then((words) => {
                 res.json(words);
             }).catch((reason: any) => {
-                console.warn(reason instanceof Error ? reason.message : reason);
-                res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+                reason = reason instanceof Error ? reason.message : reason;
+                console.warn(reason);
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+                res.send(reason);
             });
         } else {
             console.log('Bad query string:', req.query);
@@ -49,7 +62,12 @@ export class LexicMiddleWare {
     @Route('get', '/definitions/:word')
     @PrefixLogWith('[lexic/definitions]')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        console.warn('Not Implemented');
-        res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
+        console.log(req.params);
+        LexicMiddleWare.LEXIC.getDefinitions(req.params.word).then((definitions: string[]) => {
+            res.json(definitions);
+        }).catch((error: any) => {
+            console.warn(error instanceof Error ? error.message : error);
+            res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
     }
 }

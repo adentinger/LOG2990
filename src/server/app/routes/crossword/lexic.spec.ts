@@ -66,22 +66,22 @@ describe('The lexic MicroService', () => {
         }, null]];
 
         it('should give a list of words that correspond to valid constraints', (done) => {
+            const PROMISES: Promise<any>[] = [];
             for (let i = 0; i < CONSTRAINTS.length; i++) {
-                lexic.getWords(CONSTRAINTS[i][0]).then((words: string[]) => {
+                PROMISES.push(lexic.getWords(CONSTRAINTS[i][0]).then((words: string[]) => {
                     expect(words).to.be.an.instanceOf(Array);
                     words.forEach((word: string) => {
                         expect(word).to.match(CONSTRAINTS[i][1]);
                     });
-                    done();
                 }, (error) => {
-                    expect(CONSTRAINTS[i][1]).to.be.null;
-                    done();
-                }).catch(done);
+                    expect(CONSTRAINTS[i][1]).to.be.null('RegExp', `Expected to be valid: ${CONSTRAINTS[i][0]}`);
+                }));
             }
+            Promise.all(PROMISES).then(done).catch(done);
         });
     });
 
-    xit('should fetch the definitions of a given word', (done) => {
+    it('should fetch the definitions of a given word', (done) => {
         lexic.getDefinitions('banana').then((definitions: string[]) => {
             expect(definitions).to.contain('fruit').and.to.contain('boomrang-like object');
             done();
