@@ -16,18 +16,13 @@ function isCharConstraintArray(object: any): object is CharConstraint[] {
 export function isWordConstraint(object: any): boolean {
     return ('minLength' in object && Number.isInteger(object['minLength'])) &&
         ('isCommon' in object) && (
-            'charConstraints' in object && (
-                isCharConstraintArray(object['charConstraints']) || (
-                    typeof object['charConstraints'] === 'string' &&
-                    isJson(object['charConstraints']) &&
-                    isCharConstraintArray(JSON.parse(object['charConstraints']))
-                )
-            )
+            'charConstraints' in object &&
+            isCharConstraintArray(object['charConstraints'])
         );
 }
 
 export function parseWordConstraint(pseudoWordConstraint: any): WordConstraint {
-    if (!isWordConstraint(pseudoWordConstraint) &&
+    if (!isWordConstraint(pseudoWordConstraint) ||
         (
             typeof pseudoWordConstraint === 'string' &&
             isJson(pseudoWordConstraint) &&
@@ -43,11 +38,9 @@ export function parseWordConstraint(pseudoWordConstraint: any): WordConstraint {
         parsedJson = pseudoWordConstraint;
     }
     return <WordConstraint>{
-        minLength: +parsedJson.minLength,
-        maxLength: 'maxLength' in parsedJson ? +parsedJson.maxLength : undefined,
+        minLength: Number(parsedJson.minLength),
+        maxLength: 'maxLength' in parsedJson ? Number(parsedJson.maxLength) : undefined,
         isCommon: Boolean(parsedJson.isCommon),
-        charConstraints: (typeof parsedJson.charConstraints === 'string') ?
-            JSON.parse(parsedJson.charConstraints) :
-            parsedJson.charConstraints
+        charConstraints: parsedJson.charConstraints
     };
 }
