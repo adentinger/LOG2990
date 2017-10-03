@@ -11,62 +11,75 @@ describe('RegexBuilder', () => {
     describe('buildFromConstraint', () => {
         it('should create an empty Regexp from an empty word constraint', (done) => {
             const emptyWordConstraint: WordConstraint = { charConstraints: [], isCommon: true, minLength: 0 };
-            expect(regexBuilder.buildFromConstraint(emptyWordConstraint).source).include('^$');
-            expect(regexBuilder.buildFromConstraint(emptyWordConstraint).flags).include('i');
+            expect(regexBuilder.buildFromConstraint(emptyWordConstraint).source).equals('^$');
+            expect(regexBuilder.buildFromConstraint(emptyWordConstraint).flags).equals('i');
             done();
         });
-        xit('should create a valid Regexp from a valid word constraint', (done) => {
+        it('should create a valid Regexp from a valid word constraint', (done) => {
+
             let validConstraint: WordConstraint;
+
             validConstraint = { charConstraints: [{ char: 'a', position: 2 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint)).to.have.property('source', '^.{2}a$')
-                .and.to.have.property('flags', 'i');
-            validConstraint = { charConstraints: [{ char: 'a', position: 1 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint)).to.have.property('source', '^.{1}a.{1}$')
-                .and.to.have.property('flags', 'i');
-            validConstraint = { charConstraints: [{ char: 'a', position: 0 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint)).to.have.property('source', '^a.{2}$')
-                .and.to.have.property('flags', 'i');
-            validConstraint = { charConstraints: [{ char: 'a', position: 0 }, { char: 'b', position: 2 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint)).to.have.property('source', '^a.{1}b$')
-                .and.to.have.property('flags', 'i');
-            validConstraint = { charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 2 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint)).to.have.property('source', '^.{1}ab$')
-                .and.to.have.property('flags', 'i');
+            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{2}a$');
+            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+
+            validConstraint = { charConstraints: [{ char: 'b', position: 1 }], isCommon: true, minLength: 3 };
+            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{1}b.{1}$');
+            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+
+            validConstraint = { charConstraints: [{ char: 'c', position: 0 }], isCommon: true, minLength: 3 };
+            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^c.{2}$');
+            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+
+            validConstraint = { charConstraints: [{ char: 'd', position: 0 }, { char: 'b', position: 2 }], isCommon: true, minLength: 3 };
+            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^d.{1}b$');
+            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+
+            validConstraint = { charConstraints: [{ char: 'e', position: 1 }, { char: 'b', position: 2 }], isCommon: true, minLength: 3 };
+            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{1}eb$');
+            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+
             validConstraint = {
-                charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 2 }],
+                charConstraints: [{ char: 'f', position: 1 }, { char: 'b', position: 2 }],
                 isCommon: true, minLength: 3, maxLength: 9
             };
-            expect(regexBuilder.buildFromConstraint(validConstraint)).to.have.property('source', '^.{1}ab.{0,6}$')
-                .and.to.have.property('flags', 'i');
+            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{1}fb.{0,6}$');
+            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+
             done();
         });
-        xit('should return null with an invalid constraint', (done) => {
+        it('should return null with an invalid constraint', (done) => {
             let invalidWordConstraint: WordConstraint;
             invalidWordConstraint = {
                 charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 2 }],
                 isCommon: true, minLength: 2
             };
             expect(regexBuilder.buildFromConstraint(invalidWordConstraint)).to.be.null;
+
             invalidWordConstraint = {
-                charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 2 }],
+                charConstraints: [{ char: 'b', position: 1 }, { char: 'b', position: 2 }],
                 isCommon: true, minLength: 2, maxLength: 1
             };
             expect(regexBuilder.buildFromConstraint(invalidWordConstraint)).to.be.null;
+
             invalidWordConstraint = {
-                charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 2 }],
+                charConstraints: [{ char: 'c', position: 1 }, { char: 'b', position: 2 }],
                 isCommon: true, minLength: -2, maxLength: 1
             };
             expect(regexBuilder.buildFromConstraint(invalidWordConstraint)).to.be.null;
+
             invalidWordConstraint = {
-                charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 2 }],
+                charConstraints: [{ char: 'd', position: 1 }, { char: 'b', position: 2 }],
                 isCommon: true, minLength: 2, maxLength: -1
             };
             expect(regexBuilder.buildFromConstraint(invalidWordConstraint)).to.be.null;
+
             invalidWordConstraint = {
-                charConstraints: [{ char: 'a', position: 1 }, { char: 'b', position: 1 }],
+                charConstraints: [{ char: 'e', position: 1 }, { char: 'b', position: 1 }],
                 isCommon: true, minLength: 2
             };
             expect(regexBuilder.buildFromConstraint(invalidWordConstraint)).to.be.null;
+
             done();
         });
     });

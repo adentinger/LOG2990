@@ -6,54 +6,20 @@ export class RegexBuilder {
     public buildFromConstraint(constraint: WordConstraint): RegExp {
 
         let regularExpression: string;
-        regularExpression = '^';
+        regularExpression = '';
 
         if (isWordConstraint(constraint)) {
-            if (constraint.charConstraints.length !== 0) {
 
-                let positionBuffer = -1;
-                const SORTED_CHAR_CONSTRAINTS: CharConstraint[] = constraint.charConstraints.sort((a, b) => a.position - b.position);
+            const SORTED_CHAR_CONSTRAINTS: CharConstraint[] = constraint.charConstraints.sort((a, b) => a.position - b.position);
 
-                const HAS_DUPLICATE_ENTRY = !SORTED_CHAR_CONSTRAINTS.every((element) => {
-                    if (element.position !== positionBuffer) {
-                        positionBuffer = element.position;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
-                if (HAS_DUPLICATE_ENTRY) {
-                    return null;
-                }
-
-                for (let i = 0; i < SORTED_CHAR_CONSTRAINTS.length; i++) {
-
-                    const CURRENT = SORTED_CHAR_CONSTRAINTS[i].position;
-
-                    if (CURRENT === 0 || (CURRENT === SORTED_CHAR_CONSTRAINTS[i - 1].position + 1
-                        && CURRENT !== SORTED_CHAR_CONSTRAINTS.length)) {
-                        regularExpression += SORTED_CHAR_CONSTRAINTS[i].char;
-                    } else if (CURRENT === SORTED_CHAR_CONSTRAINTS.length - 1 && CURRENT === constraint.maxLength - 1) {
-                        regularExpression += SORTED_CHAR_CONSTRAINTS[i] + '$';
-                    } else if (CURRENT === SORTED_CHAR_CONSTRAINTS.length - 1 && CURRENT !== constraint.maxLength - 1) {
-                        regularExpression += SORTED_CHAR_CONSTRAINTS[i] + '.{'
-                        + (constraint.maxLength - SORTED_CHAR_CONSTRAINTS[i].position - 1) + '}$';
-                    } else if (CURRENT !== 0 && CURRENT === constraint.maxLength - 1 && CURRENT <= constraint.minLength) {
-                        regularExpression += SORTED_CHAR_CONSTRAINTS[i].char + '.{'
-                        + (constraint.minLength - SORTED_CHAR_CONSTRAINTS[i].position) + ','
-                        + (constraint.maxLength - SORTED_CHAR_CONSTRAINTS[i].position) + '}$';
-                    } else if (CURRENT !== 0 && CURRENT + 1 !== SORTED_CHAR_CONSTRAINTS[i + 1].position) {
-                        regularExpression += SORTED_CHAR_CONSTRAINTS[i].char + '.{'
-                        + (SORTED_CHAR_CONSTRAINTS[i + 1].position - SORTED_CHAR_CONSTRAINTS[i].position) + '}';
-                    }
-                }
-            } else {
-                regularExpression += '$';
+            if (this.checkConstraints(SORTED_CHAR_CONSTRAINTS, constraint) === false) {
+                return null;
             }
+
+            regularExpression += this.createRegex(regularExpression, SORTED_CHAR_CONSTRAINTS, constraint);
+
             const flags = 'i';
-            let REG_EXP: RegExp;
-            REG_EXP = new RegExp(regularExpression, flags);
+            const REG_EXP: RegExp = new RegExp(regularExpression, flags);
 
             return REG_EXP;
         } else {
@@ -61,4 +27,83 @@ export class RegexBuilder {
         }
     }
 
+    private checkConstraints(sortedConstraints: CharConstraint[], constraint: WordConstraint): boolean {
+
+        if (this.checkLengthConstraint(constraint) === true
+            && this.checkDuplicates(sortedConstraints) === true
+            && this.checkPositionConstraint(sortedConstraints, constraint) === true) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private checkDuplicates(sortedConstraints: CharConstraint[]): boolean {
+
+        let positionBuffer = -1;
+
+        for (let i = 0; i < sortedConstraints.length; i++) {
+            if (sortedConstraints[i].position !== positionBuffer) {
+                positionBuffer = sortedConstraints[i].position;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private checkLengthConstraint(constraint: WordConstraint): boolean {
+
+        if (constraint.minLength > constraint.maxLength && constraint.minLength >= 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private checkPositionConstraint(sortedConstraints: CharConstraint[], constraint: WordConstraint): boolean {
+
+        if (sortedConstraints.length > 0
+            && sortedConstraints[sortedConstraints.length - 1].position >= constraint.minLength) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private createRegex(regEx: string, sortedConstraints: CharConstraint[], constraint: WordConstraint): string {
+
+        regEx = '^';
+
+        let previous = -1;
+
+        for (let i = 0; i < sortedConstraints.length; i++) {
+
+            const CURRENT = sortedConstraints[i].position;
+
+            if (CURRENT - previous > 1) {
+                regEx += '.{' + (CURRENT - previous - 1) + '}';
+            }
+
+            regEx += sortedConstraints[i].char;
+            previous = CURRENT;
+
+        }
+
+        if (previous <= constraint.minLength && constraint.maxLength > constraint.minLength) {
+            regEx += '.{' + (constraint.minLength
+                - sortedConstraints[sortedConstraints.length - 1].position - 1) + ','
+                + (constraint.maxLength
+                    - sortedConstraints[sortedConstraints.length - 1].position - 1) + '}$';
+        } else if (previous === constraint.minLength - 1) {
+            regEx += '$';
+        } else if (previous !== constraint.minLength) {
+            regEx += '.{' + (constraint.minLength
+                - sortedConstraints[sortedConstraints.length - 1].position - 1) + '}$';
+        }
+
+        return regEx;
+    }
 }
+
