@@ -105,7 +105,7 @@ describe('MapEditorService', () => {
             expect(() => service.serializeMap()).toThrow();
         });
 
-        it('should not serialize maps if either width or height is not set', () => {
+        it('should not serialize maps if dimensions are not set', () => {
             service['width'] = -1;
             service['height'] = -1;
 
@@ -117,12 +117,12 @@ describe('MapEditorService', () => {
             const INITIAL_WIDTH = service.mapWidth;
             service.mapWidth = 500;
             service['map'] = mockMaps.functionalMap1();
-            expect(() => service.serializeMap()).toThrow();
+            service.serializeMap(); // Should not throw
 
             service['width'] = INITIAL_WIDTH;
             service['height'] = 300;
             service['map'] = mockMaps.functionalMap1();
-            expect(() => service.serializeMap()).toThrow();
+            expect(service.serializeMap).toThrow();
         });
 
     });
