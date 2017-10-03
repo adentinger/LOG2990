@@ -2,7 +2,7 @@
     position: absolute;
     top: 30%;
     left: 40%;
-    background-color: white;
+    background-color: black;
     border-radius: 10px;
     min-width: 300px;
     min-height: 40%;
@@ -28,10 +28,13 @@
 }
 
 .hide_me {
-    display:none;
+    visibility:hidden;
 }
 
 .show_me {
-    display:inline;
+    visibility: visible;
 }
 
+.window ol { font-style:italic; font-family:Georgia, Times, serif; font-size:24px; color:#bfe1f1;  }
+.window ol li p { padding:8px; font-style:normal; font-family:Arial; font-size:13px; color:#eee; border-left: 1px solid #999; }
+.window ol li p em { display:block; }

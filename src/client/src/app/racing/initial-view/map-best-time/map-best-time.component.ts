@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { MapService } from '../../services/map.service';
 import { Map } from '../../../admin-screen/map-editor/map';
@@ -9,10 +9,14 @@ import { Map } from '../../../admin-screen/map-editor/map';
     styleUrls: ['./map-best-time.component.css']
 })
 
-export class mapBestTimeComponent {
+export class mapBestTimeComponent implements OnInit {
     @Input() public map: Map;
-    @Input() public displayable = true;
-    public setDisplayableTrue(): void {
+    @Input() public displayable;
+    public set(): void {
+        this.displayable = true;
+    }
+
+    public ngOnInit(): void {
         this.displayable = true;
         console.log('hey');
     }
