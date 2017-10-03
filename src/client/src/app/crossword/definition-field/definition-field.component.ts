@@ -26,12 +26,4 @@ export class DefinitionFieldComponent implements OnInit {
         //this.selectedDefinition = definition;
         console.log('hi', e);
     }
-
-    // public outsideSelect(): void {
-    //     this.selectedDefinition = null;
-    // }
-
-
-
-
 }
