@@ -39,6 +39,10 @@ export class MockMaps {
                        12);
     }
 
+    public clockwise(): Map {
+        return this.functionalMap2();
+    }
+
     public counterClockwise(): Map {
         return new Map(new Path([new Point(0, 0), new Point(0, 10), new Point(10, 0), new Point(0, 0)]),
             MockMaps.MIN_LINE_LENGTH,

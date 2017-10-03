@@ -30,6 +30,22 @@ describe('Map', () => {
         expect(mockMaps.emptyMap1().speedBoosts).toEqual([]);
     });
 
+    describe('checkClockwise', () => {
+
+        it('should mark the map as clockwise if it is so', () => {
+            const MAP = mockMaps.clockwise();
+            MAP.checkClockwise();
+            expect(MAP.isClockwise).toBe(true);
+        });
+
+        it('should mark the map as counter-clockwise if it is so', () => {
+            const MAP = mockMaps.counterClockwise();
+            MAP.checkClockwise();
+            expect(MAP.isClockwise).toBe(false);
+        });
+
+    });
+
     it('should compute length', () => {
         expect(mockMaps.functionalMap1().computeLength()).toBeCloseTo(34.14);
         expect(mockMaps.emptyMap1().computeLength()).toEqual(0);
