@@ -1,9 +1,20 @@
 .selected {
     background-color: #CFD8DC !important;
     color: white;
-  }
+}
 
-  .maps td.selected:hover {
-    background-color: #BBD8DC !important;
-    color: white;
-  }
+td, th {
+  border: 1px solid black;
+  text-align: center;
+}
+
+thead {
+  display: block;
+  position: relative;
+}
+
+tbody {
+  display: block;
+  height: 300px;
+  overflow: auto;
+}

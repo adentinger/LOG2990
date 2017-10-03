@@ -1,0 +1,37 @@
+.window {
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    background-color: white;
+    border-radius: 10px;
+    min-width: 300px;
+    min-height: 40%;
+    max-height: 90%;
+    width: 30%;
+    height: auto;
+    padding: 20px 0px 20px 0px;
+    margin: auto;
+    overflow: hidden;
+    overflow-y: auto;
+    box-shadow: 0px 0px 10px 4px #333;
+    z-index: 2;
+}
+
+.outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background:#666;
+    opacity: 0.5;
+}
+
+.hide_me {
+    display:none;
+}
+
+.show_me {
+    display:inline;
+}
+

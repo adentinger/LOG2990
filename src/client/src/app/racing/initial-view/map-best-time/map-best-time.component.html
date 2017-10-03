@@ -1,5 +1,8 @@
-<div *ngIf="map">
-    <ul>
-       <li *ngFor="let number of map.bestTimes">{{number}}</li> 
-    </ul>>
+<div class='outer' *ngIf="map" [ngClass]="{hide_me: !displayable, show_me: displayable}" (click)="displayable = !displayable" >
+    <div class='window'>
+        <ul>
+            <li *ngFor="let number of map.bestTimes">user: {{number}}</li> 
+        </ul>
+    </div>
 </div>
+

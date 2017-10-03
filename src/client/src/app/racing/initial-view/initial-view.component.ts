@@ -25,7 +25,6 @@ export class InitialViewComponent implements OnInit {
 
     public mapSelected(map: Map): void {
         this.selectedMap = map;
-        console.log('test');
     }
 
 }

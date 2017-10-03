@@ -10,5 +10,10 @@ import { Map } from '../../../admin-screen/map-editor/map';
 })
 
 export class mapBestTimeComponent {
-    @Input() map: Map;
+    @Input() public map: Map;
+    @Input() public displayable = true;
+    public setDisplayableTrue(): void {
+        this.displayable = true;
+        console.log('hey');
+    }
 }
