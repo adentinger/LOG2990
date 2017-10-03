@@ -28,9 +28,10 @@ export class RacingGameRendering {
             this.ASPECT,
             this.NEAR,
             this.FAR);
-        this.FLOOR = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000, 20, 20), new THREE.MeshBasicMaterial({ wireframe: true }));
+        // this.FLOOR = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000, 20, 20), new THREE.MeshBasicMaterial({ wireframe: true }));
         this.SKYBOX = new Skybox('Day');
 
+        this.SCENE.add(this.SKYBOX);
         this.SCENE.add(this.CAMERA);
         this.RENDERER.setSize(this.WIDTH, this.HEIGHT);
     }
@@ -38,9 +39,9 @@ export class RacingGameRendering {
     public setupScene(): void {
 
         this.setupCamera();
-        this.SCENE.add(this.CAMERA);
+        // this.SCENE.add(this.CAMERA);
         // this.SCENE.add(this.FLOOR);
-        this.SCENE.add(this.SKYBOX);
+        //
     }
 
     private setupCamera(): void {

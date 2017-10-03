@@ -2,19 +2,19 @@ import * as THREE from 'three';
 
 export class Skybox extends THREE.Mesh {
 
-    private static textureDayPromise: Promise<THREE.CubeTexture> = new Promise((resolve: Function, reject: (error: any) => void) => {
+    private static textureDayPromise: Promise<THREE.ShaderMaterial> = new Promise((resolve: Function, reject: (error: any) => void) => {
         const loader = new THREE.CubeTextureLoader();
         loader.setPath('/assets/racing/skybox/');
         const day = loader.load(Skybox.findTextures('Day'), (texture: THREE.CubeTexture) => {
             resolve(texture);
-        }, () => {}, reject);
+        }, () => { }, reject);
     }).then((texture: THREE.CubeTexture) => {
-        Skybox.textureDay = texture;
-        return texture;
+        const mat = Skybox.setShaders(texture);
+        return mat;
     });
 
-    private static textureNight: THREE.CubeTexture = null;
-    private static textureDay: THREE.CubeTexture = null;
+    private static textureNight: THREE.ShaderMaterial = null;
+    private static textureDay: THREE.ShaderMaterial = null;
     public daySkybox = new THREE.Mesh;
     private mode: string;
     public cube: THREE.Mesh;
@@ -22,7 +22,7 @@ export class Skybox extends THREE.Mesh {
     constructor(mode: string) {
         super();
         this.mode = mode;
-        this.cube = new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1), new THREE.MeshBasicMaterial());
+        this.cube = new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1), new THREE.ShaderMaterial());
         this.add(this.cube);
         this.swapMode(mode);
     }
@@ -39,14 +39,15 @@ export class Skybox extends THREE.Mesh {
         let images: string[];
 
         if (mode === 'Day') {
-            images = ['Day-Left.jpg', 'Day-Right.jpg',
-                'Day-Back.jpg', 'Day-Front.jpg',
-                'Day-Ceilling.jpg', 'Day-Bottom.jpg'];
+            images = ['Day-Right.jpg', 'Day-Left.jpg',
+                'Day-Ceilling.jpg', 'Day-Bottom.jpg',
+                'Day-Front.jpg', 'Day-Back.jpg'];
         }
         else if (mode === 'Night') {
             images = ['Day-Left.jpg', 'Day-Right.jpg',
-                'Day-Back.jpg', '.Day-Front.jpg',
-                'Day-Ceilling.jpg', '.Day-Bottom.jpg'];
+                '.Day-Front.jpg', 'Day-Ceilling.jpg', '.Day-Bottom.jpg',
+                'Day-Back.jpg'
+            ];
         }
 
         return images;
@@ -69,19 +70,20 @@ export class Skybox extends THREE.Mesh {
         if (mode === 'Day') {
             this.mode = 'Day';
             if (Skybox.textureDay === null) {
-                Skybox.textureDayPromise.then((texture: THREE.CubeTexture) => {
+                Skybox.textureDayPromise.then((texture: THREE.ShaderMaterial) => {
                     if (this.mode === 'Day') {
-                        (this.cube.material as THREE.MeshBasicMaterial).setValues({ envMap: Skybox.textureDay });
+                        Skybox.textureDay = texture;
+                        (this.cube.material as THREE.ShaderMaterial).setValues(Skybox.textureDay);
                     }
                 });
             }
             else {
-                (this.cube.material as THREE.MeshBasicMaterial).setValues({ envMap: Skybox.textureDay });
+                (this.cube.material as THREE.ShaderMaterial).setValues(Skybox.textureDay);
             }
         }
         else if (mode === 'Night') {
             this.mode = 'Night';
-            (this.cube.material as THREE.MeshBasicMaterial).setValues({ envMap: Skybox.textureNight });
+            (this.cube.material as THREE.MeshBasicMaterial).setValues(Skybox.textureDay);
         }
         (this.cube.material as THREE.Material).update();
     }
