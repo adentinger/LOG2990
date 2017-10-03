@@ -30,6 +30,7 @@ export class MapEditorService {
 
     public set mapWidth(mapWidth: number) {
         this.converter.windowWidth = mapWidth;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
         this.width = mapWidth;
     }
 
@@ -39,6 +40,7 @@ export class MapEditorService {
 
     public set mapHeight(mapHeight: number) {
         this.converter.windowHeight = mapHeight;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
         this.height = mapHeight;
     }
 
