@@ -5,6 +5,7 @@ import { SpeedBoost } from './speed-boost';
 import { Point } from './point';
 import { Vector } from './vector';
 import { Line, IntersectionType } from './line';
+import { ShoelaceAlgorithm } from './shoelace-algorithm';
 
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
@@ -31,6 +32,8 @@ export class Map {
     public sumRatings: number;
     public numberOfRatings: number;
     public plays: number;
+
+    private clockwiseCheckerAlgorithm: ShoelaceAlgorithm = new ShoelaceAlgorithm();
 
     constructor(path: Path = new Path(),
                 minimumSegmentLength: number = Infinity,
@@ -68,7 +71,9 @@ export class Map {
     }
 
     public isClockwise(): boolean {
-        return false;
+        const POLYGON = this.path.points;
+        POLYGON.pop();
+        return this.clockwiseCheckerAlgorithm.algebraicAreaOf(POLYGON) > 0;
     }
 
     public computeLength(): number {
