@@ -1,20 +1,22 @@
-.window {
+.best-time-menu {
     position: absolute;
     top: 30%;
-    left: 40%;
-    background-color: black;
+    left: 35%;
+    background-color: #D89925;
     border-radius: 10px;
     min-width: 300px;
     min-height: 40%;
     max-height: 90%;
     width: 30%;
     height: auto;
-    padding: 20px 0px 20px 0px;
-    margin: auto;
-    overflow: hidden;
-    overflow-y: auto;
     box-shadow: 0px 0px 10px 4px #333;
     z-index: 2;
+}
+
+.best-time-menu h1 {
+    border-bottom: 5px solid #383434;
+    padding-bottom: 10px;
+    color: black;
 }
 
 .outer {
@@ -24,7 +26,7 @@
     height: 100%;
     width: 100%;
     background:#666;
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 .hide_me {
@@ -35,6 +37,17 @@
     visibility: visible;
 }
 
-.window ol { font-style:italic; font-family:Georgia, Times, serif; font-size:24px; color:#bfe1f1;  }
-.window ol li p { padding:8px; font-style:normal; font-family:Arial; font-size:13px; color:#eee; border-left: 1px solid #999; }
-.window ol li p em { display:block; }
+.best-time-menu li { 
+    font-style:normal; 
+    padding: 10px;
+    font-family:Ubuntu; 
+    font-size:30px; 
+    color:#eee; 
+    
+}
+
+.best-time-menu ol {
+    list-style-type: none;    
+    padding-left: 0px;
+    text-align: center;
+}

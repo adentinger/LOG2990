@@ -1,8 +1,8 @@
 <div class='outer' *ngIf="map" [ngClass]="{hide_me: !displayable, show_me: displayable}" (click)="displayable = !displayable"  >
-    <div class='window' >
+    <div class='best-time-menu' >
         <ol>
-            <caption>{{map.name}}</caption>
-            <li *ngFor="let number of map.bestTimes">user: {{number}}</li> 
+            <h1>{{map.name}}</h1>
+            <li *ngFor="let number of map.bestTimes">UserRanking-user: {{number}}</li> 
         </ol>
     </div>
 </div>
