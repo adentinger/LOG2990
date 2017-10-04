@@ -14,5 +14,6 @@ export class BoardComponent implements OnInit {
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getGrid();
+        console.log(this.crosswordGrid)
     }
 }

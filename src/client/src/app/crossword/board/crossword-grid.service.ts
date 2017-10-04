@@ -1,71 +1,58 @@
 import { Injectable, OnInit } from '@angular/core';
 
-import { GridWord } from '../grid-word';
+import { GridWord, Direction, Owner } from '../grid-word';
 import { ARRAY_GRIDWORD } from '../mocks/grid-mock';
 
 @Injectable()
-export class CrosswordGridService implements OnInit{
+export class CrosswordGridService {
 
     private grid: GridWord[];
+    private viewableGrid: string[][];
 
-    
+    constructor() {
+        this.grid = ARRAY_GRIDWORD;
+        this.fill();
+        this.fillAll();
+    }
 
     public getGrid(): string[][] {
+        let CROSSWORD = this.viewableGrid;
         return CROSSWORD;
     }
 
-    public ngOnInit(): void {
-        this.grid = ARRAY_GRIDWORD;
+    public fillAll() {
+        this.fill();
+        for (let i = 0; i < this.grid.length; i++) {
+            this.fillAcrossAndVertical(this.grid[i]);
+        }
+    }
+
+    public fillAcrossAndVertical(gridWord: GridWord) { //(y,x,length,direction,owner,string)
+        if (gridWord.direction === Direction.across) {
+            for (let i = 0; i < gridWord.length; i++) {
+                this.viewableGrid[gridWord.y][i + gridWord.x] = '1';
+            }
+        }
         
+        else if (gridWord.direction === Direction.vertical) {
+            for (let i = 0; i < gridWord.length; i++) {
+                this.viewableGrid[i + gridWord.y][gridWord.x] = '1';
+            }
+        }
     }
-}
 
-export var CROSSWORD: string[][];
-fill();
-fillAcross(wordA1);
-fillAcross(wordA2);
-fillAcross(wordA3);
-fillAcross(wordA4);
-fillAcross(wordA5);
-fillAcross(wordA6);
-fillAcross(wordA7);
-fillAcross(wordA8);
-fillAcross(wordA9);
-fillAcross(wordA10);
-fillVertical(wordV1);
-fillVertical(wordV2);
-fillVertical(wordV3);
-fillVertical(wordV4);
-fillVertical(wordV5);
-fillVertical(wordV6);
-fillVertical(wordV7);
-fillVertical(wordV8);
-fillVertical(wordV9);
-fillVertical(wordV10);
-
-function fill() {
-    CROSSWORD = [
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
-    ]
-}
-
-function fillAcross(tuple: [number, number, number]) { //(y,x,word)
-    for (let i = 0; i < tuple[2]; i++) {
-        CROSSWORD[tuple[0]][i + tuple[1]] = '1';
-    }
-}
-
-function fillVertical(tuple: [number, number, number]) { //(y,x,word)
-    for (let i = 0; i < tuple[2]; i++) {
-        CROSSWORD[i + tuple[0]][tuple[1]] = '1';
+    public fill() {
+        this.viewableGrid = [
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+        ]
     }
 }

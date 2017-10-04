@@ -17,4 +17,3 @@ export interface GridWord {
     owner: Owner;
     string: string;
 }
-

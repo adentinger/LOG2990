@@ -1,7 +1,7 @@
 import { GridWord, Direction, Owner } from "../grid-word";
 
 
-export const ARRAYGRIDWORD: GridWord[] = [
+export const ARRAY_GRIDWORD: GridWord[] = [
     {'y': 0,'x': 0,'length': 7,'direction': Direction.across,'owner': Owner.none,'string': ""},
     {'y': 1,'x': 0,'length': 4,'direction': Direction.across,'owner': Owner.none,'string': ""},
     {'y': 2,'x': 0,'length': 3,'direction': Direction.across,'owner': Owner.none,'string': ""},
@@ -24,81 +24,6 @@ export const ARRAYGRIDWORD: GridWord[] = [
     {'y': 7,'x': 8,'length': 3,'direction': Direction.vertical,'owner': Owner.none,'string': ""},
     {'y': 2,'x': 9,'length': 5,'direction': Direction.vertical,'owner': Owner.none,'string': ""}
 ]
-
-/*
-//across
-var wordA1: [number,number,number] = [0,0,7];
-var wordA2: [number,number,number] = [1,0,4];
-var wordA3: [number,number,number] = [2,0,3];
-var wordA4: [number,number,number] = [3,3,5];
-var wordA5: [number,number,number] = [4,3,3];
-var wordA6: [number,number,number] = [5,3,5];
-var wordA7: [number,number,number] = [6,3,3];
-var wordA8: [number,number,number] = [7,6,3];
-var wordA9: [number,number,number] = [8,5,4];
-var wordA10: [number,number,number] = [9,3,6];
-//vertical
-var wordV1: [number,number,number] = [0,0,6];
-var wordV2: [number,number,number] = [0,1,4];
-var wordV3: [number,number,number] = [0,2,3];
-var wordV4: [number,number,number] = [3,3,4];
-var wordV5: [number,number,number] = [3,4,4];
-var wordV6: [number,number,number] = [3,5,4];
-var wordV7: [number,number,number] = [7,6,3];
-var wordV8: [number,number,number] = [7,7,3];
-var wordV9: [number,number,number] = [7,8,3];
-var wordV10: [number,number,number] = [2,9,5];*/
-
-/*
-export var CROSSWORD: string[][];
-fill();
-fillAcross(wordA1);
-fillAcross(wordA2);
-fillAcross(wordA3);
-fillAcross(wordA4);
-fillAcross(wordA5);
-fillAcross(wordA6);
-fillAcross(wordA7);
-fillAcross(wordA8);
-fillAcross(wordA9);
-fillAcross(wordA10);
-fillVertical(wordV1);
-fillVertical(wordV2);
-fillVertical(wordV3);
-fillVertical(wordV4);
-fillVertical(wordV5);
-fillVertical(wordV6);
-fillVertical(wordV7);
-fillVertical(wordV8);
-fillVertical(wordV9);
-fillVertical(wordV10);
-
-function fill() {
-    CROSSWORD = [
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
-    ]
-}
-
-function fillAcross(tuple: [number, number, number]) { //(y,x,word)
-    for (let i = 0; i < tuple[2]; i++) {
-        CROSSWORD[tuple[0]][i + tuple[1]] = '1';
-    }
-}
-
-function fillVertical(tuple: [number, number, number]) { //(y,x,word)
-    for (let i = 0; i < tuple[2]; i++) {
-        CROSSWORD[i + tuple[0]][tuple[1]] = '1';
-    }
-}
 
 /*
 export const CROSSWORD: string[][] = [
