@@ -1,3 +1,8 @@
-<div id="definition-box" >
-  <p *ngFor="let definition of definitions">{{definition.text}}</p>
+<div id="definition-box" (clickOutside)='selectedDefinition = null'>
+  <div *ngFor="let definition of definitions">
+    <div [class.selected]='selectedDefinition===definition'
+         (click)='selectedDefinition = definition'>
+      {{definition.text}}
+    </div>
+  </div>
 </div>
