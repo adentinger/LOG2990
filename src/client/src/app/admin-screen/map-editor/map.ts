@@ -71,8 +71,7 @@ export class Map {
     }
 
     public isClockwise(): boolean {
-        const POLYGON = this.path.points;
-        POLYGON.pop();
+        const POLYGON = this.path.points.slice(0, this.path.points.length - 1);
         return this.clockwiseCheckerAlgorithm.algebraicAreaOf(POLYGON) > 0;
     }
 
