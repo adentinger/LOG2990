@@ -1,18 +1,41 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, functionalMap1, emptyMap2 } from './mock-maps';
+
 import { MapEditorService } from './map-editor.service';
+import { Map } from './map';
+import { SerializedMap } from './serialized-map';
+import { MockMaps } from './mock-maps';
+import { MockSerializedMaps } from './mock-serialized-maps';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from './point';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [MapEditorService]
+            providers: [
+                MapEditorService,
+                RacingUnitConversionService,
+                MockMaps,
+                MockSerializedMaps
+            ]
         });
     });
 
     let service: MapEditorService;
-    beforeEach(inject([MapEditorService], (injectedService: MapEditorService) => {
+    let converter: RacingUnitConversionService;
+    let mockMaps: MockMaps;
+    let mockSerializedMaps: MockSerializedMaps;
+
+    beforeEach(inject([MapEditorService, RacingUnitConversionService, MockMaps, MockSerializedMaps],
+                      (injectedService: MapEditorService,
+                       converterService: RacingUnitConversionService,
+                       mockMapFactory: MockMaps,
+                       mockSerializedMapFactory: MockSerializedMaps) => {
         service = injectedService;
+        service.mapWidth = 500;
+        service.mapHeight = 300;
+        converter = converterService;
+        mockMaps = mockMapFactory;
+        mockSerializedMaps = mockSerializedMapFactory;
     }));
 
     it('should be created', () => {
@@ -24,28 +47,136 @@ describe('MapEditorService', () => {
         const INITIAL_MAP = service['map'];
         expect(INITIAL_MAP).toBeTruthy();
 
-        expect(service.newMap()).toBe(true);
+        service.newMap();
         const NEW_MAP = service['map'];
         expect(NEW_MAP).toBeTruthy();
         expect(INITIAL_MAP).not.toBe(NEW_MAP);
     });
 
-    it('should be able to delete a map', () => {
-        service['map'] = Object.create(emptyMap);
-        expect(service['map']).not.toBeFalsy();
-        service.deleteMap();
-        expect(service['map']).toBeNull();
+    const CHECK_SERIALIZATION = (map: Map, serializedMap: SerializedMap) => {
+        expect(map.name).toEqual(serializedMap.name);
+        expect(map.description).toEqual(serializedMap.description);
+
+        expect(map.path.points.length).toEqual(serializedMap.points.length);
+        for (let i = 0; i < map.path.points.length; ++i) {
+            const MAP_POINT = map.path.points[i];
+            const SMAP_POINT = serializedMap.points[i];
+            const X = converter.lengthToGameUnits(MAP_POINT.x);
+            const Y = converter.lengthToGameUnits(MAP_POINT.y);
+            const CONVERTED_MAP_POINT = new Point(X, Y);
+            expect(CONVERTED_MAP_POINT.x).toBeCloseTo(SMAP_POINT.x);
+            expect(CONVERTED_MAP_POINT.y).toBeCloseTo(SMAP_POINT.y);
+        }
+
+        expect(map.plays).toEqual(serializedMap.numberOfPlays);
+        expect(map.potholes).toEqual(serializedMap.potholes);
+        expect(map.puddles).toEqual(serializedMap.puddles);
+        expect(map.speedBoosts).toEqual(serializedMap.speedBoosts);
+        expect(map.type).toEqual(serializedMap.type);
+
+        let expectedRating: number;
+        if (serializedMap.numberOfRatings !== 0) {
+            expectedRating =
+                serializedMap.sumRatings / serializedMap.numberOfRatings;
+        }
+        else {
+            expectedRating = 0;
+        }
+        expect(map.rating).toEqual(expectedRating);
+    };
+
+    describe('serializeMap', () => {
+
+        it('should serialize maps if they are valid', () => {
+            const FUNCTIONAL1 = mockMaps.functionalMap1();
+            service['map'] = FUNCTIONAL1;
+            CHECK_SERIALIZATION(FUNCTIONAL1, service.serializeMap());
+            const FUNCTIONAL2 = mockMaps.functionalMap2();
+            service['map'] = FUNCTIONAL2;
+            CHECK_SERIALIZATION(FUNCTIONAL2, service.serializeMap());
+        });
+
+        it('should not serialize maps if they are not valid', () => {
+            service['map'] = mockMaps.disfunctionalMap1();
+            expect(() => service.serializeMap()).toThrow();
+            service['map'] = mockMaps.disfunctionalMap2();
+            expect(() => service.serializeMap()).toThrow();
+            service['map'] = mockMaps.emptyMap1();
+            expect(() => service.serializeMap()).toThrow();
+        });
+
+        it('should not serialize maps if dimensions are not set', () => {
+            service['width'] = -1;
+            service['height'] = -1;
+
+            service['map'] = mockMaps.functionalMap1();
+            expect(() => service.serializeMap()).toThrow();
+            service['map'] = mockMaps.disfunctionalMap1();
+            expect(() => service.serializeMap()).toThrow();
+
+            const INITIAL_WIDTH = service.mapWidth;
+            service.mapWidth = 500;
+            service['map'] = mockMaps.functionalMap1();
+            service.serializeMap(); // Should not throw
+
+            service['width'] = INITIAL_WIDTH;
+            service['height'] = 300;
+            service['map'] = mockMaps.functionalMap1();
+            expect(service.serializeMap).toThrow();
+        });
+
     });
 
+    describe('deserializeMap', () => {
+
+        it('should deserialize maps if they are valid', () => {
+            service.mapWidth = 500;
+            service.mapHeight = 300;
+
+            const MAPS: SerializedMap[] = [
+                mockSerializedMaps.functional1(),
+                mockSerializedMaps.functional2()
+            ];
+
+            MAPS.forEach((map: SerializedMap, idx) => {
+                service.deserializeMap(map);
+                CHECK_SERIALIZATION(service.currentMap, map);
+            });
+        });
+
+        it('should not deserialize maps if they are not valid', () => {
+            const DISFUNCTIONAL_MAPS: SerializedMap[] = [
+                mockSerializedMaps.disfunctional1(),
+                mockSerializedMaps.disfunctional2()
+            ];
+
+            DISFUNCTIONAL_MAPS.forEach((map: SerializedMap) => {
+                expect(() => service.deserializeMap(map)).toThrow();
+            });
+        });
+
+        it('should not deserialize maps if either width or height is not set', () => {
+            service['width'] = -1;
+            service['height'] = -1;
+
+            const FUNCTIONAL = mockSerializedMaps.functional1();
+            expect(() => service.deserializeMap(FUNCTIONAL)).toThrow();
+            const DISFUNCTIONAL = mockSerializedMaps.disfunctional1();
+            expect(() => service.deserializeMap(DISFUNCTIONAL)).toThrow();
+        });
+
+    });
+
+
     it('should be able to check if a path loops back', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
         expect(service['map'].isClosed()).toBe(true);
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         expect(service['map'].isClosed()).toBe(false);
     });
 
     it('should be able to add a valid point', () => {
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         service['map']['height'] = 500;
         service['map']['width'] = 500;
 
@@ -62,7 +193,7 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to delete a point', () => {
-        service['map'] = Object.create(emptyMap2);
+        service['map'] = mockMaps.emptyMap1();
         const POINT: Point = new Point(3, 4);
         service['map'].path.points.push(POINT);
 
@@ -72,7 +203,7 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to edit a point', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
 
         service.editPoint(0, new Point(3, 3));
         expect(service['map'].path.points[0].x).toBe(3);
@@ -83,9 +214,9 @@ describe('MapEditorService', () => {
     });
 
     it('should provide points', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
 
-        expect(service.path).toBe(functionalMap1.path);
+        expect(service.path).toEqual(mockMaps.functionalMap1().path);
     });
 
 });

@@ -9,6 +9,7 @@ import { NormalMapLine } from './normal-map-line';
 import { Map } from '../map';
 import { Line } from '../line';
 import { FaultyMapLine } from './faulty-map-line';
+import { FirstMapLine } from './first-map-line';
 
 export class MapPath implements Drawable {
 
@@ -20,12 +21,12 @@ export class MapPath implements Drawable {
 
     constructor(context: CanvasRenderingContext2D, points: Point[]) {
         this.context = context;
-        this.updatePoints(points);
+        this.updatePoints(points, 0);
     }
 
-    public updatePoints(points: Point[]): void {
+    public updatePoints(points: Point[], minimumDistanceBetweenPoints: number): void {
         this.generatePointsFrom(points);
-        this.generateLinesFrom(points);
+        this.generateLinesFrom(points, minimumDistanceBetweenPoints);
     }
 
     private generatePointsFrom(points: Point[]): void {
@@ -45,44 +46,36 @@ export class MapPath implements Drawable {
         }).filter(value => value !== null);
     }
 
-    private generateLinesFrom(points: Point[]): void {
+    private generateLinesFrom(points: Point[], minimumDistanceBetweenPoints: number): void {
         const MAP: Map = new Map();
+        MAP.minimumSegmentLength = minimumDistanceBetweenPoints;
+
         this.lines = [];
 
-        if (this.points.length < 2) {
+        const AT_LEAST_ONE_LINE = this.points.length >= 2;
+        if (!AT_LEAST_ONE_LINE) {
             return;
         }
 
-        let erroneousLines: [Line, Line][] = [];
-        let erroneousAngles: [Point, Point, Point][] = [];
-
         MAP.path.points.push.apply(MAP.path.points, points);
-        erroneousLines = MAP.computeCrossingLines();
-
-        erroneousAngles = MAP.computeBadAngles();
+        const ERRONEOUS_LINES: Line[] = MAP.computeErroneousLines();
 
         this.lines = points.map((point: Point, index: number): AbstractMapLine => {
             if (index < points.length - 1) {
-                return new NormalMapLine (this.context, point, points[index + 1]);
+                return new NormalMapLine(this.context, point, points[index + 1]);
             }
         }).filter((value) => value !== undefined);
 
+        this.lines[0] =
+            new FirstMapLine(this.context,
+                             this.lines[0].origin,
+                             this.lines[0].destination);
+
         this.lines.forEach((line: NormalMapLine, index: number) => {
-            const isBadLinePredicate = (badLines: [Line, Line]) => {
-                return (line.origin.equals(badLines[0].origin) &&
-                       line.destination.equals(badLines[0].destination)) ||
-                       (line.origin.equals(badLines[1].origin) &&
-                       line.destination.equals(badLines[1].destination));
+            const isBadLinePredicate = (badLine: Line) => {
+                return line.equals(badLine);
             };
-            const isBadAnglePredicate = (badAngles: [Point, Point, Point]) => {
-                if (this.lines.length > 1) {
-                    return ((line.origin.equals(badAngles[0]) &&
-                            line.destination.equals(badAngles[1])) ||
-                            (line.origin.equals(badAngles[1]) &&
-                            line.destination.equals(badAngles[2])));
-                }
-            };
-            if (erroneousLines.findIndex(isBadLinePredicate) >= 0 || erroneousAngles.findIndex(isBadAnglePredicate) >= 0) {
+            if (ERRONEOUS_LINES.findIndex(isBadLinePredicate) >= 0) {
                 this.lines[index] = new FaultyMapLine(this.context, line.origin, line.destination);
             }
         });

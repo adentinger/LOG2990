@@ -1,22 +1,40 @@
 import { Point } from './point';
 
-export class Vector {
-
-    public x: number;
-    public y: number;
+export class Vector extends Point {
 
     constructor(x: number,
                 y: number) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
+    }
+
+    public static fromPoint(point: Point): Vector {
+        return new Vector(point.x, point.y);
     }
 
     public static fromPoints(origin: Point, destination: Point): Vector {
         return new Vector(destination.x - origin.x, destination.y - origin.y);
     }
 
+    public plus(that: Vector): Vector {
+        return new Vector(this.x + that.x, this.y + that.y);
+    }
+
+    public times(scalar: number): Vector {
+        return new Vector(this.x * scalar, this.y * scalar);
+    }
+
     public scalar(that: Vector): number {
         return this.x * that.x + this.y * that.y;
+    }
+
+    public normalized(): Vector {
+        const NORM = this.norm();
+        if (NORM > 0) {
+            return new Vector(this.x / NORM, this.y / NORM);
+        }
+        else {
+            throw new Error('Cannot normalize Vector of norm zero.');
+        }
     }
 
     public norm(): number {
