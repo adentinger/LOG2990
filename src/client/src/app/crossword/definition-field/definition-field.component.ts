@@ -13,18 +13,18 @@ export class DefinitionFieldComponent implements OnInit {
     public definitions: Definition[] = [];
     public selectedDefinition: Definition = null;
 
-    constructor(private service: DefinitionsService) { }
+    constructor(private definitionService: DefinitionsService) { }
 
     public ngOnInit(): void {
-        this.definitions = this.service.getDefinitions();
+        this.definitions = this.definitionService.getDefinitions();
     }
-/*
-    //send definition on click
-    public selected(): void {
-        for (let i = 0; i < this.definitions.length; i++) {
-            if (this.selectedDefinition === this.definitions[i]) {
-                this.service.
-            }
-        }
-    }*/
+
+    public onSelect(index: number): void {
+        this.definitionService.crosswordGameService.selectedWord = index;
+        this.selectedDefinition = this.definitions[index];
+    }
+    public onClickOutside(): void {
+        this.selectedDefinition = null;
+        this.definitionService.crosswordGameService.selectedWord = -1;
+    }
 }

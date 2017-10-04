@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Definition } from './class/definition';
 import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
+import { CrosswordGameService } from '../crossword-game.service';
 
 @Injectable()
 export class DefinitionsService {
@@ -11,7 +12,7 @@ export class DefinitionsService {
     public getDefinitions(): Definition[] {
         return this.definitions;
     }
-    constructor() {
+    constructor(public crosswordGameService: CrosswordGameService) {
         this.definitions = DEFINITIONS_MOCK;
     }
 }
