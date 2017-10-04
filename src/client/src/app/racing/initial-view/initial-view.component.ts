@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { MapService } from '../services/map.service';
 import { Map } from '../../admin-screen/map-editor/map';
+import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 
 @Component({
     selector: 'app-initial-view',
     templateUrl: './initial-view.component.html',
-    styleUrls: ['./initial-view.component.css']
+    styleUrls: ['./initial-view.component.css'],
 })
 export class InitialViewComponent implements OnInit {
 
+    @ViewChild(MapBestTimeComponent) child:MapBestTimeComponent;
     public maps: Map[];
     public selectedMap: Map;
 
@@ -25,6 +27,7 @@ export class InitialViewComponent implements OnInit {
 
     public mapSelected(map: Map): void {
         this.selectedMap = map;
+        this.child.displayable = true;
     }
 
 }

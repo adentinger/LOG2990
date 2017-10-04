@@ -9,15 +9,11 @@ import { Map } from '../../../admin-screen/map-editor/map';
     styleUrls: ['./map-best-time.component.css']
 })
 
-export class mapBestTimeComponent implements OnInit {
+export class MapBestTimeComponent implements OnInit {
     @Input() public map: Map;
-    @Input() public displayable;
-    public set(): void {
-        this.displayable = true;
-    }
+    public displayable;
 
     public ngOnInit(): void {
         this.displayable = true;
-        console.log('hey');
     }
 }

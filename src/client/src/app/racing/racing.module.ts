@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RacingComponent } from './racing.component';
 import { InitialViewComponent } from './initial-view/initial-view.component';
 import { MapService } from './services/map.service';
-import { mapBestTimeComponent } from './initial-view/map-best-time/map-best-time.component';
+import { MapBestTimeComponent } from './initial-view/map-best-time/map-best-time.component';
 
 @NgModule({
     imports: [
@@ -16,7 +16,7 @@ import { mapBestTimeComponent } from './initial-view/map-best-time/map-best-time
     declarations: [
         RacingComponent,
         InitialViewComponent,
-        mapBestTimeComponent
+        MapBestTimeComponent
     ],
     providers: [
         MapService
