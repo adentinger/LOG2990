@@ -42,7 +42,7 @@ describe('The lexic MicroService', () => {
         lexic = new Lexic(DB_PROVIDER, RX_BUILDER, externalWrdApiService);
     });
 
-    xdescribe('has a Filter that', () => {
+    describe('has a Filter that', () => {
         const CONSTRAINTS: [WordConstraint, RegExp][] = [[{
             charConstraints: [{ char: 'b', position: 1 }, { char: 'a', position: 0 }],
             isCommon: true,
@@ -70,14 +70,16 @@ describe('The lexic MicroService', () => {
             for (let i = 0; i < CONSTRAINTS.length; i++) {
                 PROMISES.push(lexic.getWords(CONSTRAINTS[i][0]).then((words: string[]) => {
                     expect(words).to.be.an.instanceOf(Array);
+                    expect(words.length).to.be.greaterThan(0);
+                    console.log(words);
                     words.forEach((word: string) => {
                         expect(word).to.match(CONSTRAINTS[i][1]);
                     });
                 }, (error) => {
-                    expect(CONSTRAINTS[i][1]).to.be.null('RegExp', `Expected to be valid: ${CONSTRAINTS[i][0]}`);
+                    expect(CONSTRAINTS[i][1]).to.be.null;
                 }));
             }
-            Promise.all(PROMISES).then(done).catch(done);
+            Promise.all(PROMISES).then(() => done()).catch((error) => done(error));
         });
     });
 
