@@ -24,5 +24,5 @@ coverage/
 !systemjs.config.extras.js
 !tslint.json
 !tsconfig.json
-!paackage.json
+!package.json
 !src/

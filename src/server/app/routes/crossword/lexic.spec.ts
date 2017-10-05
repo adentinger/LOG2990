@@ -70,12 +70,17 @@ describe('The lexic MicroService', () => {
             for (let i = 0; i < CONSTRAINTS.length; i++) {
                 PROMISES.push(lexic.getWords(CONSTRAINTS[i][0]).then((words: string[]) => {
                     expect(words).to.be.an.instanceOf(Array);
-                    expect(words.length).to.be.greaterThan(0);
+                    if (CONSTRAINTS[i][1] === null) {
+                        expect(words.length).to.equal(0);
+                    } else {
+                        expect(words.length).to.be.greaterThan(0);
+                    }
                     console.log(words);
                     words.forEach((word: string) => {
                         expect(word).to.match(CONSTRAINTS[i][1]);
                     });
                 }, (error) => {
+                    console.warn(error.message);
                     expect(CONSTRAINTS[i][1]).to.be.null;
                 }));
             }

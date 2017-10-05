@@ -30,32 +30,48 @@ export class Lexic {
                 return;
             }
             console.log(REGEX);
+            const COMMONALITY_FILTER = constraint.isCommon ?
+                (word: WordDocument) => Number.isFinite(word.frequency) && word.frequency >= Lexic.COMMONALITY_FREQUENCY_THREASHOLD :
+                (word: WordDocument) => Number.isFinite(word.frequency) && word.frequency < Lexic.COMMONALITY_FREQUENCY_THREASHOLD;
             this.databaseProvider.then((db: Db) => {
-                db.collection(Lexic.LEXIC_WORDS_COLLECTION, (error: MongoError, words: Collection<WordDocument>) => {
+                db.collection(Lexic.LEXIC_WORDS_COLLECTION, (error: MongoError, wordCollection: Collection<WordDocument>) => {
                     if (error) {
                         reject(error);
                         return;
                     }
                     const SEARCH_OPTION = {
-                        _id: { $regex: REGEX }
+                        value: { $regex: REGEX }
                     };
-                    const CURSOR = words.find(SEARCH_OPTION);
-                    CURSOR.map((wordEntry: WordDocument) => {
-                        console.log('word:', wordEntry.value);
-                        if (wordEntry.frequency == null) {
-                            return this.externalWordApiService.getFrequency(wordEntry.value)
-                                .then((frequency) => wordEntry.frequency = frequency)
-                                .then(() => words.updateOne({_id: wordEntry._id}, wordEntry))
-                                .then(() => wordEntry);
-                        } else {
-                            return Promise.resolve(wordEntry);
-                        }
-                    })
-                    .filter({frequency:{$gt: { $gt: Lexic.COMMONALITY_FREQUENCY_THREASHOLD }}})
-                    .toArray().then((wordArray: WordDocument[]) => {
-                        resolve(wordArray.map((word) => word.value));
-                    })
-                    .catch(reject);
+                    wordCollection.find(SEARCH_OPTION, { value: true, frequency: true })
+                        .toArray()
+                        .then((words) => {
+                            return Promise.all(words.map((word) => {
+                                if (!Number.isFinite(word.frequency)) {
+                                    return this.externalWordApiService.getFrequency(word.value)
+                                        .then((frequency: number) => {
+                                            word.frequency = frequency;
+                                            return wordCollection.updateOne({ _id: word._id }, { $set: { frequency: frequency } })
+                                                .then((result) => {
+                                                    if (result.modifiedCount > 0) {
+                                                        return word;
+                                                    }
+                                                    throw new Error(word.value + ' not updated');
+                                                });
+                                        }).catch(() => {
+                                            return word;
+                                        });
+                                }
+                                return Promise.resolve(word);
+                            }));
+                        })
+                        .then((wordDocuments) => {
+                            const words = wordDocuments.filter(COMMONALITY_FILTER).map((value) => value.value);
+                            if (words.length === 0) {
+                                throw new Error('Requested words not found');
+                            }
+                            return words;
+                        })
+                        .then(resolve, reject);
                 });
             });
         });
@@ -78,7 +94,7 @@ export class LexicMiddleWare {
             isJson(req.query['charConstraints'])) {
             req.query.charConstraints = JSON.parse(req.query.charConstraints);
         }
-        req.query.isCommon = Boolean(req.query.isCommon);
+        req.query.isCommon = typeof req.query.isCommon === 'string' ? req.query.isCommon === 'true' : Boolean(req.query.isCommon);
         req.query.minLength = Number(req.query.minLength);
         if (req.query.maxLength) {
             req.query.maxLength = Number(req.query.maxLength);
