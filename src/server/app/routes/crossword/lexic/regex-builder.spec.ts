@@ -17,34 +17,40 @@ describe('RegexBuilder', () => {
         });
         it('should create a valid Regexp from a valid word constraint', (done) => {
 
-            let validConstraint: WordConstraint;
+            let validConstraint: WordConstraint, generatedRegex: RegExp;
 
             validConstraint = { charConstraints: [{ char: 'a', position: 2 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{2}a$');
-            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^.{2}a$');
+            expect(generatedRegex.flags).equals('i');
 
             validConstraint = { charConstraints: [{ char: 'b', position: 1 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{1}b.{1}$');
-            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^.{1}b.{1}$');
+            expect(generatedRegex.flags).equals('i');
 
             validConstraint = { charConstraints: [{ char: 'c', position: 0 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^c.{2}$');
-            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^c.{2}$');
+            expect(generatedRegex.flags).equals('i');
 
             validConstraint = { charConstraints: [{ char: 'd', position: 0 }, { char: 'b', position: 2 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^d.{1}b$');
-            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^d.{1}b$');
+            expect(generatedRegex.flags).equals('i');
 
             validConstraint = { charConstraints: [{ char: 'e', position: 1 }, { char: 'b', position: 2 }], isCommon: true, minLength: 3 };
-            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{1}eb$');
-            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^.{1}eb$');
+            expect(generatedRegex.flags).equals('i');
 
             validConstraint = {
                 charConstraints: [{ char: 'f', position: 1 }, { char: 'b', position: 2 }],
                 isCommon: true, minLength: 3, maxLength: 9
             };
-            expect(regexBuilder.buildFromConstraint(validConstraint).source).equals('^.{1}fb.{0,6}$');
-            expect(regexBuilder.buildFromConstraint(validConstraint).flags).equals('i');
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^.{1}fb.{0,6}$');
+            expect(generatedRegex.flags).equals('i');
 
             done();
         });

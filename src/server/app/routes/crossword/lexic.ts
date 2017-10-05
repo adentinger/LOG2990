@@ -21,7 +21,6 @@ export class Lexic {
     }
 
     public getDefinitions(word: string): Promise<string[]> {
-        console.log('word:', word);
         return this.externalWordApiService.getDefinitions(word);
     }
 }
