@@ -96,7 +96,7 @@ export class LexicMiddleWare {
         }
         req.query.isCommon = typeof req.query.isCommon === 'string' ? req.query.isCommon === 'true' : Boolean(req.query.isCommon);
         req.query.minLength = Number(req.query.minLength);
-        if (req.query.maxLength) {
+        if (req.query.maxLength && Number.isInteger(req.query.maxLength)) {
             req.query.maxLength = Number(req.query.maxLength);
         }
         if (isWordConstraint(req.query)) {

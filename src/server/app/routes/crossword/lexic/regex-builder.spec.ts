@@ -19,6 +19,11 @@ describe('RegexBuilder', () => {
 
             let validConstraint: WordConstraint, generatedRegex: RegExp;
 
+            validConstraint = { charConstraints: [], isCommon: true, minLength: 3 };
+            generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
+            expect(generatedRegex.source).equals('^.{3}$');
+            expect(generatedRegex.flags).equals('i');
+
             validConstraint = { charConstraints: [{ char: 'a', position: 2 }], isCommon: true, minLength: 3 };
             generatedRegex = regexBuilder.buildFromConstraint(validConstraint);
             expect(generatedRegex.source).equals('^.{2}a$');
