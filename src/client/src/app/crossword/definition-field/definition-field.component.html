@@ -1,8 +1,7 @@
 <div id="definition-box" (clickOutside)='onClickOutside()'>
   <div *ngFor='let definition of definitions; let i = index;'>
-    <div [class.selected]='selectedDefinition===definition'
-    (click)='onSelect(i)'>
-    {{definition.text}}
+    <div [class.selected]='selectedDefinition===definition' (click)='onSelect(i)'>
+      {{definition.text}}
+    </div>
   </div>
-</div>
 </div>

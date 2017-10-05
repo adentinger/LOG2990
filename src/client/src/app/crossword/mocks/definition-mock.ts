@@ -36,4 +36,86 @@ export const DEFINITIONS_MOCK: Definition[] = [
             deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
             provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
     },
+    {
+        text:
+            `Definition 7 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 8 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident.`
+    },
+    {
+        text:
+            `Definition 9 : Blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 10 : Occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 11 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 12 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 13 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 14 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident.`
+    },
+    {
+        text:
+            `Definition 15 : Blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 16 : Occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 17 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 18 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 19 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.`
+    },
+    {
+        text:
+            `Definition 20 : At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+            provident.`
+    },
 ];

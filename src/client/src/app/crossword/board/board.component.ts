@@ -17,9 +17,8 @@ export class BoardComponent implements OnInit {
         console.log(this.crosswordGrid);
     }
     public checkIfHighlighted(j: number, i: number): boolean {
-
-        if (j === this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWord].y &&
-            i === this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWord].x) {
+        if (j === this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y &&
+            i === this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x) {
             return true;
         }
         else {

@@ -8,11 +8,10 @@ $color-focus-item: #EDFF71;
   margin: 10px;
   height: 100%;
   text-align: center;
-  vertical-align: center;
+	vertical-align: center;
 }
 
 .crossword-board-item {
-	border: 1px solid #000000;
 	background: transparent;
 	position: relative;
 	text-align: center;
@@ -20,7 +19,9 @@ $color-focus-item: #EDFF71;
 	font-weight: bold;
 	text-transform: uppercase;
   width: $crossword-item-size;
-  height: $crossword-item-size;
+	height: $crossword-item-size;
+	margin-bottom: -5px;
+	border: 1px solid black;
 
 	&:active:not(.black-square),
 	&:focus:not(.black-square) {
@@ -35,5 +36,5 @@ $color-focus-item: #EDFF71;
 }
 
 .highlighted {
-	border: 2px solid blue;
+	background: blue;
 }

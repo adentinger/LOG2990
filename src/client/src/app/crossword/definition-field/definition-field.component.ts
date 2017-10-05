@@ -20,11 +20,11 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public onSelect(index: number): void {
-        this.definitionService.crosswordGameService.selectedWord = index;
         this.selectedDefinition = this.definitions[index];
+        this.definitionService.crosswordGameService.selectedWordIndex = index;
     }
     public onClickOutside(): void {
         this.selectedDefinition = null;
-        this.definitionService.crosswordGameService.selectedWord = -1;
+        this.definitionService.crosswordGameService.selectedWordIndex = 0;
     }
 }

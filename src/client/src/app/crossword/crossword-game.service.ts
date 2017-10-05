@@ -6,7 +6,7 @@ import { CROSSWORD_GAME } from './mocks/crossword-game-mock';
 @Injectable()
 export class CrosswordGameService {
 
-    public selectedWord: number = -1;
+    public selectedWordIndex: number = 0;
 
     public crosswordGame: CrosswordGame = CROSSWORD_GAME;
     public getCurrentGame(): CrosswordGame {
