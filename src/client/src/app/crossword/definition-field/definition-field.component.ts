@@ -22,9 +22,14 @@ export class DefinitionFieldComponent implements OnInit {
     public onSelect(index: number): void {
         this.selectedDefinition = this.definitions[index];
         this.definitionService.crosswordGameService.selectedWordIndex = index;
+
+        this.definitionService.crosswordGameService.aDefinitionIsSelected = true;
+
     }
     public onClickOutside(): void {
         this.selectedDefinition = null;
         this.definitionService.crosswordGameService.selectedWordIndex = 0;
+
+        this.definitionService.crosswordGameService.aDefinitionIsSelected = false;        
     }
 }

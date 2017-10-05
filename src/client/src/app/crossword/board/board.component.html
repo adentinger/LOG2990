@@ -1,15 +1,15 @@
-<div id="crossword-board-container">
-  <div id="crossword-board">
-    <div *ngFor="let row of crosswordGrid; let j = index">{{j}}
-      <label *ngFor="let square of row; let i = index">
-        <input type="text" class="crossword-board-item"
-          [class.highlighted]="checkIfHighlighted(j,i)"
-          [class.black-square]='square==="0"' 
-          [disabled]='square==="0"' maxlength="1"/>
+<div id='crossword-board-container'>
+  <div id='crossword-board'>
+    <div *ngFor='let row of crosswordGrid; let j = index'>
+      <label *ngFor='let square of row; let i = index'>
+        <input type='text' class='crossword-board-item'
+          [disabled]='true'
+          [class.highlighted]='checkIfHighlighted(j,i)'
+          [class.black-square]='square==="0"' maxlength='1'/>
       </label>
     </div>
   </div>
 </div>
 
-<!-- [class.highlighted]="checkIfHighlighted(j,i)" -->
+<!-- [disabled]='square' -->
 <!-- should work but we can't acces 'i' -->

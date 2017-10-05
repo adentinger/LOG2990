@@ -7,6 +7,7 @@ import { CROSSWORD_GAME } from './mocks/crossword-game-mock';
 export class CrosswordGameService {
 
     public selectedWordIndex: number = 0;
+    public aDefinitionIsSelected: boolean = false;
 
     public crosswordGame: CrosswordGame = CROSSWORD_GAME;
     public getCurrentGame(): CrosswordGame {
