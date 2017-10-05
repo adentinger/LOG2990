@@ -5,7 +5,7 @@ export interface WordConstraint {
     readonly charConstraints: CharConstraint[];
     readonly isCommon: boolean;
     readonly minLength: number;
-    readonly maxLength?: number;
+    maxLength?: number;
 }
 
 function isCharConstraintArray(object: any): object is CharConstraint[] {

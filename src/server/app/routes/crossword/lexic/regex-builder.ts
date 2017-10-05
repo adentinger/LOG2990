@@ -10,6 +10,8 @@ export class RegexBuilder {
 
         if (isWordConstraint(constraint)) {
 
+            constraint.maxLength = 'maxLength' in constraint ? constraint.maxLength : constraint.minLength;
+
             const SORTED_CHAR_CONSTRAINTS: CharConstraint[] = constraint.charConstraints.sort((a, b) => a.position - b.position);
 
             if (this.checkConstraints(SORTED_CHAR_CONSTRAINTS, constraint) === false) {
@@ -93,14 +95,14 @@ export class RegexBuilder {
 
         if (previous <= constraint.minLength && constraint.maxLength > constraint.minLength) {
             regEx += '.{' + (constraint.minLength
-                - sortedConstraints[sortedConstraints.length - 1].position - 1) + ','
+                - previous - 1) + ','
                 + (constraint.maxLength
-                    - sortedConstraints[sortedConstraints.length - 1].position - 1) + '}$';
+                    - previous - 1) + '}$';
         } else if (previous === constraint.minLength - 1) {
             regEx += '$';
         } else if (previous !== constraint.minLength) {
             regEx += '.{' + (constraint.minLength
-                - sortedConstraints[sortedConstraints.length - 1].position - 1) + '}$';
+                - previous - 1) + '}$';
         }
 
         return regEx;
