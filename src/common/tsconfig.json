@@ -7,7 +7,7 @@
         "sourceMap": false,
         "inlineSourceMap": true,
         "declaration": true,
-        "outDir": "./",
+        "outDir": ".",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "noImplicitAny": true,

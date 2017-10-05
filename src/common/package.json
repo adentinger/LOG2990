@@ -2,19 +2,21 @@
   "name": "common",
   "version": "0.0.1",
   "description": "Common package between Client and Server side packages",
-  "main": "utils.js",
+  "main": "./index.js",
   "private": true,
+  "config": {
+    "packetapi_mgr" : "server"
+  },
   "scripts": {
     "test": "mocha -r ts-node/register \"src/**/*.spec.ts\"",
-    "lint": "tslint \"src/**/*.ts\" \"src/*.ts\" --force -t verbose",
+    "lint": "tslint \"src/**/*.ts\" \"src/*.ts\" --force -t verbose || exit 0",
     "tsc": "tsc",
     "clean": "rimraf node_modules ./*.d.ts ./*.js ./**/*.js ./**/*.d.ts",
-    "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html",
-    "postinstall": "tsc"
+    "uninstall": "npm run-script clean",
+    "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html"
   },
-  "dependencies": {
-    "@types/socket.io-client": "^1.4.30",
-    "socket.io": "^2.0.0",
+  "optionalDependencies": {
+    "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
@@ -26,7 +28,6 @@
     "mocha": "^3.5.0",
     "remap-istanbul": "^0.8.4",
     "rimraf": "^2.5.4",
-    "socket.io-client": "^2.0.3",
     "tslint": "^4.2.0",
     "tslint-eslint-rules": "^3.2.3",
     "ts-node": "^3.3.0",
