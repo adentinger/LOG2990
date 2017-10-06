@@ -108,6 +108,11 @@ export class MapEditorService {
                 const Y = this.converter.lengthFromGameUnits(point.y);
                 return new Point(X, Y);
             });
+
+            // A Map's last point is supposed to be the same as its first
+            // point when it is valid.
+            POINTS.push(new Point(POINTS[0].x, POINTS[0].y));
+
             const NEW_MAP = new Map(
                 new Path(POINTS),
                 this.minimumDistanceBetweenPoints,
