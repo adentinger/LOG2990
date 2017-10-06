@@ -2,12 +2,7 @@
   <div #crosswordBoard id='crossword-board'>
     <div *ngFor='let row of crosswordGrid; let j = index'>
       <label *ngFor='let square of row; let i = index'>
-        <input type='text'
-          class='crossword-board-item square-{{j}}-{{i}}'
-          [disabled]='!checkIfHighlighted(j,i)'
-          [class.highlighted]='checkIfHighlighted(j,i)'
-          [class.black-square]='square==="0"' maxlength='1'
-        />
+        <app-tile class ="hello" ></app-tile>
       </label>
     </div>
     <input type='text' id='inputText'/>
