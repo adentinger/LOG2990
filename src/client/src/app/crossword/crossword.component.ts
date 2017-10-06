@@ -14,7 +14,9 @@ export class CrosswordComponent implements OnInit {
     public gameIsBeingConfigured = true;
     public selectedDefinition: number;
 
-    constructor() { }
+	public selectedTiles: number[][] = []; // holds the coordinated of the tiles owned by the current selected word, the individual tiles will look at this value to decide if they should be hightlighted
+
+	constructor() { }
 
     public ngOnInit(): void {
     }

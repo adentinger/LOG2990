@@ -10,6 +10,7 @@ export class CrosswordGridService {
     public grid: GridWord[];
     private viewableGrid: string[][];
 
+
     constructor(public crosswordGameService: CrosswordGameService) {
         this.grid = ARRAY_GRIDWORD;
         this.fill();
@@ -31,13 +32,13 @@ export class CrosswordGridService {
     public fillAcrossAndVertical(gridWord: GridWord) { // (y,x,length,direction,owner,string)
         if (gridWord.direction === Direction.across) {
             for (let i = 0; i < gridWord.length; i++) {
-                this.viewableGrid[gridWord.y][i + gridWord.x] = '1';
+                this.viewableGrid[gridWord.y][i + gridWord.x] = '';
             }
         }
 
         else if (gridWord.direction === Direction.vertical) {
             for (let i = 0; i < gridWord.length; i++) {
-                this.viewableGrid[i + gridWord.y][gridWord.x] = '1';
+                this.viewableGrid[i + gridWord.y][gridWord.x] = '';
             }
         }
     }

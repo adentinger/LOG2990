@@ -10,7 +10,8 @@ import { Direction } from '../grid-word';
 })
 
 export class BoardComponent implements OnInit {
-    public crosswordGrid: string[][];
+	public crosswordGrid: string[][];
+
     public wordBuffer: string = '';
 
     @Input('indexOfDefinition') indexOfDefinition: number;
@@ -22,6 +23,7 @@ export class BoardComponent implements OnInit {
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getGrid();
+
     }
 
 

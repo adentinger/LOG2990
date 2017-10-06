@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
 import { Direction } from '../../grid-word';
 
@@ -9,11 +9,25 @@ import { Direction } from '../../grid-word';
 })
 export class CrosswordTileComponent implements OnInit {
 
-    @ViewChild('crosswordBoard') private gridElement: ElementRef;
-    
-    public ngOnInit() {}
+	public tileValue: string;
+	@Input() private tileRow: number;
+	@Input() private tileColumn: number;
 
-    constructor(private crosswordGridService: CrosswordGridService) {}
+    @ViewChild('crosswordBoard') private gridElement: ElementRef;
+	@Input() get tileChar() {
+		return this.tileValue;
+	}
+	@Output() tileValueChange: EventEmitter<string> = new EventEmitter<string>();
+	set tileChar(value) { 
+		this.tileValue = value;
+		this.tileValueChange.emit(this.tileValue);
+	}
+    
+	public ngOnInit() {
+		//this.tileChar = this.tileRow + '';
+	}
+
+	constructor(private crosswordGridService: CrosswordGridService) { }
 
     public checkIfHighlighted(j: number, i: number): boolean {
         let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y,
