@@ -59,6 +59,11 @@ export class MapEditorService {
         return this.converter.lengthFromGameUnits(2 * Track.SEGMENT_WIDTH);
     }
 
+    public get isMapClockwise(): boolean {
+        return this.map.isClockwise() ||
+               this.map.computeErrors() !== MapError.NONE;
+    }
+
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
             if (this.computeMapErrors() === MapError.NONE) {

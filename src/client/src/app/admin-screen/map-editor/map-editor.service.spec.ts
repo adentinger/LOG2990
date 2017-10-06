@@ -95,6 +95,26 @@ describe('MapEditorService', () => {
         expect(map.rating).toEqual(expectedRating);
     };
 
+    describe('isMapClockwise', () => {
+
+        it('should return true when the map is valid and clockwise', () => {
+            service['map'] = mockMaps.clockwise();
+            expect(service.isMapClockwise).toBe(true);
+        });
+
+        it('should return false when the map is valid but is counter-clockwise', () => {
+            service['map'] = mockMaps.counterClockwise();
+            expect(service.isMapClockwise).toBe(false);
+        });
+
+        it('should return true when the map is invalid', () => {
+            service['map'] = mockMaps.disfunctionalMap1();
+            // tslint:disable-next-line:no-unused-expression
+            expect(service.isMapClockwise).toBe(true);
+        });
+
+    });
+
     describe('serializeMap', () => {
 
         it('should serialize maps as-is if they are valid and clockwise', () => {
