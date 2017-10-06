@@ -14,7 +14,7 @@ export class RegexBuilder {
 
             const SORTED_CHAR_CONSTRAINTS: CharConstraint[] = constraint.charConstraints.sort((a, b) => a.position - b.position);
 
-            if (this.checkConstraints(SORTED_CHAR_CONSTRAINTS, constraint) === false) {
+            if (!this.checkConstraints(SORTED_CHAR_CONSTRAINTS, constraint)) {
                 return null;
             }
 
@@ -31,47 +31,31 @@ export class RegexBuilder {
 
     private checkConstraints(sortedConstraints: CharConstraint[], constraint: WordConstraint): boolean {
 
-        if (this.checkLengthConstraint(constraint) === true
-            && this.checkDuplicates(sortedConstraints) === true
-            && this.checkPositionConstraint(sortedConstraints, constraint) === true) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return (this.checkLengthConstraint(constraint)
+            && this.checkDuplicates(sortedConstraints)
+            && this.checkPositionConstraint(sortedConstraints, constraint));
     }
 
     private checkDuplicates(sortedConstraints: CharConstraint[]): boolean {
 
         let positionBuffer = -1;
 
-        for (let i = 0; i < sortedConstraints.length; i++) {
-            if (sortedConstraints[i].position !== positionBuffer) {
-                positionBuffer = sortedConstraints[i].position;
-            } else {
-                return false;
-            }
-        }
-        return true;
+        return sortedConstraints.every((constraint: CharConstraint) => {
+            const predicate = constraint.position !== positionBuffer;
+            positionBuffer = constraint.position;
+            return predicate;
+        });
     }
 
     private checkLengthConstraint(constraint: WordConstraint): boolean {
 
-        if (constraint.minLength > constraint.maxLength && constraint.minLength >= 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(constraint.minLength > constraint.maxLength && constraint.minLength >= 0);
     }
 
     private checkPositionConstraint(sortedConstraints: CharConstraint[], constraint: WordConstraint): boolean {
 
-        if (sortedConstraints.length > 0
-            && sortedConstraints[sortedConstraints.length - 1].position >= constraint.minLength) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(sortedConstraints.length > 0
+            && sortedConstraints[sortedConstraints.length - 1].position >= constraint.minLength);
     }
 
     private createRegex(regEx: string, sortedConstraints: CharConstraint[], constraint: WordConstraint): string {
