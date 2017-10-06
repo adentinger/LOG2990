@@ -43,9 +43,13 @@ export class Skybox extends THREE.Mesh {
         let images: string[];
 
         if (mode === 'Day') {
-            images = ['Day-Right.jpg', 'Day-Left.jpg',
+            /*images = ['Day-Right.jpg', 'Day-Left.jpg',
                 'Day-Ceilling.jpg', 'Day-Bottom.jpg',
                 'Day-Front.jpg', 'Day-Back.jpg'];
+                */
+                images = ['Night-Right.jpg', 'Night-Left.jpg',
+                'Night-Ceilling.jpg', 'Night-Bottom.jpg',
+                'Night-Front.jpg', 'Night-Back.jpg'];
         }
         else if (mode === 'Night') {
             images = ['Night-Right.jpg', 'Night-Left.jpg',
