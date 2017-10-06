@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, ViewChildren } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { Direction } from '../grid-word';
 
@@ -8,15 +8,18 @@ import { Direction } from '../grid-word';
     styleUrls: ['./board.component.scss'],
     providers: [CrosswordGridService]
 })
+
 export class BoardComponent implements OnInit {
     public crosswordGrid: string[][];
+    @ViewChild('crosswordBoard') private gridElement: ElementRef;
+
 
     constructor(private crosswordGridService: CrosswordGridService) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getGrid();
-        console.log(this.crosswordGrid);
     }
+
     public checkIfHighlighted(j: number, i: number): boolean {
         let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y;
         let x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
@@ -24,16 +27,15 @@ export class BoardComponent implements OnInit {
         let direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
         let aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
 
+        this.focusOnInputFieldOnGrid();
+
+
         if (aDefinitionIsSelected) {
             if (direction === Direction.across) {
-                if (j === y && i >= x && i <= wordLength+x-1) {
-                    return true;
-                }
+                return (j === y && i >= x && i <= wordLength + x - 1);
             }
             else if (direction === Direction.vertical) {
-                if (i === x && j >= y && j <= wordLength+y-1) {
-                    return true;
-                }
+                return (i === x && j >= y && j <= wordLength + y - 1);
             }
         }
 
@@ -42,30 +44,18 @@ export class BoardComponent implements OnInit {
         }
     }
 
-    public checkIfDisabled(j: number, i: number): boolean {
+    public focusOnInputFieldOnGrid() {
         let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y;
         let x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
         let wordLength = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].length;
         let direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
         let aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
 
+        let a = y;
+        let b = x;
+        
         if (aDefinitionIsSelected) {
-            if (direction === Direction.across) {
-                if (j === y && i >= x && i <= x + wordLength) {
-                    return false;
-                }
-    
-            }
-    
-            else if (direction === Direction.vertical) {
-                if (i === x && j >= y && j <= y + wordLength) {
-                    return false;
-                }
-            }
-        }
-
-        else {
-            return true;      
+            this.gridElement.nativeElement.querySelector('.square-' + y + '-' + x).focus();
         }
     }
 }

@@ -3,7 +3,7 @@ import { GridWord, Direction, Owner } from '../grid-word';
 
 export const ARRAY_GRIDWORD: GridWord[] = [
     { 'y': 0, 'x': 0, 'length': 7, 'direction': Direction.across, 'owner': Owner.none, 'string': ''},
-    { 'y': 1, 'x': 0, 'length': 4, 'direction': Direction.across, 'owner': Owner.player1, 'string': 'abab'},
+    { 'y': 1, 'x': 0, 'length': 4, 'direction': Direction.across, 'owner': Owner.none, 'string': ''},
     { 'y': 2, 'x': 0, 'length': 3, 'direction': Direction.across, 'owner': Owner.none, 'string': ''},
     { 'y': 3, 'x': 3, 'length': 5, 'direction': Direction.across, 'owner': Owner.none, 'string': ''},
     { 'y': 4, 'x': 3, 'length': 3, 'direction': Direction.across, 'owner': Owner.none, 'string': ''},
