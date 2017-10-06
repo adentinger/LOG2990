@@ -68,6 +68,8 @@ export class MapEditorService {
                         const Y = this.converter.lengthToGameUnits(point.y);
                         return new Point(X, Y);
                     });
+                POINTS.pop(); // Do not include the last point ;
+                              // it is the same as the first point.
                 return new SerializedMap(
                     this.map.name,
                     this.map.description,
