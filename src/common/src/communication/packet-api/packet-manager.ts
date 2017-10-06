@@ -1,8 +1,4 @@
-try {
-    require('socket.io');
-} catch (err) {
-    console.warn('The package "socket.io" is required to use PacketManagerServer');
-}
+import * as SocketIO from 'socket.io';
 import { PacketParser } from './';
 import { Constructor, fromArrayBuffer } from '../../utils';
 import { PacketManagerBase } from './packet-manager-base';
