@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-// import * as io from 'socket.io-client';
-// import { WordConstraint } from 'common/lexic/word-constraint';
-// import { PacketManagerClient } from 'common/communication/packet-api/packet-manager-client';
-// import { PacketEvent } from 'common/communication/packet-api';
-// import 'common/lexic/word-packet'; // <-- This is the first problematic line
+import * as io from 'socket.io-client';
+import { WordConstraint } from 'common/lexic/word-constraint';
+import { PacketManagerClient } from 'common/communication/packet-api/packet-manager-client';
+import { PacketEvent } from 'common/communication/packet-api';
+import 'common/lexic/word-packet'; // <-- This is the first problematic line
 
 @Component({
     selector: 'app-admin-screen',

@@ -13,6 +13,7 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import { PrefixLogWith } from 'common/utils';
 import * as PacketAPI from 'common/communication/packet-api';
+import { PacketManagerServer } from 'common/communication/packet-api/packet-manager'
 import * as ServerIO from 'socket.io';
 
 import { WordConstraint } from 'common/lexic/word-constraint';
@@ -25,7 +26,7 @@ import 'common/lexic/word-packet';
 export class Application {
 
     public app: express.Application;
-    public packetManager: PacketAPI.PacketManagerServer;
+    public packetManager: PacketManagerServer;
 
     /**
      * Bootstrap the application.
@@ -72,7 +73,7 @@ export class Application {
         this.app.use(express.static(path.join(__dirname, '../client')));
         this.app.use(cors());
 
-        this.packetManager = new PacketAPI.PacketManagerServer(ServerIO(new Server()).attach(3030));
+        this.packetManager = new PacketManagerServer(ServerIO(new Server()).attach(3030));
         this.packetManager.registerHandler(WordConstraint, this.wordConstraintHandler.bind(this));
     }
 

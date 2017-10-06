@@ -2,8 +2,8 @@ export * from './packet-manager-base';
 export * from './packet-parser';
 export * from './packet-event';
 export * from './packet-handler';
-
 import { PacketManagerBase, Socket } from './packet-manager-base';
+export declare type PacketManager = PacketManagerBase<Socket>;
 
 // Export the right packet Manager
 // tslint:disable-next-line:variable-name
@@ -25,4 +25,3 @@ if (process.env.npm_package_config_packetapi_mgr === 'client') {
     }
 }
 exports.PacketManager = PacketManager as PacketManagerBase<Socket>;
-declare type PacketManager = PacketManagerBase<Socket>;
