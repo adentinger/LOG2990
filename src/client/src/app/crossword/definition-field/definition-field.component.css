@@ -4,3 +4,11 @@
     height: 60vh;
     overflow-y: auto;
 }
+
+.selected {
+    background: yellow;
+}
+
+.selected2 {
+    background: blue;
+}
