@@ -12,8 +12,14 @@ import { DefinitionsService } from './definition-field/definitions.service';
 export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
+    public selectedDefinition: number;
+
     constructor() { }
 
     public ngOnInit(): void {
+    }
+
+    public onSelectedDefinitionChange(event) {
+        this.selectedDefinition = event;
     }
 }

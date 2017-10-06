@@ -11,6 +11,10 @@ import { Direction } from '../grid-word';
 
 export class BoardComponent implements OnInit {
     public crosswordGrid: string[][];
+    public wordBuffer: string = '';
+
+    @Input('indexOfDefinition') indexOfDefinition: number;
+
     @ViewChild('crosswordBoard') private gridElement: ElementRef;
 
 
@@ -21,17 +25,17 @@ export class BoardComponent implements OnInit {
     }
 
     public checkIfHighlighted(j: number, i: number): boolean {
-        let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y;
-        let x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
+        let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y,
+            x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
         let wordLength = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].length;
         let direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
         let aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
 
-        this.focusOnInputFieldOnGrid();
-
-
         if (aDefinitionIsSelected) {
+            this.gridElement.nativeElement.querySelector('#inputText').focus();
+            
             if (direction === Direction.across) {
+                // updateLetter(i)
                 return (j === y && i >= x && i <= wordLength + x - 1);
             }
             else if (direction === Direction.vertical) {
@@ -44,18 +48,16 @@ export class BoardComponent implements OnInit {
         }
     }
 
+    /*
     public focusOnInputFieldOnGrid() {
         let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y;
         let x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
         let wordLength = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].length;
         let direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
         let aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
-
-        let a = y;
-        let b = x;
         
         if (aDefinitionIsSelected) {
             this.gridElement.nativeElement.querySelector('.square-' + y + '-' + x).focus();
         }
-    }
+    }*/
 }

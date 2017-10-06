@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Definition } from './class/definition';
 import { DefinitionsService } from './definitions.service';
 
@@ -10,8 +10,9 @@ import { DefinitionsService } from './definitions.service';
 })
 export class DefinitionFieldComponent implements OnInit {
 
+    @Output() selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    public selectedDefinitionId: number = -1;
     public definitions: Definition[] = [];
-    public selectedDefinition: Definition = null;
 
     constructor(private definitionService: DefinitionsService) { }
 
@@ -20,14 +21,17 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public onSelect(index: number): void {
-        this.selectedDefinition = this.definitions[index];
+        this.selectedDefinitionId = index;
+        this.selectedDefinition.emit(index);
         this.definitionService.crosswordGameService.selectedWordIndex = index;
 
         this.definitionService.crosswordGameService.aDefinitionIsSelected = true;
+        // change le focus vers le buffer
 
     }
     public onClickOutside(): void {
-        this.selectedDefinition = null;
+        this.selectedDefinitionId = -1;        
+        this.selectedDefinition.emit(null);        
         this.definitionService.crosswordGameService.selectedWordIndex = 0;
 
         this.definitionService.crosswordGameService.aDefinitionIsSelected = false;        

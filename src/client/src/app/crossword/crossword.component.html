@@ -1,11 +1,11 @@
 <div class="container" id="crossword-container">
   <div class="row">
     <div class="col-md-8">
-      <app-board></app-board>
+      <app-board [indexOfDefinition]='selectedDefinition'></app-board>
     </div>
     <div class="col-md-4">
       <app-game-details></app-game-details>
-      <app-definition-field></app-definition-field>
+      <app-definition-field (selectedDefinition)="selectedDefinition = $event"></app-definition-field>
     </div>
   </div>
 </div>
