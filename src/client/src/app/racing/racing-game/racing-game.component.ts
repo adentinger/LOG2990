@@ -12,6 +12,9 @@ export class RacingGameComponent implements OnInit {
     @ViewChild('racingGame')
     public racingGame: ElementRef;
 
+    @ViewChild('racingGameCanvas')
+    public racingGameCanvas: ElementRef;
+
     private mouseX = 0;
     private mouseY = 0;
     private windowHalfX = window.innerWidth * 0.5;
@@ -20,12 +23,16 @@ export class RacingGameComponent implements OnInit {
     constructor(private racingGameRenderer: RacingGameService) { }
 
     public ngOnInit(): void {
-        this.addRenderer();
-        this.racingGameRenderer.initialise();
+        this.racingGameRenderer.initialise(this.racingGameCanvas);
     }
 
-    private addRenderer(): void {
-        this.racingGame.nativeElement.appendChild(this.racingGameRenderer.racingGameRendering.RENDERER.domElement);
+    public onResize() {
+        const height = (window).innerHeight;
+        const width = (window).innerWidth;
+        console.log('height', height, 'width', width);
+
+        this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
+        this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
 /*
     public onMouseMove(e) {

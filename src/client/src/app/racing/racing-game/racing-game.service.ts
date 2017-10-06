@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { RacingGameRendering } from './racing-game-rendering';
 
 @Injectable()
@@ -8,14 +8,12 @@ export class RacingGameService {
     private animationRequestId = 0;
     private isRendering = false;
 
-    constructor() {
-        this.newRacingGame();
-    }
+    constructor() { }
 
-    private newRacingGame(): boolean {
+    private newRacingGame(canvas: ElementRef): boolean {
         let gameCreated = false;
 
-        this.racingGameRendering = new RacingGameRendering();
+        this.racingGameRendering = new RacingGameRendering(canvas);
         if (this.racingGameRendering !== null) {
             gameCreated = true;
         }
@@ -23,7 +21,8 @@ export class RacingGameService {
         return gameCreated;
     }
 
-    public initialise(): void {
+    public initialise(canvas: ElementRef): void {
+        this.newRacingGame(canvas);
         this.startRendering();
         this.racingGameRendering.setupScene();
     }

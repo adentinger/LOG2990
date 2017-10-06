@@ -1,5 +1,6 @@
 import { Skybox } from './skybox';
 import * as THREE from 'three';
+import { ElementRef } from '@angular/core';
 
 export class RacingGameRendering {
 
@@ -19,9 +20,9 @@ export class RacingGameRendering {
     private readonly SKYBOX: Skybox;
     private readonly LIGHTS: THREE.Light[] = [];
 
-    constructor() {
+    constructor(canvas: ElementRef) {
         this.SCENE = new THREE.Scene();
-        this.RENDERER = new THREE.WebGLRenderer();
+        this.RENDERER = new THREE.WebGLRenderer({canvas: canvas.nativeElement});
         this.CAMERA = new THREE.PerspectiveCamera(
             this.VIEW_ANGLE,
             this.ASPECT,
@@ -31,7 +32,6 @@ export class RacingGameRendering {
 
         this.SCENE.add(this.SKYBOX);
         this.SCENE.add(this.CAMERA);
-        this.RENDERER.setSize(this.WIDTH, this.HEIGHT);
     }
 
     public setupScene(): void {
