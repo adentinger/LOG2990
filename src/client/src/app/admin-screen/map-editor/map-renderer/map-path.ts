@@ -9,6 +9,7 @@ import { NormalMapLine } from './normal-map-line';
 import { Map } from '../map';
 import { Line } from '../line';
 import { FaultyMapLine } from './faulty-map-line';
+import { FirstMapLine } from './first-map-line';
 
 export class MapPath implements Drawable {
 
@@ -18,14 +19,23 @@ export class MapPath implements Drawable {
     private points: AbstractMapPoint[] = [];
     private lines: AbstractMapLine[] = [];
 
+    public shouldReverse = false;
+
     constructor(context: CanvasRenderingContext2D, points: Point[]) {
         this.context = context;
-        this.updatePoints(points);
+        this.updatePoints(points, 0);
     }
 
-    public updatePoints(points: Point[]): void {
-        this.generatePointsFrom(points);
-        this.generateLinesFrom(points);
+    public updatePoints(points: Point[], minimumDistanceBetweenPoints: number): void {
+        let possiblyReversedPoints: Point[];
+        if (!this.shouldReverse) {
+            possiblyReversedPoints = points;
+        }
+        else {
+            possiblyReversedPoints = points.slice().reverse();
+        }
+        this.generatePointsFrom(possiblyReversedPoints);
+        this.generateLinesFrom(possiblyReversedPoints, minimumDistanceBetweenPoints);
     }
 
     private generatePointsFrom(points: Point[]): void {
@@ -45,11 +55,14 @@ export class MapPath implements Drawable {
         }).filter(value => value !== null);
     }
 
-    private generateLinesFrom(points: Point[]): void {
+    private generateLinesFrom(points: Point[], minimumDistanceBetweenPoints: number): void {
         const MAP: Map = new Map();
+        MAP.minimumSegmentLength = minimumDistanceBetweenPoints;
+
         this.lines = [];
 
-        if (this.points.length < 2) {
+        const AT_LEAST_ONE_LINE = this.points.length >= 2;
+        if (!AT_LEAST_ONE_LINE) {
             return;
         }
 
@@ -61,6 +74,11 @@ export class MapPath implements Drawable {
                 return new NormalMapLine(this.context, point, points[index + 1]);
             }
         }).filter((value) => value !== undefined);
+
+        this.lines[0] =
+            new FirstMapLine(this.context,
+                             this.lines[0].origin,
+                             this.lines[0].destination);
 
         this.lines.forEach((line: NormalMapLine, index: number) => {
             const isBadLinePredicate = (badLine: Line) => {
@@ -99,6 +117,10 @@ export class MapPath implements Drawable {
         this.currentActivePoint = this.points.lastIndexOf(ACTIVE_POINT);
         if (this.activePoint !== -1) {
             ACTIVE_POINT.isActive = true;
+            if (this.shouldReverse && this.currentActivePoint !== 0) {
+                this.currentActivePoint =
+                    (this.points.length) - this.currentActivePoint;
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import { DefinitionsService } from './definitions.service';
 export class DefinitionFieldComponent implements OnInit {
 
     public definitions: Definition[] = [];
+    public selectedDefinition: Definition = null;
 
     constructor(private service: DefinitionsService) { }
 

@@ -5,7 +5,7 @@
         <tbody>
           <tr>
             <td>
-              <button [disabled]="!isMapValid">Save Map</button>
+              <button (click)="saveMap()" [disabled]="!isMapValid">Save Map</button>
             </td>
           </tr>
           <tr>

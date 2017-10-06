@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { MapEditorService } from '../map-editor.service';
-import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
 import { Point } from '../point';
@@ -14,8 +13,7 @@ export class MapRendererService implements Drawable {
     private context: CanvasRenderingContext2D;
     private path: MapPath;
 
-    constructor(private mapEditor: MapEditorService,
-                private converter: RacingUnitConversionService) {
+    constructor(private mapEditor: MapEditorService) {
         this.path = new MapPath(this.context, []);
     }
 
@@ -33,7 +31,8 @@ export class MapRendererService implements Drawable {
     public draw(): void {
         this.checkIfCanvasSet();
         this.clear();
-        this.path.updatePoints(this.mapEditor.points);
+        this.path.shouldReverse = !this.mapEditor.isMapClockwise;
+        this.path.updatePoints(this.mapEditor.points, this.mapEditor.minimumDistanceBetweenPoints);
         this.path.draw();
     }
 

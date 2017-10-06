@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
-import { RacingUnitConversionService } from './map-renderer/racing-unit-conversion.service';
-import { AbstractRacingUnitConversionService } from './abstract-racing-unit-conversion.service';
-import { Map as RacingMap, MAP_TYPES } from './map';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
+import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
+
+const INITIAL_WIDTH = 500;
 
 @Component({
     selector: 'app-map-editor',
@@ -18,39 +19,56 @@ const RIGHT_MOUSE_BUTTON = 2;
     providers: [
         MapEditorService,
         MapRendererService,
-        RacingUnitConversionService,
-        {
-            provide: AbstractRacingUnitConversionService,
-            useExisting: RacingUnitConversionService
-        }
+        RacingUnitConversionService
     ]
 })
 export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
-    public width = 500;
-    public height = 500;
     public isDragging = false;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService) { }
+                private mapRenderer: MapRendererService) {
+        this.width = INITIAL_WIDTH;
+    }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
     }
 
+    @Input() public set width(width: number) {
+        this.mapEditor.mapWidth = width;
+    }
+
+    public get width(): number {
+        return this.mapEditor.mapWidth;
+    }
+
+    @Input() public set height(height: number) {
+        this.mapEditor.mapHeight = height;
+    }
+
+    public get height(): number {
+        return this.mapEditor.mapHeight;
+    }
+
     public get mapTypes(): string[] {
         return  MAP_TYPES;
     }
+
     public get currentMap(): RacingMap {
         return this.mapEditor.currentMap;
     }
 
     public get isMapValid(): boolean {
-        return this.mapEditor.isMapValid();
+        return this.mapEditor.computeMapErrors() === MapError.NONE;
+    }
+
+    public saveMap(): void {
+        console.log('Map "Saved": ', this.mapEditor.serializeMap());
     }
 
     public clicked(event: MouseEvent): void {
