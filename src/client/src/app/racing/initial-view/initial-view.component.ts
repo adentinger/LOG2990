@@ -15,7 +15,6 @@ export class InitialViewComponent implements OnInit {
     constructor(private mapService: MapService) { }
 
     public ngOnInit(): void {
-        this.maps = this.mapService.maps;
     }
 
 }
