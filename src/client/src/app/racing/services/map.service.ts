@@ -4,8 +4,6 @@ import { SerializedMap } from '../../admin-screen/map-editor/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
 import { MAPS } from './mock-maps';
 
-const MAX_IDS_PER_REQUEST = 100;
-
 @Injectable()
 export class MapService {
 

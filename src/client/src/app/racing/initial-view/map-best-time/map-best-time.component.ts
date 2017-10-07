@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { MapService } from '../../services/map.service';
 import { Map } from '../../../admin-screen/map-editor/map';
 
 @Component({
