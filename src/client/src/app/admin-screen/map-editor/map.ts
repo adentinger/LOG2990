@@ -25,6 +25,7 @@ export class Map {
     public potholes: Pothole[] = [];
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
+    public bestTimes: number[];
 
     public name: string;
     public description: string;
@@ -43,9 +44,11 @@ export class Map {
                 potholes: Pothole[] = [],
                 puddles: Puddle[] = [],
                 speedBoosts: SpeedBoost[] = [],
+                bestTimes: number[] = [],
                 sumRatings: number = 0,
                 numberOfRatings: number = 0,
                 plays: number = 0) {
+
         this.path = path;
         this.minimumSegmentLength = minimumSegmentLength;
         this.name = name;
@@ -54,6 +57,7 @@ export class Map {
         this.potholes.push.apply(this.potholes, potholes);
         this.puddles.push.apply(this.puddles, puddles);
         this.speedBoosts.push.apply(this.speedBoosts, speedBoosts);
+        this.bestTimes = bestTimes;
         this.sumRatings = sumRatings;
         this.numberOfRatings = numberOfRatings;
         this.plays = plays;

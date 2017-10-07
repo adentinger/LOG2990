@@ -22,6 +22,7 @@ export class MockMaps {
                        [new Pothole(11), new Pothole(17), new Pothole(22)],
                        [new Puddle(15)],
                        [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)],
+                       [12, 24, 48],
                        4,
                        12);
     }
@@ -32,6 +33,7 @@ export class MockMaps {
                        'name',
                        'description',
                        'professional',
+                       [],
                        [],
                        [],
                        [],
@@ -52,6 +54,7 @@ export class MockMaps {
             [],
             [],
             [],
+            [],
             4,
             12
         );
@@ -66,6 +69,7 @@ export class MockMaps {
                        [],
                        [],
                        [],
+                       [],
                        9,
                        -1);
     }
@@ -76,6 +80,7 @@ export class MockMaps {
                        'name',
                        'description',
                        'sdljhgso',
+                       [],
                        [],
                        [],
                        [],

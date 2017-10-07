@@ -127,6 +127,7 @@ export class MapEditorService {
                 serializedMap.potholes.slice(),
                 serializedMap.puddles.slice(),
                 serializedMap.speedBoosts.slice(),
+                [],
                 serializedMap.sumRatings,
                 serializedMap.numberOfRatings,
                 serializedMap.numberOfPlays

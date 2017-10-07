@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { SerializedMap } from '../../admin-screen/map-editor/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
+import { MAPS } from './mock-maps';
 
 const MAX_IDS_PER_REQUEST = 100;
 
 @Injectable()
 export class MapService {
+
+    public maps: Map[];
 
     constructor() {
     }
@@ -29,6 +32,11 @@ export class MapService {
 
     public getByName(name: string): Promise<Map> {
         return Promise.reject('Not yet implemented');
+    }
+
+    // To be deleted ; mock method.
+    public getMaps(): Promise<Map[]> {
+        return Promise.resolve(MAPS);
     }
 
 }
