@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InitialViewComponent } from './initial-view.component';
+import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 import { MapService } from '../services/map.service';
 
 describe('InitialViewComponent', () => {
@@ -9,7 +10,10 @@ describe('InitialViewComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ InitialViewComponent ],
+            declarations: [
+                InitialViewComponent,
+                MapBestTimeComponent
+            ],
             providers: [ MapService ]
         })
         .compileComponents();
