@@ -11,7 +11,8 @@ import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 })
 export class InitialViewComponent implements OnInit {
 
-    @ViewChild(MapBestTimeComponent) child:MapBestTimeComponent;
+    @ViewChild(MapBestTimeComponent)
+    private child: MapBestTimeComponent;
     public maps: Map[];
     public selectedMap: Map;
 
