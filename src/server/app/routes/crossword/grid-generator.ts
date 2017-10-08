@@ -17,6 +17,7 @@ Crossword - minimal black cases X.
 import { readFileSync } from 'fs';
 //export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
+import { Word } from './word';
 
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
@@ -31,14 +32,6 @@ export class GridGeneratorMiddleWare {
 
 for (let i = 0; i < lexicon.length; i++) {
     lexicon[i] = lexicon[i].slice(0, -1);
-}
-
-export class Word {
-    public value: string;
-    public position: [number, number];
-    constructor(value: string) {
-        this.value = value;
-    }
 }
 
 export class Grid {
@@ -70,7 +63,6 @@ export class Grid {
         // finaly we push a word on last column
         this.gridForVertical.push((this.getWordOfDesiredLength(4, 5)));
 
-        this.generateGridTenByTenContainingWordStartingPosition()
         //console.info(this.gridForPosition);
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
@@ -481,36 +473,6 @@ export class Grid {
         word = this.noAccent(word);
         word = this.noApostropheAndDash(word);
         return word;
-    }
-
-    public generateGridTenByTenContainingWordStartingPosition() {
-        // tuple --> [across word number, vertical word number]
-        this.gridForPosition[0][0] = [1, 1];
-        this.gridForPosition[0][1] = [0, 2];
-        this.gridForPosition[0][2] = [0, 3];
-        this.gridForPosition[3][3] = [4, 4];
-        this.gridForPosition[3][4] = [0, 5];
-        this.gridForPosition[3][5] = [0, 6];
-        this.gridForPosition[7][6] = [8, 7];
-        this.gridForPosition[7][7] = [0, 8];
-        this.gridForPosition[7][8] = [0, 9];
-        this.gridForPosition[2][9] = [0, 10];
-        this.gridForPosition[1][0] = [2, 0];
-        this.gridForPosition[2][0] = [3, 0];
-        this.gridForPosition[4][3] = [5, 0];
-        this.gridForPosition[5][3] = [6, 0];
-        this.gridForPosition[6][3] = [7, 0];
-        this.gridForPosition[8][8] = [9 , 0]; // end of the word
-        this.gridForPosition[9][8] = [10, 1]; // end of the word
-
-        // other cases are black
-        for (let i = 0; i < this.gridForPosition.length; i++) {
-            for (let j = 0; j < this.gridForPosition[i].length; j++) {
-                if (!this.gridForPosition[i][j]) {
-                    this.gridForPosition[i][j] = [0, 0];
-                }
-            }
-        }
     }
 }
 
