@@ -1,37 +1,150 @@
 import { Injectable } from '@angular/core';
-import { Map } from './map';
+
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
+import { Map, MapError } from './map';
+import { SerializedMap } from './serialized-map';
 import { Point } from './point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
+import { Track } from '../../racing/track';
 
 @Injectable()
 export class MapEditorService {
 
+    public width = 0;
+    public height = 0;
+
     private map: Map;
 
-    constructor() {
+    constructor(private converter: RacingUnitConversionService) {
         this.newMap();
     }
 
-    public newMap(): boolean {
-        let mapCreated = false;
+    public get currentMap(): Map {
+        return this.map;
+    }
 
-        this.deleteMap();
+    public get mapWidth(): number {
+        return this.width;
+    }
 
+    public set mapWidth(mapWidth: number) {
+        const ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
+        this.width = mapWidth;
+        this.height = mapWidth / ASPECT_RATIO;
+        this.converter.windowWidth = this.width;
+        this.converter.windowHeight = this.height;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
+
+    public get mapHeight(): number {
+        return this.height;
+    }
+
+    public set mapHeight(mapHeight: number) {
+        const ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
+        this.width = ASPECT_RATIO * mapHeight;
+        this.height = mapHeight;
+        this.converter.windowWidth = this.width;
+        this.converter.windowHeight = this.height;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
+
+    public newMap(): void {
         this.map = new Map();
-        if (this.map !== null) {
-            mapCreated = true;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
+
+    public get minimumDistanceBetweenPoints(): number {
+        return this.converter.lengthFromGameUnits(2 * Track.SEGMENT_WIDTH);
+    }
+
+    public get isMapClockwise(): boolean {
+        return this.map.isClockwise() ||
+               this.map.computeErrors() !== MapError.NONE;
+    }
+
+    public serializeMap(): SerializedMap {
+        if (this.areWidthAndHeightSet()) {
+            if (this.computeMapErrors() === MapError.NONE) {
+                const POINTS: Point[] =
+                    this.map.path.points.map((point: Point) => {
+                        const X = this.converter.lengthToGameUnits(point.x);
+                        const Y = this.converter.lengthToGameUnits(point.y);
+                        return new Point(X, Y);
+                    });
+
+                if (!this.map.isClockwise()) {
+                    POINTS.reverse();
+                }
+
+                POINTS.pop(); // Do not include the last point ;
+                              // it is the same as the first point.
+                return new SerializedMap(
+                    this.map.name,
+                    this.map.description,
+                    this.map.type,
+                    this.map.sumRatings,      // Reset rating?
+                    this.map.numberOfRatings, // Reset rating?
+                    0,                        // Reset number of plays?
+                    POINTS,
+                    this.map.potholes.slice(),
+                    this.map.puddles.slice(),
+                    this.map.speedBoosts.slice()
+                );
+            }
+            else {
+                throw new Error('Serialization failed: ' +
+                                'The map is currently not valid. ' +
+                                'Fix map problems before attempting serialization');
+            }
         }
-
-        return mapCreated;
+        else {
+            throw new Error('Serializing map failed: ' +
+                            'Please set map width and height to a value ' +
+                            'that is >0 before attempting to deserialize.');
+        }
     }
 
-    public saveMap(): Promise<boolean> {
-        return Promise.reject(false);
-    }
+    public deserializeMap(serializedMap: SerializedMap): void {
+        if (this.areWidthAndHeightSet()) {
+            const POINTS: Point[] = serializedMap.points.map((point: Point) => {
+                const X = this.converter.lengthFromGameUnits(point.x);
+                const Y = this.converter.lengthFromGameUnits(point.y);
+                return new Point(X, Y);
+            });
 
-    public deleteMap(): void {
-        this.map = null;
+            // A Map's last point is supposed to be the same as its first
+            // point when it is valid.
+            POINTS.push(new Point(POINTS[0].x, POINTS[0].y));
+
+            const NEW_MAP = new Map(
+                new Path(POINTS),
+                this.minimumDistanceBetweenPoints,
+                serializedMap.name,
+                serializedMap.description,
+                serializedMap.type,
+                serializedMap.potholes.slice(),
+                serializedMap.puddles.slice(),
+                serializedMap.speedBoosts.slice(),
+                serializedMap.sumRatings,
+                serializedMap.numberOfRatings,
+                serializedMap.numberOfPlays
+            );
+
+            if (NEW_MAP.computeErrors() === MapError.NONE) {
+                this.map = NEW_MAP;
+            }
+            else {
+                throw new Error('Deserializing map failed: ' +
+                                'The serialized map is not valid.');
+            }
+        }
+        else {
+            throw new Error('Deserializing map failed: ' +
+                            'Please set map width and height to a value ' +
+                            'that is >0 before attempting to deserialize.');
+        }
     }
 
     public get points(): Point[] {
@@ -63,7 +176,6 @@ export class MapEditorService {
                 (this.points[0].equals(this.points[this.points.length - 1]));
 
             if (EDITING_FIRST_POINT && IS_PATH_CLOSED) {
-                console.log('editing first point');
                 POINTS_TO_EDIT.push(this.points[0],
                                     this.points[this.points.length - 1]);
             }
@@ -79,8 +191,8 @@ export class MapEditorService {
     }
 
     private areValidCoordinates(coordinates: Point): boolean {
-        return coordinates.x < this.map.width && coordinates.y < this.map.height &&
-               coordinates.x > 0              && coordinates.y > 0;
+        return coordinates.x < this.mapWidth && coordinates.y < this.mapHeight &&
+               coordinates.x > 0             && coordinates.y > 0;
     }
 
     public isFirstPoint(pointIndex: PointIndex): boolean {
@@ -94,6 +206,14 @@ export class MapEditorService {
         else {
             throw new Error('Cannot get first map point: map is empty.');
         }
+    }
+
+    public computeMapErrors(): MapError {
+        return this.map.computeErrors();
+    }
+
+    private areWidthAndHeightSet(): boolean {
+        return this.mapWidth > 0 && this.mapHeight > 0;
     }
 
 }

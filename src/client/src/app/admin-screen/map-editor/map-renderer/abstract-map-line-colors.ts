@@ -4,9 +4,9 @@ export class AbstractMapLineColors extends MapColors {
 
     private line: string;
 
-    constructor(line: string) {
+    constructor(lineColor: string) {
         super();
-        this.line = line;
+        this.line = lineColor;
     }
 
 }

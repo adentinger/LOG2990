@@ -1,8 +1,12 @@
-.green {
-    background: green;
+.crossword {
+    background: #FFDd65;
     padding: 20px;
 }
-.purple {
-    background: purple;
+.racing {
+    background: #44C0AB;
     padding: 20px;
+}
+
+div {
+    height: 100%;
 }

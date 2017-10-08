@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RacingComponent } from './racing.component';
+import { InitialViewComponent } from './initial-view/initial-view.component';
+import { MapService } from './services/map.service';
 
 describe('RacingComponent', () => {
     let component: RacingComponent;
@@ -8,7 +10,13 @@ describe('RacingComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [RacingComponent]
+            declarations: [
+                RacingComponent,
+                InitialViewComponent
+            ],
+            providers: [
+                MapService
+            ]
         })
             .compileComponents();
     }));

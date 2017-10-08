@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { CROSSWORD } from '../mocks/mock-grid';
+import { CROSSWORD } from '../mocks/grid-mock';
 
 @Injectable()
 export class CrosswordGridService {

@@ -34,6 +34,13 @@ export class Line {
         return this.origin.y - this.slope * this.origin.x;
     }
 
+    public equals(that: Line): boolean {
+        return (this.origin     .equals(that.origin) &&
+                this.destination.equals(that.destination)) ||
+               (this.origin     .equals(that.destination) &&
+                this.destination.equals(that.origin));
+    }
+
     public intersectsWith(that: Line): IntersectionType {
 
         const point1 = this.origin;

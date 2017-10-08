@@ -31,7 +31,8 @@ export class MapRendererService implements Drawable {
     public draw(): void {
         this.checkIfCanvasSet();
         this.clear();
-        this.path.updatePoints(this.mapEditor.points);
+        this.path.shouldReverse = !this.mapEditor.isMapClockwise;
+        this.path.updatePoints(this.mapEditor.points, this.mapEditor.minimumDistanceBetweenPoints);
         this.path.draw();
     }
 
