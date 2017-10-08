@@ -8,8 +8,8 @@ export class MapsMiddleWare {
 
     @Route('get', '/:name')
     public getMaps(req: express.Request,
-                    res: express.Response,
-                    next: express.NextFunction): void {
+                   res: express.Response,
+                   next: express.NextFunction): void {
         res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -29,8 +29,8 @@ export class MapsMiddleWare {
 
     @Route('delete', '/:name')
     public deleteMaps(req: express.Request,
-                res: express.Response,
-                next: express.NextFunction): void {
+                      res: express.Response,
+                      next: express.NextFunction): void {
         res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
     }
 
