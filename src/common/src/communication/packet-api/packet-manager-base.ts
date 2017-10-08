@@ -2,9 +2,9 @@ import { Constructor, toArrayBuffer, Class } from '../../utils';
 import { PacketParser } from './packet-parser';
 import { PacketHandler, registerParsers, registerHandlers } from './packet-handler';
 import { PacketEvent } from './packet-event';
-import { console } from '../../prefixable-console';
 
-export declare type On = (event: string, listener: Function) => { on: On };
+export declare type Listener = (...args: any[]) => void;
+export declare type On = (event: string, listener: Function | Listener) => { on: On };
 export declare interface Socket {
     id: string;
     on: On;
@@ -32,16 +32,6 @@ export abstract class PacketManagerBase<Sock extends Socket> {
         return null;
     }
 
-    private static checkEventType<T>(eventType: string, dataType: Constructor<T>): boolean {
-        if (PacketManagerBase.PACKET_MESSAGE_MATCHER.test(eventType)) {
-            eventType = eventType.match(PacketManagerBase.PACKET_MESSAGE_MATCHER)[1];
-            if (eventType === dataType.name) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Must be called at the end of the child class' constructor
      */
@@ -55,25 +45,45 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * @param socket A socket from which we listen a packet message.
      * @param param1 A tuple containing a parser and the type of object it parses.
      */
-    protected registerParserToSocket<T>(socket: Sock, [dataType, parser]: [Constructor<T>, PacketParser<T>]) {
+    protected registerParsersToSocket(socket: Sock) {
         const messageHandler = (message: string, data: string) => {
             if (PacketManagerBase.isPacketMessage(message)) {
                 const eventType = PacketManagerBase.getEventType(message);
-                if (PacketManagerBase.checkEventType(eventType, dataType)) {
+                let dataType: Constructor<any>, parser: PacketParser<any>;
+                if (this.hasEventType(eventType) &&
+                    ([dataType, parser] = this.getParser(eventType)) !== null) {
                     console.log(`[Packet] Reception "${eventType}"`);
                     try {
                         const object = parser.parse(toArrayBuffer(data));
                         this.callHandlers(dataType, new PacketEvent(object, socket.id));
                     } catch (error) {
-                        console.pushPrefix('[Packet]');
-                        console.warn(`An error occured while parsing ${eventType}: `,
-                                     error instanceof Error ? error.message : error);
-                        console.popPrefix();
+                        console.warn(`[Packet] An error occured while parsing ${eventType}: `,
+                            error instanceof Error ? error.message : error);
                     }
+                } else {
+                    console.warn(`No parser for packet with "${eventType}" type. Packet dropped`);
                 }
             }
         };
         socket.on('message', messageHandler);
+    }
+
+    private hasEventType(eventType: string): boolean {
+        for (const [dataType] of this.parsers) {
+            if (dataType.name === eventType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private getParser(dataType: string): [Constructor<any>, PacketParser<any>] {
+        for (const parserEntry of this.parsers) {
+            if (parserEntry[0].name === dataType) {
+                return parserEntry;
+            }
+        }
+        return null;
     }
 
     private callHandlers<T>(dataType: Constructor<T>, event: PacketEvent<T>) {
@@ -110,5 +120,8 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * @param type The type of data the parser can parse.
      * @param parser An instance of a class extending PacketParser and implements parse and serialize.
      */
-    public abstract registerParser<T>(type: Class<T>, parser: PacketParser<T>): void;
+    public registerParser<T>(type: Constructor<T>, parser: PacketParser<T>) {
+        console.log(`[Packet] Registering parser for ${type.name}`);
+        this.parsers.set(type, parser);
+    }
 }

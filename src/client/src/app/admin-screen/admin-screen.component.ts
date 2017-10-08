@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as io from 'socket.io-client';
 import { WordConstraint } from 'common/lexic/word-constraint';
-import { PacketManagerClient } from 'common/communication/packet-api/packet-manager-client';
 import { PacketEvent } from 'common/communication/packet-api';
-import 'common/lexic/word-packet'; // <-- This is the first problematic line
+import { PacketManagerService } from '../packet-manager.service';
 
 @Component({
     selector: 'app-admin-screen',
@@ -12,25 +10,25 @@ import 'common/lexic/word-packet'; // <-- This is the first problematic line
 })
 export class AdminScreenComponent implements OnInit {
     public readonly JSON = JSON;
-    // private packetManager: PacketManagerClient;
+    public count = 0;
     public data: any;
 
-    constructor() {}
+    constructor(private packetService: PacketManagerService) {}
 
     public ngOnInit(): void {
-        // This is the seconde problematic line
-        // |
-        // v
-        /*/this.packetManager = new PacketManagerClient(io.connect('http://localhost:3030')); /**/
-        /*/this.packetManager.registerHandler(WordConstraint, (event: PacketEvent<WordConstraint>) => {
-            console.log('Packet Received');
-            this.data = event.value;
-        }); /**/
+        this.packetService.packetManager.registerHandler(WordConstraint, this.wordConstraintHandler.bind(this));
+    }
+
+    private wordConstraintHandler(event: PacketEvent<WordConstraint>): void {
+        console.log('[AdminScreen] Packet Received', JSON.stringify(event));
+        this.data = event.value;
+        console.log('[AdminScreen] data: ', this.data);
     }
 
     public sendSocket(): void {
-        /*/const wc: WordConstraint = { minLength: 1, isCommon: true, charConstraints: [{ char: 'a', position: 0 }] };
-        this.packetManager.sendPacket(WordConstraint, wc); /**/
+        const wc: WordConstraint = { minLength: ++this.count, isCommon: true, charConstraints: [{ char: 'a', position: 0 }] };
+        console.log('[AdminScreen] Sending to server ...');
+        this.packetService.packetManager.sendPacket(WordConstraint, wc);
     }
 
 }

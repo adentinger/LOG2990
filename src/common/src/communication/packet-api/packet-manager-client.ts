@@ -1,9 +1,4 @@
-try {
-    require('socket.io-client');
-} catch (err) {
-    console.warn('The package "socket.io-client" is required to use PacketManagerClient');
-}
-import { PacketParser } from './';
+import 'socket.io-client';
 import { Constructor, fromArrayBuffer } from '../../utils';
 import { PacketManagerBase } from './packet-manager-base';
 
@@ -11,6 +6,7 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
     constructor(private socket: SocketIOClient.Socket) {
         super();
         this.register();
+        this.registerParsersToSocket(this.socket);
     }
 
     public sendPacket<T>(type: Constructor<T>, data: T): boolean {
@@ -20,13 +16,9 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
             this.socket.send('packet:' + type.name,
                 fromArrayBuffer(parser.serialize(data)));
             return true;
+        } else {
+            console.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
         }
         return false;
-    }
-
-    public registerParser<T>(type: Constructor<T>, parser: PacketParser<T>): void {
-        console.log(`[Packet] Registering parser for ${type.name}`);
-        this.parsers.set(type, parser);
-        this.registerParserToSocket(this.socket, [type, parser]);
     }
 }

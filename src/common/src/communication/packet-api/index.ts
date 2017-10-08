@@ -3,7 +3,6 @@ export * from './packet-parser';
 export * from './packet-event';
 export * from './packet-handler';
 import { PacketManagerBase, Socket } from './packet-manager-base';
-export declare type PacketManager = PacketManagerBase<Socket>;
 
 // Export the right packet Manager
 // tslint:disable-next-line:variable-name

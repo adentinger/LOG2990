@@ -29,5 +29,3 @@ export function toArrayBuffer(str: string): ArrayBuffer {
 export function fromArrayBuffer(data: ArrayBuffer): string {
     return String.fromCharCode.apply(null, new Uint16Array(data));
 }
-
-export * from './prefixable-console';

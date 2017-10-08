@@ -1,5 +1,4 @@
 import * as SocketIO from 'socket.io';
-import { PacketParser } from './';
 import { Constructor, fromArrayBuffer } from '../../utils';
 import { PacketManagerBase } from './packet-manager-base';
 
@@ -13,11 +12,13 @@ export class PacketManagerServer extends PacketManagerBase<SocketIO.Socket> {
     }
 
     private onConnection(socket: SocketIO.Socket) {
-        console.log(`[Packet] New connection on "${socket.handshake.url}"`);
+        console.log(`[Packet] New connection on "${socket.handshake.url}" (id: ${socket.id})`);
         this.knownSockets.set(socket.id, socket);
-        for (const parserEntry of this.parsers) {
-            this.registerParserToSocket(socket, parserEntry);
-        }
+        this.registerParsersToSocket(socket);
+        socket.on('disconnect', () => {
+            console.log(`[Packet] Disconnection (id: ${socket.id})`);
+            this.knownSockets.delete(socket.id);
+        });
     }
 
     public sendPacket<T>(type: Constructor<T>, data: T, socketid: string): boolean {
@@ -27,15 +28,9 @@ export class PacketManagerServer extends PacketManagerBase<SocketIO.Socket> {
             this.knownSockets.get(socketid).send('packet:' + type.name,
                 fromArrayBuffer(parser.serialize(data)));
             return true;
+        } else if (!this.parsers.has(type)) {
+            console.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
         }
         return false;
-    }
-
-    public registerParser<T>(type: Constructor<T>, parser: PacketParser<T>) {
-        console.log(`[Packet] Registering parser for ${type.name}`);
-        this.parsers.set(type, parser);
-        for (const socket of this.knownSockets.values()) {
-            this.registerParserToSocket(socket, [type, parser]);
-        }
     }
 }

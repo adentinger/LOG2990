@@ -11,7 +11,6 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
-import { PrefixLogWith } from 'common/utils';
 import * as PacketAPI from 'common/communication/packet-api';
 import { PacketManagerServer } from 'common/communication/packet-api/packet-manager'
 import * as ServerIO from 'socket.io';
@@ -88,7 +87,6 @@ export class Application {
      * @class Server
      * @method routes
      */
-    @PrefixLogWith('[Route]')
     public routes() {
         let router: express.Router;
         router = express.Router();
