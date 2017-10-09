@@ -58,7 +58,7 @@ export function Route(type: RouteType | 'use', route?: string): MethodDecorator 
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
         const ORIGINAL_FUNCTION = descriptor.value;
         descriptor.value = function (...argv: any[]): any {
-            console.log('[INFO] Handling ' + (route ? type.toUpperCase() : '') +
+            console.log('[INFO] Handling ' + (route !== undefined ? type.toUpperCase() : '') +
                 ' request to "' + route + '"');
             return ORIGINAL_FUNCTION.apply(this, argv);
         };

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BoardComponent } from './board.component';
+import { CrosswordTileComponent } from './crossword-tile/crossword-tile.component';
+import { CrosswordGameService } from '../crossword-game.service';
 
 describe('BoardComponent', () => {
     let component: BoardComponent;
@@ -8,7 +10,8 @@ describe('BoardComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BoardComponent]
+            declarations: [BoardComponent, CrosswordTileComponent],
+            providers: [ CrosswordGameService ]
         })
             .compileComponents();
     }));

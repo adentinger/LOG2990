@@ -1,11 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { CrosswordGridService } from './crossword-grid.service';
+import { CrosswordGameService } from '../crossword-game.service';
 
 describe('CrosswordGridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [CrosswordGridService]
+            providers: [CrosswordGridService, CrosswordGameService]
         });
     });
 
@@ -13,9 +14,9 @@ describe('CrosswordGridService', () => {
         expect(service).toBeTruthy();
     }));
 
-    it('the first square should contain a character', inject([CrosswordGridService], (service: CrosswordGridService) => {
+    it('the first square should not contain a character', inject([CrosswordGridService], (service: CrosswordGridService) => {
         const firstLetter = service.getViewableGrid()[0][0];
-        expect(firstLetter).toMatch('.');
+        expect(firstLetter).toMatch(/^$/i);
     }));
 
     it('should return an array', inject([CrosswordGridService], (service: CrosswordGridService) => {
@@ -35,7 +36,7 @@ describe('CrosswordGridService', () => {
 
     it('should be filled with at least 35% letters', inject([CrosswordGridService], (service: CrosswordGridService) => {
         const grid: any = service.getViewableGrid();
-        const regex = new RegExp('[a-zA-Z]');
+        const regex = new RegExp('^0$');
         let counter = 0;
         for (const row of grid) {
             for (const square of row) {
@@ -44,7 +45,7 @@ describe('CrosswordGridService', () => {
                 }
             }
         }
-        expect(counter).toBeGreaterThan(35);
+        expect(100 - counter).toBeGreaterThan(35);
     }));
 
 });

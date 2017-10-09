@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DefinitionFieldComponent } from './definition-field.component';
+import { CrosswordGameService } from '../crossword-game.service';
 
 describe('DefinitionFieldComponent', () => {
     let component: DefinitionFieldComponent;
@@ -8,7 +9,8 @@ describe('DefinitionFieldComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DefinitionFieldComponent]
+            declarations: [DefinitionFieldComponent],
+            providers:    [CrosswordGameService]
         })
             .compileComponents();
     }));

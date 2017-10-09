@@ -1,3 +1,12 @@
 #ignoring .vscode folder but we keep some files for debuging
 /.vscode/chrome
 .*.swp
+.*.swo
+typings
+app/**/*.js
+app/**/*.map
+node_modules
+jspm_packages
+bower_components
+*.d.ts
+

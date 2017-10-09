@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 
@@ -20,6 +20,8 @@ export abstract class ConfigMenuStateConfirm extends ConfigMenuState {
 
 @Injectable()
 export class ConfigMenuService {
+    private static readonly SERVER_ADDRESS = 'http://localhost:3000';
+    private static readonly GAMES_PATH = '/crossword/games/';
     private static readonly STATE_CONFIRM = -1;
     private static readonly STATE_SEND = -2;
     private static confirmState: ConfigMenuStateConfirm = {
@@ -38,7 +40,7 @@ export class ConfigMenuService {
     private stateStack: number[] = [];
 
     constructor(private location: Location,
-                http: HttpClient,
+                private http: HttpClient,
                 @Inject('menuConfigUrl') menuConfigUrl: string) {
         http.get(menuConfigUrl, {responseType: 'json'}).subscribe((menuPages) => {
             this.states.push.apply(this.states, ConfigMenuState.fromJson(menuPages, http));
@@ -69,8 +71,8 @@ export class ConfigMenuService {
         }
     }
 
-    private setDisplayedSettings() {
-        const displayedSettings = [];
+    private getDisplayedSettings(): Object {
+        const displayedSettings = {};
         for (const setting in this.gameConfiguration) {
             if (this.gameConfiguration.hasOwnProperty(setting)) {
                 const state = this.states.find((value: ConfigMenuState) => value.id === +setting);
@@ -86,7 +88,7 @@ export class ConfigMenuService {
                 displayedSettings[state.name] = options[this.gameConfiguration[setting]];
             }
         }
-        (this.getCurrentState())['settings'] = displayedSettings;
+        return displayedSettings;
     }
 
     public selectOption(optionId: number): void {
@@ -99,7 +101,7 @@ export class ConfigMenuService {
             this.nextState(optionId);
         }
         if (this.currentStateId === ConfigMenuService.STATE_CONFIRM) {
-            this.setDisplayedSettings();
+            (this.getCurrentState())['settings'] = this.getDisplayedSettings();
         }
         if (this.currentStateId === ConfigMenuService.STATE_SEND) {
             delete this.gameConfiguration[currentState.name];
@@ -119,6 +121,10 @@ export class ConfigMenuService {
     }
 
     public sendGameConfiguration(): void {
+        this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
+                       this.gameConfiguration).subscribe((response) => {
+                           console.log(response);
+                       }, console.error);
         this.isConfiguringGame = false;
     }
 }

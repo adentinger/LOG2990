@@ -10,18 +10,17 @@ import { Direction } from '../grid-word';
 })
 
 export class BoardComponent implements OnInit {
-	public crosswordGrid: string[][];
+    public crosswordGrid: string[][];
+    public wordBuffer = '';
 
-    public wordBuffer: string = '';
+    @Input('indexOfDefinition') public indexOfDefinition: number;
+    @ViewChild('crosswordBoard') private crosswordBoard: ElementRef;
+    @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    @Input('indexOfDefinition') indexOfDefinition: number;
-
-    @ViewChild('inputBuffer') inputBuffer: ElementRef;
     public onSelect(): void {
         this.inputBuffer.nativeElement.focus();
         this.inputBuffer.nativeElement.value = '';
     }
-    @ViewChild('crosswordBoard') private crosswordBoard: ElementRef;
 
     constructor(private crosswordGridService: CrosswordGridService) { }
 
@@ -33,26 +32,26 @@ export class BoardComponent implements OnInit {
         return input.replace(/[^a-zA-Z]/g, '');
     }
 
-    onChange(inputValue) {
-        let word = this.crosswordGridService.grid[this.indexOfDefinition];
+    public onChange(inputValue) {
+        const word = this.crosswordGridService.grid[this.indexOfDefinition];
 
-        let input = this.stripSymbols(inputValue);
+        const input = this.stripSymbols(inputValue);
 
         for (let i = 0; i < word.length; i++) {
             if (word.direction === Direction.across) {
-                if ( i < input.length) {
-                    this.crosswordGrid[word.y][word.x+i] = input[i];
+                if (i < input.length) {
+                    this.crosswordGrid[word.y][word.x + i] = input[i];
                 }
                 else {
-                    this.crosswordGrid[word.y][word.x+i] = '';
+                    this.crosswordGrid[word.y][word.x + i] = '';
                 }
             }
             else if (word.direction === Direction.vertical) {
-                if ( i < input.length) {
-                    this.crosswordGrid[word.y+i][word.x] = input[i];
+                if (i < input.length) {
+                    this.crosswordGrid[word.y + i][word.x] = input[i];
                 }
                 else {
-                    this.crosswordGrid[word.y+i][word.x] = '';
+                    this.crosswordGrid[word.y + i][word.x] = '';
                 }
             }
         }

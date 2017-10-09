@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
+import { HttpStatus } from '../../http-response-status';
 
 type CrosswordGameMode = 'classic' | 'dynamic';
 type CrosswordGameDifficulty = 'easy' | 'normal' | 'brutal';
@@ -10,9 +11,9 @@ interface MockCrosswordPendingGame {
     difficulty: CrosswordGameDifficulty;
 }
 
-@MiddleWare
+@MiddleWare('/crossword/games')
 export class CrosswordGamesMiddleWare {
-    @Route('get', '/crossword/games/pending/:count')
+    @Route('get', '/pending/:count')
     public pending(req: express.Request, res: express.Response, next: express.NextFunction): void {
         const MODES: CrosswordGameMode[] = ['classic', 'dynamic'];
         const DIFFICULTIES: CrosswordGameDifficulty[] = ['easy', 'normal', 'brutal'];
@@ -28,4 +29,12 @@ export class CrosswordGamesMiddleWare {
         }
         res.send(MOCK_PENDING_GAMES);
     }
+
+    @Route('post', '/')
+    public postGame(req: express.Request, res: express.Response): void {
+        console.log(req.body);
+        res.sendStatus(HttpStatus.IM_A_TEAPOT);
+    }
 }
+
+

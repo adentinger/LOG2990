@@ -8,13 +8,16 @@ if [ "$#" -ne 1 ]; then
 	usage
 elif [ $1 = "start" ]; then
 	cd ./server/
-	npm start >/dev/null&
-	cd ../client/
 	npm start&
+	cd ../client/
+	npm start >/dev/null&
+
 	cd ..
 elif [ $1 = "stop" ]; then
 	kill `pidof @angular/cli`; kill `pidof node`
 elif [ $1 = "update" ]; then
+    cd ./common/
+    npm install
 	cd ./server/
 	npm install&
 	cd ../client/
