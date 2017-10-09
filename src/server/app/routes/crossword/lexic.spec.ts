@@ -75,12 +75,10 @@ describe('The lexic MicroService', () => {
                     } else {
                         expect(words.length).to.be.greaterThan(0);
                     }
-                    console.log(words);
                     words.forEach((word: string) => {
                         expect(word).to.match(CONSTRAINTS[i][1]);
                     });
                 }, (error) => {
-                    console.warn(error.message);
                     expect(CONSTRAINTS[i][1]).to.be.null;
                 }));
             }

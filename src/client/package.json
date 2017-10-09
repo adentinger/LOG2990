@@ -2,6 +2,9 @@
   "name": "log2990",
   "version": "0.0.0",
   "license": "MIT",
+  "engines": {
+    "npm": "<=4.6.1"
+  },
   "config": {
     "packetapi_mgr": "client"
   },

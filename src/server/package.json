@@ -3,6 +3,9 @@
   "description": "Projet de base pour le cours de LOG2990",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "npm": "<=4.6.1"
+  },
   "config": {
     "packetapi_mgr": "server"
   },
