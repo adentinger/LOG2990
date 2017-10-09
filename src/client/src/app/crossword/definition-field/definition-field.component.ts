@@ -27,8 +27,8 @@ export class DefinitionFieldComponent implements OnInit {
 
         this.definitionService.crosswordGameService.aDefinitionIsSelected = true;
         // change le focus vers le buffer
-
     }
+
     public onClickOutside(): void {
         this.selectedDefinitionId = -1;        
         this.selectedDefinition.emit(null);        

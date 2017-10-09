@@ -16,17 +16,15 @@ export class BoardComponent implements OnInit {
 
     @Input('indexOfDefinition') indexOfDefinition: number;
 
-    @ViewChild('crosswordBoard') private gridElement: ElementRef;
-
+    @ViewChild('crosswordBoard') private crosswordBoard: ElementRef;
 
     constructor(private crosswordGridService: CrosswordGridService) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getGrid();
-
     }
 
-
+    
     /*
     public focusOnInputFieldOnGrid() {
         let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y;
@@ -39,4 +37,8 @@ export class BoardComponent implements OnInit {
             this.gridElement.nativeElement.querySelector('.square-' + y + '-' + x).focus();
         }
     }*/
+
+    onChange(inputValue) {
+        console.log(inputValue);
+    }
 }
