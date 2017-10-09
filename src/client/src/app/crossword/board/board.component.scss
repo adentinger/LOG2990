@@ -35,10 +35,8 @@ $color-focus-item: #EDFF71;
 	}
 }
 
-.black-square {
-  background: black;
-}
-
-.highlighted {
-	background: blue;
+#inputText { // invisible
+    height: 0;
+    border: 0;
+    margin: 0;
 }
