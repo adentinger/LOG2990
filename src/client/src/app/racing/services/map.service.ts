@@ -26,11 +26,15 @@ export class MapService {
     }
 
     public getMapNames(count: number): Promise<string[]> {
-        return Promise.reject('Not yet implemented');
+        return Promise.resolve(this.mockSerializedMaps.functionnalMaps().map((map: SerializedMap) => {
+            return map.name;
+        }));
     }
 
-    public getByName(name: string): Promise<Map> {
-        return Promise.reject('Not yet implemented');
+    public getByName(name: string): Promise<SerializedMap> {
+        return Promise.resolve(this.mockSerializedMaps.functionnalMaps().find((map: SerializedMap) => {
+            return (map.name === name);
+        }));
     }
 
     // To be deleted ; mock method.

@@ -4,12 +4,12 @@
     <button routerLink="map-editor">map editor</button>
     <div class="mapList">
       <div class="tableTitle">Map name</div>
-      <div class="maps" *ngFor="let map of maps" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
-        <span class="mapNames">{{map.name}}</span>
+      <div class="maps" *ngFor="let map of mapNames" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
+        <span class="mapNames">{{map}}</span>
       </div>
     </div>
   </div>
   <div *ngIf="selectedMap">
-      <app-map-editor [map]="selectedMap"></app-map-editor> 
+      <app-map-editor [map]="serializedMap"></app-map-editor> 
   </div>
 </div>

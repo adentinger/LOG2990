@@ -10,22 +10,24 @@ import { MapEditorComponent } from './map-editor/map-editor.component';
 })
 export class AdminScreenComponent implements OnInit {
 
-    public maps: SerializedMap[];
-    public selectedMap: SerializedMap;
+    public mapNames: string[];
+    public selectedMap: string;
     private child: MapEditorComponent;
+    public serializedMap: SerializedMap;
 
     constructor(private mapService: MapService) { }
 
     public ngOnInit(): void {
-        this.getMaps();
+        this.getMapsNames();
     }
 
-    public getMaps(): void {
-        this.mapService.getMaps().then((maps) => this.maps = maps);
+    public getMapsNames(): void {
+        this.mapService.getMapNames(100).then((mapNames) => this.mapNames = mapNames);
     }
 
-    public mapSelected(map: SerializedMap): void {
+    public mapSelected(map: string): void {
         this.selectedMap = map;
+        this.mapService.getByName(this.selectedMap).then((serializedMap) => this.serializedMap = serializedMap);
     }
 
 }
