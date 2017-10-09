@@ -33,7 +33,7 @@ export class MockSerializedMaps {
             0,
             0,
             0,
-            [new Point(0, 0), new Point(100, 50), new Point(0, 100)],
+            [new Point(0, 0), new Point(100, 90), new Point(0, 100)],
             [],
             [],
             []
@@ -70,6 +70,10 @@ export class MockSerializedMaps {
             [new Puddle(15), new Puddle(25), new Puddle(55)],
             [new SpeedBoost(5), new SpeedBoost(15), new SpeedBoost(45)]
         );
+    }
+
+    public functionnalMaps(): SerializedMap[] {
+        return [this.functional1(), this.functional2()];
     }
 
 }

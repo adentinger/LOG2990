@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
@@ -7,6 +7,7 @@ import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
 import { MapService } from '../../racing/services/map.service';
+import { SerializedMap } from './serialized-map';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
@@ -23,21 +24,38 @@ const INITIAL_WIDTH = 500;
         RacingUnitConversionService
     ]
 })
-export class MapEditorComponent implements OnInit {
+export class MapEditorComponent implements OnInit, AfterViewInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
+    public displayable;
     public isDragging = false;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService) {
+        private mapRenderer: MapRendererService) {
         this.width = INITIAL_WIDTH;
+        this.displayable = true;
+    }
+
+    @Input() public set map(serializedMap: SerializedMap) {
+        this.mapEditor.deserializeMap(serializedMap);
+        if (this.mapRenderer.canvas !== undefined) {
+            this.mapRenderer.draw();
+        }
+    }
+
+    public get internalMap(): RacingMap {
+        return this.mapEditor.currentMap;
     }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
+    }
+
+    public ngAfterViewInit(): void {
+        this.mapRenderer.draw();
     }
 
     @Input() public set width(width: number) {

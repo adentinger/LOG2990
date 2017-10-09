@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { MapService } from '../services/map.service';
-import { Map } from '../../admin-screen/map-editor/map';
+import { SerializedMap } from '../../admin-screen/map-editor/serialized-map';
 import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 
 @Component({
@@ -13,8 +13,8 @@ export class InitialViewComponent implements OnInit {
 
     @ViewChild(MapBestTimeComponent)
     private child: MapBestTimeComponent;
-    public maps: Map[];
-    public selectedMap: Map;
+    public maps: SerializedMap[];
+    public selectedMap: SerializedMap;
 
     constructor(private mapService: MapService) { }
 
@@ -26,7 +26,7 @@ export class InitialViewComponent implements OnInit {
         this.mapService.getMaps().then(maps => this.maps = maps);
     }
 
-    public mapSelected(map: Map): void {
+    public mapSelected(map: SerializedMap): void {
         this.selectedMap = map;
         this.child.displayable = true;
     }

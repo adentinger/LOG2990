@@ -8,7 +8,7 @@ export const MAP0 = new Map(new Path([
     new Point( 0,  0),
     new Point(10,  0),
     new Point(10, 10),
-    new Point( 0,  0)]), MIN_LINE_LENGTH, 'map0', 'description0', 'Amateur', [], [], [], [ 1, 2, 3], 0, 0, 0);
+    new Point( 0,  0)]), MIN_LINE_LENGTH, 'map0', 'description0', 'Professional', [], [], [], [ 1, 2, 3], 0, 0, 0);
 
 export const MAP1 = new Map(new Path([
     new Point(  0,   0),

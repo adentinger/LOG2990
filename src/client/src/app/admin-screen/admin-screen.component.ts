@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MapService } from '../racing/services/map.service';
-import { Map as RacingMap} from './map-editor/map';
+import { SerializedMap } from './map-editor/serialized-map';
+import { MapEditorComponent } from './map-editor/map-editor.component';
 
 @Component({
     selector: 'app-admin-screen',
@@ -9,9 +10,9 @@ import { Map as RacingMap} from './map-editor/map';
 })
 export class AdminScreenComponent implements OnInit {
 
-    public displayable;
-    public maps: RacingMap[];
-    public selectedMap: RacingMap;
+    public maps: SerializedMap[];
+    public selectedMap: SerializedMap;
+    private child: MapEditorComponent;
 
     constructor(private mapService: MapService) { }
 
@@ -19,14 +20,12 @@ export class AdminScreenComponent implements OnInit {
         this.getMaps();
     }
 
-
     public getMaps(): void {
         this.mapService.getMaps().then((maps) => this.maps = maps);
     }
 
-    public mapSelected(map: RacingMap): void {
+    public mapSelected(map: SerializedMap): void {
         this.selectedMap = map;
-        this.displayable = true;
     }
 
 }

@@ -28,6 +28,10 @@ export class MapRendererService implements Drawable {
         }
     }
 
+    public get canvas(): HTMLCanvasElement {
+        return this.canvasElement;
+    }
+
     public draw(): void {
         this.checkIfCanvasSet();
         this.clear();

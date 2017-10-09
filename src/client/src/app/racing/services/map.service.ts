@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { SerializedMap } from '../../admin-screen/map-editor/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
-import { MAPS } from './mock-maps';
+import { MockSerializedMaps } from '../../admin-screen/map-editor/mock-serialized-maps';
 
 @Injectable()
 export class MapService {
 
     public maps: Map[];
+    private mockSerializedMaps: MockSerializedMaps = new MockSerializedMaps;
 
     constructor() {
     }
@@ -33,8 +34,8 @@ export class MapService {
     }
 
     // To be deleted ; mock method.
-    public getMaps(): Promise<Map[]> {
-        return Promise.resolve(MAPS);
+    public getMaps(): Promise<SerializedMap[]> {
+        return Promise.resolve(this.mockSerializedMaps.functionnalMaps());
     }
 
 }
