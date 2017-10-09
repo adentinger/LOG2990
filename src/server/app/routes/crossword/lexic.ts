@@ -1,8 +1,8 @@
 import { Db, MongoError, Collection } from 'mongodb';
 
-import { WordConstraint } from './lexic/word-constraint';
 import { RegexBuilder } from './lexic/regex-builder';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
+import { WordConstraint } from 'common/lexic/word-constraint';
 
 interface WordDocument {
     _id: string;
@@ -99,4 +99,5 @@ export class Lexic {
     public getDefinitions(word: string): Promise<string[]> {
         return this.externalWordApiService.getDefinitions(word);
     }
+
 }

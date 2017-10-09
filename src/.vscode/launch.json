@@ -18,6 +18,18 @@
         "runtimeArgs": [
           "--disable-session-crashed-bubble"
         ]
+      },
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Debug client test",
+        "url": "http://localhost:9876",
+        "webRoot": "${workspaceRoot}",
+        "sourceMaps": true,
+        "userDataDir": "${workspaceRoot}/.vscode/chrome",
+        "runtimeArgs": [
+          "--disable-session-crashed-bubble"
+        ]
       }
     ]
   }
