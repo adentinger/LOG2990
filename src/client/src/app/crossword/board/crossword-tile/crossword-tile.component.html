@@ -1,8 +1,8 @@
 <input type='text'
-    class='crossword-board-item square-{{j}}-{{i}}'
-    [disabled]='!checkIfHighlighted(j,i)'
-    [class.highlighted]='checkIfHighlighted(j,i)'
+    class='crossword-board-item square-{{tileRow}}-{{tileColumn}}'
+    [disabled]='!checkIfHighlighted(tileRow,tileColumn)'
+    [class.highlighted]='checkIfHighlighted(tileRow,tileColumn)'
     [class.black-square]='tileChar==="0"' 
-	[value]="tileChar ? '' : tileValue"
+	[value]="tileChar ? '' : tileChar"
 	maxlength='1'
 />

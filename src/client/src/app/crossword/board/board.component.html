@@ -2,9 +2,9 @@
   <div #crosswordBoard id='crossword-board'>
     <div *ngFor='let row of crosswordGrid; let j = index'>
       <label *ngFor='let square of row; let i = index'>
-		  <app-tile class ="hello" [tileRow]='i' [tileColumn]='j' [(tileChar)]='crosswordGrid[j][i]'></app-tile>
+      <app-tile class ="case" [tileRow]='i' [tileColumn]='j' [(tileChar)]='crosswordGrid[j][i]'></app-tile>
       </label>
     </div>
-    <input type='text' #inputBuffer id='inputText'/>
+    <input type='text' #inputBuffer (keyup)='onChange($event.target.value)' id='inputText'/>
   </div>
 </div>

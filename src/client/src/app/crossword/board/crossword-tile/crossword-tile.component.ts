@@ -10,8 +10,8 @@ import { Direction } from '../../grid-word';
 export class CrosswordTileComponent implements OnInit {
 
 	public tileValue: string;
-	@Input() private tileRow: number;
-	@Input() private tileColumn: number;
+	@Input() public readonly tileRow: number;
+	@Input() public readonly tileColumn: number;
 
     @ViewChild('crosswordBoard') private gridElement: ElementRef;
 	@Input() get tileChar() {
