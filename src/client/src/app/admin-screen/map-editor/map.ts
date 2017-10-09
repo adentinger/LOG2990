@@ -5,6 +5,7 @@ import { SpeedBoost } from './speed-boost';
 import { Point } from './point';
 import { Vector } from './vector';
 import { Line, IntersectionType } from './line';
+import { ShoelaceAlgorithm } from './shoelace-algorithm';
 
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
@@ -24,6 +25,7 @@ export class Map {
     public potholes: Pothole[] = [];
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
+    public bestTimes: number[];
 
     public name: string;
     public description: string;
@@ -31,6 +33,8 @@ export class Map {
     public sumRatings: number;
     public numberOfRatings: number;
     public plays: number;
+
+    private clockwiseCheckerAlgorithm: ShoelaceAlgorithm = new ShoelaceAlgorithm();
 
     constructor(path: Path = new Path(),
                 minimumSegmentLength: number = Infinity,
@@ -40,9 +44,11 @@ export class Map {
                 potholes: Pothole[] = [],
                 puddles: Puddle[] = [],
                 speedBoosts: SpeedBoost[] = [],
+                bestTimes: number[] = [],
                 sumRatings: number = 0,
                 numberOfRatings: number = 0,
                 plays: number = 0) {
+
         this.path = path;
         this.minimumSegmentLength = minimumSegmentLength;
         this.name = name;
@@ -51,6 +57,7 @@ export class Map {
         this.potholes.push.apply(this.potholes, potholes);
         this.puddles.push.apply(this.puddles, puddles);
         this.speedBoosts.push.apply(this.speedBoosts, speedBoosts);
+        this.bestTimes = bestTimes;
         this.sumRatings = sumRatings;
         this.numberOfRatings = numberOfRatings;
         this.plays = plays;
@@ -65,6 +72,11 @@ export class Map {
             rating = 0;
         }
         return rating;
+    }
+
+    public isClockwise(): boolean {
+        const POLYGON = this.path.points.slice(0, this.path.points.length - 1);
+        return this.clockwiseCheckerAlgorithm.algebraicAreaOf(POLYGON) > 0;
     }
 
     public computeLength(): number {

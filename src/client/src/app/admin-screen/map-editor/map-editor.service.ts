@@ -59,6 +59,11 @@ export class MapEditorService {
         return this.converter.lengthFromGameUnits(2 * Track.SEGMENT_WIDTH);
     }
 
+    public get isMapClockwise(): boolean {
+        return this.map.isClockwise() ||
+               this.map.computeErrors() !== MapError.NONE;
+    }
+
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
             if (this.computeMapErrors() === MapError.NONE) {
@@ -68,6 +73,13 @@ export class MapEditorService {
                         const Y = this.converter.lengthToGameUnits(point.y);
                         return new Point(X, Y);
                     });
+
+                if (!this.map.isClockwise()) {
+                    POINTS.reverse();
+                }
+
+                POINTS.pop(); // Do not include the last point ;
+                              // it is the same as the first point.
                 return new SerializedMap(
                     this.map.name,
                     this.map.description,
@@ -101,6 +113,11 @@ export class MapEditorService {
                 const Y = this.converter.lengthFromGameUnits(point.y);
                 return new Point(X, Y);
             });
+
+            // A Map's last point is supposed to be the same as its first
+            // point when it is valid.
+            POINTS.push(new Point(POINTS[0].x, POINTS[0].y));
+
             const NEW_MAP = new Map(
                 new Path(POINTS),
                 this.minimumDistanceBetweenPoints,
@@ -110,6 +127,7 @@ export class MapEditorService {
                 serializedMap.potholes.slice(),
                 serializedMap.puddles.slice(),
                 serializedMap.speedBoosts.slice(),
+                [],
                 serializedMap.sumRatings,
                 serializedMap.numberOfRatings,
                 serializedMap.numberOfPlays

@@ -22,6 +22,7 @@ export class MockMaps {
                        [new Pothole(11), new Pothole(17), new Pothole(22)],
                        [new Puddle(15)],
                        [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)],
+                       [12, 24, 48],
                        4,
                        12);
     }
@@ -35,8 +36,28 @@ export class MockMaps {
                        [],
                        [],
                        [],
+                       [],
                        4,
                        12);
+    }
+
+    public clockwise(): Map {
+        return this.functionalMap2();
+    }
+
+    public counterClockwise(): Map {
+        return new Map(new Path([new Point(0, 0), new Point(0, 10), new Point(10, 0), new Point(0, 0)]),
+            MockMaps.MIN_LINE_LENGTH,
+            'counter-clockwise',
+            'desc. counter-clockwise',
+            'Amateur',
+            [],
+            [],
+            [],
+            [],
+            4,
+            12
+        );
     }
 
     public disfunctionalMap1(): Map {
@@ -45,6 +66,7 @@ export class MockMaps {
                        'name',
                        'description',
                        'sdljhgso',
+                       [],
                        [],
                        [],
                        [],
@@ -58,6 +80,7 @@ export class MockMaps {
                        'name',
                        'description',
                        'sdljhgso',
+                       [],
                        [],
                        [],
                        [],

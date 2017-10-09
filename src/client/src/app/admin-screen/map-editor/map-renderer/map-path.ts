@@ -19,14 +19,23 @@ export class MapPath implements Drawable {
     private points: AbstractMapPoint[] = [];
     private lines: AbstractMapLine[] = [];
 
+    public shouldReverse = false;
+
     constructor(context: CanvasRenderingContext2D, points: Point[]) {
         this.context = context;
         this.updatePoints(points, 0);
     }
 
     public updatePoints(points: Point[], minimumDistanceBetweenPoints: number): void {
-        this.generatePointsFrom(points);
-        this.generateLinesFrom(points, minimumDistanceBetweenPoints);
+        let possiblyReversedPoints: Point[];
+        if (!this.shouldReverse) {
+            possiblyReversedPoints = points;
+        }
+        else {
+            possiblyReversedPoints = points.slice().reverse();
+        }
+        this.generatePointsFrom(possiblyReversedPoints);
+        this.generateLinesFrom(possiblyReversedPoints, minimumDistanceBetweenPoints);
     }
 
     private generatePointsFrom(points: Point[]): void {
@@ -108,6 +117,10 @@ export class MapPath implements Drawable {
         this.currentActivePoint = this.points.lastIndexOf(ACTIVE_POINT);
         if (this.activePoint !== -1) {
             ACTIVE_POINT.isActive = true;
+            if (this.shouldReverse && this.currentActivePoint !== 0) {
+                this.currentActivePoint =
+                    (this.points.length) - this.currentActivePoint;
+            }
         }
     }
 

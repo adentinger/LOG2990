@@ -57,9 +57,19 @@ describe('MapEditorService', () => {
         expect(map.name).toEqual(serializedMap.name);
         expect(map.description).toEqual(serializedMap.description);
 
-        expect(map.path.points.length).toEqual(serializedMap.points.length);
-        for (let i = 0; i < map.path.points.length; ++i) {
-            const MAP_POINT = map.path.points[i];
+        let mapPoints: Point[];
+        if (map.isClockwise()) {
+            mapPoints = map.path.points.slice();
+        }
+        else {
+            mapPoints = map.path.points.slice().reverse();
+        }
+        mapPoints.pop();
+
+        expect(mapPoints.length).toEqual(serializedMap.points.length);
+
+        for (let i = 0; i < mapPoints.length; ++i) {
+            const MAP_POINT = mapPoints[i];
             const SMAP_POINT = serializedMap.points[i];
             const X = converter.lengthToGameUnits(MAP_POINT.x);
             const Y = converter.lengthToGameUnits(MAP_POINT.y);
@@ -85,15 +95,38 @@ describe('MapEditorService', () => {
         expect(map.rating).toEqual(expectedRating);
     };
 
+    describe('isMapClockwise', () => {
+
+        it('should return true when the map is valid and clockwise', () => {
+            service['map'] = mockMaps.clockwise();
+            expect(service.isMapClockwise).toBe(true);
+        });
+
+        it('should return false when the map is valid but is counter-clockwise', () => {
+            service['map'] = mockMaps.counterClockwise();
+            expect(service.isMapClockwise).toBe(false);
+        });
+
+        it('should return true when the map is invalid', () => {
+            service['map'] = mockMaps.disfunctionalMap1();
+            // tslint:disable-next-line:no-unused-expression
+            expect(service.isMapClockwise).toBe(true);
+        });
+
+    });
+
     describe('serializeMap', () => {
 
-        it('should serialize maps if they are valid', () => {
-            const FUNCTIONAL1 = mockMaps.functionalMap1();
-            service['map'] = FUNCTIONAL1;
-            CHECK_SERIALIZATION(FUNCTIONAL1, service.serializeMap());
-            const FUNCTIONAL2 = mockMaps.functionalMap2();
-            service['map'] = FUNCTIONAL2;
-            CHECK_SERIALIZATION(FUNCTIONAL2, service.serializeMap());
+        it('should serialize maps as-is if they are valid and clockwise', () => {
+            const CLOCKWISE = mockMaps.clockwise();
+            service['map'] = CLOCKWISE;
+            CHECK_SERIALIZATION(CLOCKWISE, service.serializeMap());
+        });
+
+        it('should serialize maps reversed if they are valid and counter-clockwise', () => {
+            const COUNTER_CLOCKWISE = mockMaps.counterClockwise();
+            service['map'] = COUNTER_CLOCKWISE;
+            CHECK_SERIALIZATION(COUNTER_CLOCKWISE, service.serializeMap());
         });
 
         it('should not serialize maps if they are not valid', () => {

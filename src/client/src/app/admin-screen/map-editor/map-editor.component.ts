@@ -58,6 +58,7 @@ export class MapEditorComponent implements OnInit {
     public get mapTypes(): string[] {
         return  MAP_TYPES;
     }
+
     public get currentMap(): RacingMap {
         return this.mapEditor.currentMap;
     }

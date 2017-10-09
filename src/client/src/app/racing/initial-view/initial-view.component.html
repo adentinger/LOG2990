@@ -1,8 +1,19 @@
-<div>
-  <table>
-    <tr><th>Map name</th><th>Map type</th><th>Map description</th></tr>
-    <ng-container *ngFor="let map of maps">
-      <tr><td>{{map.name}}</td><td>{{map.type}}</td><td>{{map.description}}</td><tr>
-    </ng-container>
-  </table>
-</div>
+<table>
+  <tr>
+    <th>Map name</th>
+    <th>Map Type</th>
+    <th>Map description</th>
+    <th>Map average rating</th>
+    <th>Map number of times played</th>
+  </tr>
+  <tr class="maps" *ngFor="let map of maps" [class.selected]="map === selectedMap"
+  (click)="mapSelected(map)">
+    <td>{{map.name}}</td>
+    <td>{{map.type}}</td>
+    <td>{{map.description}}</td>
+    <td>{{map.rating}}</td>
+    <td>{{map.plays}}</td>
+  </tr>
+</table>
+<app-map-best-time [map]="selectedMap"></app-map-best-time> 
+

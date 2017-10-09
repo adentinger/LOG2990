@@ -1,0 +1,64 @@
+.selected {
+    background-color: #00B3FF !important;
+    color: #000000;
+}
+
+thead {
+  display: block;
+  position: relative;
+}
+
+tbody {
+  display: block;
+  height: 500px;
+  overflow: auto;
+}
+
+th {
+  color:#00B7FF;
+  background:#FFFFFF;
+  border-bottom:4px solid #00AEFF;
+  border-right: 1px solid #D4DCDF;
+  font-size:20px;
+  padding:24px;
+  text-align:center;
+  font-family: Ubuntu;
+  text-shadow: 2px 2px 5px #00B7FF;
+}
+ 
+tr:hover td {
+  background:#00A2FF;
+  color:#FFFFFF;
+  border-top: 1px solid #EBF0F8;
+}
+ 
+tr:first-child {
+  border-top:none;
+}
+
+tr:last-child {
+  border-bottom:none;
+}
+ 
+tr:nth-child(odd) td {
+  background:#EBEBEB;
+}
+ 
+tr:nth-child(odd):hover td {
+  background:#00A2FF;
+}
+
+td {
+  background:#FFFFFF;
+  padding:20px;
+  text-align:center;
+  vertical-align:middle;
+  font-size:18px;
+  border-right: 1px solid #D4DCDF;
+  font-family: Ubuntu;
+  text-shadow: 2px 2px 5px #000000;
+}
+
+table {
+  margin:5%;
+}
