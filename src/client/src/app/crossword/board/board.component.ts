@@ -26,24 +26,29 @@ export class BoardComponent implements OnInit {
     constructor(private crosswordGridService: CrosswordGridService) { }
 
     public ngOnInit(): void {
-        this.crosswordGrid = this.crosswordGridService.getGrid();
+        this.crosswordGrid = this.crosswordGridService.getViewableGrid();
     }
 
-    
-    /*
-    public focusOnInputFieldOnGrid() {
-        let y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y;
-        let x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
-        let wordLength = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].length;
-        let direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
-        let aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
-        
-        if (aDefinitionIsSelected) {
-            this.gridElement.nativeElement.querySelector('.square-' + y + '-' + x).focus();
-        }
-    }*/
-
     onChange(inputValue) {
-        console.log(inputValue);
+        let word = this.crosswordGridService.grid[this.indexOfDefinition];
+
+        for (let i = 0; i < word.length; i++) {
+            if (word.direction === Direction.across) {
+                if ( i < inputValue.length) {
+                    this.crosswordGrid[word.y][word.x+i] = inputValue[i];
+                }
+                else {
+                    this.crosswordGrid[word.y][word.x+i] = '';
+                }
+            }
+            else if (word.direction === Direction.vertical) {
+                if ( i < inputValue.length) {
+                    this.crosswordGrid[word.y+i][word.x] = inputValue[i];
+                }
+                else {
+                    this.crosswordGrid[word.y+i][word.x] = '';
+                }
+            }
+        }
     }
 }

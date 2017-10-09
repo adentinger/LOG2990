@@ -149,6 +149,6 @@ index 1b50175..01a5c10 100644
      }
 -
 +    public ngOnInit(): void { 
-+        this.crosswordGrid = this.crosswordGridService.getGrid();
++        this.crosswordGrid = this.crosswordGridService.getViewableGrid();
 +    }
  }

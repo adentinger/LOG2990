@@ -10,14 +10,13 @@ export class CrosswordGridService {
     public grid: GridWord[];
     private viewableGrid: string[][];
 
-
     constructor(public crosswordGameService: CrosswordGameService) {
         this.grid = ARRAY_GRIDWORD;
         this.fill();
         this.fillAll();
     }
 
-    public getGrid(): string[][] {
+    public getViewableGrid(): string[][] {
         const CROSSWORD = this.viewableGrid;
         return CROSSWORD;
     }
