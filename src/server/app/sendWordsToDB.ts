@@ -78,9 +78,16 @@ MongoClient.connect(DB_URL, (error: MongoError, dbParameter: Db) => {
                         throw new Error('Value not found');
                     }
                     return value;
-                }).catch((e) => {
+                }).then((value) => {
+                    if (!value.value || !value.frequency) {
+                        return collection.updateOne({ _id: WORD },
+                            { _id: WORD, value: WORD, frequency: value.frequency || null })
+                            .catch(exitIfError);
+                    }
+                    return Promise.resolve(<any>{});
+                }, (e) => {
                     console.log('Inserting "' + WORD + '" ...');
-                    return collection.insertOne({ _id: WORD, value: WORD }).catch(exitIfError);
+                    return collection.insertOne({ _id: WORD, value: WORD, frequency: null }).catch(exitIfError);
                 }));
                 if (!VALUE_IN_DB) {
                     console.log(WORD, 'couldn\'t be placed in the DataBase');
