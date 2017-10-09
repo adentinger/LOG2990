@@ -17,7 +17,7 @@ Crossword - minimal black cases X.
 import { readFileSync } from 'fs';
 //export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
-
+/*
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
 
@@ -27,11 +27,7 @@ export class GridGeneratorMiddleWare {
     public pending(req: express.Request, res: express.Response, next: express.NextFunction): void {
         res.send(new Grid(10));
     }
-}
-
-for (let i = 0; i < lexicon.length; i++) {
-    lexicon[i] = lexicon[i].slice(0, -1);
-}
+}*/
 
 export class Word {
     public value: string;
@@ -73,10 +69,10 @@ export class Grid {
         //console.info(this.gridForPosition);
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
-        //console.dir(this.gridForVertical);
-        //console.dir(this.gridForAcross);
+        console.dir(this.gridForVertical);
+        console.dir(this.gridForAcross);
         this.formatGrid(this);
-        //console.dir(this.grid);
+        console.dir(this.grid);
     }
 
     public putWordVertical(word: Word, column: number) {
@@ -317,9 +313,8 @@ export class Grid {
 
         }while (alreadyChosen === true);
         desiredWordVerified = this.wordFormatting(desiredWordVerified);
-        return new Word(desiredWordVerified);
-
-
+        const word: Word = new Word(desiredWordVerified);
+        return word;
     }
 
     public putWordAcrossAndVerticalOnGridForPrintingOut() {
@@ -432,7 +427,7 @@ export class Grid {
     public getRandomIndex(min: number, max: number) {
         min = Math.ceil(min);
         max = Math.floor(max);
-        return (Math.floor(Math.random() * (max - min)) + min);
+        return (Math.round(Math.random() * (max - min)) + min);
     }
 
     public formatGrid(crossword: Grid) {

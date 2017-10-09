@@ -1,9 +1,6 @@
 import { lexicon } from './englishWords';
 import { Word } from './word';
 import { Grid } from './grid-generator';
-for (let i = 0; i < lexicon.length; i++) {
-    lexicon[i] = lexicon[i].slice(0, -1);
-}
 
 export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, grid:Grid) {
     const desiredWords: string[] = [];
@@ -62,8 +59,7 @@ export function noAccent(word: string) {
 }
 
 export function noApostropheAndDash(word: string) {
-    word = word.replace(/-/g, '');
-    word = word.replace(/'/g, '');
+    word = word.replace(/['-]/g, '');
     return word;
 }
 

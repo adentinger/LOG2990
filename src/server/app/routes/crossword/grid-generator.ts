@@ -35,9 +35,6 @@ export class GridGeneratorMiddleWare {
     }
 }
 */
-for (let i = 0; i < lexicon.length; i++) {
-    lexicon[i] = lexicon[i].slice(0, -1);
-}
 
 export class Grid {
     public temporaryGridForAcross: Word[] = [];
@@ -51,6 +48,7 @@ export class Grid {
         for (let i = 0; i < size; i++) {
             this.grid[i] = new Array<string>(size);
         }
+
         for (let i = 0; i < size; i++) {
             this.gridForPosition[i] = new Array<[number, number]>(size);
         }
@@ -61,16 +59,20 @@ export class Grid {
         // the grid is separated in three cases + a final word push
         const firstGrid = new GridFillerFirstSection(this);
         this.temporaryGridForVertical = firstGrid.temporaryGridForVertical;
+        this.temporaryGridForAcross = firstGrid.temporaryGridForAcross;
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
 
         const secondGrid = new GridFillerSecondSection(this);
         this.temporaryGridForVertical = secondGrid.temporaryGridForVertical;
+        this.temporaryGridForAcross = secondGrid.temporaryGridForAcross;
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
 
-        /*const thirdGrid = new GridFillerThirdSection(this);
+        const thirdGrid = new GridFillerThirdSection(this);
         this.temporaryGridForVertical = thirdGrid.temporaryGridForVertical;
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();*/
+        this.temporaryGridForAcross = thirdGrid.temporaryGridForAcross;
+        this.pushOnTheGridAndReinitialiseTemporaryGrid();
 
+        this.gridForVertical.push(getWordOfDesiredLength(4, 5, this));
         /*
         this.initialisation(2);
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
@@ -128,7 +130,8 @@ export class Grid {
         }else if ((row >= 7) && (row <= 9)) {
             columnToWriteOn = 8;
         }
-
+        console.log('BONJOURR')
+        console.log(word)
         if (row < 7) {
             word.position = [row, columnToWriteOn];
             for (let i = 0; i < word.value.length; i++) {
