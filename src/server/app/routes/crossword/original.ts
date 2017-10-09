@@ -17,13 +17,7 @@ Crossword - minimal black cases X.
 import { readFileSync } from 'fs';
 //export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
-import { Word } from './word';
-import { getRandomIndex, getWordOfDesiredLength, formatGrid } from './lexique';
-import { GridFillerFirstSection } from './grid-filler-first-section';
-import { GridFillerSecondSection } from './grid-filler-second-section';
-import { GridFillerThirdSection } from './grid-filler-third-section';
 
-/*
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
 
@@ -34,9 +28,17 @@ export class GridGeneratorMiddleWare {
         res.send(new Grid(10));
     }
 }
-*/
+
 for (let i = 0; i < lexicon.length; i++) {
     lexicon[i] = lexicon[i].slice(0, -1);
+}
+
+export class Word {
+    public value: string;
+    public position: [number, number];
+    constructor(value: string) {
+        this.value = value;
+    }
 }
 
 export class Grid {
@@ -59,43 +61,22 @@ export class Grid {
 
     public gridGeneration() {
         // the grid is separated in three cases + a final word push
-        const firstGrid = new GridFillerFirstSection(this);
-        this.temporaryGridForVertical = firstGrid.temporaryGridForVertical;
+        this.initialisation(1);
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
-
-        const secondGrid = new GridFillerSecondSection(this);
-        this.temporaryGridForVertical = secondGrid.temporaryGridForVertical;
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
-
-        /*const thirdGrid = new GridFillerThirdSection(this);
-        this.temporaryGridForVertical = thirdGrid.temporaryGridForVertical;
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();*/
-
-        /*
         this.initialisation(2);
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
         this.initialisation(3);
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
-        */
         // finaly we push a word on last column
+        this.gridForVertical.push((this.getWordOfDesiredLength(4, 5)));
 
         //console.info(this.gridForPosition);
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
-        console.dir(this.gridForVertical);
-        console.dir(this.gridForAcross);
-        formatGrid(this);
-        console.dir(this.grid);
-    }
-
-    public putWordAcrossAndVerticalOnGridForPrintingOut() {
-        for (let i = 0; i < this.gridForVertical.length; i++) {
-            this.putWordVertical(this.gridForVertical[i], i);
-        }
-
-        for (let i = 0; i < this.gridForAcross.length; i++) {
-            this.putWordAcross(this.gridForAcross[i], i);
-        }
+        //console.dir(this.gridForVertical);
+        //console.dir(this.gridForAcross);
+        this.formatGrid(this);
+        //console.dir(this.grid);
     }
 
     public putWordVertical(word: Word, column: number) {
@@ -158,13 +139,12 @@ export class Grid {
         this.temporaryGridForAcross = [];
         this.temporaryGridForVertical = [];
     }
+
     public pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
         for (let i = 0; i < wordsSuggestions.length; i++) {
             this.temporaryGridForAcross.push(new Word(wordsSuggestions[i]));
         }
     }
-    
-    
 
     public alreadyChoosen(wordToCheck: string) {
         let alreadyChoosen = false;
@@ -187,7 +167,6 @@ export class Grid {
         return alreadyChoosen;
     }
 
-    /*
     public returnArrayOfWordsThatFitsAcross(onColumnNow: number, caseNumber: number) {
         const firstLettersWordsArray: string[] = [];
         let beginningOfTheWordOnAcross: string[] = [];
@@ -244,7 +223,7 @@ export class Grid {
             }
         }
 
-        returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
+        returnedWord = theWords[this.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
             returnedWord = 'nothing found';
@@ -280,7 +259,7 @@ export class Grid {
             }
         }
 
-        returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
+        returnedWord = theWords[this.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
             returnedWord = 'nothing found';
@@ -313,7 +292,7 @@ export class Grid {
             }
         }
 
-        returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
+        returnedWord = theWords[this.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
             returnedWord = 'nothing found';
@@ -322,7 +301,36 @@ export class Grid {
         return returnedWord;
     }
 
-    
+    public getWordOfDesiredLength(lengthMin: number, lengthMax: number) {
+        const desiredWords: string[] = [];
+        for (let i = 0 ; i < lexicon.length; i++) {
+            if ((lexicon[i].length >= lengthMin) && (lexicon[i].length <= lengthMax)) {
+                desiredWords.push(lexicon[i]);
+            }
+        }
+
+        let desiredWordVerified: string;
+        let alreadyChosen = false;
+        do {
+            desiredWordVerified = desiredWords[this.getRandomIndex(0, desiredWords.length - 1)];
+            alreadyChosen = this.alreadyChoosen(desiredWordVerified);
+
+        }while (alreadyChosen === true);
+        desiredWordVerified = this.wordFormatting(desiredWordVerified);
+        return new Word(desiredWordVerified);
+
+
+    }
+
+    public putWordAcrossAndVerticalOnGridForPrintingOut() {
+        for (let i = 0; i < this.gridForVertical.length; i++) {
+            this.putWordVertical(this.gridForVertical[i], i);
+        }
+
+        for (let i = 0; i < this.gridForAcross.length; i++) {
+            this.putWordAcross(this.gridForAcross[i], i);
+        }
+    }
 
     public initialisation(caseNumber: number) {
         let word;
@@ -407,17 +415,34 @@ export class Grid {
     // theses three functions are used to get a vertical word
     // for case one
     public getWordOfLengthThreeToSix() {
-        return getWordOfDesiredLength(3, 6, this);
+        return this.getWordOfDesiredLength(3, 6);
     }
 
     // for case one and three
     public getWordOfLengthThree() {
-        return  getWordOfDesiredLength(3, 3, this);
+        return  this.getWordOfDesiredLength(3, 3);
     }
 
     // for case two
     public getWordOfLengthFour() {
-        return getWordOfDesiredLength(4, 4, this);
+        return this.getWordOfDesiredLength(4, 4);
+    }
+
+
+    public getRandomIndex(min: number, max: number) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return (Math.floor(Math.random() * (max - min)) + min);
+    }
+
+    public formatGrid(crossword: Grid) {
+        for (let index = 0; index < crossword.grid.length; index++) {
+            for (let j = 0; j < crossword.grid[index].length; j++) {
+                if (!crossword.grid[index][j]) {
+                    crossword.grid[index][j] = ' ';
+                }
+            }
+        }
     }
 
     public reverseString(str: string) {
@@ -425,7 +450,37 @@ export class Grid {
         const reverseArray = splitString.reverse();
         return reverseArray.join('');
     }
-    */
+
+    public noAccent(word: string) {
+        const accent = [
+            /[\300-\306]/g, /[\340-\346]/g, // A, a
+            /[\310-\313]/g, /[\350-\353]/g, // E, e
+            /[\314-\317]/g, /[\354-\357]/g, // I, i
+            /[\322-\330]/g, /[\362-\370]/g, // O, o
+            /[\331-\334]/g, /[\371-\374]/g, // U, u
+            /[\321]/g, /[\361]/g, // N, n
+            /[\307]/g, /[\347]/g, // C, c
+        ];
+        const noAccent = ['A', 'a', 'E', 'e', 'I', 'i', 'O', 'o', 'U', 'u', 'N', 'n', 'C', 'c'];
+
+        for (let i = 0; i < accent.length; i++) {
+            word = word.replace(accent[i], noAccent[i]);
+        }
+
+        return word;
+    }
+
+    public noApostropheAndDash(word: string) {
+        word = word.replace(/-/g, '');
+        word = word.replace(/'/g, '');
+        return word;
+    }
+
+    public wordFormatting(word: string) {
+        word = this.noAccent(word);
+        word = this.noApostropheAndDash(word);
+        return word;
+    }
 }
 
 const puzzle = new Grid(10);
