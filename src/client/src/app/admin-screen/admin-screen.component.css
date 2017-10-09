@@ -1,0 +1,48 @@
+.container {
+    margin: left;
+    height: 100%;
+    width: 100%;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 200px;
+    padding: 0;
+}
+.mapList {
+    flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.tableTitle {
+    color:#00B7FF;
+    background:#FFFFFF;
+    border-bottom:4px solid #00AEFF;
+    border-right: 1px solid #D4DCDF;
+    font-size:20px;
+    padding:24px;
+    text-align:center;
+    font-family: Ubuntu;
+    text-shadow: 2px 2px 5px #00B7FF;
+  }
+
+  .maps:hover {
+    background:#00A2FF;
+    color:#FFFFFF;
+    border-top: 1px solid #EBF0F8;
+  }
+
+  .maps {
+    width: 100%;
+    background:#FFFFFF;
+    text-align:center;
+    font-size:18px;
+    border-right: 1px solid #D4DCDF;
+    font-family: Ubuntu;
+    text-shadow: 2px 2px 5px #000000;
+  }

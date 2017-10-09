@@ -27,23 +27,17 @@ export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
     public isDragging = false;
-    public maps: RacingMap[];
-    public selectedMap: RacingMap;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
-    public displayable;
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService,
-                private mapService: MapService) {
+                private mapRenderer: MapRendererService) {
         this.width = INITIAL_WIDTH;
     }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
-        this.displayable = true;
-        this.getMaps();
     }
 
     @Input() public set width(width: number) {
@@ -149,15 +143,6 @@ export class MapEditorComponent implements OnInit {
     private removePoint(): void {
         this.mapEditor.popPoint();
         this.mapRenderer.draw();
-    }
-
-    public getMaps(): void {
-        this.mapService.getMaps().then((maps) => this.maps = maps);
-    }
-
-    public mapSelected(map: RacingMap): void {
-        this.selectedMap = map;
-        this.displayable = true;
     }
 
 }
