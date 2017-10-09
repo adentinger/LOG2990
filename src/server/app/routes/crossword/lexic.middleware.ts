@@ -5,7 +5,6 @@ import { HttpStatus } from '../../http-response-status';
 import { WordConstraint, isWordConstraint, parseWordConstraint } from 'common/lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
 import { isJson } from 'common/utils';
-import { PrefixLogWith } from 'common/prefixable-console';
 import { CharConstraint } from 'common/lexic/char-constraint';
 import { RegexBuilder } from './lexic/regex-builder';
 import { Lexic } from './lexic';
@@ -43,7 +42,6 @@ export class LexicMiddleWare {
     }
 
     @Route('get', '/words')
-    @PrefixLogWith('[lexic/words]')
     public words(req: express.Request, res: express.Response, next: express.NextFunction): void {
         let initialQuery;
         initialQuery = LexicMiddleWare.parseQuery(req.query);
@@ -65,7 +63,6 @@ export class LexicMiddleWare {
     }
 
     @Route('get', '/definitions/:word')
-    @PrefixLogWith('[lexic/definitions]')
     public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
         console.log(req.params);
         LexicMiddleWare.LEXIC.getDefinitions(req.params.word).then((definitions: string[]) => {
