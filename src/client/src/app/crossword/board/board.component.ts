@@ -29,21 +29,27 @@ export class BoardComponent implements OnInit {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
     }
 
+    private stripSymbols(input) {
+        return input.replace(/[^a-zA-Z]/g, '');
+    }
+
     onChange(inputValue) {
         let word = this.crosswordGridService.grid[this.indexOfDefinition];
 
+        let input = this.stripSymbols(inputValue);
+
         for (let i = 0; i < word.length; i++) {
             if (word.direction === Direction.across) {
-                if ( i < inputValue.length) {
-                    this.crosswordGrid[word.y][word.x+i] = inputValue[i];
+                if ( i < input.length) {
+                    this.crosswordGrid[word.y][word.x+i] = input[i];
                 }
                 else {
                     this.crosswordGrid[word.y][word.x+i] = '';
                 }
             }
             else if (word.direction === Direction.vertical) {
-                if ( i < inputValue.length) {
-                    this.crosswordGrid[word.y+i][word.x] = inputValue[i];
+                if ( i < input.length) {
+                    this.crosswordGrid[word.y+i][word.x] = input[i];
                 }
                 else {
                     this.crosswordGrid[word.y+i][word.x] = '';
