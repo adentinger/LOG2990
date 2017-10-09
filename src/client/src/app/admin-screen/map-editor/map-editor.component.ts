@@ -6,6 +6,7 @@ import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from './point';
 import { PointIndex } from './point-index';
+import { MapService } from '../../racing/services/map.service';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
@@ -26,17 +27,23 @@ export class MapEditorComponent implements OnInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
     public isDragging = false;
+    public maps: RacingMap[];
+    public selectedMap: RacingMap;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
+    public displayable;
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService) {
+                private mapRenderer: MapRendererService,
+                private mapService: MapService) {
         this.width = INITIAL_WIDTH;
     }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
+        this.displayable = true;
+        this.getMaps();
     }
 
     @Input() public set width(width: number) {
@@ -56,7 +63,7 @@ export class MapEditorComponent implements OnInit {
     }
 
     public get mapTypes(): string[] {
-        return  MAP_TYPES;
+        return MAP_TYPES;
     }
 
     public get currentMap(): RacingMap {
@@ -142,6 +149,15 @@ export class MapEditorComponent implements OnInit {
     private removePoint(): void {
         this.mapEditor.popPoint();
         this.mapRenderer.draw();
+    }
+
+    public getMaps(): void {
+        this.mapService.getMaps().then((maps) => this.maps = maps);
+    }
+
+    public mapSelected(map: RacingMap): void {
+        this.selectedMap = map;
+        this.displayable = true;
     }
 
 }

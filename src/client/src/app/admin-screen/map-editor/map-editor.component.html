@@ -1,5 +1,11 @@
 <div class="mapEditionScreen-outer">
   <div class="mapEditionScreen">
+    <div class="mapList">
+      <div class="tableTitle">Map name</div>
+      <div class="maps" *ngFor="let map of maps" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
+        <span class="mapNames">{{map.name}}</span>
+      </div>
+    </div>>
     <div class="mapParameters">
       <table>
         <tbody>
