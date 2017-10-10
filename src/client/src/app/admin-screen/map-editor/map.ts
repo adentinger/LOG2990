@@ -2,10 +2,10 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
-import { Point } from './point';
-import { Vector } from './vector';
-import { Line, IntersectionType } from './line';
-import { ShoelaceAlgorithm } from './shoelace-algorithm';
+import { Point } from '../../common/math/point';
+import { Vector } from '../../common/math/vector';
+import { Line, IntersectionType } from '../../common/math/line';
+import { ShoelaceAlgorithm } from '../../common/math/shoelace-algorithm';
 
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];

@@ -6,7 +6,7 @@ import { SerializedMap } from './serialized-map';
 import { MockMaps } from './mock-maps';
 import { MockSerializedMaps } from './mock-serialized-maps';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
-import { Point } from './point';
+import { Point } from '../../common/math/point';
 
 describe('MapEditorService', () => {
     beforeEach(() => {

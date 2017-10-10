@@ -1,4 +1,4 @@
-import { Point } from './point';
+import { Point } from '../../common/math/point';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';

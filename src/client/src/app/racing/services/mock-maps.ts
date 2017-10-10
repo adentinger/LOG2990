@@ -1,6 +1,6 @@
 import { Map } from '../../admin-screen/map-editor/map';
 import { Path } from '../../admin-screen/map-editor/path';
-import { Point } from '../../admin-screen/map-editor/point';
+import { Point } from '../../common/math/point';
 
 const MIN_LINE_LENGTH = 10.0;
 

@@ -1,4 +1,4 @@
-import { Point } from './point';
+import { Point } from '../../common/math/point';
 
 export class Path {
     public points: Point[] = [];

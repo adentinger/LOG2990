@@ -17,6 +17,6 @@
     "**/*.d.ts"
   ],
   "exclude": [
-    "**/common/*"
+    "**/common/*.spec.ts"
   ]
 }
