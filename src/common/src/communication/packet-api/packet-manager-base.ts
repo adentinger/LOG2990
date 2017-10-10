@@ -18,7 +18,7 @@ export declare interface Socket {
 export abstract class PacketManagerBase<Sock extends Socket> {
     private static readonly PACKET_MESSAGE_MATCHER = /^packet:([a-zA-Z_][a-zA-Z0-9_$]*)$/i;
     protected parsers: Map<Constructor<any>, PacketParser<any>> = new Map();
-    private handlers: Map<Constructor<any>, PacketHandler<any>[]> = new Map();
+    private handlers: Map<Constructor<any>, Set<PacketHandler<any>>> = new Map();
 
     private static isPacketMessage(message: string): boolean {
         return PacketManagerBase.PACKET_MESSAGE_MATCHER.test(message);
@@ -87,7 +87,7 @@ export abstract class PacketManagerBase<Sock extends Socket> {
     }
 
     private callHandlers<T>(dataType: Constructor<T>, event: PacketEvent<T>) {
-        const HANDLERS = (this.handlers.get(dataType) || []) as PacketHandler<T>[];
+        const HANDLERS = (this.handlers.get(dataType)) as Set<PacketHandler<T>>;
         for (const HANDLER of HANDLERS) {
             HANDLER(event);
         }
@@ -97,13 +97,23 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * Register a handler that will be called when receiving a packet of the given type.
      * @param type The data type of the object the handler can handle.
      * @param handler A function that will be called when receiveing a message of the given type.
+     * @returns The given handler. Usually useful to keep a reference to the handler and unregister later.
      */
-    public registerHandler<T>(type: Constructor<T>, handler: PacketHandler<T>): void {
-        console.log(`[Packet] New handler for ${type.name} [${handler.name}]`);
-        const handlerList = this.handlers.get(type) || [];
-        handlerList.push(handler);
-        console.log(handlerList);
-        this.handlers.set(type, handlerList);
+    public registerHandler<T>(type: Constructor<T>, handler: PacketHandler<T>): PacketHandler<T> {
+        console.log(`[Packet] New handler for ${type.name}`);
+        if (!this.handlers.has(type)) {
+            this.handlers.set(type, new Set<PacketHandler<any>>());
+        }
+        const handlerList = this.handlers.get(type);
+        handlerList.add(handler);
+        return handler;
+    }
+
+    public unregisterHandler<T>(type: Constructor<T>, handler: PacketHandler<T>): boolean {
+        if (this.handlers.has(type)) {
+            return this.handlers.get(type).delete(handler);
+        }
+        return false;
     }
 
     /**
