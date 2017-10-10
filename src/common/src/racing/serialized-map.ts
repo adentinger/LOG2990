@@ -1,7 +1,7 @@
 import { Point } from '../math/point';
-import { Pothole } from './pothole';
-import { Puddle } from './puddle';
-import { SpeedBoost } from './speed-boost';
+import { SerializedPothole } from './serialized-pothole';
+import { SerializedPuddle } from './serialized-puddle';
+import { SerializedSpeedBoost } from './serialized-speed-boost';
 
 // This class is meant to be used as a container object that can be
 // sent to / retrieved from a database via a web service. Do NOT add any
@@ -17,9 +17,9 @@ export class SerializedMap {
     public numberOfPlays: number;
 
     public points: Point[];
-    public potholes: Pothole[];
-    public puddles: Puddle[];
-    public speedBoosts: SpeedBoost[];
+    public potholes: SerializedPothole[];
+    public puddles: SerializedPuddle[];
+    public speedBoosts: SerializedSpeedBoost[];
 
     public constructor(name: string = '',
                        description: string = '',
@@ -28,9 +28,9 @@ export class SerializedMap {
                        numberOfRatings: number = 0,
                        numberOfPlays: number = 0,
                        points: Point[] = [],
-                       potholes: Pothole[] = [],
-                       puddles: Puddle[] = [],
-                       speedBoosts: SpeedBoost[] = []) {
+                       potholes: SerializedPothole[] = [],
+                       puddles: SerializedPuddle[] = [],
+                       speedBoosts: SerializedSpeedBoost[] = []) {
         this.name = name;
         this.description = description;
         this.type = type;
