@@ -26,7 +26,7 @@ export class MapsMiddleWare {
             });
     }
 
-    @Route('post', '')
+    @Route('post', '/')
     public postMaps(req: express.Request,
                     res: express.Response): void {
         const SERIALIZED_MAP: SerializedMap = req.body;
@@ -41,7 +41,7 @@ export class MapsMiddleWare {
             });
     }
 
-    @Route('put', '')
+    @Route('put', '/')
     public putMaps(req: express.Request,
                    res: express.Response): void {
         MapsMiddleWare.MAP_DB_SERVICE.saveEdited(req.body)
