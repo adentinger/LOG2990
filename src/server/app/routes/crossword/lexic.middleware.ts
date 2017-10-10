@@ -2,10 +2,10 @@ import * as express from 'express';
 
 import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
-import { WordConstraint, isWordConstraint, parseWordConstraint } from 'common/lexic/word-constraint';
+import { WordConstraint, isWordConstraint, parseWordConstraint } from '../../common/lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
-import { isJson } from 'common/utils';
-import { CharConstraint } from 'common/lexic/char-constraint';
+import { isJson } from '../../common/utils';
+import { CharConstraint } from '../../common/lexic/char-constraint';
 import { RegexBuilder } from './lexic/regex-builder';
 import { Lexic } from './lexic';
 import { ExternalWordApiService } from './lexic/external-word-api.service';

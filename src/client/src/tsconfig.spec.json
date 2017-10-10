@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "types": [
       "jasmine",
       "node"
@@ -15,5 +15,8 @@
   "include": [
     "**/*.spec.ts",
     "**/*.d.ts"
+  ],
+  "exclude": [
+    "**/common/*"
   ]
 }

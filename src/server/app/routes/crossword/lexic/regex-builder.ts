@@ -1,5 +1,5 @@
-import { WordConstraint, isWordConstraint } from 'common/lexic/word-constraint';
-import { CharConstraint } from 'common/lexic/char-constraint';
+import { WordConstraint, isWordConstraint } from '../../../common/lexic/word-constraint';
+import { CharConstraint } from '../../../common/lexic/char-constraint';
 
 export class RegexBuilder {
 

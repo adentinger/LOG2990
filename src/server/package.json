@@ -24,7 +24,6 @@
   "dependencies": {
     "@types/socket.io": "1.4.30",
     "body-parser": "~1.16.0",
-    "common": "file:../common",
     "cookie-parser": "~1.4.0",
     "cors": "~2.8.1",
     "debug": "~2.2.0",

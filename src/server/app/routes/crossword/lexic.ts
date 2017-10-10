@@ -2,7 +2,7 @@ import { Db, MongoError, Collection } from 'mongodb';
 
 import { RegexBuilder } from './lexic/regex-builder';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
-import { WordConstraint } from 'common/lexic/word-constraint';
+import { WordConstraint } from '../../common/lexic/word-constraint';
 
 interface WordDocument {
     _id: string;

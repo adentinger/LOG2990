@@ -1,4 +1,3 @@
-import * as SocketIO from 'socket.io';
 import { Constructor, fromArrayBuffer } from '../../utils';
 import { PacketManagerBase } from './packet-manager-base';
 

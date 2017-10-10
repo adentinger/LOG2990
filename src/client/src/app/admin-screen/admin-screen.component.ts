@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WordConstraint } from 'common/lexic/word-constraint';
-import { PacketEvent } from 'common/communication/packet-api';
+import { WordConstraint } from '../common/lexic/word-constraint';
+import { PacketEvent } from '../common/communication/packet-api';
 import { PacketManagerService } from '../packet-manager.service';
 
 @Component({
