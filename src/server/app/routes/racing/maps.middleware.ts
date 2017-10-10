@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import { MiddleWare, Route } from '../middle-ware';
-import { HttpStatus } from '../../http-response-status';
+import { HttpStatus, getStatusOrDefault } from '../../http-response-status';
 import { provideDatabase } from '../../app-db';
 import { MapDbService } from './maps-db-service';
 import { SerializedMap } from '../../common/racing/serialized-map';
@@ -21,8 +21,8 @@ export class MapsMiddleWare {
                 res.json(serializedMap);
                 res.send();
             })
-            .catch((reason: HttpStatus) => {
-                res.sendStatus(reason);
+            .catch((reason: any) => {
+                res.sendStatus(getStatusOrDefault(reason));
             });
     }
 
@@ -36,8 +36,8 @@ export class MapsMiddleWare {
                 res.json(id);
                 res.send();
             })
-            .catch((reason: HttpStatus) => {
-                res.sendStatus(reason);
+            .catch((reason: any) => {
+                res.sendStatus(getStatusOrDefault(reason));
             });
     }
 
@@ -48,8 +48,8 @@ export class MapsMiddleWare {
             .then(() => {
                 res.sendStatus(HttpStatus.OK);
             })
-            .catch((reason: HttpStatus) => {
-                res.sendStatus(reason);
+            .catch((reason: any) => {
+                res.sendStatus(getStatusOrDefault(reason));
             });
     }
 
@@ -60,8 +60,8 @@ export class MapsMiddleWare {
             .then(() => {
                 res.sendStatus(HttpStatus.OK);
             })
-            .catch((reason: HttpStatus) => {
-                res.sendStatus(reason);
+            .catch((reason: any) => {
+                res.sendStatus(getStatusOrDefault(reason));
             });
     }
 
