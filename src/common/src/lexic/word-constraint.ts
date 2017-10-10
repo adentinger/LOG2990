@@ -2,9 +2,9 @@ import { CharConstraint, isCharConstraint } from './char-constraint';
 import { isJson } from '../utils';
 
 export class WordConstraint {
-    public readonly charConstraints: CharConstraint[];
-    public readonly isCommon: boolean;
-    public readonly minLength: number;
+    public charConstraints: CharConstraint[];
+    public isCommon?: boolean;
+    public minLength: number;
     public maxLength?: number;
 }
 
@@ -14,11 +14,10 @@ function isCharConstraintArray(object: any): object is CharConstraint[] {
 }
 
 export function isWordConstraint(object: any): boolean {
-    return ('minLength' in object && Number.isInteger(object['minLength'])) &&
-        ('isCommon' in object) && (
-            'charConstraints' in object &&
-            isCharConstraintArray(object['charConstraints'])
-        );
+    return ('minLength' in object && Number.isInteger(object['minLength'])) && (
+        'charConstraints' in object &&
+        isCharConstraintArray(object['charConstraints'])
+    );
 }
 
 export function parseWordConstraint(pseudoWordConstraint: any): WordConstraint {
@@ -39,8 +38,8 @@ export function parseWordConstraint(pseudoWordConstraint: any): WordConstraint {
     }
     return <WordConstraint>{
         minLength: Number(parsedJson.minLength),
-        maxLength: 'maxLength' in parsedJson ? Number(parsedJson.maxLength) : undefined,
-        isCommon: Boolean(parsedJson.isCommon),
+        maxLength: 'maxLength' in parsedJson ? Number(parsedJson.maxLength) : null,
+        isCommon: 'isCommon' in parsedJson && parsedJson.isCommon !== undefined ? Boolean(parsedJson.isCommon) : null,
         charConstraints: parsedJson.charConstraints
     };
 }
