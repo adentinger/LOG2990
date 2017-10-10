@@ -1,8 +1,8 @@
 import { Map } from './map';
 import { Path } from './path';
-import { Pothole } from './pothole';
-import { Puddle } from './puddle';
-import { SpeedBoost } from './speed-boost';
+import { Pothole } from '../../common/racing/pothole';
+import { Puddle } from '../../common/racing/puddle';
+import { SpeedBoost } from '../../common/racing/speed-boost';
 import { Point } from '../../common/math/point';
 
 export class MockMaps {

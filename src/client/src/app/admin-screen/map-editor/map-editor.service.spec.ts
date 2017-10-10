@@ -2,9 +2,9 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MapEditorService } from './map-editor.service';
 import { Map } from './map';
-import { SerializedMap } from './serialized-map';
+import { SerializedMap } from '../../common/racing/serialized-map';
 import { MockMaps } from './mock-maps';
-import { MockSerializedMaps } from './mock-serialized-maps';
+import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from '../../common/math/point';
 

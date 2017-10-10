@@ -1,5 +1,5 @@
 import { SerializedMap } from './serialized-map';
-import { Point } from '../../common/math/point';
+import { Point } from '../math/point';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';

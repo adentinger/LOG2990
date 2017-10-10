@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map, MapError } from './map';
-import { SerializedMap } from './serialized-map';
+import { SerializedMap } from '../../common/racing/serialized-map';
 import { Point } from '../../common/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
