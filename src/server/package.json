@@ -19,7 +19,8 @@
     "tsc:w": "tsc -w",
     "clean": "rimraf out node_modules",
     "postinstall": "rimraf false",
-    "word2db": "tsc --outDir out --lib es2015 app/sendWordsToDB.ts && node out/sendWordsToDB.js"
+    "word2db": "tsc --outDir out --lib es2015 app/sendWordsToDB.ts && node out/sendWordsToDB.js",
+    "fetchFreq": "tsc && node out/fetchFrequencies.js"
   },
   "dependencies": {
     "@types/socket.io": "1.4.30",
