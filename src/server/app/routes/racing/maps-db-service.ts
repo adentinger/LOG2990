@@ -35,7 +35,7 @@ export class MapDbService {
 
     public getMapNames(count: number): Promise<string[]> {
         console.log(new Error('Not implemented'));
-        return Promise.reject(new Error('Not implemented'));
+        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public getByName(name: string): Promise<SerializedMap> {
