@@ -1,5 +1,6 @@
 import { Constructor, Class } from '../../utils';
-import { PacketParser, PacketEvent } from './';
+import { PacketParser } from './packet-parser';
+import { PacketEvent } from './packet-event';
 import { PacketManagerBase } from './packet-manager-base';
 
 const parsers: [Class<any>, Constructor<PacketParser<any>>][] = [];

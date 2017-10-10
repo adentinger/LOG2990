@@ -12,7 +12,7 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as PacketAPI from './common/communication/packet-api';
-import { PacketManagerServer } from './common/communication/packet-api/packet-manager';
+import { PacketManagerServer } from './packet-manager';
 import * as ServerIO from 'socket.io';
 
 import { WordConstraint } from './common/lexic/word-constraint';

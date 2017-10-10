@@ -1,5 +1,5 @@
-import { Constructor, fromArrayBuffer } from '../../utils';
-import { PacketManagerBase } from './packet-manager-base';
+import { Constructor, fromArrayBuffer } from './common/utils';
+import { PacketManagerBase } from './common/communication/packet-api/packet-manager-base';
 
 export class PacketManagerServer extends PacketManagerBase<SocketIO.Socket> {
     private readonly knownSockets: Map<string, SocketIO.Socket> = new Map();
