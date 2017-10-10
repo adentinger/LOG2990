@@ -48,6 +48,7 @@
     "@types/node": "~6.0.60",
     "@types/three": "~0.84.20",
     "@types/stats.js": "^0.16.1",
+    "@types/chai": "4.0.4",
     "codelyzer": "~3.1.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
