@@ -3,7 +3,7 @@ import { isJson } from './utils';
 
 // Used to put a blank space between passing and failing tests in the output
 function itSplitTests() {
-    xit('', (done) => done());
+    it('', (done) => done());
 }
 
 // Template for isJson tests
