@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminScreenComponent } from './admin-screen.component';
 import { PacketManagerService, packetManagerClient } from '../packet-manager.service';
-import { PacketManagerClient } from '../common/communication/packet-api/packet-manager-client';
+import { PacketManagerClient } from '../packet-manager-client';
 
 describe('AdminScreenComponent', () => {
   let component: AdminScreenComponent;
