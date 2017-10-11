@@ -13,8 +13,7 @@ export class MapNamesMiddleWare {
 
     @Route('get', '/:count')
     public getMapNames(req: express.Request,
-                       res: express.Response,
-                       next: express.NextFunction): void {
+                       res: express.Response): void {
         const COUNT: number = req.params.count;
         MapNamesMiddleWare.MAP_DB_SERVICE.getMapNames(COUNT)
             .then((names: string[]) => {
