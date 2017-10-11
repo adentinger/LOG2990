@@ -7,6 +7,12 @@ import { Point } from '../../common/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
+import { SerializedPothole } from '../../common/racing/serialized-pothole';
+import { Pothole } from './pothole';
+import { SerializedSpeedBoost } from '../../common/racing/serialized-speed-boost';
+import { SerializedPuddle } from '../../common/racing/serialized-puddle';
+import { Puddle } from './puddle';
+import { SpeedBoost } from './speed-boost';
 
 @Injectable()
 export class MapEditorService {
@@ -80,17 +86,33 @@ export class MapEditorService {
 
                 POINTS.pop(); // Do not include the last point ;
                               // it is the same as the first point.
+                const SERIALIZED_POTHOLES: SerializedPothole[] =
+                    this.map.potholes.map(
+                        (pothole: Pothole) =>
+                            new SerializedPothole(
+                                this.converter.lengthToGameUnits(pothole.position)));
+                const SERIALIZED_PUDDLES: SerializedPuddle[] =
+                    this.map.potholes.map(
+                        (puddle: Puddle) =>
+                            new SerializedPuddle(
+                                this.converter.lengthToGameUnits(puddle.position)));
+                const SERIALIZED_SPEED_BOOSTS: SerializedSpeedBoost[] =
+                    this.map.potholes.map(
+                        (speedBoost: SpeedBoost) =>
+                            new SerializedSpeedBoost(
+                                this.converter.lengthToGameUnits(speedBoost.position)));
+
                 return new SerializedMap(
                     this.map.name,
                     this.map.description,
                     this.map.type,
-                    this.map.sumRatings,      // Reset rating?
-                    this.map.numberOfRatings, // Reset rating?
-                    0,                        // Reset number of plays?
+                    0,
+                    0,
+                    0,
                     POINTS,
-                    this.map.potholes.slice(),
-                    this.map.puddles.slice(),
-                    this.map.speedBoosts.slice()
+                    SERIALIZED_POTHOLES,
+                    SERIALIZED_PUDDLES,
+                    SERIALIZED_SPEED_BOOSTS
                 );
             }
             else {
@@ -118,19 +140,36 @@ export class MapEditorService {
             // point when it is valid.
             POINTS.push(new Point(POINTS[0].x, POINTS[0].y));
 
+
+            const DESERIALIZED_POTHOLES: Pothole[] =
+                serializedMap.potholes.map(
+                (pothole: SerializedPothole) =>
+                    new Pothole(
+                        this.converter.lengthFromGameUnits(pothole.position)));
+            const DESERIALIZED_PUDDLES: Puddle[] =
+                serializedMap.puddles.map(
+                    (puddle: SerializedPuddle) =>
+                        new Puddle(
+                            this.converter.lengthFromGameUnits(puddle.position)));
+            const DESERIALIZED_SPEED_BOOSTS: SpeedBoost[] =
+                serializedMap.speedBoosts.map(
+                    (speedBoost: SerializedSpeedBoost) =>
+                        new SpeedBoost(
+                            this.converter.lengthFromGameUnits(speedBoost.position)));
+
             const NEW_MAP = new Map(
                 new Path(POINTS),
                 this.minimumDistanceBetweenPoints,
                 serializedMap.name,
                 serializedMap.description,
                 serializedMap.type,
-                serializedMap.potholes.slice(),
-                serializedMap.puddles.slice(),
-                serializedMap.speedBoosts.slice(),
+                DESERIALIZED_POTHOLES,
+                DESERIALIZED_PUDDLES,
+                DESERIALIZED_SPEED_BOOSTS,
                 [],
-                serializedMap.sumRatings,
-                serializedMap.numberOfRatings,
-                serializedMap.numberOfPlays
+                0,
+                0,
+                0
             );
 
             if (NEW_MAP.computeErrors() === MapError.NONE) {
