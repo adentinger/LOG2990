@@ -8,7 +8,7 @@ export const MAP0 = new Map(new Path([
     new Point( 0,  0),
     new Point(10,  0),
     new Point(10, 10),
-    new Point( 0,  0)]), MIN_LINE_LENGTH, 'map0', 'description0', 'Amateur', [], [], [], [ 1, 2, 3], 0, 0, 0);
+    new Point( 0,  0)]), MIN_LINE_LENGTH, 'map0', 'description0', 'Professional', [], [], [], [ 1, 2, 3], 0, 0, 0);
 
 export const MAP1 = new Map(new Path([
     new Point(  0,   0),
@@ -52,4 +52,5 @@ export const MAP7 = new Map(new Path([
         new Point(300, 300),
         new Point(  0,   0)]), MIN_LINE_LENGTH, 'map3', 'description3', 'Amateur', [], [], [], [10, 11, 12], 30, 300, 300);
 
-export const MAPS: Map[] = [MAP0, MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7];
+export const MAPS: Map[] = [MAP0, MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP0, MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7,
+                            MAP0, MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP0, MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7];

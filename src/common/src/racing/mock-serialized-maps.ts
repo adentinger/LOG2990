@@ -21,7 +21,8 @@ export class MockSerializedMaps {
             [new Point(0, 0), new Point(100, 50), new Point(0, 100)],
             [new Pothole(10), new Pothole(20), new Pothole(50)],
             [new Puddle(15), new Puddle(25), new Puddle(55)],
-            [new SpeedBoost(5), new SpeedBoost(15), new SpeedBoost(45)]
+            [new SpeedBoost(5), new SpeedBoost(15), new SpeedBoost(45)],
+            [1 , 2 , 3]
         );
     }
 
@@ -30,13 +31,14 @@ export class MockSerializedMaps {
             'functional2',
             '',
             'Amateur',
-            0,
-            0,
-            0,
-            [new Point(0, 0), new Point(100, 50), new Point(0, 100)],
+            11,
+            3,
+            12,
+            [new Point(0, 0), new Point(100, 90), new Point(0, 100)],
             [],
             [],
-            []
+            [],
+            [10 , 20 , 30]
         );
     }
 
@@ -70,6 +72,10 @@ export class MockSerializedMaps {
             [new Puddle(15), new Puddle(25), new Puddle(55)],
             [new SpeedBoost(5), new SpeedBoost(15), new SpeedBoost(45)]
         );
+    }
+
+    public functionnalMaps(): SerializedMap[] {
+        return [this.functional1(), this.functional2()];
     }
 
 }

@@ -11,8 +11,8 @@ import { Track } from '../../racing/track';
 @Injectable()
 export class MapEditorService {
 
-    public width = 0;
-    public height = 0;
+    private width = 0;
+    private height = 0;
 
     private map: Map;
 

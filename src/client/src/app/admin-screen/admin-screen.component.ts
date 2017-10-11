@@ -1,4 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { MapService } from '../racing/services/map.service';
+import { SerializedMap } from '../common/racing/serialized-map';
+import { MapEditorComponent } from './map-editor/map-editor.component';
 import { WordConstraint } from '../common/lexic/word-constraint';
 import { PacketEvent } from '../common/communication/packet-api';
 import { PacketManagerService } from '../packet-manager.service';
@@ -16,9 +20,16 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
     public data: any;
     private readonly packetHandlers: [Class<any>, PacketHandler<any>][] = [];
 
-    constructor(private packetService: PacketManagerClient) {}
+    public mapNames: string[];
+    public selectedMap: string;
+    private child: MapEditorComponent;
+    public serializedMap: SerializedMap;
+
+    constructor(private packetService: PacketManagerClient,
+                private mapService: MapService) {}
 
     public ngOnInit(): void {
+        this.getMapsNames();
         console.log('[AdminScreen] Registering handlers');
         this.packetHandlers.push([WordConstraint,
             this.packetService.registerHandler(WordConstraint, this.wordConstraintHandler.bind(this))]);
@@ -31,6 +42,15 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
         }
     }
 
+    public getMapsNames(): void {
+        this.mapService.getMapNames(100).then((mapNames) => this.mapNames = mapNames);
+    }
+
+    public mapSelected(map: string): void {
+        this.selectedMap = map;
+        this.mapService.getByName(this.selectedMap).then((serializedMap) => this.serializedMap = serializedMap);
+    }
+
     private wordConstraintHandler(event: PacketEvent<WordConstraint>): void {
         console.log('[AdminScreen] Packet Received', JSON.stringify(event));
         this.data = event.value;
@@ -41,6 +61,10 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
         const wc: WordConstraint = { minLength: ++this.count, isCommon: true, charConstraints: [{ char: 'a', position: 0 }] };
         console.log('[AdminScreen] Sending to server ...');
         this.packetService.sendPacket(WordConstraint, wc);
+    }
+
+    public deleteMap(map: string): void {
+        this.mapService.delete(map);
     }
 
 }
