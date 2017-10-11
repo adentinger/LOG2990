@@ -31,9 +31,8 @@ export class MapsMiddleWare {
                     res: express.Response): void {
         const SERIALIZED_MAP: SerializedMap = req.body;
         MapsMiddleWare.MAP_DB_SERVICE.saveNew(SERIALIZED_MAP)
-            .then((id: number) => {
+            .then(() => {
                 res.status(HttpStatus.CREATED);
-                res.json(id);
                 res.send();
             })
             .catch((reason: any) => {

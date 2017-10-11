@@ -7,8 +7,7 @@ export class MapDbService {
 
     public static readonly COLLECTION = 'racing-maps';
 
-    // TODO Change 'any' to an interface.
-    public mapCollection: Collection<any>;
+    public mapCollection: Collection;
 
     constructor(private dbPromise: Promise<Db>) {
         dbPromise.then((db: Db) => {
@@ -18,14 +17,27 @@ export class MapDbService {
         });
     }
 
-    public saveNew(serializedMap: SerializedMap): Promise<number> {
-        console.log(new Error('Not implemented'));
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
+    public saveNew(serializedMap: SerializedMap): Promise<void> {
+
+        return new Promise((resolve, reject) => {
+            const DOCUMENT_MAP: any = serializedMap;
+            DOCUMENT_MAP._id = serializedMap.name;
+
+            this.mapCollection.insertOne(DOCUMENT_MAP)
+            .then(() => {
+                resolve();
+            })
+            .catch(() => {
+                reject(HttpStatus.CONFLICT);
+            });
+        });
+
     }
 
     public saveEdited(serializedMap: SerializedMap): Promise<void> {
-        console.log(new Error('Not implemented'));
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
+        return new Promise((resolve, reject) => {
+
+        });
     }
 
     public delete(name: string): Promise<void> {
