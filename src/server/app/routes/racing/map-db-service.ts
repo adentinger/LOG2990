@@ -86,7 +86,9 @@ export class MapDbService {
     }
 
     private makeSerializedMapFrom(mapDocument: any): SerializedMap {
-        return mapDocument;
+        // tslint:disable-next-line:no-unused-variable
+        const {_id: ID, ...SERIALIZED_MAP} = mapDocument;
+        return SERIALIZED_MAP;
     }
 
 }
