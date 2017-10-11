@@ -18,7 +18,6 @@ export class MapDbService {
     }
 
     public saveNew(serializedMap: SerializedMap): Promise<void> {
-
         return new Promise((resolve, reject) => {
             const MAP_DOCUMENT: any = this.makeMapDocumentFrom(serializedMap);
 
@@ -30,7 +29,6 @@ export class MapDbService {
                 reject(HttpStatus.CONFLICT);
             });
         });
-
     }
 
     public saveEdited(serializedMap: SerializedMap): Promise<void> {
@@ -58,8 +56,16 @@ export class MapDbService {
     }
 
     public getMapNames(count: number): Promise<string[]> {
-        console.log(new Error('Not implemented'));
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
+        return new Promise((resolve, reject) => {
+            this.mapCollection.find({}, {_id: false, name: true}).toArray()
+            .then((names: any) => {
+                console.log(names);
+                resolve(names);
+            })
+            .catch(() => {
+                reject(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
+        });
     }
 
     public getByName(name: string): Promise<SerializedMap> {
