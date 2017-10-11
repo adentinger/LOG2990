@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpModule } from '@angular/http';
 
 import { InitialViewComponent } from './initial-view.component';
+import { MapThumbnailComponent } from './map-thumbnail/map-thumbnail.component';
 import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 import { MapService } from '../services/map.service';
 
@@ -10,8 +12,12 @@ describe('InitialViewComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
+            imports: [
+                HttpModule
+            ],
             declarations: [
                 InitialViewComponent,
+                MapThumbnailComponent,
                 MapBestTimeComponent
             ],
             providers: [ MapService ]
