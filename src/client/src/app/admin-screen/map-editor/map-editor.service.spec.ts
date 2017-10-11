@@ -7,6 +7,8 @@ import { MockMaps } from './mock-maps';
 import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from '../../common/math/point';
+import { Item } from './item';
+import { SerializedItem } from '../../common/racing/serialized-item';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
@@ -53,14 +55,7 @@ describe('MapEditorService', () => {
         expect(INITIAL_MAP).not.toBe(NEW_MAP);
     });
 
-    const CHECK_SERIALIZATION = (map: Map, serializedMap: SerializedMap) => {
-        expect(map.name).toEqual(serializedMap.name);
-        expect(map.description).toEqual(serializedMap.description);
-        expect(map.type).toEqual(serializedMap.type);
-        expect(serializedMap.sumRatings).toEqual(0);
-        expect(serializedMap.numberOfRatings).toEqual(0);
-        expect(serializedMap.numberOfPlays).toEqual(0);
-
+    const CHECK_POINTS_SERIALIZATION = (map: Map, serializedMap: SerializedMap) => {
         let mapPoints: Point[];
         if (map.isClockwise()) {
             mapPoints = map.path.points.slice();
@@ -70,7 +65,8 @@ describe('MapEditorService', () => {
         }
         mapPoints.pop();
 
-        expect(mapPoints.length).toEqual(serializedMap.points.length);
+        expect(mapPoints.length).toEqual(serializedMap.points.length,
+                                         'Not the same number of points.');
 
         for (let i = 0; i < mapPoints.length; ++i) {
             const MAP_POINT = mapPoints[i];
@@ -78,14 +74,50 @@ describe('MapEditorService', () => {
             const X = converter.lengthToGameUnits(MAP_POINT.x);
             const Y = converter.lengthToGameUnits(MAP_POINT.y);
             const CONVERTED_MAP_POINT = new Point(X, Y);
-            expect(CONVERTED_MAP_POINT.x).toBeCloseTo(SMAP_POINT.x);
-            expect(CONVERTED_MAP_POINT.y).toBeCloseTo(SMAP_POINT.y);
+            expect(CONVERTED_MAP_POINT.x).toBeCloseTo(SMAP_POINT.x, 0.001,
+                                                      'Points X-coordinates don\'t match');
+            expect(CONVERTED_MAP_POINT.y).toBeCloseTo(SMAP_POINT.y, 0.001,
+                                                      'Points Y-coordinates don\'t match');
         }
+    };
 
-        expect(map.potholes).toEqual(serializedMap.potholes);
-        expect(map.puddles).toEqual(serializedMap.puddles);
-        expect(map.speedBoosts).toEqual(serializedMap.speedBoosts);
-        expect(serializedMap.bestTimes.length).toEqual(0);
+    const CHECK_ITEMS_SERIALIZATION = (map: Map, serializedMap: SerializedMap) => {
+        const MAP_ITEM_ARRAYS: Item[][] = [
+            map.potholes,
+            map.puddles,
+            map.speedBoosts
+        ];
+        const SMAP_ITEM_ARRAYS: SerializedItem[][] = [
+            serializedMap.potholes,
+            serializedMap.puddles,
+            serializedMap.speedBoosts
+        ];
+        for (let i = 0; i < MAP_ITEM_ARRAYS.length; ++i) {
+            expect(MAP_ITEM_ARRAYS[i].length).toEqual(SMAP_ITEM_ARRAYS[i].length,
+                                                      'Not the same number of items');
+            for (let j = 0; j < MAP_ITEM_ARRAYS[i].length; ++j) {
+                const MAP_ITEM = MAP_ITEM_ARRAYS[i][j];
+                const SMAP_ITEM = SMAP_ITEM_ARRAYS[i][j];
+                const CONVERTED_POSITION =
+                    converter.lengthToGameUnits(MAP_ITEM.position);
+                expect(CONVERTED_POSITION).toBeCloseTo(SMAP_ITEM.position, 0.001,
+                                                       'Item positions don\'t match');
+            }
+        }
+    };
+
+    const CHECK_SERIALIZATION = (map: Map, serializedMap: SerializedMap, isSerialization: boolean) => {
+        expect(map.name).toEqual(serializedMap.name, 'Different map names');
+        expect(map.description).toEqual(serializedMap.description, 'Different descriptions');
+        expect(map.type).toEqual(serializedMap.type, 'Different map types');
+        CHECK_POINTS_SERIALIZATION(map, serializedMap);
+        CHECK_ITEMS_SERIALIZATION(map, serializedMap);
+        if (isSerialization) {
+            expect(serializedMap.sumRatings).toEqual(0, 'Sum of ratings not zero');
+            expect(serializedMap.numberOfRatings).toEqual(0, 'Number of ratings not zero');
+            expect(serializedMap.numberOfPlays).toEqual(0, 'Number of plays not zero');
+            expect(serializedMap.bestTimes.length).toEqual(0, 'Best times not empty');
+        }
     };
 
     describe('isMapClockwise', () => {
@@ -113,13 +145,13 @@ describe('MapEditorService', () => {
         it('should serialize maps as-is if they are valid and clockwise', () => {
             const CLOCKWISE = mockMaps.clockwise();
             service['map'] = CLOCKWISE;
-            CHECK_SERIALIZATION(CLOCKWISE, service.serializeMap());
+            CHECK_SERIALIZATION(CLOCKWISE, service.serializeMap(), true);
         });
 
         it('should serialize maps reversed if they are valid and counter-clockwise', () => {
             const COUNTER_CLOCKWISE = mockMaps.counterClockwise();
             service['map'] = COUNTER_CLOCKWISE;
-            CHECK_SERIALIZATION(COUNTER_CLOCKWISE, service.serializeMap());
+            CHECK_SERIALIZATION(COUNTER_CLOCKWISE, service.serializeMap(), true);
         });
 
         it('should not serialize maps if they are not valid', () => {
@@ -166,7 +198,7 @@ describe('MapEditorService', () => {
 
             MAPS.forEach((map: SerializedMap, idx) => {
                 service.deserializeMap(map);
-                CHECK_SERIALIZATION(service.currentMap, map);
+                CHECK_SERIALIZATION(service.currentMap, map, false);
             });
         });
 
