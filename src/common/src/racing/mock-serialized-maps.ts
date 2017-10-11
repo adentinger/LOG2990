@@ -1,8 +1,8 @@
 import { SerializedMap } from './serialized-map';
-import { Point } from './point';
-import { Pothole } from './pothole';
-import { Puddle } from './puddle';
-import { SpeedBoost } from './speed-boost';
+import { Point } from '../math/point';
+import { SerializedPothole as Pothole } from './serialized-pothole';
+import { SerializedPuddle as Puddle } from './serialized-puddle';
+import { SerializedSpeedBoost as SpeedBoost } from './serialized-speed-boost';
 
 export class MockSerializedMaps {
 

@@ -3,7 +3,7 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
-import { Point } from './point';
+import { Point } from '../../common/math/point';
 
 export class MockMaps {
 

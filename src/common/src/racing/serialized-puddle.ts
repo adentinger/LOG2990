@@ -1,6 +1,6 @@
-import { Item } from './item';
+import { SerializedItem } from './serialized-item';
 
-export class SpeedBoost implements Item {
+export class SerializedPuddle implements SerializedItem {
 
     public position: number;
 

@@ -11,16 +11,16 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
-import * as PacketAPI from 'common/communication/packet-api';
-import { PacketManagerServer } from 'common/communication/packet-api/packet-manager';
+import * as PacketAPI from './common/communication/packet-api';
+import { PacketManagerServer } from './packet-manager';
 import * as ServerIO from 'socket.io';
 
-import { WordConstraint } from 'common/lexic/word-constraint';
+import { WordConstraint } from './common/lexic/word-constraint';
 import { Server } from 'http';
 
 import { registerMiddleWares } from './routes/middle-ware';
 import './routes';
-import 'common/lexic/word-packet';
+import './common/lexic/word-packet';
 
 export class Application {
 

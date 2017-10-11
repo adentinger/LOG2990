@@ -19,7 +19,7 @@ import { MapEditorComponent } from './admin-screen/map-editor/map-editor.compone
 import { AppRoutingModule } from './app-routing.module';
 
 import { PacketManagerService, packetManagerClient } from './packet-manager.service';
-import { PacketManagerClient } from 'common/communication/packet-api/packet-manager-client';
+import { PacketManagerClient } from './packet-manager-client';
 
 @NgModule({
     declarations: [
