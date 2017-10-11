@@ -134,7 +134,6 @@ describe('MapEditorService', () => {
 
         it('should return true when the map is invalid', () => {
             service['map'] = mockMaps.disfunctionalMap1();
-            // tslint:disable-next-line:no-unused-expression
             expect(service.isMapClockwise).toBe(true);
         });
 
