@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { MapService } from '../services/map.service';
 import { SerializedMap } from '../../admin-screen/map-editor/serialized-map';
 import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
+import { MapThumbnailComponent} from './map-thumbnail/map-thumbnail.component';
+import { MapEditorService } from '../../admin-screen/map-editor/map-editor.service';
+import { MapRendererService } from '../../admin-screen/map-editor/map-renderer/map-renderer.service';
+import { RacingUnitConversionService } from '../../admin-screen/map-editor/racing-unit-conversion.service';
 
 @Component({
     selector: 'app-initial-view',
@@ -15,6 +19,9 @@ export class InitialViewComponent implements OnInit {
     private child: MapBestTimeComponent;
     public maps: SerializedMap[];
     public selectedMap: SerializedMap;
+
+    public width: number;
+    public height: number;
 
     constructor(private mapService: MapService) { }
 
@@ -29,6 +36,18 @@ export class InitialViewComponent implements OnInit {
     public mapSelected(map: SerializedMap): void {
         this.selectedMap = map;
         this.child.displayable = true;
+    }
+
+    public get mapWidth(): number {
+        return this.width;
+    }
+
+    @Input() public set mapWidth(width: number) {
+        this.width = width;
+    }
+
+    @Input() public set mapHeight(height: number) {
+        this.height = height;
     }
 
 }

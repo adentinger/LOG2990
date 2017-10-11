@@ -5,6 +5,7 @@
     <th>Map description</th>
     <th>Map average rating</th>
     <th>Map number of times played</th>
+    <th>Map thumbnail</th>
   </tr>
   <tr class="maps" *ngFor="let map of maps" [class.selected]="map === selectedMap"
   (click)="mapSelected(map)">
@@ -13,6 +14,7 @@
     <td>{{map.description}}</td>
     <td>{{map.rating}}</td>
     <td>{{map.plays}}</td>
+    <td><app-map-thumbnail class="thumbnail" [width]="500" [map]="map"></app-map-thumbnail></td>
   </tr>
 </table>
 <app-map-best-time [map]="selectedMap"></app-map-best-time> 
