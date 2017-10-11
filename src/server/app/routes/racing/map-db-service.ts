@@ -63,8 +63,20 @@ export class MapDbService {
     }
 
     public getByName(name: string): Promise<SerializedMap> {
-        console.log(new Error('Not implemented'));
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
+        return new Promise((resolve, reject) => {
+            this.mapCollection.findOne({_id: name})
+            .then((mapDocument) => {
+                if (mapDocument) {
+                    resolve(this.makeSerializedMapFrom(mapDocument));
+                }
+                else {
+                    reject(HttpStatus.NOT_FOUND);
+                }
+            })
+            .catch(() => {
+                reject(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
+        });
     }
 
     private makeMapDocumentFrom(serializedMap: SerializedMap): any {
