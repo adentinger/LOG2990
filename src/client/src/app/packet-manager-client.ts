@@ -18,7 +18,7 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
             return true;
         } else {
             console.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
+            return false;
         }
-        return false;
     }
 }
