@@ -165,11 +165,7 @@ export class MapEditorService {
                 serializedMap.type,
                 DESERIALIZED_POTHOLES,
                 DESERIALIZED_PUDDLES,
-                DESERIALIZED_SPEED_BOOSTS,
-                [],
-                0,
-                0,
-                0
+                DESERIALIZED_SPEED_BOOSTS
             );
 
             if (NEW_MAP.computeErrors() === MapError.NONE) {
