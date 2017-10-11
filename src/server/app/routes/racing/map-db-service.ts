@@ -51,15 +51,26 @@ export class MapDbService {
     }
 
     public delete(name: string): Promise<void> {
-        console.log(new Error('Not implemented'));
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
+        return new Promise((resolve, reject) => {
+            this.mapCollection.findOneAndDelete({name: name})
+            .then((result: FindAndModifyWriteOpResultObject) => {
+                if (result.value) {
+                    resolve();
+                }
+                else {
+                    reject(HttpStatus.NOT_FOUND);
+                }
+            })
+            .catch((reason) => {
+                reject(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
+        });
     }
 
     public getMapNames(count: number): Promise<string[]> {
         return new Promise((resolve, reject) => {
             this.mapCollection.find({}, {_id: false, name: true}).toArray()
             .then((names: any) => {
-                console.log(names);
                 resolve(names);
             })
             .catch(() => {
