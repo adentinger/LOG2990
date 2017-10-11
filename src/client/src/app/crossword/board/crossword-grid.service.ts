@@ -10,7 +10,7 @@ export class CrosswordGridService {
     public grid: GridWord[];
     private viewableGrid: string[][];
 
-    constructor(public crosswordGameService: CrosswordGameService) {
+    constructor(private crosswordGameService: CrosswordGameService) {
         this.grid = ARRAY_GRIDWORD;
         this.fill();
         this.fillAll();

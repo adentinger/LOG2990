@@ -14,6 +14,7 @@ import { DefinitionsService } from './definition-field/definitions.service';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { CrosswordGameService } from './crossword-game.service';
 import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
+import { CrosswordGridService } from './board/crossword-grid.service';
 
 @NgModule({
     imports: [
@@ -35,7 +36,9 @@ import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.co
         ConfigMenuService,
         SimpleTimer,
         DefinitionsService,
-        CrosswordGameService
+        CrosswordGameService,
+        CrosswordGridService
+        
     ],
     exports: [
         CrosswordComponent

@@ -5,37 +5,37 @@ import { DefinitionsService } from './definitions.service';
 @Component({
     selector: 'app-definition-field',
     templateUrl: './definition-field.component.html',
-    styleUrls: ['./definition-field.component.css'],
-    providers: [DefinitionsService]
+    styleUrls: ['./definition-field.component.css']
 })
 export class DefinitionFieldComponent implements OnInit {
 
     @ViewChild('inputBuffer') inputBuffer: ElementRef;
 
     @Output() selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
-    public selectedDefinitionId: number = -1;
     public definitions: Definition[] = [];
 
-    constructor(private definitionService: DefinitionsService) { }
+    constructor(private definitionService: DefinitionsService) {
+        this.selectedDefinition = definitionService._selectedDefinition;
+    }
 
     public ngOnInit(): void {
         this.definitions = this.definitionService.getDefinitions();
     }
 
-    public onSelect(index: number, event): void {
-        this.selectedDefinitionId = index;
-        this.selectedDefinition.emit(index);
-        this.definitionService.crosswordGameService.selectedWordIndex = index;
+    public get selectedDefinitionId() {
+        console.log(this.definitionService._selectedDefinitionId)
+        return this.definitionService._selectedDefinitionId;
+    }
 
-        this.definitionService.crosswordGameService.aDefinitionIsSelected = true;
-        // change le focus vers le buffer
+    public set selectedDefinitionId(selectedDefinitionId) {
+        this.definitionService.selectedDefinitionId = selectedDefinitionId;
+    }
+
+    public onSelect(index: number, event): void {
+        this.definitionService.onSelect(index, event);
     }
 
     public onClickOutside(): void {
-        this.selectedDefinitionId = -1;        
-        this.selectedDefinition.emit(null);        
-        this.definitionService.crosswordGameService.selectedWordIndex = 0;
-
-        this.definitionService.crosswordGameService.aDefinitionIsSelected = false;        
+        this.definitionService.onClickOutside();
     }
 }

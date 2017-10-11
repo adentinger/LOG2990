@@ -6,8 +6,7 @@ import { BoardComponent } from './board/board.component';
 @Component({
     selector: 'app-crossword',
     templateUrl: './crossword.component.html',
-    providers: [SimpleTimer,
-                DefinitionsService]
+    providers: [SimpleTimer]
 })
 export class CrosswordComponent implements OnInit {
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
 import { Direction } from '../../grid-word';
+import { CrosswordGameService } from '../../crossword-game.service';
 
 @Component({
     selector: 'app-tile',
@@ -26,14 +27,14 @@ export class CrosswordTileComponent implements OnInit {
     public ngOnInit() {
     }
 
-    constructor(private crosswordGridService: CrosswordGridService) { }
+    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService) { }
 
     public checkIfHighlighted(j: number, i: number): boolean {
-        const y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y,
-            x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
-        const wordLength = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].length;
-        const direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
-        const aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
+        const   y = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].y,
+                x = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].x,
+                wordLength = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].length,
+                direction = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].direction,
+                aDefinitionIsSelected = this.crosswordGameService.aDefinitionIsSelected;
 
         if (aDefinitionIsSelected) {
             if (direction === Direction.across) {
