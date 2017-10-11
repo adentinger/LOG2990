@@ -24,7 +24,6 @@ export class DefinitionsService {
 
     public set selectedDefinitionId(selectedDefinitionId) {
         this._selectedDefinitionId = selectedDefinitionId;
-        console.log(this._selectedDefinitionId);
 
         if (selectedDefinitionId === -1) {
             this._selectedDefinition.emit(null);

@@ -14,7 +14,6 @@ export class CrosswordTileComponent implements OnInit {
     @Input() public readonly tileRow: number;
     @Input() public readonly tileColumn: number;
 
-    @ViewChild('crosswordBoard') private gridElement: ElementRef;
     @Input() get tileChar() {
         return this.tileValue;
     }
@@ -29,7 +28,7 @@ export class CrosswordTileComponent implements OnInit {
 
     constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService) { }
 
-    public checkIfHighlighted(j: number, i: number): boolean {
+    public checkIfHighlighted(): boolean {
         const   y = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].y,
                 x = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].x,
                 wordLength = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].length,
@@ -38,10 +37,10 @@ export class CrosswordTileComponent implements OnInit {
 
         if (aDefinitionIsSelected) {
             if (direction === Direction.across) {
-                return (j === y && i >= x && i <= wordLength + x - 1);
+                return (this.tileRow === y && this.tileColumn >= x && this.tileColumn <= wordLength + x - 1);
             }
             else if (direction === Direction.vertical) {
-                return (i === x && j >= y && j <= wordLength + y - 1);
+                return (this.tileColumn === x && this.tileRow >= y && this.tileRow <= wordLength + y - 1);
             }
         }
         else {
@@ -49,4 +48,20 @@ export class CrosswordTileComponent implements OnInit {
         }
     }
 
+    public checkIfGreyed(): boolean {
+        const   y = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].y,
+        x = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].x,
+        wordLength = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].length,
+        direction = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex].direction,
+        aDefinitionIsSelected = this.crosswordGameService.aDefinitionIsSelected;
+
+        if (!aDefinitionIsSelected) {
+            if (this.tileChar !== '') {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 }

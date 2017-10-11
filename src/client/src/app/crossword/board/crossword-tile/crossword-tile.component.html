@@ -1,7 +1,8 @@
 <input type='text'
     class='crossword-board-item' 
-    [disabled]='!checkIfHighlighted(tileRow,tileColumn)'
-    [class.highlighted]='checkIfHighlighted(tileRow,tileColumn)'
+    [disabled]='true'
+    [class.highlighted]='checkIfHighlighted()'
     [class.black-square]='tileChar==="0"' 
+    [class.greyed]='checkIfGreyed()'
 	[value]='tileChar'
 	maxlength='1'/>

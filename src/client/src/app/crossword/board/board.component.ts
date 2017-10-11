@@ -17,7 +17,6 @@ export class BoardComponent implements OnInit {
     public disableInput = false;
 
     @Input('indexOfDefinition') public indexOfDefinition: number;
-    @ViewChild('crosswordBoard') private crosswordBoard: ElementRef;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
     public onSelect(): void {
@@ -25,7 +24,8 @@ export class BoardComponent implements OnInit {
         this.inputBuffer.nativeElement.value = '';
     }
 
-    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService, private definitionsService: DefinitionsService) { }
+    constructor(private crosswordGridService: CrosswordGridService,
+        private crosswordGameService: CrosswordGameService, private definitionsService: DefinitionsService) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
@@ -56,6 +56,7 @@ export class BoardComponent implements OnInit {
         }
     }
 
+    // socketIO
     private sendWordToServer(input: string) {
         //
     }
@@ -73,8 +74,6 @@ export class BoardComponent implements OnInit {
         else if (input.length === word.length) {
             this.inputLettersOnGrid(word, input);
             this.sendWordToServer(input);
-            
-            this.definitionsService.selectedDefinitionId = -1;
             this.crosswordGameService.aDefinitionIsSelected = false;
         }
     }

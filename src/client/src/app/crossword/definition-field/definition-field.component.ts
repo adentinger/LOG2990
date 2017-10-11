@@ -23,7 +23,6 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public get selectedDefinitionId() {
-        console.log(this.definitionService._selectedDefinitionId)
         return this.definitionService._selectedDefinitionId;
     }
 
