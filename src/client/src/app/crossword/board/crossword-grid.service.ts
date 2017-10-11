@@ -34,7 +34,6 @@ export class CrosswordGridService {
                 this.viewableGrid[gridWord.y][i + gridWord.x] = '';
             }
         }
-
         else if (gridWord.direction === Direction.vertical) {
             for (let i = 0; i < gridWord.length; i++) {
                 this.viewableGrid[i + gridWord.y][gridWord.x] = '';
