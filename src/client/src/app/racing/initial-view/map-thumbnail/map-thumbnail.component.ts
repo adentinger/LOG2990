@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Input, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input, AfterViewChecked } from '@angular/core';
 import { MapEditorService } from '../../../admin-screen/map-editor/map-editor.service';
 import { MapRendererService } from '../../../admin-screen/map-editor/map-renderer/map-renderer.service';
 import { RacingUnitConversionService } from '../../../admin-screen/map-editor/racing-unit-conversion.service';

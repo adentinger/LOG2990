@@ -63,4 +63,8 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
         this.packetService.sendPacket(WordConstraint, wc);
     }
 
+    public deleteMap(map: string): void {
+        this.mapService.delete(map);
+    }
+
 }

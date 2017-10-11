@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import { Http } from '@angular/http';
 import { SerializedMap } from '../../common/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
 import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
@@ -10,19 +10,22 @@ export class MapService {
     public maps: Map[];
     private mockSerializedMaps: MockSerializedMaps = new MockSerializedMaps;
 
-    constructor() {
+    constructor(private http: Http) {
     }
 
     public saveNew(serializedMap: SerializedMap): Promise<void> {
-        return Promise.reject('Not yet implemented');
+        const url = 'http://localhost:3000/racing/maps';
+        return this.http.post(url, JSON.stringify({map: serializedMap})).toPromise().then(() => null);
     }
 
-    public saveEdited(): Promise<void> {
-        return Promise.reject('Not yet implemented');
+    public saveEdited(serializedMap: SerializedMap): Promise<void> {
+        const url = 'http://localhost:3000/racing/maps/' + serializedMap.name;
+        return this.http.put(url, JSON.stringify({serializedMap})).toPromise().then(() => null);
     }
 
     public delete(name: string): Promise<number[]> {
-        return Promise.reject('Not yet implemented');
+        const url = 'http://localhost:3000/racing/maps/' + name;
+        return this.http.delete(url).toPromise().then(() => null);
     }
 
     public getMapNames(count: number): Promise<string[]> {

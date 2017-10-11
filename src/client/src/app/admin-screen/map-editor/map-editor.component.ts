@@ -6,7 +6,6 @@ import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from '../../common/math/point';
 import { PointIndex } from './point-index';
-import { MapService } from '../../racing/services/map.service';
 import { SerializedMap } from '../../common/racing/serialized-map';
 
 const LEFT_MOUSE_BUTTON = 0;

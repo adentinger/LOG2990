@@ -3,10 +3,6 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MapService } from '../services/map.service';
 import { SerializedMap } from '../../common/racing/serialized-map';
 import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
-import { MapThumbnailComponent} from './map-thumbnail/map-thumbnail.component';
-import { MapEditorService } from '../../admin-screen/map-editor/map-editor.service';
-import { MapRendererService } from '../../admin-screen/map-editor/map-renderer/map-renderer.service';
-import { RacingUnitConversionService } from '../../admin-screen/map-editor/racing-unit-conversion.service';
 
 @Component({
     selector: 'app-initial-view',
