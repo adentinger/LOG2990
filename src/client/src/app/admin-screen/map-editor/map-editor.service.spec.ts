@@ -56,6 +56,10 @@ describe('MapEditorService', () => {
     const CHECK_SERIALIZATION = (map: Map, serializedMap: SerializedMap) => {
         expect(map.name).toEqual(serializedMap.name);
         expect(map.description).toEqual(serializedMap.description);
+        expect(map.type).toEqual(serializedMap.type);
+        expect(serializedMap.sumRatings).toEqual(0);
+        expect(serializedMap.numberOfRatings).toEqual(0);
+        expect(serializedMap.numberOfPlays).toEqual(0);
 
         let mapPoints: Point[];
         if (map.isClockwise()) {
@@ -78,21 +82,10 @@ describe('MapEditorService', () => {
             expect(CONVERTED_MAP_POINT.y).toBeCloseTo(SMAP_POINT.y);
         }
 
-        expect(map.plays).toEqual(serializedMap.numberOfPlays);
         expect(map.potholes).toEqual(serializedMap.potholes);
         expect(map.puddles).toEqual(serializedMap.puddles);
         expect(map.speedBoosts).toEqual(serializedMap.speedBoosts);
-        expect(map.type).toEqual(serializedMap.type);
-
-        let expectedRating: number;
-        if (serializedMap.numberOfRatings !== 0) {
-            expectedRating =
-                serializedMap.sumRatings / serializedMap.numberOfRatings;
-        }
-        else {
-            expectedRating = 0;
-        }
-        expect(map.rating).toEqual(expectedRating);
+        expect(serializedMap.bestTimes.length).toEqual(0);
     };
 
     describe('isMapClockwise', () => {
