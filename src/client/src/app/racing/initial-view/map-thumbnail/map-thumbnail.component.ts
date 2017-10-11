@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, Input, AfterViewInit, AfterVi
 import { MapEditorService } from '../../../admin-screen/map-editor/map-editor.service';
 import { MapRendererService } from '../../../admin-screen/map-editor/map-renderer/map-renderer.service';
 import { RacingUnitConversionService } from '../../../admin-screen/map-editor/racing-unit-conversion.service';
-import { SerializedMap } from '../../../admin-screen/map-editor/serialized-map';
+import { SerializedMap } from '../../../common/racing/serialized-map';
 
 @Component({
     selector: 'app-map-thumbnail',

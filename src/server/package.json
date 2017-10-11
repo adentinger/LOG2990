@@ -3,9 +3,15 @@
   "description": "Projet de base pour le cours de LOG2990",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "npm": "<=4.6.1"
+  },
+  "config": {
+    "packetapi_mgr": "server"
+  },
   "scripts": {
     "start": "tsc && concurrently --kill-others \"tsc -w \" \"nodemon out/www.js\" ",
-    "lint": "tslint \"app/**/*.ts\" \"app/*.ts\" --force -t verbose",
+    "lint": "tslint \"app/**/*.ts\" \"app/*.ts\" --force -t verbose || exit 0",
     "test": "mocha -r ts-node/register app/**/*.spec.ts",
     "test-once": "tsc && karma start karma.conf.js --single-run || npm run-script coverage",
     "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html",
@@ -13,11 +19,12 @@
     "tsc:w": "tsc -w",
     "clean": "rimraf out node_modules",
     "postinstall": "rimraf false",
-    "word2db": "tsc --outDir out --lib es2015 app/sendWordsToDB.ts && nodejs out/sendWordsToDB.js"
+    "word2db": "tsc --outDir out --lib es2015 app/sendWordsToDB.ts && node out/sendWordsToDB.js",
+    "fetchFreq": "tsc && node out/fetchFrequencies.js"
   },
   "dependencies": {
+    "@types/socket.io": "1.4.30",
     "body-parser": "~1.16.0",
-    "common": "file:../common",
     "cookie-parser": "~1.4.0",
     "cors": "~2.8.1",
     "debug": "~2.2.0",
@@ -26,7 +33,7 @@
     "nodemon": "^1.11.0",
     "pug": "^2.0.0-alpha6",
     "serve-favicon": "~2.3.0",
-    "socket.io": "1.4.4",
+    "socket.io": "1.7.2",
     "systemjs": "0.19.39",
     "mongodb": "^2.2.31",
     "reflect-metadata": "^0.1.10"
@@ -42,7 +49,6 @@
     "@types/cors": "2.8.1",
     "@types/mocha": "2.2.42",
     "@types/morgan": "1.7.32",
-    "@types/socket.io": "1.4.30",
     "@types/mongodb": "^2.2.9",
     "chai": "4.0.0",
     "concurrently": "^3.0.0",

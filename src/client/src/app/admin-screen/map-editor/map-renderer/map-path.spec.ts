@@ -1,5 +1,5 @@
 import { MapPath } from './map-path';
-import { Point } from '../point';
+import { Point } from '../../../common/math/point';
 
 class CanvasFactory {
 

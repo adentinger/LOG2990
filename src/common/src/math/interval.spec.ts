@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import { Interval } from './interval';
 
 describe('Interval', () => {
@@ -6,16 +7,16 @@ describe('Interval', () => {
         const LOWER_BOUND = 0;
         const UPPER_BOUND = 10;
         const INTERVAL = new Interval(LOWER_BOUND, UPPER_BOUND);
-        expect(INTERVAL.lower).toBe(LOWER_BOUND);
-        expect(INTERVAL.upper).toBe(UPPER_BOUND);
+        expect(INTERVAL.lower).to.deep.equal(LOWER_BOUND);
+        expect(INTERVAL.upper).to.deep.equal(UPPER_BOUND);
     });
 
     it('should filter bounds correctly when creating', () => {
         const LOWER_BOUND = 100;
         const UPPER_BOUND = 1000;
         const INTERVAL = new Interval(UPPER_BOUND, LOWER_BOUND);
-        expect(INTERVAL.lower).toBe(LOWER_BOUND);
-        expect(INTERVAL.upper).toBe(UPPER_BOUND);
+        expect(INTERVAL.lower).to.deep.equal(LOWER_BOUND);
+        expect(INTERVAL.upper).to.deep.equal(UPPER_BOUND);
     });
 
     it('should verify is number is in bound', () => {
@@ -24,8 +25,8 @@ describe('Interval', () => {
         const NUMBER_IN_BOUND = 50;
         const NUMBER_OUT_OF_BOUND = 1000;
         const INTERVAL = new Interval(UPPER_BOUND, LOWER_BOUND);
-        expect(INTERVAL.contains(NUMBER_IN_BOUND)).toBe(true);
-        expect(INTERVAL.contains(NUMBER_OUT_OF_BOUND)).toBe(false);
+        expect(INTERVAL.contains(NUMBER_IN_BOUND)).to.be.true;
+        expect(INTERVAL.contains(NUMBER_OUT_OF_BOUND)).to.be.false;
     });
 
     it('should check if two intervals intersect', () => {
@@ -39,7 +40,7 @@ describe('Interval', () => {
         const INTERVAL_2 = new Interval(UPPER_BOUND_2, LOWER_BOUND_2);
         const INTERVAL_3 = new Interval(UPPER_BOUND_3, LOWER_BOUND_3);
         const FIRST_INTERVAL = new Interval(50, 100);
-        expect(INTERVAL_1.intersect(INTERVAL_2)).toEqual(FIRST_INTERVAL);
-        expect(INTERVAL_1.intersect(INTERVAL_3).isEmpty()).toBe(true);
+        expect(INTERVAL_1.intersect(INTERVAL_2)).to.deep.equal(FIRST_INTERVAL);
+        expect(INTERVAL_1.intersect(INTERVAL_3).isEmpty()).to.be.true;
     });
 });

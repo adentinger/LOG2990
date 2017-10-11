@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import { Line, IntersectionType } from './line';
 import { Point } from './point';
 import { Vector } from './vector';
@@ -12,46 +14,46 @@ describe('Line', () => {
         const ORIGIN = new Point(0, 0);
         const DESTINATION = new Point(0, 0);
         const LINE = new Line(ORIGIN, DESTINATION);
-        expect(LINE.origin).toBe(ORIGIN);
-        expect(LINE.destination).toBe(DESTINATION);
+        expect(LINE.origin).to.equal(ORIGIN);
+        expect(LINE.destination).to.equal(DESTINATION);
     });
 
     it('should compute its translation', () => {
         const TRANSLATION = makeLine(50, 50, 0, 100).translation;
-        expect(TRANSLATION).toEqual(new Vector(-50, 50));
+        expect(TRANSLATION).to.deep.equal(new Vector(-50, 50));
     });
 
     describe('slope', () => {
         it('should compute the line\'s slope', () => {
             const SLOPE = makeLine(0, 0, 1, 2).slope;
-            expect(SLOPE).toBeCloseTo(2);
+            expect(SLOPE).to.be.closeTo(2, 0.001);
         });
     });
 
     it('should compute its intercept', () => {
         const INTERCEPT = makeLine(1, 1, 2, 0).intercept;
-        expect(INTERCEPT).toBeCloseTo(2);
+        expect(INTERCEPT).to.be.closeTo(2, 0.001);
     });
 
     describe('intersectsWith', () => {
 
         it('should return that identical lines are intersecting', () => {
             const LINE = makeLine(0, 0, 1, 1);
-            expect(LINE.intersectsWith(LINE)).toBe(IntersectionType.INTERSECT_LINE);
+            expect(LINE.intersectsWith(LINE)).to.equal(IntersectionType.INTERSECT_LINE);
         });
 
         it('should return that crossing lines are intersecting', () => {
             const LINE1 = makeLine(1, 1, 2, 2);
             const LINE2 = makeLine(1, 2, 2, 1);
-            expect(LINE1.intersectsWith(LINE2)).toBe(IntersectionType.INTERSECT_POINT);
-            expect(LINE2.intersectsWith(LINE1)).toBe(IntersectionType.INTERSECT_POINT);
+            expect(LINE1.intersectsWith(LINE2)).to.equal(IntersectionType.INTERSECT_POINT);
+            expect(LINE2.intersectsWith(LINE1)).to.equal(IntersectionType.INTERSECT_POINT);
         });
 
         it('should return that non-crossing lines are not intersecting', () => {
             const LINE1 = makeLine(1, 1, 10, 1);
             const LINE2 = makeLine(1, 2, 2, 1.01);
-            expect(LINE1.intersectsWith(LINE2)).toBe(IntersectionType.INTERSECT_NONE);
-            expect(LINE2.intersectsWith(LINE1)).toBe(IntersectionType.INTERSECT_NONE);
+            expect(LINE1.intersectsWith(LINE2)).to.equal(IntersectionType.INTERSECT_NONE);
+            expect(LINE2.intersectsWith(LINE1)).to.equal(IntersectionType.INTERSECT_NONE);
         });
 
         it('should work with vertical and horizontal lines', () => {
@@ -59,11 +61,11 @@ describe('Line', () => {
             const VERTICAL_LINE_XING = makeLine(2, 1, 2, 3);
             const VERTICAL_LINE_NOT_XING = makeLine(2, 1, 2, 1.99);
 
-            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).toBe(IntersectionType.INTERSECT_POINT);
-            expect(VERTICAL_LINE_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_POINT);
-            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_NOT_XING)).toBe(IntersectionType.INTERSECT_NONE);
-            expect(VERTICAL_LINE_NOT_XING.intersectsWith(HORIZONTAL_LINE)).toBe(IntersectionType.INTERSECT_NONE);
-            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).toBe(IntersectionType.INTERSECT_POINT);
+            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).to.equal(IntersectionType.INTERSECT_POINT);
+            expect(VERTICAL_LINE_XING.intersectsWith(HORIZONTAL_LINE)).to.equal(IntersectionType.INTERSECT_POINT);
+            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_NOT_XING)).to.equal(IntersectionType.INTERSECT_NONE);
+            expect(VERTICAL_LINE_NOT_XING.intersectsWith(HORIZONTAL_LINE)).to.equal(IntersectionType.INTERSECT_NONE);
+            expect(HORIZONTAL_LINE.intersectsWith(VERTICAL_LINE_XING)).to.equal(IntersectionType.INTERSECT_POINT);
         });
 
         it('should work with intersecting points', () => {
@@ -71,8 +73,8 @@ describe('Line', () => {
             const LINE_WITH_NO_VECTOR_2 = makeLine(1, 1, 1, 1);
             const LINE_WITH_NO_VECTOR_3 = makeLine(1, 2, 1, 2);
 
-            expect(LINE_WITH_NO_VECTOR_1.intersectsWith(LINE_WITH_NO_VECTOR_2)).toBe(IntersectionType.INTERSECT_LINE);
-            expect(LINE_WITH_NO_VECTOR_1.intersectsWith(LINE_WITH_NO_VECTOR_3)).toBe(IntersectionType.INTERSECT_NONE);
+            expect(LINE_WITH_NO_VECTOR_1.intersectsWith(LINE_WITH_NO_VECTOR_2)).to.equal(IntersectionType.INTERSECT_LINE);
+            expect(LINE_WITH_NO_VECTOR_1.intersectsWith(LINE_WITH_NO_VECTOR_3)).to.equal(IntersectionType.INTERSECT_NONE);
         });
 
     });

@@ -6,6 +6,7 @@ false/
 # Exclusion des fichiers Javascripts
 *.js
 *.d.ts
+lib/
 
 # NPM Debug Log
 npm-debug.log
@@ -24,5 +25,5 @@ coverage/
 !systemjs.config.extras.js
 !tslint.json
 !tsconfig.json
-!paackage.json
+!package.json
 !src/

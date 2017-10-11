@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { SerializedMap } from '../../admin-screen/map-editor/serialized-map';
+import { SerializedMap } from '../../common/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
-import { MockSerializedMaps } from '../../admin-screen/map-editor/mock-serialized-maps';
+import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
 
 @Injectable()
 export class MapService {

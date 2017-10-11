@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import * as express from 'express';
-import { console } from 'common/utils';
 
 type RequestHandler = (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
 export type RouteType = 'get' | 'post' | 'put' | 'delete' | 'head' | 'all';
@@ -72,6 +71,7 @@ export function Route(type: RouteType | 'use', route?: string): MethodDecorator 
 
 export function registerMiddleWares(router: express.Router) {
     const EMPTY_ARGUMENT_LIST = [] as ArrayLike<any>;
+    const ORIGINAL_LOG = console.log;
     let middlewareRouter: express.Router;
     for (const middleWare of MIDDLEWARES) {
         middlewareRouter = router;
@@ -80,11 +80,11 @@ export function registerMiddleWares(router: express.Router) {
             middlewareRouter = express.Router();
             router.use(middleWare.baseRoute, middlewareRouter);
             console.log('Registering sub-routes of "' + middleWare.baseRoute + '"');
-            console.pushPrefix('\t');
+            console.log = console.log.bind(console, '\t');
         }
         Reflect.construct(middleWare.constructor, EMPTY_ARGUMENT_LIST)[REGISTER_FUNCTION](middlewareRouter);
         if (middleWare.baseRoute) {
-            console.popPrefix();
+            console.log = ORIGINAL_LOG;
         }
     }
 }

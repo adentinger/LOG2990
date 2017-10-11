@@ -3,7 +3,7 @@ import { isJson } from './utils';
 
 // Used to put a blank space between passing and failing tests in the output
 function itSplitTests() {
-    xit('', (done) => done());
+    it('', (done) => done());
 }
 
 // Template for isJson tests
@@ -34,12 +34,10 @@ describe('The Utility library', () => {
         itShouldPass('a nested JSON Object', '{"my":{"beautiful":{"nested":{"object":{}}}}}');
         itShouldPass('a JSON Array that contains null', '[null]', '[null, null, null]');
         itShouldPass('a JSON Array that contains numbers', '[0]', '[-1, 1]', '[42, 10000]');
-        itShouldPass('', '0');
         itSplitTests(); // Section separation
         itShouldFail('an empty string', '');
         itShouldFail('an a string containing non-matching (square) brackets', '{}}', '[[]');
         itShouldFail('empty Object/Array with commas', '{,}', '[,]', '{,,,,,,,}', '[,,,,,,,]');
         itShouldFail('valid JavaScript (pseudo-)numbers', 'Infinity', '-Infinity', 'NaN');
-        itShouldFail('', '');
     });
 });

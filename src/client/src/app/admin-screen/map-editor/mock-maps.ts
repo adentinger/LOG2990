@@ -3,7 +3,7 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
-import { Point } from './point';
+import { Point } from '../../common/math/point';
 
 export class MockMaps {
 
@@ -24,7 +24,8 @@ export class MockMaps {
                        [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)],
                        [12, 24, 48],
                        4,
-                       12);
+                       12,
+                       0);
     }
 
     public functionalMap2(): Map {
@@ -38,7 +39,8 @@ export class MockMaps {
                        [],
                        [],
                        4,
-                       12);
+                       12,
+                       13);
     }
 
     public clockwise(): Map {

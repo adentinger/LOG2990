@@ -12,4 +12,5 @@
   <div *ngIf="selectedMap">
       <app-map-editor [map]="serializedMap"></app-map-editor> 
   </div>
+  <button (click)="sendSocket()">Send word constraint</button>
 </div>

@@ -10,8 +10,6 @@ import { Point } from './point';
 
 export class ShoelaceAlgorithm {
 
-    constructor() { }
-
     public algebraicAreaOf(points: Point[]) {
         const NUMBER_OF_POINTS = points.length;
         let DOUBLE_AREA = 0;
