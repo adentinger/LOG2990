@@ -77,6 +77,8 @@ export enum HttpStatus {
     RAILGUN_ERROR
 }
 
+export default HttpStatus;
+
 export function getStatusOrDefault(status: any): HttpStatus {
     if (status in HttpStatus) {
         return status;
