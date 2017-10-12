@@ -11,6 +11,8 @@ import { SerializedSpeedBoost } from '../../common/racing/serialized-speed-boost
 import { SpeedBoost } from './speed-boost';
 import { Path } from './path';
 import { Track } from '../../racing/track';
+import { Item } from './item';
+import { SerializedItem } from '../../common/racing/serialized-item';
 
 @Injectable()
 export class MapConverterService {
@@ -18,53 +20,60 @@ export class MapConverterService {
     constructor(private converter: RacingUnitConversionService) { }
 
     public serialize(map: Map): SerializedMap {
-        if (map.computeErrors() === MapError.NONE) {const POINTS: Point[] =
-            map.path.points.map((point: Point) => {
-                const X = this.converter.lengthToGameUnits(point.x);
-                const Y = this.converter.lengthToGameUnits(point.y);
-                return new Point(X, Y);
-            });
+        if (map.computeErrors() === MapError.NONE) {
+            const SERIALIZED_MAP =
+                new SerializedMap(map.name,
+                                  map.description,
+                                  map.type,
+                                  0,
+                                  0,
+                                  0);
+            this.serializePoints(map, SERIALIZED_MAP);
+            this.serializeItems(map, SERIALIZED_MAP);
 
-            if (!map.isClockwise()) {
-                POINTS.reverse();
-            }
-
-            POINTS.pop(); // Do not include the last point ;
-                          // it is the same as the first point.
-            const SERIALIZED_POTHOLES: SerializedPothole[] =
-                map.potholes.map(
-                    (pothole: Pothole) =>
-                        new SerializedPothole(
-                            this.converter.lengthToGameUnits(pothole.position)));
-            const SERIALIZED_PUDDLES: SerializedPuddle[] =
-                map.potholes.map(
-                    (puddle: Puddle) =>
-                        new SerializedPuddle(
-                            this.converter.lengthToGameUnits(puddle.position)));
-            const SERIALIZED_SPEED_BOOSTS: SerializedSpeedBoost[] =
-                map.potholes.map(
-                    (speedBoost: SpeedBoost) =>
-                        new SerializedSpeedBoost(
-                            this.converter.lengthToGameUnits(speedBoost.position)));
-
-            return new SerializedMap(
-                map.name,
-                map.description,
-                map.type,
-                0,
-                0,
-                0,
-                POINTS,
-                SERIALIZED_POTHOLES,
-                SERIALIZED_PUDDLES,
-                SERIALIZED_SPEED_BOOSTS
-            );
+            SERIALIZED_MAP.bestTimes = [];
+            return SERIALIZED_MAP;
         }
         else {
             throw new Error('Serialization failed: ' +
                             'The map is currently not valid. ' +
                             'Fix map problems before attempting serialization');
         }
+    }
+
+    private serializePoints(map: Map, serializedMap: SerializedMap): void {
+        const POINTS: Point[] =
+        map.path.points.map((point: Point) => {
+            const X = this.converter.lengthToGameUnits(point.x);
+            const Y = this.converter.lengthToGameUnits(point.y);
+            return new Point(X, Y);
+        });
+
+        if (!map.isClockwise()) {
+            POINTS.reverse();
+        }
+        POINTS.pop(); // Do not include the last point ;
+                      // it is the same as the first point.
+
+        serializedMap.points = POINTS;
+    }
+
+    private serializeItems(map: Map, serializedMap: SerializedMap): void {
+        serializedMap.potholes =
+            map.potholes.map(
+                (pothole: Pothole) =>
+                    new SerializedPothole(
+                        this.converter.lengthToGameUnits(pothole.position)));
+        serializedMap.puddles =
+            map.potholes.map(
+                (puddle: Puddle) =>
+                    new SerializedPuddle(
+                        this.converter.lengthToGameUnits(puddle.position)));
+        serializedMap.speedBoosts =
+            map.potholes.map(
+                (speedBoost: SpeedBoost) =>
+                    new SerializedSpeedBoost(
+                        this.converter.lengthToGameUnits(speedBoost.position)));
     }
 
     public deserialize(serializedMap: SerializedMap): Map {
@@ -113,6 +122,14 @@ export class MapConverterService {
             throw new Error('Deserializing map failed: ' +
                             'The serialized map is not valid.');
         }
+    }
+
+    private deserializePoints(serializedMap: SerializedMap, map: Map): void {
+        return null;
+    }
+
+    private deserializeItems(serializedMap: SerializedMap, map: Map): void {
+        return null;
     }
 
     private get minimumDistanceBetweenPoints(): number {
