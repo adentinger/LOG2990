@@ -19,8 +19,11 @@ export class MapDbService {
 
     public saveNew(serializedMap: SerializedMap): Promise<void> {
         return new Promise((resolve, reject) => {
-            const MAP_DOCUMENT: any = this.makeMapDocumentFrom(serializedMap);
+            if (serializedMap.name == null) {
+                reject(HttpStatus.BAD_REQUEST);
+            }
 
+            const MAP_DOCUMENT: any = this.makeMapDocumentFrom(serializedMap);
             this.mapCollection.insertOne(MAP_DOCUMENT)
             .then(() => {
                 resolve();
@@ -33,6 +36,10 @@ export class MapDbService {
 
     public saveEdited(serializedMap: SerializedMap): Promise<void> {
         return new Promise((resolve, reject) => {
+            if (serializedMap.name == null) {
+                reject(HttpStatus.BAD_REQUEST);
+            }
+
             const MAP_DOCUMENT: any = this.makeMapDocumentFrom(serializedMap);
 
             this.mapCollection.findOneAndReplace({_id: MAP_DOCUMENT._id}, MAP_DOCUMENT)
