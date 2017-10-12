@@ -12,7 +12,6 @@ export class DefinitionFieldComponent implements OnInit {
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
     @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
-    @Output() public clickedOutside: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public definitions: Definition[] = [];
 

@@ -22,6 +22,7 @@ export class BoardComponent implements OnInit {
     public onSelect(): void {
         this.inputBuffer.nativeElement.focus();
         this.inputBuffer.nativeElement.value = '';
+        this.clearGridOfUselessLetters();
     }
 
     constructor(private crosswordGridService: CrosswordGridService,
@@ -56,11 +57,11 @@ export class BoardComponent implements OnInit {
         }
     }
 
-    public clearGridBeforeEnteringAWordOnFocus() {
-        const word = this.crosswordGridService.grid;
-        for (let i = 0; i < word.length; i++) {
-            if (this.inputBuffer.nativeElement.value === '' && word[i].string !== '') {
-                this.inputLettersOnGrid(word[i], '');
+    public clearGridOfUselessLetters(): void {
+        const words = this.crosswordGridService.grid;
+        for (let i = 0; i < words.length; i++) {
+            if (words[i].string === '') {
+                this.inputLettersOnGrid(words[i], '');
             }
         }
     }
@@ -77,14 +78,30 @@ export class BoardComponent implements OnInit {
 
         this.inputBuffer.nativeElement.value = input;
 
-        if (input.length < word.length) {
-            this.inputLettersOnGrid(word, input);
+        if (this.crosswordGameService.aDefinitionIsSelected) {
+            if (input.length < word.length) {
+                this.inputLettersOnGrid(word, input);
+            }
+            else if (input.length === word.length) {
+                this.inputLettersOnGrid(word, input);
+                this.sendWordToServer(input);
+
+                this.handleResponseFromServer();
+
+                this.definitionsService.internalSelectedDefinitionId = -1;
+                this.crosswordGameService.aDefinitionIsSelected = false;
+            }
         }
-        else if (input.length === word.length) {
-            this.inputLettersOnGrid(word, input);
-            this.sendWordToServer(input);
-            this.definitionsService.internalSelectedDefinitionId = -1;
-            this.crosswordGameService.aDefinitionIsSelected = false;
+    }
+
+    // junk function
+    private handleResponseFromServer() {
+        const wordFound = false;
+        if (wordFound) {
+            //
+        }
+        if (!wordFound) {
+            this.clearGridOfUselessLetters();
         }
     }
 }

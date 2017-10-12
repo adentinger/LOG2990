@@ -36,6 +36,7 @@ export class DefinitionsService {
     public onSelect(index: number, event): void {
         this.selectedDefinitionId = index;
         this.crosswordGameService.selectedWordIndex = index;
+        this.crosswordGameService.lastSelectedWordIndex = index;
 
         this.crosswordGameService.aDefinitionIsSelected = true;
     }
