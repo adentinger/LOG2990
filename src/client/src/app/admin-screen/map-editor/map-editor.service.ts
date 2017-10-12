@@ -85,50 +85,13 @@ export class MapEditorService {
 
     public deserializeMap(serializedMap: SerializedMap): void {
         if (this.areWidthAndHeightSet()) {
-            const POINTS: Point[] = serializedMap.points.map((point: Point) => {
-                const X = this.converter.lengthFromGameUnits(point.x);
-                const Y = this.converter.lengthFromGameUnits(point.y);
-                return new Point(X, Y);
-            });
-
-            // A Map's last point is supposed to be the same as its first
-            // point when it is valid.
-            POINTS.push(new Point(POINTS[0].x, POINTS[0].y));
-
-
-            const DESERIALIZED_POTHOLES: Pothole[] =
-                serializedMap.potholes.map(
-                (pothole: SerializedPothole) =>
-                    new Pothole(
-                        this.converter.lengthFromGameUnits(pothole.position)));
-            const DESERIALIZED_PUDDLES: Puddle[] =
-                serializedMap.puddles.map(
-                    (puddle: SerializedPuddle) =>
-                        new Puddle(
-                            this.converter.lengthFromGameUnits(puddle.position)));
-            const DESERIALIZED_SPEED_BOOSTS: SpeedBoost[] =
-                serializedMap.speedBoosts.map(
-                    (speedBoost: SerializedSpeedBoost) =>
-                        new SpeedBoost(
-                            this.converter.lengthFromGameUnits(speedBoost.position)));
-
-            const NEW_MAP = new Map(
-                new Path(POINTS),
-                this.minimumDistanceBetweenPoints,
-                serializedMap.name,
-                serializedMap.description,
-                serializedMap.type,
-                DESERIALIZED_POTHOLES,
-                DESERIALIZED_PUDDLES,
-                DESERIALIZED_SPEED_BOOSTS
-            );
-
-            if (NEW_MAP.computeErrors() === MapError.NONE) {
-                this.map = NEW_MAP;
+            let newMap: Map;
+            try {
+                newMap = this.mapConverter.deserialize(serializedMap);
             }
-            else {
-                throw new Error('Deserializing map failed: ' +
-                                'The serialized map is not valid.');
+            catch (error) {}
+            finally {
+                this.map = newMap;
             }
         }
         else {
