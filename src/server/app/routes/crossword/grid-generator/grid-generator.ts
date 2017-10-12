@@ -14,7 +14,7 @@ Crossword - minimal black cases X.
 --------------------------------*/
 // For no confusion : Case = State, there is 3 Cases in the following code; one for each part of the grid.
 
-import { readFileSync } from 'fs';
+//import { readFileSync } from 'fs';
 //export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
 import { Word } from './word';
@@ -22,6 +22,7 @@ import { getRandomIndex, getWordOfDesiredLength, formatGrid } from './lexique';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
+import { Grid } from './grid';
 
 /*
 import * as express from 'express';
@@ -36,22 +37,22 @@ export class GridGeneratorMiddleWare {
 }
 */
 
-export class Grid {
+export class GridGenerator {
     public temporaryGridForAcross: Word[] = [];
     public temporaryGridForVertical: Word[] = [];
-    public gridForAcross: Word[] = [];
-    public gridForVertical: Word[] = [];
-    public grid: string[][] = [];
+    public gridDisplay: string[][] = [];
     public gridForPosition: Array<[number, number]>[] = [];
+    public grid: Grid;
 
     constructor(private size: number) {
         for (let i = 0; i < size; i++) {
-            this.grid[i] = new Array<string>(size);
+            this.gridDisplay[i] = new Array<string>(size);
         }
 
         for (let i = 0; i < size; i++) {
             this.gridForPosition[i] = new Array<[number, number]>(size);
         }
+        this.grid = new Grid();
         this.gridGeneration();
     }
 
@@ -72,7 +73,7 @@ export class Grid {
         this.temporaryGridForAcross = thirdGrid.temporaryGridForAcross;
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
 
-        this.gridForVertical.push(getWordOfDesiredLength(4, 5, this));
+        this.grid.gridForVertical.push(getWordOfDesiredLength(4, 5, this));
         /*
         this.initialisation(2);
         this.pushOnTheGridAndReinitialiseTemporaryGrid();
@@ -84,19 +85,19 @@ export class Grid {
         //console.info(this.gridForPosition);
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
-        console.dir(this.gridForVertical);
-        console.dir(this.gridForAcross);
+        console.dir(this.grid.gridForVertical);
+        console.dir(this.grid.gridForAcross);
         formatGrid(this);
-        console.dir(this.grid);
+        console.dir(this.gridDisplay);
     }
 
     public putWordAcrossAndVerticalOnGridForPrintingOut() {
-        for (let i = 0; i < this.gridForVertical.length; i++) {
-            this.putWordVertical(this.gridForVertical[i], i);
+        for (let i = 0; i < this.grid.gridForVertical.length; i++) {
+            this.putWordVertical(this.grid.gridForVertical[i], i);
         }
 
-        for (let i = 0; i < this.gridForAcross.length; i++) {
-            this.putWordAcross(this.gridForAcross[i], i);
+        for (let i = 0; i < this.grid.gridForAcross.length; i++) {
+            this.putWordAcross(this.grid.gridForAcross[i], i);
         }
     }
 
@@ -116,7 +117,7 @@ export class Grid {
         word.position = [rowToWriteOn, column];
 
         for (let i = 0; i < word.value.length; i++) {
-            this.grid[rowToWriteOn + i][column] = word.value[i];
+            this.gridDisplay[rowToWriteOn + i][column] = word.value[i];
         }
     }
 
@@ -130,17 +131,17 @@ export class Grid {
         }else if ((row >= 7) && (row <= 9)) {
             columnToWriteOn = 8;
         }
-        console.log('BONJOURR')
-        console.log(word)
+        console.log('BONJOURR');
+        console.log(word);
         if (row < 7) {
             word.position = [row, columnToWriteOn];
             for (let i = 0; i < word.value.length; i++) {
-                this.grid[row][columnToWriteOn + i] = word.value[i];
+                this.gridDisplay[row][columnToWriteOn + i] = word.value[i];
             }
         }else {
             let wordIndex = word.value.length - 1;
             for (let i = 0; i < word.value.length; i++) {
-                this.grid[row][columnToWriteOn - i] = word.value[wordIndex];
+                this.gridDisplay[row][columnToWriteOn - i] = word.value[wordIndex];
                 wordIndex--;
             }
             word.position = [row, columnToWriteOn - (word.value.length - 1)];
@@ -148,14 +149,14 @@ export class Grid {
     }
 
     public pushOnTheGridAndReinitialiseTemporaryGrid() {
-        if (this.gridForVertical.length === 6) { // for Case three
+        if (this.grid.gridForVertical.length === 6) { // for Case three
             this.temporaryGridForVertical.reverse();
         }
         for (let i = 0; i < this.temporaryGridForVertical.length; i ++) {
-            this.gridForVertical.push(this.temporaryGridForVertical[i]);
+            this.grid.gridForVertical.push(this.temporaryGridForVertical[i]);
         }
         for (let i = 0; i < this.temporaryGridForAcross.length; i ++) {
-            this.gridForAcross.push(this.temporaryGridForAcross[i]);
+            this.grid.gridForAcross.push(this.temporaryGridForAcross[i]);
         }
 
         this.temporaryGridForAcross = [];
@@ -173,12 +174,12 @@ export class Grid {
         let alreadyChoosen = false;
         let allWords: string[] = [];
 
-            for (let i = 0; i < this.gridForAcross.length; i++) {
-                allWords.push(this.gridForAcross[i].value);
+            for (let i = 0; i < this.grid.gridForAcross.length; i++) {
+                allWords.push(this.grid.gridForAcross[i].value);
             }
 
-            for (let i = 0; i < this.gridForVertical.length; i++) {
-                allWords.push(this.gridForVertical[i].value);
+            for (let i = 0; i < this.grid.gridForVertical.length; i++) {
+                allWords.push(this.grid.gridForVertical[i].value);
             }
 
             for (let i = 0; i < allWords.length; i++) {
@@ -191,4 +192,4 @@ export class Grid {
     }
 }
 
-const puzzle = new Grid(10);
+const puzzle = new GridGenerator(10);

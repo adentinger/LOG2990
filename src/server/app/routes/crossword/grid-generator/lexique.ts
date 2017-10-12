@@ -1,8 +1,8 @@
 import { lexicon } from './englishWords';
 import { Word } from './word';
-import { Grid } from './grid-generator';
+import { GridGenerator } from './grid-generator';
 
-export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, grid:Grid) {
+export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, gridGenerator:GridGenerator) {
     const desiredWords: string[] = [];
     for (let i = 0 ; i < lexicon.length; i++) {
         if ((lexicon[i].length >= lengthMin) && (lexicon[i].length <= lengthMax)) {
@@ -14,7 +14,7 @@ export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, gri
     let alreadyChosen = false;
     do {
         desiredWordVerified = desiredWords[getRandomIndex(0, desiredWords.length - 1)];
-        alreadyChosen = grid.alreadyChoosen(desiredWordVerified);
+        alreadyChosen = gridGenerator.alreadyChoosen(desiredWordVerified);
 
     }while (alreadyChosen === true);
     desiredWordVerified = wordFormatting(desiredWordVerified);
@@ -29,11 +29,11 @@ export function getRandomIndex(min: number, max: number) {
     return (Math.floor(Math.random() * (max - min)) + min);
 }
 
-export function formatGrid(crossword: Grid) {
-    for (let index = 0; index < crossword.grid.length; index++) {
-        for (let j = 0; j < crossword.grid[index].length; j++) {
-            if (!crossword.grid[index][j]) {
-                crossword.grid[index][j] = ' ';
+export function formatGrid(crossword: GridGenerator) {
+    for (let index = 0; index < crossword.gridDisplay.length; index++) {
+        for (let j = 0; j < crossword.gridDisplay[index].length; j++) {
+            if (!crossword.gridDisplay[index][j]) {
+                crossword.gridDisplay[index][j] = ' ';
             }
         }
     }

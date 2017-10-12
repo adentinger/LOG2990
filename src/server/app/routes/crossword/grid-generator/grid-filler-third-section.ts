@@ -1,11 +1,11 @@
 import { GridFiller, row,  } from './grid-filler';
 import { lexicon } from './englishWords';
 import { getRandomIndex, reverseString, getWordOfDesiredLength } from './lexique';
-import { Grid } from './grid-generator';
+import { GridGenerator } from './grid-generator';
 
 export class GridFillerThirdSection extends GridFiller {
 
-    constructor(grid: Grid) {
+    constructor(grid: GridGenerator) {
         super(grid);
         this.firstWordLenght = [3, 3];
         this.secondWordLenght = [3, 3];

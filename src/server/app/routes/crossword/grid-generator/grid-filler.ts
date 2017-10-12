@@ -1,6 +1,6 @@
 import { Word } from './word';
 import { getWordOfDesiredLength, getRandomIndex } from './lexique';
-import { Grid } from './grid-generator';
+import { GridGenerator } from './grid-generator';
 import { lexicon } from './englishWords';
 
 
@@ -21,7 +21,7 @@ export abstract class GridFiller {
     public temporaryGridForAcross: Word[] = [];
     public temporaryGridForVertical: Word[] = [];
 
-    constructor(grid: Grid) { }
+    constructor(grid: GridGenerator) { }
 
     public pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
         for (let i = 0; i < wordsSuggestions.length; i++) {
@@ -29,14 +29,14 @@ export abstract class GridFiller {
         }
     }
 
-    public initialisation(grid: Grid) {
+    public initialisation(grid: GridGenerator) {
         const word = getWordOfDesiredLength(this.firstWordLenght[0], this.firstWordLenght[1], grid);
 
         this.temporaryGridForVertical.push(word);
         this.findSecondWord(word, grid);
     }
 
-    public findSecondWord(word: Word, grid: Grid) {
+    public findSecondWord(word: Word, grid: GridGenerator) {
         let firstWordsSuggestions: string[] = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
@@ -59,7 +59,7 @@ export abstract class GridFiller {
         }
     }
 
-    public findThirdWord(word: Word, wordsSuggestions: string[], grid: Grid) {
+    public findThirdWord(word: Word, wordsSuggestions: string[], grid: GridGenerator) {
         wordsSuggestions = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
