@@ -10,6 +10,7 @@ import * as path from 'path';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
+import * as session from 'express-session';
 import * as cors from 'cors';
 import * as PacketAPI from './common/communication/packet-api';
 import { PacketManagerServer } from './packet-manager';
@@ -24,6 +25,8 @@ import './common/lexic/word-packet';
 
 @PacketAPI.PacketHandlerClass()
 export class Application {
+
+    public static readonly SECRET = '<Put random string here>';
 
     public app: express.Application;
     public packetManager: PacketManagerServer;
@@ -72,7 +75,8 @@ export class Application {
         this.app.use(logger('dev'));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(cookieParser());
+        this.app.use(cookieParser(Application.SECRET));
+        this.app.use(session({ secret: Application.SECRET }));
         this.app.use(express.static(path.join(__dirname, '../client')));
         this.app.use(cors());
     }
