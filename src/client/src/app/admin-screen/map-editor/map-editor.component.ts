@@ -91,7 +91,6 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
 
     public saveMap(): void {
         const SERIALIZED_MAP = this.mapEditor.serializeMap();
-        console.log('Saving', SERIALIZED_MAP);
         this.mapService.saveNew(SERIALIZED_MAP);
     }
 
