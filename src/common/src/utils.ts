@@ -10,11 +10,14 @@ export function isJson(pseudoJson: string): boolean {
     }
 }
 
-export interface Constructor<T> extends Function {
-    prototype: T;
+export interface Constructor<T extends Object> extends Function {
     new(...argv: any[]): T;
 }
-export declare type Class<T> = Constructor<T>; // For comprehention's sake
+export declare type Class<T> = Constructor<T> | Function; // For comprehention's sake
+
+export interface InstanceOf<T extends Constructor<InstanceOf<T>>> extends Object {
+    readonly constructor: T | Function;
+}
 
 export function toArrayBuffer(str: string): ArrayBuffer {
     const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
