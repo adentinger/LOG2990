@@ -56,6 +56,15 @@ export class BoardComponent implements OnInit {
         }
     }
 
+    public clearGridBeforeEnteringAWordOnFocus() {
+        const word = this.crosswordGridService.grid;
+        for (let i = 0; i < word.length; i++) {
+            if (this.inputBuffer.nativeElement.value === '' && word[i].string !== '') {
+                this.inputLettersOnGrid(word[i], '');
+            }
+        }
+    }
+
     // socketIO
     private sendWordToServer(input: string) {
         //
@@ -74,6 +83,7 @@ export class BoardComponent implements OnInit {
         else if (input.length === word.length) {
             this.inputLettersOnGrid(word, input);
             this.sendWordToServer(input);
+            this.definitionsService.internalSelectedDefinitionId = -1;
             this.crosswordGameService.aDefinitionIsSelected = false;
         }
     }

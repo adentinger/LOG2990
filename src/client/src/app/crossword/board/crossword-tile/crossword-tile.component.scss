@@ -47,3 +47,7 @@ $color-focus-item: #EDFF71;
 .greyed:not(.black-square) {
 	background: #A7A7A7; //lightgrey
 }
+
+.empty:not(black-square) {
+	text-indent: -9999px;
+}

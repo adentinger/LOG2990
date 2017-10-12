@@ -38,7 +38,6 @@ import { CrosswordGridService } from './board/crossword-grid.service';
         DefinitionsService,
         CrosswordGameService,
         CrosswordGridService
-        
     ],
     exports: [
         CrosswordComponent

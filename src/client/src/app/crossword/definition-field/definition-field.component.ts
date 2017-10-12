@@ -9,13 +9,15 @@ import { DefinitionsService } from './definitions.service';
 })
 export class DefinitionFieldComponent implements OnInit {
 
-    @ViewChild('inputBuffer') inputBuffer: ElementRef;
+    @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    @Output() selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    @Output() public clickedOutside: EventEmitter<boolean> = new EventEmitter<boolean>();
+
     public definitions: Definition[] = [];
 
     constructor(private definitionService: DefinitionsService) {
-        this.selectedDefinition = definitionService._selectedDefinition;
+        this.selectedDefinition = definitionService.internalSelectedDefinition;
     }
 
     public ngOnInit(): void {
@@ -23,7 +25,7 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public get selectedDefinitionId() {
-        return this.definitionService._selectedDefinitionId;
+        return this.definitionService.internalSelectedDefinitionId;
     }
 
     public set selectedDefinitionId(selectedDefinitionId) {

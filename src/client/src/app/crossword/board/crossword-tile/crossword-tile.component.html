@@ -1,8 +1,9 @@
-<input type='text'
+<input #caseInput type='text'
     class='crossword-board-item' 
     [disabled]='true'
     [class.highlighted]='checkIfHighlighted()'
     [class.black-square]='tileChar==="0"' 
     [class.greyed]='checkIfGreyed()'
+    [class.empty]='checkIfEmpty()'
 	[value]='tileChar'
 	maxlength='1'/>

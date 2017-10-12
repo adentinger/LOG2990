@@ -5,6 +5,7 @@
       <app-tile [tileRow]='j' [tileColumn]='i' [tileChar]='crosswordGrid[j][i]'></app-tile>
       </label>
     </div>
-    <input type='text' id='inputText' #inputBuffer (keyup)='onChange($event.target.value)'/>
+    <input type='text' id='inputText' #inputBuffer (focus)='clearGridBeforeEnteringAWordOnFocus()' 
+    (keyup)='onChange($event.target.value)'/>
   </div>
 </div>

@@ -8,8 +8,8 @@ import { CrosswordGameService } from '../crossword-game.service';
 export class DefinitionsService {
 
     private definitions: Definition[];
-    public _selectedDefinitionId: number = -1;
-    public _selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    public internalSelectedDefinitionId: number = -1;
+    public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
     public getDefinitions(): Definition[] {
         return this.definitions;
@@ -19,17 +19,17 @@ export class DefinitionsService {
     }
 
     public get selectedDefinitionId() {
-        return this._selectedDefinitionId;
+        return this.internalSelectedDefinitionId;
     }
 
     public set selectedDefinitionId(selectedDefinitionId) {
-        this._selectedDefinitionId = selectedDefinitionId;
+        this.internalSelectedDefinitionId = selectedDefinitionId;
 
         if (selectedDefinitionId === -1) {
-            this._selectedDefinition.emit(null);
+            this.internalSelectedDefinition.emit(null);
         }
         else {
-            this._selectedDefinition.emit(selectedDefinitionId);            
+            this.internalSelectedDefinition.emit(selectedDefinitionId);
         }
     }
 
