@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
@@ -34,6 +34,9 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
     private loadedMapName = '';
+
+    @Output() public mapWasSaved = new EventEmitter<string>();
+    @Output() public mapCouldNotBeSaved = new EventEmitter<string>();
 
     constructor(private mapEditor: MapEditorService,
                 private mapRenderer: MapRendererService,
@@ -93,13 +96,28 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
 
     public saveMap(): void {
         const SERIALIZED_MAP = this.mapEditor.serializeMap();
+
+        let savePromise: Promise<void>;
         if (SERIALIZED_MAP.name !== this.loadedMapName) {
-            this.mapService.saveNew(SERIALIZED_MAP);
+            savePromise = this.mapService.saveNew(SERIALIZED_MAP);
         }
         else {
-            this.mapService.saveEdited(SERIALIZED_MAP);
+            savePromise = this.mapService.saveEdited(SERIALIZED_MAP);
         }
+
+        savePromise.then(() => {
+            this.mapWasSaved.emit(SERIALIZED_MAP.name);
+        })
+        .catch(() => {
+            this.mapCouldNotBeSaved.emit(SERIALIZED_MAP.name);
+        });
     }
+
+    public potholes(): void {}
+
+    public puddles(): void {}
+
+    public speedBoosts(): void {}
 
     public clicked(event: MouseEvent): void {
         event.preventDefault();
