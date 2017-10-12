@@ -74,54 +74,7 @@ export class MapEditorService {
 
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
-            if (this.computeMapErrors() === MapError.NONE) {
-                const POINTS: Point[] =
-                    this.map.path.points.map((point: Point) => {
-                        const X = this.converter.lengthToGameUnits(point.x);
-                        const Y = this.converter.lengthToGameUnits(point.y);
-                        return new Point(X, Y);
-                    });
-
-                if (!this.map.isClockwise()) {
-                    POINTS.reverse();
-                }
-
-                POINTS.pop(); // Do not include the last point ;
-                              // it is the same as the first point.
-                const SERIALIZED_POTHOLES: SerializedPothole[] =
-                    this.map.potholes.map(
-                        (pothole: Pothole) =>
-                            new SerializedPothole(
-                                this.converter.lengthToGameUnits(pothole.position)));
-                const SERIALIZED_PUDDLES: SerializedPuddle[] =
-                    this.map.potholes.map(
-                        (puddle: Puddle) =>
-                            new SerializedPuddle(
-                                this.converter.lengthToGameUnits(puddle.position)));
-                const SERIALIZED_SPEED_BOOSTS: SerializedSpeedBoost[] =
-                    this.map.potholes.map(
-                        (speedBoost: SpeedBoost) =>
-                            new SerializedSpeedBoost(
-                                this.converter.lengthToGameUnits(speedBoost.position)));
-
-                return new SerializedMap(
-                    this.map.name,
-                    this.map.description,
-                    this.map.type,
-                    0,
-                    0,
-                    0,
-                    POINTS,
-                    SERIALIZED_POTHOLES,
-                    SERIALIZED_PUDDLES,
-                    SERIALIZED_SPEED_BOOSTS
-                );
-            }
-            else {
-                throw new Error('Serialization failed: ' +
-                                'The map is currently not valid. ' +
-                                'Fix map problems before attempting serialization');
-            }
+            return this.mapConverter.serialize(this.map);
         }
         else {
             throw new Error('Serializing map failed: ' +
