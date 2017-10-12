@@ -32,15 +32,13 @@ export class MapService {
     }
 
     public getMapNames(count: number): Promise<string[]> {
-        return Promise.resolve(this.mockSerializedMaps.functionnalMaps().map((map: SerializedMap) => {
-            return map.name;
-        }));
+        const url = 'http://localhost:3000/racing/map-names/' + count;
+        return this.http.get(url).toPromise().then(response => response.json() as string[]);
     }
 
     public getByName(name: string): Promise<SerializedMap> {
-        return Promise.resolve(this.mockSerializedMaps.functionnalMaps().find((map: SerializedMap) => {
-            return (map.name === name);
-        }));
+        const url = 'http://localhost:3000/racing/maps/' + name;
+        return this.http.get(url).toPromise().then(response => response.json() as SerializedMap);
     }
 
     // To be deleted ; mock method.

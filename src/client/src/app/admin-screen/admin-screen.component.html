@@ -10,7 +10,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="selectedMap">
+  <div *ngIf="serializedMap">
       <app-map-editor [map]="serializedMap"></app-map-editor> 
   </div>
   <button (click)="sendSocket()">Send word constraint</button>
