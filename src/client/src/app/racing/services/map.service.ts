@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 import { SerializedMap } from '../../common/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
 import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
 
 @Injectable()
 export class MapService {
+
+    private static readonly HEADERS: RequestOptionsArgs =
+        {headers: new Headers({'Content-Type': 'application/json'})};
 
     public maps: Map[];
     private mockSerializedMaps: MockSerializedMaps = new MockSerializedMaps;
@@ -15,15 +18,15 @@ export class MapService {
 
     public saveNew(serializedMap: SerializedMap): Promise<void> {
         const url = 'http://localhost:3000/racing/maps';
-        return this.http.post(url, JSON.stringify({map: serializedMap})).toPromise().then(() => null);
+        return this.http.post(url, JSON.stringify(serializedMap), MapService.HEADERS).toPromise().then(() => null);
     }
 
     public saveEdited(serializedMap: SerializedMap): Promise<void> {
         const url = 'http://localhost:3000/racing/maps/' + serializedMap.name;
-        return this.http.put(url, JSON.stringify({serializedMap})).toPromise().then(() => null);
+        return this.http.put(url, JSON.stringify(serializedMap), MapService.HEADERS).toPromise().then(() => null);
     }
 
-    public delete(name: string): Promise<number[]> {
+    public delete(name: string): Promise<void> {
         const url = 'http://localhost:3000/racing/maps/' + name;
         return this.http.delete(url).toPromise().then(() => null);
     }
