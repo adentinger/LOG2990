@@ -33,6 +33,7 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     public isDragging = false;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
+    private loadedMapName = '';
 
     constructor(private mapEditor: MapEditorService,
                 private mapRenderer: MapRendererService,
@@ -43,6 +44,7 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
 
     @Input() public set map(serializedMap: SerializedMap) {
         this.mapEditor.deserializeMap(serializedMap);
+        this.loadedMapName = serializedMap.name;
         if (this.mapRenderer.canvas !== undefined) {
             this.mapRenderer.draw();
         }
@@ -91,7 +93,12 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
 
     public saveMap(): void {
         const SERIALIZED_MAP = this.mapEditor.serializeMap();
-        this.mapService.saveNew(SERIALIZED_MAP);
+        if (SERIALIZED_MAP.name !== this.loadedMapName) {
+            this.mapService.saveNew(SERIALIZED_MAP);
+        }
+        else {
+            this.mapService.saveEdited(SERIALIZED_MAP);
+        }
     }
 
     public clicked(event: MouseEvent): void {
