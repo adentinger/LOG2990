@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit } from '
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
+import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from '../../common/math/point';
@@ -20,6 +21,7 @@ const INITIAL_WIDTH = 500;
     providers: [
         MapEditorService,
         MapRendererService,
+        MapConverterService,
         RacingUnitConversionService
     ]
 })

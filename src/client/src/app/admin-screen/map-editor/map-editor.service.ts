@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map, MapError } from './map';
 import { SerializedMap } from '../../common/racing/serialized-map';
@@ -22,7 +23,8 @@ export class MapEditorService {
 
     private map: Map;
 
-    constructor(private converter: RacingUnitConversionService) {
+    constructor(private converter: RacingUnitConversionService,
+                private mapConverter: MapConverterService) {
         this.newMap();
     }
 
