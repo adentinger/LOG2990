@@ -8,6 +8,7 @@ import { Map as RacingMap, MAP_TYPES, MapError } from './map';
 import { Point } from '../../common/math/point';
 import { PointIndex } from './point-index';
 import { SerializedMap } from '../../common/racing/serialized-map';
+import { MapService } from '../../racing/services/map.service';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
@@ -34,7 +35,8 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     private hoveredPoint: PointIndex = -1;
 
     constructor(private mapEditor: MapEditorService,
-        private mapRenderer: MapRendererService) {
+                private mapRenderer: MapRendererService,
+                private mapService: MapService) {
         this.width = INITIAL_WIDTH;
         this.displayable = true;
     }
@@ -88,7 +90,9 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     }
 
     public saveMap(): void {
-        console.log('Map "Saved": ', this.mapEditor.serializeMap());
+        const SERIALIZED_MAP = this.mapEditor.serializeMap();
+        console.log('Saving', SERIALIZED_MAP);
+        this.mapService.saveNew(SERIALIZED_MAP);
     }
 
     public clicked(event: MouseEvent): void {
