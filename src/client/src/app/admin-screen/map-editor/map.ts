@@ -25,7 +25,6 @@ export class Map {
     public potholes: Pothole[] = [];
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
-    public bestTimes: number[];
 
     public name: string;
     public description: string;

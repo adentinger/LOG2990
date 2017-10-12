@@ -8,12 +8,6 @@ import { Point } from '../../common/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
-import { SerializedPothole } from '../../common/racing/serialized-pothole';
-import { Pothole } from './pothole';
-import { SerializedSpeedBoost } from '../../common/racing/serialized-speed-boost';
-import { SerializedPuddle } from '../../common/racing/serialized-puddle';
-import { Puddle } from './puddle';
-import { SpeedBoost } from './speed-boost';
 
 @Injectable()
 export class MapEditorService {
