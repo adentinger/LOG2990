@@ -22,7 +22,7 @@ export class MapService {
     }
 
     public saveEdited(serializedMap: SerializedMap): Promise<void> {
-        const url = 'http://localhost:3000/racing/maps/' + serializedMap.name;
+        const url = 'http://localhost:3000/racing/maps/';
         return this.http.put(url, JSON.stringify(serializedMap), MapService.HEADERS).toPromise().then(() => null);
     }
 
