@@ -20,6 +20,8 @@ export class SerializedMap {
     public potholes: SerializedPothole[];
     public puddles: SerializedPuddle[];
     public speedBoosts: SerializedSpeedBoost[];
+    public bestTimes: number[];
+
 
     public constructor(name: string = '',
                        description: string = '',
@@ -30,7 +32,8 @@ export class SerializedMap {
                        points: Point[] = [],
                        potholes: SerializedPothole[] = [],
                        puddles: SerializedPuddle[] = [],
-                       speedBoosts: SerializedSpeedBoost[] = []) {
+                       speedBoosts: SerializedSpeedBoost[] = [],
+                       bestTimes: number[] = []) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -41,6 +44,7 @@ export class SerializedMap {
         this.potholes = potholes;
         this.puddles = puddles;
         this.speedBoosts = speedBoosts;
+        this.bestTimes = bestTimes;
     }
 
 }

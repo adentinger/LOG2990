@@ -2,9 +2,9 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MapEditorService } from './map-editor.service';
 import { Map } from './map';
-import { SerializedMap } from '../../common/racing/serialized-map';
 import { MockMaps } from './mock-maps';
 import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
+import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from '../../common/math/point';
 
@@ -13,6 +13,7 @@ describe('MapEditorService', () => {
         TestBed.configureTestingModule({
             providers: [
                 MapEditorService,
+                MapConverterService,
                 RacingUnitConversionService,
                 MockMaps,
                 MockSerializedMaps
@@ -53,48 +54,6 @@ describe('MapEditorService', () => {
         expect(INITIAL_MAP).not.toBe(NEW_MAP);
     });
 
-    const CHECK_SERIALIZATION = (map: Map, serializedMap: SerializedMap) => {
-        expect(map.name).toEqual(serializedMap.name);
-        expect(map.description).toEqual(serializedMap.description);
-
-        let mapPoints: Point[];
-        if (map.isClockwise()) {
-            mapPoints = map.path.points.slice();
-        }
-        else {
-            mapPoints = map.path.points.slice().reverse();
-        }
-        mapPoints.pop();
-
-        expect(mapPoints.length).toEqual(serializedMap.points.length);
-
-        for (let i = 0; i < mapPoints.length; ++i) {
-            const MAP_POINT = mapPoints[i];
-            const SMAP_POINT = serializedMap.points[i];
-            const X = converter.lengthToGameUnits(MAP_POINT.x);
-            const Y = converter.lengthToGameUnits(MAP_POINT.y);
-            const CONVERTED_MAP_POINT = new Point(X, Y);
-            expect(CONVERTED_MAP_POINT.x).toBeCloseTo(SMAP_POINT.x);
-            expect(CONVERTED_MAP_POINT.y).toBeCloseTo(SMAP_POINT.y);
-        }
-
-        expect(map.plays).toEqual(serializedMap.numberOfPlays);
-        expect(map.potholes).toEqual(serializedMap.potholes);
-        expect(map.puddles).toEqual(serializedMap.puddles);
-        expect(map.speedBoosts).toEqual(serializedMap.speedBoosts);
-        expect(map.type).toEqual(serializedMap.type);
-
-        let expectedRating: number;
-        if (serializedMap.numberOfRatings !== 0) {
-            expectedRating =
-                serializedMap.sumRatings / serializedMap.numberOfRatings;
-        }
-        else {
-            expectedRating = 0;
-        }
-        expect(map.rating).toEqual(expectedRating);
-    };
-
     describe('isMapClockwise', () => {
 
         it('should return true when the map is valid and clockwise', () => {
@@ -109,97 +68,10 @@ describe('MapEditorService', () => {
 
         it('should return true when the map is invalid', () => {
             service['map'] = mockMaps.disfunctionalMap1();
-            // tslint:disable-next-line:no-unused-expression
             expect(service.isMapClockwise).toBe(true);
         });
 
     });
-
-    describe('serializeMap', () => {
-
-        it('should serialize maps as-is if they are valid and clockwise', () => {
-            const CLOCKWISE = mockMaps.clockwise();
-            service['map'] = CLOCKWISE;
-            CHECK_SERIALIZATION(CLOCKWISE, service.serializeMap());
-        });
-
-        it('should serialize maps reversed if they are valid and counter-clockwise', () => {
-            const COUNTER_CLOCKWISE = mockMaps.counterClockwise();
-            service['map'] = COUNTER_CLOCKWISE;
-            CHECK_SERIALIZATION(COUNTER_CLOCKWISE, service.serializeMap());
-        });
-
-        it('should not serialize maps if they are not valid', () => {
-            service['map'] = mockMaps.disfunctionalMap1();
-            expect(() => service.serializeMap()).toThrow();
-            service['map'] = mockMaps.disfunctionalMap2();
-            expect(() => service.serializeMap()).toThrow();
-            service['map'] = mockMaps.emptyMap1();
-            expect(() => service.serializeMap()).toThrow();
-        });
-
-        it('should not serialize maps if dimensions are not set', () => {
-            service['width'] = -1;
-            service['height'] = -1;
-
-            service['map'] = mockMaps.functionalMap1();
-            expect(() => service.serializeMap()).toThrow();
-            service['map'] = mockMaps.disfunctionalMap1();
-            expect(() => service.serializeMap()).toThrow();
-
-            const INITIAL_WIDTH = service.mapWidth;
-            service.mapWidth = 500;
-            service['map'] = mockMaps.functionalMap1();
-            service.serializeMap(); // Should not throw
-
-            service['width'] = INITIAL_WIDTH;
-            service['height'] = 300;
-            service['map'] = mockMaps.functionalMap1();
-            expect(service.serializeMap).toThrow();
-        });
-
-    });
-
-    describe('deserializeMap', () => {
-
-        it('should deserialize maps if they are valid', () => {
-            service.mapWidth = 500;
-            service.mapHeight = 300;
-
-            const MAPS: SerializedMap[] = [
-                mockSerializedMaps.functional1(),
-                mockSerializedMaps.functional2()
-            ];
-
-            MAPS.forEach((map: SerializedMap, idx) => {
-                service.deserializeMap(map);
-                CHECK_SERIALIZATION(service.currentMap, map);
-            });
-        });
-
-        it('should not deserialize maps if they are not valid', () => {
-            const DISFUNCTIONAL_MAPS: SerializedMap[] = [
-                mockSerializedMaps.disfunctional1(),
-                mockSerializedMaps.disfunctional2()
-            ];
-
-            DISFUNCTIONAL_MAPS.forEach((map: SerializedMap) => {
-                expect(() => service.deserializeMap(map)).toThrow();
-            });
-        });
-
-        it('should not deserialize maps if either width or height is not set', () => {
-            service['width'] = -1;
-            service['height'] = -1;
-
-            const FUNCTIONAL = mockSerializedMaps.functional1();
-            expect(() => service.deserializeMap(FUNCTIONAL)).toThrow();
-            const DISFUNCTIONAL = mockSerializedMaps.disfunctional1();
-            expect(() => service.deserializeMap(DISFUNCTIONAL)).toThrow();
-        });
-
-    });
-
 
     it('should be able to check if a path loops back', () => {
         service['map'] = mockMaps.functionalMap1();

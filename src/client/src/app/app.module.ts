@@ -20,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { PacketManagerService, packetManagerClient } from './packet-manager.service';
 import { PacketManagerClient } from './packet-manager-client';
+import { MapService } from './racing/services/map.service';
 
 @NgModule({
     declarations: [
@@ -40,7 +41,8 @@ import { PacketManagerClient } from './packet-manager-client';
     providers: [
         BasicService,
         PacketManagerService,
-        {provide: PacketManagerClient, useValue: packetManagerClient}
+        {provide: PacketManagerClient, useValue: packetManagerClient},
+        MapService
     ],
     bootstrap: [AppComponent]
 })

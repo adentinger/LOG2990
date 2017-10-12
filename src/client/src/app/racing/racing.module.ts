@@ -5,6 +5,7 @@ import { RacingComponent } from './racing.component';
 import { InitialViewComponent } from './initial-view/initial-view.component';
 import { MapService } from './services/map.service';
 import { MapBestTimeComponent } from './initial-view/map-best-time/map-best-time.component';
+import { MapThumbnailComponent } from './initial-view/map-thumbnail/map-thumbnail.component';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { MapBestTimeComponent } from './initial-view/map-best-time/map-best-time
     declarations: [
         RacingComponent,
         InitialViewComponent,
-        MapBestTimeComponent
+        MapBestTimeComponent,
+        MapThumbnailComponent
     ],
     providers: [
         MapService
