@@ -101,6 +101,12 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
         }
     }
 
+    public potholes(): void {}
+
+    public puddles(): void {}
+
+    public speedBoosts(): void {}
+
     public clicked(event: MouseEvent): void {
         event.preventDefault();
         if (!this.isDragging) {
