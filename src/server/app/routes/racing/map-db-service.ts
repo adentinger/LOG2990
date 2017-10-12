@@ -21,6 +21,7 @@ export class MapDbService {
         return new Promise((resolve, reject) => {
             if (serializedMap.name == null) {
                 reject(HttpStatus.BAD_REQUEST);
+                return;
             }
 
             const MAP_DOCUMENT: any = this.makeMapDocumentFrom(serializedMap);
@@ -38,6 +39,7 @@ export class MapDbService {
         return new Promise((resolve, reject) => {
             if (serializedMap.name == null) {
                 reject(HttpStatus.BAD_REQUEST);
+                return;
             }
 
             const MAP_DOCUMENT: any = this.makeMapDocumentFrom(serializedMap);
