@@ -11,7 +11,7 @@
     </div>
   </div>
   <div *ngIf="serializedMap">
-      <app-map-editor [map]="serializedMap"></app-map-editor> 
+      <app-map-editor [map]="serializedMap" (mapWasSaved)="addMap($event)"></app-map-editor> 
   </div>
   <button (click)="sendSocket()">Send word constraint</button>
 </div>

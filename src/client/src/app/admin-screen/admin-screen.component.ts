@@ -51,6 +51,21 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
         this.mapService.getByName(this.selectedMap).then((serializedMap) => this.serializedMap = serializedMap);
     }
 
+    private keepAllMapsExcept(map: string): void {
+        this.mapNames = this.mapNames.filter((name: string) => name !== map);
+    }
+
+    public addMap(map: string): void {
+        this.keepAllMapsExcept(map);
+        this.mapNames.push(map);
+    }
+
+    public deleteMap(map: string): void {
+        this.mapService.delete(map)
+            .then(() => this.keepAllMapsExcept(map))
+            .catch(() => {});
+    }
+
     private wordConstraintHandler(event: PacketEvent<WordConstraint>): void {
         console.log('[AdminScreen] Packet Received', JSON.stringify(event));
         this.data = event.value;
@@ -61,10 +76,6 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
         const wc: WordConstraint = { minLength: ++this.count, isCommon: true, charConstraints: [{ char: 'a', position: 0 }] };
         console.log('[AdminScreen] Sending to server ...');
         this.packetService.sendPacket(WordConstraint, wc);
-    }
-
-    public deleteMap(map: string): void {
-        this.mapService.delete(map);
     }
 
 }
