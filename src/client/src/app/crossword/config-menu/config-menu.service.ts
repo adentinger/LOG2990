@@ -29,7 +29,7 @@ export class ConfigMenuService {
         name: 'Confirm Settings',
         settings: {},
         options: [
-            {name: 'Start', nextPage: ConfigMenuService.STATE_SEND}
+            { name: 'Start', nextPage: ConfigMenuService.STATE_SEND }
         ]
     };
     public isConfiguringGame = true;
@@ -39,10 +39,12 @@ export class ConfigMenuService {
     private gameConfiguration: SavedSettings = {};
     private stateStack: number[] = [];
 
+    public createdGameId;
+
     constructor(private location: Location,
-                private http: HttpClient,
-                @Inject('menuConfigUrl') menuConfigUrl: string) {
-        http.get(menuConfigUrl, {responseType: 'json'}).subscribe((menuPages) => {
+        private http: HttpClient,
+        @Inject('menuConfigUrl') menuConfigUrl: string) {
+        http.get(menuConfigUrl, { responseType: 'json' }).subscribe((menuPages) => {
             this.states.push.apply(this.states, ConfigMenuState.fromJson(menuPages, http));
             if (this.states.length > 0) {
                 const firstState = this.states.find((value: ConfigMenuState) => value.id === 0);
@@ -80,7 +82,7 @@ export class ConfigMenuService {
                 if (ConfigMenuState.hasFetchableOptions(state)) {
                     options = (state.options as FetchableOptionList).fetchedOptions
                         .map((option: FetchedPendingGame) =>
-                        FetchedPendingGame.prototype.toString.apply(option));
+                            FetchedPendingGame.prototype.toString.apply(option));
                 } else {
                     options = (state.options as ConfigMenuOption[])
                         .map((option: ConfigMenuOption) => option.name);
@@ -121,10 +123,21 @@ export class ConfigMenuService {
     }
 
     public sendGameConfiguration(): void {
+        console.log('sending to url: ' + ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH);
+        console.log('sending:' + this.getDisplayedSettings().toString());
         this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
-                       this.gameConfiguration).subscribe((response) => {
-                           console.log(response);
-                       }, console.error);
+            this.getDisplayedSettings)
+            .subscribe(
+            (response) => {
+                console.log('response on client: ' + JSON.stringify(response));
+            },
+            (error: Error) => {
+                console.log('error on client : ' + error.message);
+            });
+        // .subscribe((response: Response) => {
+        //     // console.log(response.json());
+        // }, console.error);
+        // console.log(this.getDisplayedSettings());
         this.isConfiguringGame = false;
     }
 }

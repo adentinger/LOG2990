@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../http-response-status';
+import { GameManager } from './games/game-manager';
 
 type CrosswordGameMode = 'classic' | 'dynamic';
 type CrosswordGameDifficulty = 'easy' | 'normal' | 'brutal';
@@ -30,11 +31,15 @@ export class CrosswordGamesMiddleWare {
         res.send(MOCK_PENDING_GAMES);
     }
 
-    @Route('post', '/')
-    public postGame(req: express.Request, res: express.Response): void {
-        console.log(req.body);
-        res.sendStatus(HttpStatus.IM_A_TEAPOT);
-    }
+    // @Route('post', '/')
+    // public postGame(req: express.Request, res: express.Response): void {
+    //     // console.log('MIDDLEWARE TRIGGERED');
+    //     // res.status(HttpStatus.ACCEPTED);
+
+    //     console.log(req.body);
+    //     const newGameId = GameManager.getInstance().newGame(req.body);
+    //     res.send({
+    //         'id': newGameId
+    //     });
+    // }
 }
-
-
