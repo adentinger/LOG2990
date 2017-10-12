@@ -23,7 +23,7 @@ export class AdminScreenComponent implements OnInit, OnDestroy {
     public mapNames: string[];
     public selectedMap: string;
     private child: MapEditorComponent;
-    public serializedMap: SerializedMap;
+    public serializedMap: SerializedMap = new SerializedMap();
 
     constructor(private packetService: PacketManagerClient,
                 private mapService: MapService) {}

@@ -46,7 +46,12 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     }
 
     @Input() public set map(serializedMap: SerializedMap) {
-        this.mapEditor.deserializeMap(serializedMap);
+        if (serializedMap.name !== '') {
+            this.mapEditor.deserializeMap(serializedMap);
+        }
+        else {
+            this.mapEditor.newMap();
+        }
         this.loadedMapName = serializedMap.name;
         if (this.mapRenderer.canvas !== undefined) {
             this.mapRenderer.draw();
