@@ -70,8 +70,12 @@ export class MapDbService {
     public getMapNames(count: number): Promise<string[]> {
         return new Promise((resolve, reject) => {
             this.mapCollection.find({}, {_id: false, name: true}).toArray()
-            .then((names: any) => {
-                resolve(names);
+            .then((nameObjects: any[]) => {
+                const NAMES: string[] = nameObjects.map((nameObject: any) => nameObject.name);
+                if (NAMES.length > count) {
+                    NAMES.splice(count);
+                }
+                resolve(NAMES);
             })
             .catch(() => {
                 reject(HttpStatus.INTERNAL_SERVER_ERROR);
