@@ -38,20 +38,17 @@ export class GridGeneratorMiddleWare {
 */
 
 export class GridGenerator {
-    public temporaryGridForAcross: Word[] = [];
-    public temporaryGridForVertical: Word[] = [];
     public gridDisplay: string[][] = [];
-    public gridForPosition: Array<[number, number]>[] = [];
     public grid: Grid;
+    public wordsPositionVertical: [number, number, number][];
+    public wordsPositionHorizontal: [number, number, number][];
 
     constructor(private size: number) {
         for (let i = 0; i < size; i++) {
             this.gridDisplay[i] = new Array<string>(size);
         }
-
-        for (let i = 0; i < size; i++) {
-            this.gridForPosition[i] = new Array<[number, number]>(size);
-        }
+        this.wordsPositionVertical = [[0, 2, 0], [3, 5, 3], [6, 8, 7], [9, 9, 2]];
+        this.wordsPositionHorizontal = [[0, 2, 0], [3, 6, 3], [7, 9, 8]];
         this.grid = new Grid();
         this.gridGeneration();
     }
@@ -59,30 +56,16 @@ export class GridGenerator {
     public gridGeneration() {
         // the grid is separated in three cases + a final word push
         const firstGrid = new GridFillerFirstSection(this);
-        this.temporaryGridForVertical = firstGrid.temporaryGridForVertical;
-        this.temporaryGridForAcross = firstGrid.temporaryGridForAcross;
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
+        this.pushOnTheGridAndReinitialiseTemporaryGrid(firstGrid.temporaryGridForVertical, firstGrid.temporaryGridForAcross);
 
         const secondGrid = new GridFillerSecondSection(this);
-        this.temporaryGridForVertical = secondGrid.temporaryGridForVertical;
-        this.temporaryGridForAcross = secondGrid.temporaryGridForAcross;
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
+        this.pushOnTheGridAndReinitialiseTemporaryGrid(secondGrid.temporaryGridForVertical, secondGrid.temporaryGridForAcross);
 
         const thirdGrid = new GridFillerThirdSection(this);
-        this.temporaryGridForVertical = thirdGrid.temporaryGridForVertical;
-        this.temporaryGridForAcross = thirdGrid.temporaryGridForAcross;
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
+        this.pushOnTheGridAndReinitialiseTemporaryGrid(thirdGrid.temporaryGridForVertical, thirdGrid.temporaryGridForAcross);
 
         this.grid.gridForVertical.push(getWordOfDesiredLength(4, 5, this));
-        /*
-        this.initialisation(2);
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
-        this.initialisation(3);
-        this.pushOnTheGridAndReinitialiseTemporaryGrid();
-        */
-        // finaly we push a word on last column
 
-        //console.info(this.gridForPosition);
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
         console.dir(this.grid.gridForVertical);
@@ -103,76 +86,65 @@ export class GridGenerator {
 
     public putWordVertical(word: Word, column: number) {
 
-        let rowToWriteOn: number;
-        if ((column >= 0) && (column <= 2)) {
-            rowToWriteOn = 0;
-        }else if ((column >= 3) && (column <= 5)) {
-            rowToWriteOn = 3;
-        }else if ((column >= 6) && (column <= 8)) {
-            rowToWriteOn = 7;
-        }else if (column === 9) {
-            rowToWriteOn = 2;
+        let row: number;
+        for (let index = 0; index < this.wordsPositionVertical.length; index++) {
+            if (column >= this.wordsPositionVertical[index][0] &&
+                 column <= this.wordsPositionVertical[index][1]) {
+                     row = this.wordsPositionVertical[index][2];
+                    word.position = [this.wordsPositionVertical[index][2], column];
+             }
         }
 
-        word.position = [rowToWriteOn, column];
-
         for (let i = 0; i < word.value.length; i++) {
-            this.gridDisplay[rowToWriteOn + i][column] = word.value[i];
+            this.gridDisplay[row + i][column] = word.value[i];
         }
     }
 
     public putWordAcross(word: Word, row: number) {
 
-        let columnToWriteOn: number;
-        if ((row >= 0) && (row <= 2)) {
-            columnToWriteOn = 0;
-        }else if ((row >= 3) && (row <= 6)) {
-            columnToWriteOn = 3;
-        }else if ((row >= 7) && (row <= 9)) {
-            columnToWriteOn = 8;
+        let column: number;
+        for (let index = 0; index < this.wordsPositionHorizontal.length; index++) {
+            if (row >= this.wordsPositionHorizontal[index][0] &&
+                row <= this.wordsPositionHorizontal[index][1]) {
+                column = this.wordsPositionHorizontal[index][2];
+                if (row < 7) {
+                    column = this.wordsPositionHorizontal[index][2];
+                    word.position = [row, this.wordsPositionHorizontal[index][2]];
+                }else {
+                    column = this.wordsPositionHorizontal[index][2] - (word.value.length - 1);
+                    word.position = [row, this.wordsPositionHorizontal[index][2] - (word.value.length - 1)];
+                }
+            }
         }
-        console.log('BONJOURR');
-        console.log(word);
+
         if (row < 7) {
-            word.position = [row, columnToWriteOn];
             for (let i = 0; i < word.value.length; i++) {
-                this.gridDisplay[row][columnToWriteOn + i] = word.value[i];
+                this.gridDisplay[row][column + i] = word.value[i];
             }
         }else {
             let wordIndex = word.value.length - 1;
             for (let i = 0; i < word.value.length; i++) {
-                this.gridDisplay[row][columnToWriteOn - i] = word.value[wordIndex];
+                this.gridDisplay[row][column + i] = word.value[i];
                 wordIndex--;
             }
-            word.position = [row, columnToWriteOn - (word.value.length - 1)];
         }
     }
 
-    public pushOnTheGridAndReinitialiseTemporaryGrid() {
+    public pushOnTheGridAndReinitialiseTemporaryGrid(temporaryGridForVertical: Word[], temporaryGridForAcross: Word[]) {
         if (this.grid.gridForVertical.length === 6) { // for Case three
-            this.temporaryGridForVertical.reverse();
+            temporaryGridForVertical.reverse();
         }
-        for (let i = 0; i < this.temporaryGridForVertical.length; i ++) {
-            this.grid.gridForVertical.push(this.temporaryGridForVertical[i]);
+        for (let i = 0; i < temporaryGridForVertical.length; i ++) {
+            this.grid.gridForVertical.push(temporaryGridForVertical[i]);
         }
-        for (let i = 0; i < this.temporaryGridForAcross.length; i ++) {
-            this.grid.gridForAcross.push(this.temporaryGridForAcross[i]);
-        }
-
-        this.temporaryGridForAcross = [];
-        this.temporaryGridForVertical = [];
-    }
-    public pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
-        for (let i = 0; i < wordsSuggestions.length; i++) {
-            this.temporaryGridForAcross.push(new Word(wordsSuggestions[i]));
+        for (let i = 0; i < temporaryGridForAcross.length; i ++) {
+            this.grid.gridForAcross.push(temporaryGridForAcross[i]);
         }
     }
-
-
 
     public alreadyChoosen(wordToCheck: string) {
         let alreadyChoosen = false;
-        let allWords: string[] = [];
+        const allWords: string[] = [];
 
             for (let i = 0; i < this.grid.gridForAcross.length; i++) {
                 allWords.push(this.grid.gridForAcross[i].value);
@@ -183,7 +155,7 @@ export class GridGenerator {
             }
 
             for (let i = 0; i < allWords.length; i++) {
-                if (allWords[i] === wordToCheck){
+                if (allWords[i] === wordToCheck) {
                     alreadyChoosen = true;
                 }
             }
