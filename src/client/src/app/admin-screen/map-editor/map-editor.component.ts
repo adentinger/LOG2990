@@ -112,6 +112,7 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
         }
 
         savePromise.then(() => {
+            this.loadedMapName = SERIALIZED_MAP.name;
             this.mapWasSaved.emit(SERIALIZED_MAP.name);
         })
         .catch(() => {
