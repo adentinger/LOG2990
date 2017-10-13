@@ -41,9 +41,4 @@ export class MapService {
         return this.http.get(url).toPromise().then(response => response.json() as SerializedMap);
     }
 
-    // To be deleted ; mock method.
-    public getMaps(): Promise<SerializedMap[]> {
-        return Promise.resolve(this.mockSerializedMaps.functionnalMaps());
-    }
-
 }
