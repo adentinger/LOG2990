@@ -8,7 +8,7 @@ export class CrosswordGame {
         // other attributes
     }
 
-    public getStatus(): String {    // MOC
+    public getStatus(): String {    // MOCK
         return 'game of type ' + this.gameMode + 'in process';
     }
 }

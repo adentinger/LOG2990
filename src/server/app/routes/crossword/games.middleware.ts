@@ -31,15 +31,29 @@ export class CrosswordGamesMiddleWare {
         res.send(MOCK_PENDING_GAMES);
     }
 
-    // @Route('post', '/')
-    // public postGame(req: express.Request, res: express.Response): void {
-    //     // console.log('MIDDLEWARE TRIGGERED');
-    //     // res.status(HttpStatus.ACCEPTED);
+    @Route('post', '/')
+    public postGame(req: express.Request, res: express.Response): void {
+        // console.log('MIDDLEWARE TRIGGERED');
+        res.status(HttpStatus.ACCEPTED);
 
-    //     console.log(req.body);
-    //     const newGameId = GameManager.getInstance().newGame(req.body);
-    //     res.send({
-    //         'id': newGameId
-    //     });
-    // }
+        console.log(req.body);
+        const newGameId = GameManager.getInstance().newGame(req.body);
+        res.json({
+            'id': newGameId
+        });
+    }
+    @Route('get', '/:id')
+    public getGame(req: express.Request, res: express.Response): void {
+        // res.status(HttpStatus.ACCEPTED);
+        let game;
+        console.log("\nprocessing req =" + req.body);
+        try {
+            game = GameManager.getInstance().getGame(req.params.id);
+        } catch (error) {
+            res.sendStatus(HttpStatus.NOT_FOUND);
+            return;
+        }
+        res.status(HttpStatus.OK);
+        res.send(game);
+    }
 }

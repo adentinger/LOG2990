@@ -1,4 +1,5 @@
-import { expect } from 'chai';
+// import { expect } from 'chai';
+const chai = require('chai');
 import { isJson } from './utils';
 
 // Used to put a blank space between passing and failing tests in the output
@@ -12,7 +13,7 @@ function itShould(passOrFail: 'pass' | 'fail', message: string, ...stringsToTest
         for (const stringToTest of stringsToTest) {
             const FAIL_MESSAGE = `expected "${stringToTest}" to ${passOrFail}`;
             const TEST_RESULT = isJson(stringToTest) ? 'pass' : 'fail' ;
-            expect(TEST_RESULT).to.equals(passOrFail, FAIL_MESSAGE);
+            chai.expect(TEST_RESULT).to.equals(passOrFail, FAIL_MESSAGE);
         }
         done();
     });

@@ -6,7 +6,7 @@ const ID_LENGTH = 8;
 export class GameManager {
 
     private static instance: GameManager; // Singleton
-    private games: Map<string, CrosswordGame>;
+    private games: Map<string, CrosswordGame> = new Map();
 
     public static getInstance() {
         if (!GameManager.instance) {
@@ -23,19 +23,20 @@ export class GameManager {
 
         // TODO initialize game
         this.games[newId] = new CrosswordGame(configs);
+        console.log("new game created in gameManager: " + JSON.stringify(this.games[newId]));
         return newId;
     }
 
-    public getGame(id: string) {
+    public getGame(id: string): CrosswordGame {
         if (this.games.has(id)) {
             return this.games['id'];
         } else {
-            return new Error('This id does not exist');
+            throw new Error('This id does not exist');
         }
     }
 
     private generateRandomString(length: number): string {
-        let text = ' ';
+        let text = '';
         const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
         for (let i = 0; i < length; i++) {
