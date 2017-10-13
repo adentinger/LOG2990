@@ -1,21 +1,3 @@
-/*--------------------------------
-Crossword - minimal black cases X.
- _ _ _ _ _ _ _ _ _ _
-|_|_|_|_|_|_|_|_|_|X|
-|_|_|_|_|X|X|X|X|X|X|
-|_|_|_|X|X|X|X|X|X|_|
-|_|_|X|_|_|_|_|_|X|_|
-|_|X|X|_|_|_|X|X|X|_|
-|_|X|X|_|_|_|_|_|X|_|
-|X|X|X|_|_|_|X|X|X|_|
-|X|X|X|X|X|X|_|_|_|X|
-|X|X|X|X|X|_|_|_|_|X|
-|X|_|_|_|_|_|_|_|_|X|
---------------------------------*/
-// For no confusion : Case = State, there is 3 Cases in the following code; one for each part of the grid.
-
-//import { readFileSync } from 'fs';
-//export const lexicon = readFileSync('englishWords.txt', 'utf8').toString().split('\n');
 import { lexicon } from './englishWords';
 import { Word } from './word';
 import { getRandomIndex, getWordOfDesiredLength, formatGrid } from './lexique';
@@ -37,11 +19,14 @@ export class GridGeneratorMiddleWare {
 }
 */
 
+enum difficulty {easy, medium, hard}
+
 export class GridGenerator {
     public gridDisplay: string[][] = [];
     public grid: Grid;
     public wordsPositionVertical: [number, number, number][];
     public wordsPositionHorizontal: [number, number, number][];
+    public difficulty: difficulty;
 
     constructor(private size: number) {
         for (let i = 0; i < size; i++) {
@@ -49,7 +34,7 @@ export class GridGenerator {
         }
         this.wordsPositionVertical = [[0, 2, 0], [3, 5, 3], [6, 8, 7], [9, 9, 2]];
         this.wordsPositionHorizontal = [[0, 2, 0], [3, 6, 3], [7, 9, 8]];
-        this.grid = new Grid();
+        this.grid = new Grid(this.difficulty);
         this.gridGeneration();
     }
 

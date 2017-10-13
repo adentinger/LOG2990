@@ -16,12 +16,15 @@ export abstract class GridFiller {
     protected secondWordLenght: [number, number];
     protected thirdWordLenght: [number, number];
     protected untilWhichRow: number;
+    protected isCommon: boolean;
 
 
     public temporaryGridForAcross: Word[] = [];
     public temporaryGridForVertical: Word[] = [];
 
-    constructor(grid: GridGenerator) { }
+    constructor(grid: GridGenerator, isCommon: boolean) {
+        this.isCommon = isCommon;
+     }
 
     public pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
         for (let i = 0; i < wordsSuggestions.length; i++) {

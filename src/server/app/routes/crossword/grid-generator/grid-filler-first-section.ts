@@ -6,8 +6,8 @@ import { GridGenerator } from './grid-generator';
 
 export class GridFillerFirstSection extends GridFiller {
 
-    constructor(grid: GridGenerator) {
-        super(grid);
+    constructor(grid: GridGenerator, isCommon: boolean) {
+        super(grid, isCommon);
         this.firstWordLenght = [3, 6];
         this.secondWordLenght = [3, 4];
         this.thirdWordLenght = [3, 3];
