@@ -104,6 +104,7 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
 
         let savePromise: Promise<void>;
         if (SERIALIZED_MAP.name !== this.loadedMapName) {
+            this.internalMap.name = SERIALIZED_MAP.name;
             savePromise = this.mapService.saveNew(SERIALIZED_MAP);
         }
         else {
