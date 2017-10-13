@@ -23,7 +23,7 @@ export class GameManager {
 
         // TODO initialize game
         this.games[newId] = new CrosswordGame(configs);
-        console.log("new game created in gameManager: " + JSON.stringify(this.games[newId]));
+        console.log('new game created in gameManager: ' + JSON.stringify(this.games[newId]));
         return newId;
     }
 

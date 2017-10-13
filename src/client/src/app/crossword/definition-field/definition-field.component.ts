@@ -10,9 +10,9 @@ import { DefinitionsService } from './definitions.service';
 })
 export class DefinitionFieldComponent implements OnInit {
 
-    @ViewChild('inputBuffer') inputBuffer: ElementRef;
+    @ViewChild('inputBuffer') private inputBuffer: ElementRef;
 
-    @Output() selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
     public selectedDefinitionId: number = -1;
     public definitions: Definition[] = [];
 
@@ -32,10 +32,10 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public onClickOutside(): void {
-        this.selectedDefinitionId = -1;        
-        this.selectedDefinition.emit(null);        
+        this.selectedDefinitionId = -1;
+        this.selectedDefinition.emit(null);
         this.definitionService.crosswordGameService.selectedWordIndex = 0;
 
-        this.definitionService.crosswordGameService.aDefinitionIsSelected = false;        
+        this.definitionService.crosswordGameService.aDefinitionIsSelected = false;
     }
 }

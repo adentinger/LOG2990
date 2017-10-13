@@ -7,21 +7,22 @@ import { BoardComponent } from './board/board.component';
     selector: 'app-crossword',
     templateUrl: './crossword.component.html',
     providers: [SimpleTimer,
-                DefinitionsService]
+        DefinitionsService]
 })
 export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
     public selectedDefinition: number;
+    @ViewChild(BoardComponent) public gameBoard: BoardComponent;
 
-	public selectedTiles: number[][] = []; // holds the coordinates of the tiles owned by the current selected word, the individual tiles will look at this value to decide if they should be hightlighted
-
-	constructor() { }
+    // holds the coordinates of the tiles owned by the current selected word, the individual 
+    // tiles will look at this value to decide if they should be hightlighted
+    public selectedTiles: number[][] = [];
+    constructor() { }
 
     public ngOnInit(): void {
     }
 
-    @ViewChild(BoardComponent) gameBoard: BoardComponent;
 
     public onSelectedDefinitionChange(event) {
         this.selectedDefinition = event;

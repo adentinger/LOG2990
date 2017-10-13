@@ -18,16 +18,16 @@ describe('CrosswordComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            declarations: [CrosswordComponent, 
-                ConfigMenuComponent, 
-                BoardComponent, 
-                DefinitionFieldComponent, 
-                GameDetailsComponent, 
+            declarations: [CrosswordComponent,
+                ConfigMenuComponent,
+                BoardComponent,
+                DefinitionFieldComponent,
+                GameDetailsComponent,
                 CrosswordTileComponent
             ],
-            providers: [HttpClient, 
-                        CrosswordGameService, 
-                        {provide: Location, useClass: SpyLocation}]
+            providers: [HttpClient,
+                CrosswordGameService,
+                { provide: Location, useClass: SpyLocation }]
         })
             .compileComponents();
     }));

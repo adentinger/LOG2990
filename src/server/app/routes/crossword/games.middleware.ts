@@ -46,7 +46,7 @@ export class CrosswordGamesMiddleWare {
     public getGame(req: express.Request, res: express.Response): void {
         // res.status(HttpStatus.ACCEPTED);
         let game;
-        console.log("\nprocessing req =" + req.body);
+        console.log('\nprocessing req =' + req.body);
         try {
             game = GameManager.getInstance().getGame(req.params.id);
         } catch (error) {

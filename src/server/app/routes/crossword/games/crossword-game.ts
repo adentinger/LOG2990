@@ -1,4 +1,3 @@
-// import { CrosswordGameConfigs } from '../../../../../common/communication/game-configs';
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 export class CrosswordGame {
 
