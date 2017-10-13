@@ -1,4 +1,4 @@
-import { CrosswordGameConfigs } from '../../../../../common/communication/game-configs';
+import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
 
 const ID_LENGTH = 8;

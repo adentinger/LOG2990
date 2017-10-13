@@ -1,4 +1,5 @@
-import { CrosswordGameConfigs } from '../../../../../common/communication/game-configs';
+// import { CrosswordGameConfigs } from '../../../../../common/communication/game-configs';
+import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 export class CrosswordGame {
 
     private gameMode: string;
@@ -7,7 +8,7 @@ export class CrosswordGame {
         // other attributes
     }
 
-    public getStatus(): String {    // MOCK
+    public getStatus(): String {    // MOC
         return 'game of type ' + this.gameMode + 'in process';
     }
 }
