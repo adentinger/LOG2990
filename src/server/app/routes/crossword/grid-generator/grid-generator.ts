@@ -19,18 +19,24 @@ export class GridGeneratorMiddleWare {
 }
 */
 
-enum difficulty {easy, medium, hard}
+enum Difficulty {easy, normal, hard}
 
 export class GridGenerator {
     public gridDisplay: string[][] = [];
     public grid: Grid;
     public wordsPositionVertical: [number, number, number][];
     public wordsPositionHorizontal: [number, number, number][];
-    public difficulty: difficulty;
+    public difficulty: Difficulty;
+    public isCommon: boolean;
 
-    constructor(private size: number) {
-        for (let i = 0; i < size; i++) {
-            this.gridDisplay[i] = new Array<string>(size);
+    constructor(difficulty: Difficulty) {
+        for (let i = 0; i < 10; i++) {
+            this.gridDisplay[i] = new Array<string>(10);
+        }
+        if (difficulty === Difficulty.easy || difficulty === Difficulty.normal) {
+            this.isCommon = true;
+        } else if (difficulty === Difficulty.hard) {
+            this.isCommon = false;
         }
         this.wordsPositionVertical = [[0, 2, 0], [3, 5, 3], [6, 8, 7], [9, 9, 2]];
         this.wordsPositionHorizontal = [[0, 2, 0], [3, 6, 3], [7, 9, 8]];
@@ -40,13 +46,13 @@ export class GridGenerator {
 
     public gridGeneration() {
         // the grid is separated in three cases + a final word push
-        const firstGrid = new GridFillerFirstSection(this);
+        const firstGrid = new GridFillerFirstSection(this, this.isCommon);
         this.pushOnTheGridAndReinitialiseTemporaryGrid(firstGrid.temporaryGridForVertical, firstGrid.temporaryGridForAcross);
 
-        const secondGrid = new GridFillerSecondSection(this);
+        const secondGrid = new GridFillerSecondSection(this, this.isCommon);
         this.pushOnTheGridAndReinitialiseTemporaryGrid(secondGrid.temporaryGridForVertical, secondGrid.temporaryGridForAcross);
 
-        const thirdGrid = new GridFillerThirdSection(this);
+        const thirdGrid = new GridFillerThirdSection(this, this.isCommon);
         this.pushOnTheGridAndReinitialiseTemporaryGrid(thirdGrid.temporaryGridForVertical, thirdGrid.temporaryGridForAcross);
 
         this.grid.gridForVertical.push(getWordOfDesiredLength(4, 5, this));
