@@ -127,26 +127,6 @@ export class GridGenerator {
         }
     }
 
-    public alreadyChoosen(wordToCheck: string) {
-        let alreadyChoosen = false;
-        const allWords: string[] = [];
-
-            for (let i = 0; i < this.grid.gridForAcross.length; i++) {
-                allWords.push(this.grid.gridForAcross[i].value);
-            }
-
-            for (let i = 0; i < this.grid.gridForVertical.length; i++) {
-                allWords.push(this.grid.gridForVertical[i].value);
-            }
-
-            for (let i = 0; i < allWords.length; i++) {
-                if (allWords[i] === wordToCheck) {
-                    alreadyChoosen = true;
-                }
-            }
-
-        return alreadyChoosen;
-    }
 }
 
 const puzzle = new GridGenerator(10);

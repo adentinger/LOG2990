@@ -2,7 +2,7 @@ import { lexicon } from './englishWords';
 import { Word } from './word';
 import { GridGenerator } from './grid-generator';
 
-export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, gridGenerator:GridGenerator) {
+export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, gridGenerator: GridGenerator) {
     const desiredWords: string[] = [];
     for (let i = 0 ; i < lexicon.length; i++) {
         if ((lexicon[i].length >= lengthMin) && (lexicon[i].length <= lengthMax)) {
@@ -14,7 +14,7 @@ export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, gri
     let alreadyChosen = false;
     do {
         desiredWordVerified = desiredWords[getRandomIndex(0, desiredWords.length - 1)];
-        alreadyChosen = gridGenerator.alreadyChoosen(desiredWordVerified);
+        alreadyChosen = alreadyChoosen(desiredWordVerified, gridGenerator.grid.gridForVertical, gridGenerator.grid.gridForAcross);
 
     }while (alreadyChosen === true);
     desiredWordVerified = wordFormatting(desiredWordVerified);
@@ -73,4 +73,25 @@ export function reverseString(str: string) {
     const splitString = str.split('');
     const reverseArray = splitString.reverse();
     return reverseArray.join('');
+}
+
+export function alreadyChoosen(wordToCheck: string, gridForVertical: Word[], gridForAcross: Word[]) {
+    let alreadyChoosen = false;
+    const allWords: string[] = [];
+
+        for (let i = 0; i < gridForAcross.length; i++) {
+            allWords.push(gridForAcross[i].value);
+        }
+
+        for (let i = 0; i < gridForVertical.length; i++) {
+            allWords.push(gridForVertical[i].value);
+        }
+
+        for (let i = 0; i < allWords.length; i++) {
+            if (allWords[i] === wordToCheck) {
+                alreadyChoosen = true;
+            }
+        }
+
+    return alreadyChoosen;
 }
