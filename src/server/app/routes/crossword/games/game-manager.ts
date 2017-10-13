@@ -4,9 +4,10 @@ import { CrosswordGame } from './crossword-game';
 const ID_LENGTH = 8;
 
 export class GameManager {
-
-    private static instance: GameManager; // Singleton
+    private static instance: GameManager;
     private games: Map<string, CrosswordGame> = new Map();
+
+    private constructor() { } // Singleton
 
     public static getInstance() {
         if (!GameManager.instance) {
@@ -22,17 +23,24 @@ export class GameManager {
         } while (this.games.has(newId));
 
         // TODO initialize game
-        this.games[newId] = new CrosswordGame(configs);
-        console.log('new game created in gameManager: ' + JSON.stringify(this.games[newId]));
+        this.games.set(newId, new CrosswordGame(configs));
         return newId;
     }
 
     public getGame(id: string): CrosswordGame {
         if (this.games.has(id)) {
-            return this.games['id'];
+            return this.games.get(id);
         } else {
-            throw new Error('This id does not exist');
+            return null;
         }
+    }
+
+    public getNumberOfActiveGames(): number {
+        return this.games.size;
+    }
+
+    public deleteGame(id: string): boolean {
+        return this.games.delete(id);
     }
 
     private generateRandomString(length: number): string {
