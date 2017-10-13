@@ -21,7 +21,7 @@ export class AdminAuthGard implements CanActivate {
             .catch((reason: HttpErrorResponse) => reason.status >= 200 && reason.status < 400).catch(() => false)
             .then((isConnected) => {
                 if (!isConnected) {
-                    const password = window.prompt('You have to be logged in to have access to this page') || '';
+                    const password = window.prompt('You have to be logged in to have access to this page (password is \'admin\')') || '';
                     return this.http.post(AdminAuthGard.ADDRESS + AdminAuthGard.AUTHENTICATION_PATH + password,
                         null, { observe: 'response', withCredentials: true, headers })
                         .toPromise().then((response: HttpResponse<Object>) => response.ok)
