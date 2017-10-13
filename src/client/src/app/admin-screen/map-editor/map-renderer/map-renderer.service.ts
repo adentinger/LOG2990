@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MapEditorService } from '../map-editor.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
-import { Point } from '../point';
+import { Point } from '../../../common/math/point';
 import { PointIndex } from '../point-index';
 
 @Injectable()
@@ -26,6 +26,10 @@ export class MapRendererService implements Drawable {
         else {
             throw new Error('Cannot change canvas once set.');
         }
+    }
+
+    public get canvas(): HTMLCanvasElement {
+        return this.canvasElement;
     }
 
     public draw(): void {

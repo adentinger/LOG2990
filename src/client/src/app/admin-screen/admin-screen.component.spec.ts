@@ -1,8 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AdminScreenComponent } from './admin-screen.component';
+import { MapEditorComponent } from './map-editor/map-editor.component';
 import { PacketManagerService, packetManagerClient } from '../packet-manager.service';
-import { PacketManagerClient } from 'common/communication/packet-api/packet-manager-client';
+import { PacketManagerClient } from '../packet-manager-client';
+import { MapService } from '../racing/services/map.service';
 
 describe('AdminScreenComponent', () => {
   let component: AdminScreenComponent;
@@ -10,10 +14,18 @@ describe('AdminScreenComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminScreenComponent ],
+      imports: [
+        FormsModule,
+        HttpModule
+      ],
+      declarations: [
+        AdminScreenComponent,
+        MapEditorComponent
+      ],
       providers: [
           PacketManagerService,
-          {provide: PacketManagerClient, useValue: packetManagerClient}
+          {provide: PacketManagerClient, useValue: packetManagerClient},
+          MapService
       ]
     })
     .compileComponents();

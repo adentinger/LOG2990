@@ -1,3 +1,17 @@
-<h1>Admin page</h1>
-<button routerLink="map-editor">map editor</button>
-<button (click)="sendSocket()">Send word constraint</button>
+<div class="container">
+  <div class="listContainer">
+    <h1>Admin page</h1>
+    <button routerLink="map-editor">map editor</button>
+    <div class="mapList">
+      <div class="tableTitle">Map name</div>
+      <div class="maps" *ngFor="let map of mapNames" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
+        <span class="mapNames">{{map}}</span>
+        <button class="delete" (click)="deleteMap(map); $event.stopPropagation()">x</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="serializedMap">
+      <app-map-editor [map]="serializedMap" (mapWasSaved)="addMap($event)"></app-map-editor> 
+  </div>
+  <button (click)="sendSocket()">Send word constraint</button>
+</div>

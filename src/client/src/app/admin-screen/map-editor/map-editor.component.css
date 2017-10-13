@@ -23,7 +23,7 @@
 }
 
 .editionArea {
-    flex-grow: 3;
+    flex-grow: 1;
     align-items: flex-start;
     text-align: center;
 }

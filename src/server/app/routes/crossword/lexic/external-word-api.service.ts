@@ -1,8 +1,8 @@
 import * as http from 'http';
 
 export class ExternalWordApiService {
-    private static readonly API_KEY = '509a8efe219607991700e030dbd01768e4a6b86cfa513bcc9';
-    private static readonly REQUEST_BASE: http.RequestOptions = {
+    private static readonly FREQUENCY_API_KEY = '509a8efe219607991700e030dbd01768e4a6b86cfa513bcc9';
+    private static readonly FREQUENCY_REQUEST_BASE: http.RequestOptions = {
         hostname: 'api.wordnik.com',
         port: '80',
         protocol: 'http:',
@@ -13,7 +13,7 @@ export class ExternalWordApiService {
     private requestWordInfo(requestOptions: http.RequestOptions): Promise<string> {
         return new Promise((resolve, reject) => {
             const REQUEST_OPTIONS: http.RequestOptions = {
-                ...ExternalWordApiService.REQUEST_BASE,
+                ...ExternalWordApiService.FREQUENCY_REQUEST_BASE,
                 ...requestOptions
             };
             const req = http.request(REQUEST_OPTIONS);
@@ -31,7 +31,7 @@ export class ExternalWordApiService {
         return this.requestWordInfo({
             path: `/v4/word.json/${word}/definitions` +
             '?limit=200&includeRelated=false&useCanonical=false&includeTags=false' +
-            `&api_key=${ExternalWordApiService.API_KEY}`
+            `&api_key=${ExternalWordApiService.FREQUENCY_API_KEY}`
         }).then((resp) => {
             const DEFINITIONS = JSON.parse(resp);
             if (Array.isArray(DEFINITIONS) && DEFINITIONS[0] && 'text' in DEFINITIONS[0]) {
@@ -39,7 +39,7 @@ export class ExternalWordApiService {
                     .sort((a, b) => +a.sequence - +b.sequence)
                     .map((element) => <string>element.text));
             } else {
-                throw DEFINITIONS;
+                throw DEFINITIONS as Error;
             }
         });
     }
@@ -48,7 +48,7 @@ export class ExternalWordApiService {
         return this.requestWordInfo({
             path: `/v4/word.json/${word}/frequency` +
             '?useCanonical=false&startYear=1800' +
-            `&api_key=${ExternalWordApiService.API_KEY}`
+            `&api_key=${ExternalWordApiService.FREQUENCY_API_KEY}`
         }).then((resp) => {
             const FREQUENCY = JSON.parse(resp);
             if ('totalCount' in FREQUENCY && Number.isFinite(FREQUENCY['totalCount'])) {

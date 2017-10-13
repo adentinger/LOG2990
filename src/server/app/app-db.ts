@@ -1,4 +1,4 @@
-import { MongoClient, Db, MongoError } from 'mongodb';
+import { MongoClient, Db, MongoError, Collection } from 'mongodb';
 
 const USERNAME = 'LOG2990-01';
 const PASSWORD = new Buffer('YXcyN0pNNjM', 'base64').toString('ascii');
@@ -21,4 +21,8 @@ const DATABASE_PROMISE: Promise<Db> = new Promise<Db>((resolve, reject) => {
 
 export function provideDatabase(): Promise<Db> {
     return DATABASE_PROMISE;
+}
+
+export function fetchCollection<T = any>(collectionName: string): Promise<Collection<T>> {
+    return DATABASE_PROMISE.then((db: Db) => db.collection<T>(collectionName));
 }

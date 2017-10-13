@@ -1,5 +1,5 @@
 import { Drawable } from './drawable';
-import { Point } from '../point';
+import { Point } from '../../../common/math/point';
 import { AbstractMapPoint } from './abstract-map-point';
 import { NormalMapPoint } from './normal-map-point';
 import { FirstMapPoint } from './first-map-point';
@@ -7,7 +7,7 @@ import { PointIndex } from '../point-index';
 import { AbstractMapLine } from './abstract-map-line';
 import { NormalMapLine } from './normal-map-line';
 import { Map } from '../map';
-import { Line } from '../line';
+import { Line } from '../../../common/math/line';
 import { FaultyMapLine } from './faulty-map-line';
 import { FirstMapLine } from './first-map-line';
 

@@ -23,7 +23,6 @@ describe('WordConstraint', () => {
         );
         itShouldFail('an object without minLength', {isCommon: true, charConstraints: '[]'});
         itShouldFail('an object with invalid minLength', {minLength: NaN, isCommon: true, charConstraints: '[]'});
-        itShouldFail('an object without isCommon', {minLength: 1, charConstraints: '[]'});
         itShouldFail('an object without charConstraints', {minLength: 1, isCommon: true});
         itShouldFail('an object without valid charConstraints', {minLength: 1, isCommon: true, charConstraints: null});
     });

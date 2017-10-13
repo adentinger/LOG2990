@@ -1,7 +1,9 @@
 import 'socket.io-client';
-import { Constructor, fromArrayBuffer } from '../../utils';
-import { PacketManagerBase } from './packet-manager-base';
+import { Constructor, fromArrayBuffer } from './common/utils';
+import { PacketManagerBase } from './common/communication/packet-api/packet-manager-base';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket> {
     constructor(private socket: SocketIOClient.Socket) {
         super();
@@ -18,7 +20,7 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
             return true;
         } else {
             console.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
+            return false;
         }
-        return false;
     }
 }

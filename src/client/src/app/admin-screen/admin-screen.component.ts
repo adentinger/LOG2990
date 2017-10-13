@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { WordConstraint } from 'common/lexic/word-constraint';
-import { PacketEvent } from 'common/communication/packet-api';
+
+import { MapService } from '../racing/services/map.service';
+import { SerializedMap } from '../common/racing/serialized-map';
+import { WordConstraint } from '../common/lexic/word-constraint';
 import { PacketManagerService } from '../packet-manager.service';
 
 @Component({
@@ -11,18 +13,44 @@ import { PacketManagerService } from '../packet-manager.service';
 export class AdminScreenComponent implements OnInit {
     public readonly JSON = JSON;
     public count = 0;
-    public data: any;
 
-    constructor(private packetService: PacketManagerService) {}
+    public mapNames: string[];
+    public selectedMap: string;
+    public serializedMap: SerializedMap = new SerializedMap();
+
+    constructor(private packetService: PacketManagerService,
+        private mapService: MapService) { }
 
     public ngOnInit(): void {
-        this.packetService.packetManager.registerHandler(WordConstraint, this.wordConstraintHandler.bind(this));
+        this.getMapsNames();
     }
 
-    private wordConstraintHandler(event: PacketEvent<WordConstraint>): void {
-        console.log('[AdminScreen] Packet Received', JSON.stringify(event));
-        this.data = event.value;
-        console.log('[AdminScreen] data: ', this.data);
+    public get data() {
+        return this.packetService.data;
+    }
+
+    public getMapsNames(): void {
+        this.mapService.getMapNames(100).then((mapNames) => this.mapNames = mapNames);
+    }
+
+    public mapSelected(map: string): void {
+        this.selectedMap = map;
+        this.mapService.getByName(this.selectedMap).then((serializedMap) => this.serializedMap = serializedMap);
+    }
+
+    private keepAllMapsExcept(map: string): void {
+        this.mapNames = this.mapNames.filter((name: string) => name !== map);
+    }
+
+    public addMap(map: string): void {
+        this.keepAllMapsExcept(map);
+        this.mapNames.push(map);
+    }
+
+    public deleteMap(map: string): void {
+        this.mapService.delete(map)
+            .then(() => this.keepAllMapsExcept(map))
+            .catch(() => { });
     }
 
     public sendSocket(): void {
