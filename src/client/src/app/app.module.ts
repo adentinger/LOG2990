@@ -18,6 +18,10 @@ import { MapEditorComponent } from './admin-screen/map-editor/map-editor.compone
 
 import { AppRoutingModule } from './app-routing.module';
 
+import { PacketManagerService, packetManagerClient } from './packet-manager.service';
+import { PacketManagerClient } from './packet-manager-client';
+import { MapService } from './racing/services/map.service';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -35,7 +39,10 @@ import { AppRoutingModule } from './app-routing.module';
         AppRoutingModule
     ],
     providers: [
-        BasicService
+        BasicService,
+        PacketManagerService,
+        {provide: PacketManagerClient, useValue: packetManagerClient},
+        MapService
     ],
     bootstrap: [AppComponent]
 })

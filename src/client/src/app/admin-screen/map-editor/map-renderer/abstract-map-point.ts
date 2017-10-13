@@ -1,5 +1,5 @@
 import { Drawable } from './drawable';
-import { Point } from '../point';
+import { Point } from '../../../common/math/point';
 import { MapColors } from './map-colors';
 
 export const INNER_COLOR_IDX = 0;

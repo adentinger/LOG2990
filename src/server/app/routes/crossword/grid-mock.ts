@@ -1,4 +1,4 @@
-import { Grid } from '../../../../common/grid';
+import { Grid } from '../../common/grid';
 
 export const GRID_MOCK: Grid = {
     horizontalWords : [

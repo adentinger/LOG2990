@@ -1,8 +1,8 @@
 import { AbstractMapPoint } from './abstract-map-point';
 import { FirstMapPointColorsActive } from './first-map-point-colors-active';
 import { FirstMapPointColorsInactive } from './first-map-point-colors-inactive';
-import { Point } from '../point';
-import { Vector } from '../vector';
+import { Point } from '../../../common/math/point';
+import { Vector } from '../../../common/math/vector';
 
 const INNER_RADIUS = 5.0;
 const RIM_RADIUS   = 10.0;

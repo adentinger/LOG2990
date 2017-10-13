@@ -76,3 +76,15 @@ export enum HttpStatus {
     INVALID_SSL_CERTIFICATE,
     RAILGUN_ERROR
 }
+
+export default HttpStatus;
+
+export function getStatusOrDefault(status: any): HttpStatus {
+    if (status in HttpStatus) {
+        return status;
+    }
+    else {
+        console.warn(new Error('Status is not a HttpStatus instance.'));
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+}

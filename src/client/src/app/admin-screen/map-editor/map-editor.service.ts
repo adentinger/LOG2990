@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 
+import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map, MapError } from './map';
-import { SerializedMap } from './serialized-map';
-import { Point } from './point';
+import { SerializedMap } from '../../common/racing/serialized-map';
+import { Point } from '../../common/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
@@ -11,12 +12,13 @@ import { Track } from '../../racing/track';
 @Injectable()
 export class MapEditorService {
 
-    public width = 0;
-    public height = 0;
+    private width = 0;
+    private height = 0;
 
     private map: Map;
 
-    constructor(private converter: RacingUnitConversionService) {
+    constructor(private converter: RacingUnitConversionService,
+                private mapConverter: MapConverterService) {
         this.newMap();
     }
 
@@ -66,38 +68,7 @@ export class MapEditorService {
 
     public serializeMap(): SerializedMap {
         if (this.areWidthAndHeightSet()) {
-            if (this.computeMapErrors() === MapError.NONE) {
-                const POINTS: Point[] =
-                    this.map.path.points.map((point: Point) => {
-                        const X = this.converter.lengthToGameUnits(point.x);
-                        const Y = this.converter.lengthToGameUnits(point.y);
-                        return new Point(X, Y);
-                    });
-
-                if (!this.map.isClockwise()) {
-                    POINTS.reverse();
-                }
-
-                POINTS.pop(); // Do not include the last point ;
-                              // it is the same as the first point.
-                return new SerializedMap(
-                    this.map.name,
-                    this.map.description,
-                    this.map.type,
-                    this.map.sumRatings,      // Reset rating?
-                    this.map.numberOfRatings, // Reset rating?
-                    0,                        // Reset number of plays?
-                    POINTS,
-                    this.map.potholes.slice(),
-                    this.map.puddles.slice(),
-                    this.map.speedBoosts.slice()
-                );
-            }
-            else {
-                throw new Error('Serialization failed: ' +
-                                'The map is currently not valid. ' +
-                                'Fix map problems before attempting serialization');
-            }
+            return this.mapConverter.serialize(this.map);
         }
         else {
             throw new Error('Serializing map failed: ' +
@@ -108,36 +79,13 @@ export class MapEditorService {
 
     public deserializeMap(serializedMap: SerializedMap): void {
         if (this.areWidthAndHeightSet()) {
-            const POINTS: Point[] = serializedMap.points.map((point: Point) => {
-                const X = this.converter.lengthFromGameUnits(point.x);
-                const Y = this.converter.lengthFromGameUnits(point.y);
-                return new Point(X, Y);
-            });
-
-            // A Map's last point is supposed to be the same as its first
-            // point when it is valid.
-            POINTS.push(new Point(POINTS[0].x, POINTS[0].y));
-
-            const NEW_MAP = new Map(
-                new Path(POINTS),
-                this.minimumDistanceBetweenPoints,
-                serializedMap.name,
-                serializedMap.description,
-                serializedMap.type,
-                serializedMap.potholes.slice(),
-                serializedMap.puddles.slice(),
-                serializedMap.speedBoosts.slice(),
-                serializedMap.sumRatings,
-                serializedMap.numberOfRatings,
-                serializedMap.numberOfPlays
-            );
-
-            if (NEW_MAP.computeErrors() === MapError.NONE) {
-                this.map = NEW_MAP;
+            let newMap: Map;
+            try {
+                newMap = this.mapConverter.deserialize(serializedMap);
             }
-            else {
-                throw new Error('Deserializing map failed: ' +
-                                'The serialized map is not valid.');
+            catch (error) {}
+            finally {
+                this.map = newMap;
             }
         }
         else {

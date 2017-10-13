@@ -3,9 +3,15 @@
   "description": "Projet de base pour le cours de LOG2990",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "npm": "<=4.6.1"
+  },
+  "config": {
+    "packetapi_mgr": "server"
+  },
   "scripts": {
     "start": "tsc && concurrently --kill-others \"tsc -w \" \"nodemon out/www.js\" ",
-    "lint": "tslint \"app/**/*.ts\" \"app/*.ts\" --force -t verbose",
+    "lint": "tslint \"app/**/*.ts\" \"app/*.ts\" --force -t verbose || exit 0",
     "test": "mocha -r ts-node/register app/**/*.spec.ts",
     "test-once": "tsc && karma start karma.conf.js --single-run || npm run-script coverage",
     "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html",
@@ -13,26 +19,34 @@
     "tsc:w": "tsc -w",
     "clean": "rimraf out node_modules",
     "postinstall": "rimraf false",
-    "word2db": "tsc --outDir out --lib es2015 app/sendWordsToDB.ts && nodejs out/sendWordsToDB.js"
+    "word2db": "tsc --outDir out --lib es2015 app/sendWordsToDB.ts && node out/sendWordsToDB.js",
+    "fetchFreq": "tsc && node out/fetchFrequencies.js"
   },
   "dependencies": {
+    "@types/socket.io": "1.4.30",
     "body-parser": "~1.16.0",
-    "common": "file:../common",
     "cookie-parser": "~1.4.0",
     "cors": "~2.8.1",
     "debug": "~2.2.0",
-    "express": "^4.15.4",
-    "mongodb": "^2.2.31",
+    "express": "4.15.4",
+    "express-session": "~1.15.6",
     "morgan": "1.7.0",
     "nodemon": "^1.11.0",
     "pug": "^2.0.0-alpha6",
     "reflect-metadata": "^0.1.10",
     "serve-favicon": "~2.3.0",
-    "socket.io": "1.4.4",
-    "systemjs": "0.19.39"
+    "socket.io": "1.7.2",
+    "systemjs": "0.19.39",
+    "mongodb": "^2.2.31",
+    "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
     "@types/body-parser": "1.16.5",
+    "@types/express": "4.0.37",
+    "@types/express-serve-static-core": "4.0.50",
+    "@types/express-session": "~1.15.3",
+    "@types/node": "^8.0.26",
+    "@types/node-uuid": "0.0.28",
     "@types/chai": "4.0.4",
     "@types/cookie-parser": "1.4.1",
     "@types/cors": "2.8.1",
@@ -40,9 +54,6 @@
     "@types/express-serve-static-core": "4.0.50",
     "@types/mocha": "2.2.42",
     "@types/morgan": "1.7.32",
-    "@types/node": "^8.0.26",
-    "@types/node-uuid": "0.0.28",
-    "@types/socket.io": "1.4.30",
     "@types/mongodb": "^2.2.9",
     "chai": "4.0.0",
     "concurrently": "^3.0.0",

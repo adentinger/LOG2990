@@ -1,51 +1,76 @@
-import * as express from 'express';
-import { Db } from 'mongodb';
+import { Db, Collection, Cursor } from 'mongodb';
 
-import { Route, MiddleWare } from '../middle-ware';
+import { RegexBuilder } from './lexic/regex-builder';
+import { ExternalWordApiService } from './lexic/external-word-api.service';
+import { WordConstraint } from '../../common/lexic/word-constraint';
 import { HttpStatus } from '../../http-response-status';
-import { WordConstraint, isWordConstraint, parseWordConstraint } from './lexic/word-constraint';
-import { provideDatabase } from '../../app-db';
-import { PrefixLogWith } from 'common/utils';
 
-export const LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
+export interface WordDocument {
+    _id: string;
+    value: string;
+    frequency: number;
+}
 
 export class Lexic {
-    constructor(private databaseProvider: Promise<Db>) { }
+    public static readonly LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
+    public static readonly COMMONALITY_FREQUENCY_THRESHOLD = 1000;
+    private wordCollection: Collection<WordDocument> = null;
+
+    constructor(private databaseProvider: Promise<Db>,
+        private regexBuilder: RegexBuilder,
+        private externalWordApiService: ExternalWordApiService) {
+        this.getCollection().then((wordCollection: Collection<WordDocument>) => {
+            this.wordCollection = wordCollection;
+        });
+    }
+
+    private getCollection(): Promise<Collection<WordDocument>> {
+        return this.databaseProvider.then((db: Db) => {
+            return db.collection<WordDocument>(Lexic.LEXIC_WORDS_COLLECTION);
+        });
+    }
+
+    private fetchWords(constraint: WordConstraint, resolve: (value: string[]) => void, reject: (reason?: any) => void) {
+        const REGEX = this.regexBuilder.buildFromConstraint(constraint);
+        if (REGEX === null) {
+            reject(HttpStatus.BAD_REQUEST);
+            return;
+        }
+
+        const SEARCH_OPTION = { value: { $regex: REGEX } };
+        if ('isCommon' in constraint && constraint.isCommon !== null) {
+            SEARCH_OPTION['frequency'] = constraint.isCommon ?
+                { $gte: Lexic.COMMONALITY_FREQUENCY_THRESHOLD } :
+                { $lt: Lexic.COMMONALITY_FREQUENCY_THRESHOLD };
+        }
+        const CURSOR: Cursor<any> = this.wordCollection.find(SEARCH_OPTION, { value: true })
+            .map((value: WordDocument) => value.value);
+        CURSOR.toArray().then((words: string[]) => {
+            if (words.length === 0) {
+                throw HttpStatus.NOT_FOUND;
+            }
+            resolve(words);
+        }).catch(reject);
+    }
 
     public getWords(constraint: WordConstraint): Promise<string[]> {
-        return Promise.reject(new Error('Not implemented'));
+        return new Promise((resolve, reject) => {
+            this.databaseProvider.then((db: Db) => {
+                if (this.wordCollection !== null) {
+                    this.fetchWords(constraint, resolve, reject);
+                } else {
+                    this.getCollection()
+                        .then((wordCollection: Collection<WordDocument>) => {
+                            this.wordCollection = wordCollection;
+                            this.fetchWords(constraint, resolve, reject);
+                        }).catch(reject);
+                }
+            });
+        });
     }
 
     public getDefinitions(word: string): Promise<string[]> {
-        return Promise.reject(new Error('Not implemented'));
-    }
-}
-
-@MiddleWare('/crossword/lexic')
-export class LexicMiddleWare {
-    private static readonly LEXIC = new Lexic(provideDatabase());
-
-    @Route('get', '/words')
-    @PrefixLogWith('[lexic/words]')
-    public words(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        if (isWordConstraint(req.query)) {
-            const CONSTRAINT: WordConstraint = parseWordConstraint(req.query);
-            LexicMiddleWare.LEXIC.getWords(CONSTRAINT).then((words) => {
-                res.json(words);
-            }).catch((reason: any) => {
-                console.warn(reason instanceof Error ? reason.message : reason);
-                res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-            });
-        } else {
-            console.log('Bad query string:', req.query);
-            res.sendStatus(HttpStatus.BAD_REQUEST);
-        }
+        return this.externalWordApiService.getDefinitions(word);
     }
 
-    @Route('get', '/definitions/:word')
-    @PrefixLogWith('[lexic/definitions]')
-    public definitions(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        console.warn('Not Implemented');
-        res.sendStatus(HttpStatus.NOT_IMPLEMENTED);
-    }
 }

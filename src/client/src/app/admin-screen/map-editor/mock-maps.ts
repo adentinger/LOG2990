@@ -3,7 +3,7 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
-import { Point } from './point';
+import { Point } from '../../common/math/point';
 
 export class MockMaps {
 
@@ -21,9 +21,7 @@ export class MockMaps {
                        'professional',
                        [new Pothole(11), new Pothole(17), new Pothole(22)],
                        [new Puddle(15)],
-                       [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)],
-                       4,
-                       12);
+                       [new SpeedBoost(1), new SpeedBoost(6), new SpeedBoost(6), new SpeedBoost(23), new SpeedBoost(27)]);
     }
 
     public functionalMap2(): Map {
@@ -34,9 +32,7 @@ export class MockMaps {
                        'professional',
                        [],
                        [],
-                       [],
-                       4,
-                       12);
+                       []);
     }
 
     public clockwise(): Map {
@@ -45,15 +41,13 @@ export class MockMaps {
 
     public counterClockwise(): Map {
         return new Map(new Path([new Point(0, 0), new Point(0, 10), new Point(10, 0), new Point(0, 0)]),
-            MockMaps.MIN_LINE_LENGTH,
-            'counter-clockwise',
-            'desc. counter-clockwise',
-            'Amateur',
-            [],
-            [],
-            [],
-            4,
-            12
+                       MockMaps.MIN_LINE_LENGTH,
+                       'counter-clockwise',
+                       'desc. counter-clockwise',
+                       'Amateur',
+                       [],
+                       [],
+                       []
         );
     }
 
@@ -65,9 +59,7 @@ export class MockMaps {
                        'sdljhgso',
                        [],
                        [],
-                       [],
-                       9,
-                       -1);
+                       []);
     }
 
     public disfunctionalMap2(): Map {
@@ -78,9 +70,7 @@ export class MockMaps {
                        'sdljhgso',
                        [],
                        [],
-                       [],
-                       9,
-                       -1);
+                       []);
     }
 
 }

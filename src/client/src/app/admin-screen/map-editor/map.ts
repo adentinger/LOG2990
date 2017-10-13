@@ -2,10 +2,10 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
-import { Point } from './point';
-import { Vector } from './vector';
-import { Line, IntersectionType } from './line';
-import { ShoelaceAlgorithm } from './shoelace-algorithm';
+import { Point } from '../../common/math/point';
+import { Vector } from '../../common/math/vector';
+import { Line, IntersectionType } from '../../common/math/line';
+import { ShoelaceAlgorithm } from '../../common/math/shoelace-algorithm';
 
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
@@ -29,9 +29,6 @@ export class Map {
     public name: string;
     public description: string;
     public type: string;
-    public sumRatings: number;
-    public numberOfRatings: number;
-    public plays: number;
 
     private clockwiseCheckerAlgorithm: ShoelaceAlgorithm = new ShoelaceAlgorithm();
 
@@ -42,10 +39,8 @@ export class Map {
                 type: string = 'Amateur',
                 potholes: Pothole[] = [],
                 puddles: Puddle[] = [],
-                speedBoosts: SpeedBoost[] = [],
-                sumRatings: number = 0,
-                numberOfRatings: number = 0,
-                plays: number = 0) {
+                speedBoosts: SpeedBoost[] = []) {
+
         this.path = path;
         this.minimumSegmentLength = minimumSegmentLength;
         this.name = name;
@@ -54,20 +49,6 @@ export class Map {
         this.potholes.push.apply(this.potholes, potholes);
         this.puddles.push.apply(this.puddles, puddles);
         this.speedBoosts.push.apply(this.speedBoosts, speedBoosts);
-        this.sumRatings = sumRatings;
-        this.numberOfRatings = numberOfRatings;
-        this.plays = plays;
-    }
-
-    public get rating(): number {
-        let rating: number;
-        if (this.numberOfRatings !== 0) {
-            rating = this.sumRatings / this.numberOfRatings;
-        }
-        else {
-            rating = 0;
-        }
-        return rating;
     }
 
     public isClockwise(): boolean {
