@@ -1,6 +1,7 @@
 import { lexicon } from './englishWords';
 import { Word } from './word';
 import { GridGenerator } from './grid-generator';
+import * as http from 'http';
 
 export function getWordOfDesiredLength(lengthMin: number, lengthMax: number, gridGenerator: GridGenerator) {
     const desiredWords: string[] = [];
@@ -95,3 +96,35 @@ export function alreadyChoosen(wordToCheck: string, gridForVertical: Word[], gri
 
     return alreadyChoosen;
 }
+
+export function getWords(minLength: number,
+    maxLength?: number, isCommon?: boolean,
+    charConstraints?: {char: string, position: number}[]): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+        let url = 'http://localhost:3000/crossword/lexic/words?minLength=' + minLength;
+        if (Number.isInteger(maxLength)) {
+            url += '&maxLength' + maxLength;
+        }
+        if (isCommon !== undefined) {
+            url += '&isCommon=' + Boolean(isCommon);
+        }
+        if (Array.isArray(charConstraints)) {
+            url += '&charConstraints=' + JSON.stringify(charConstraints);
+        }
+        console.log('URL:', url);
+        http.get(url, (response: http.IncomingMessage) => {
+            let data = '';
+            response.on('data', (chunk) => data += chunk);
+            response.on('end', () => {
+                console.log(JSON.parse(data));
+                resolve(JSON.parse(data));
+            });
+            response.on('error', reject);
+        });
+    });
+}
+
+/*getWords(3, 5, false).then((words: string[]) => {
+    const randomWord = words[Math.round(Math.random() * words.length)];
+    console.log(randomWord);
+});*/

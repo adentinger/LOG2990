@@ -1,6 +1,6 @@
 import { Word } from './word';
 
-enum Difficulty {easy, normal, hard}
+export enum Difficulty {easy, normal, hard}
 
 
 export class Grid {

@@ -4,7 +4,7 @@ import { getRandomIndex, getWordOfDesiredLength, formatGrid } from './lexique';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
-import { Grid } from './grid';
+import { Grid, Difficulty } from './grid';
 
 /*
 import * as express from 'express';
@@ -18,8 +18,6 @@ export class GridGeneratorMiddleWare {
     }
 }
 */
-
-enum Difficulty {easy, normal, hard}
 
 export class GridGenerator {
     public gridDisplay: string[][] = [];
