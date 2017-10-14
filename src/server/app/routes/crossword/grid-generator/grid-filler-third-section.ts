@@ -1,6 +1,5 @@
-import { GridFiller, row,  } from './grid-filler';
+import { GridFiller } from './grid-filler';
 import { lexicon } from './englishWords';
-import { WordCaller } from './WordCaller';
 import { GridGenerator } from './grid-generator';
 
 export class GridFillerThirdSection extends GridFiller {

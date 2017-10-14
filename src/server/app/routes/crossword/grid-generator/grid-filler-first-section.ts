@@ -1,5 +1,4 @@
-import { GridFiller, row,  } from './grid-filler';
-import { WordCaller} from './WordCaller';
+import { GridFiller } from './grid-filler';
 import { GridGenerator } from './grid-generator';
 
 export class GridFillerFirstSection extends GridFiller {

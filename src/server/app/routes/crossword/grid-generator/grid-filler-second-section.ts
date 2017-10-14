@@ -1,5 +1,4 @@
 import { GridFiller } from './grid-filler';
-import { WordCaller } from './WordCaller';
 import { GridGenerator } from './grid-generator';
 
 enum row {first, second, third, fourth}

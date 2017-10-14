@@ -26,13 +26,13 @@ export class WordCaller {
 
     }
 
-     public getRandomIndex(min: number, max: number) {
+    public getRandomIndex(min: number, max: number) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return (Math.floor(Math.random() * (max - min)) + min);
     }
 
-     public formatGrid(crossword: GridGenerator) {
+    public formatGrid(crossword: GridGenerator) {
         for (let index = 0; index < crossword.gridDisplay.length; index++) {
             for (let j = 0; j < crossword.gridDisplay[index].length; j++) {
                 if (!crossword.gridDisplay[index][j]) {
@@ -42,7 +42,7 @@ export class WordCaller {
         }
     }
 
-     public noAccent(word: string) {
+    public noAccent(word: string) {
         const accent = [
             /[\300-\306]/g, /[\340-\346]/g, // A, a
             /[\310-\313]/g, /[\350-\353]/g, // E, e
@@ -61,24 +61,24 @@ export class WordCaller {
         return word;
     }
 
-     public noApostropheAndDash(word: string) {
+    public noApostropheAndDash(word: string) {
         word = word.replace(/['-]/g, '');
         return word;
     }
 
-     public wordFormatting(word: string) {
+    public wordFormatting(word: string) {
         word = this.noAccent(word);
         word = this.noApostropheAndDash(word);
         return word;
     }
 
-     public reverseString(str: string) {
+    public reverseString(str: string) {
         const splitString = str.split('');
         const reverseArray = splitString.reverse();
         return reverseArray.join('');
     }
 
-     public alreadyChoosen(wordToCheck: string, gridForVertical: Word[], gridForAcross: Word[]) {
+    public alreadyChoosen(wordToCheck: string, gridForVertical: Word[], gridForAcross: Word[]) {
         let alreadyChoosen = false;
         const allWords: string[] = [];
 
@@ -99,7 +99,7 @@ export class WordCaller {
         return alreadyChoosen;
     }
 
-     public getWordsAsynchronous(minLength: number,
+    private getWordsAsynchronous(minLength: number,
         maxLength?: number, isCommon?: boolean,
         charConstraints?: {char: string, position: number}[]): Promise<string[]> {
         return new Promise((resolve, reject) => {
@@ -113,7 +113,6 @@ export class WordCaller {
             if (Array.isArray(charConstraints)) {
                 url += '&charConstraints=' + JSON.stringify(charConstraints);
             }
-            console.log('URL:', url);
             http.get(url, (response: http.IncomingMessage) => {
                 let data = '';
                 response.on('data', (chunk) => data += chunk);
@@ -128,9 +127,11 @@ export class WordCaller {
     public async getWordsSynchronous(minLength: number,
         maxLength?: number, isCommon?: boolean,
         charConstraints?: {char: string, position: number}[]) {
-        return await this.getWordsAsynchronous(minLength,
+        const DATA = await this.getWordsAsynchronous(minLength,
             maxLength, isCommon,
             charConstraints);
+            console.log(DATA);
+        return DATA;
     }
 }
 

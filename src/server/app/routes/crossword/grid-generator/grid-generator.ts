@@ -134,6 +134,3 @@ export class GridGenerator {
     }
 
 }
-
-let gridGenerator = new GridGenerator(Difficulty.easy);
-console.log(gridGenerator.gridGeneration());
