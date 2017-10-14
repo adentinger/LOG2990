@@ -1,12 +1,12 @@
 import { HttpStatus } from '../../../http-response-status';
 import { Grid } from '../../../common/grid';
 
-export class GridBankMiddleware {
+export class GridBanks {
 
-    private static readonly INSTANCE = new GridBankMiddleware();
+    private static readonly INSTANCE = new GridBanks();
 
-    public static getInstance(): GridBankMiddleware {
-        return GridBankMiddleware.INSTANCE;
+    public static getInstance(): GridBanks {
+        return GridBanks.INSTANCE;
     }
 
     private constructor() {}
