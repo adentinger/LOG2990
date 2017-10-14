@@ -1,7 +1,5 @@
 import { GridFiller } from './grid-filler';
-import { lexicon } from './englishWords';
-import { getRandomIndex } from './lexique';
-import { Word } from './word';
+import { WordCaller } from './WordCaller';
 import { GridGenerator } from './grid-generator';
 
 enum row {first, second, third, fourth}

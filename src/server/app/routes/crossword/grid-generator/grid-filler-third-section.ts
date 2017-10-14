@@ -1,6 +1,6 @@
 import { GridFiller, row,  } from './grid-filler';
 import { lexicon } from './englishWords';
-import { getRandomIndex, reverseString, getWordOfDesiredLength } from './lexique';
+import { WordCaller } from './WordCaller';
 import { GridGenerator } from './grid-generator';
 
 export class GridFillerThirdSection extends GridFiller {
@@ -16,7 +16,7 @@ export class GridFillerThirdSection extends GridFiller {
     }
 
     public returnARandomWordFromSuggestions (beginningOfTheWordAcross: string, rowNumber: number): string {
-        beginningOfTheWordAcross = reverseString(beginningOfTheWordAcross);
+        beginningOfTheWordAcross = this.wordCaller.reverseString(beginningOfTheWordAcross);
         let returnedWord;
         const theWords: string[] = [];
         for (let i = 0; i < lexicon.length; i++) { // if the end of 2 words matches
@@ -27,7 +27,7 @@ export class GridFillerThirdSection extends GridFiller {
             }
         }
 
-        returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
+        returnedWord = theWords[this.wordCaller.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
             returnedWord = 'nothing found';

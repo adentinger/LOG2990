@@ -1,6 +1,5 @@
-import { lexicon } from './englishWords';
 import { Word } from './word';
-import { getRandomIndex, getWordOfDesiredLength, formatGrid } from './lexique';
+import { WordCaller} from './WordCaller';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
@@ -26,6 +25,7 @@ export class GridGenerator {
     public wordsPositionHorizontal: [number, number, number][];
     public difficulty: Difficulty;
     public isCommon: boolean;
+    public wordCaller: WordCaller;
 
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
@@ -40,6 +40,7 @@ export class GridGenerator {
         this.wordsPositionVertical = [[0, 2, 0], [3, 5, 3], [6, 8, 7], [9, 9, 2]];
         this.wordsPositionHorizontal = [[0, 2, 0], [3, 6, 3], [7, 9, 8]];
         this.grid = new Grid(this.difficulty);
+        this.wordCaller = new WordCaller();
     }
 
     public gridGeneration(): Grid {
@@ -53,14 +54,14 @@ export class GridGenerator {
         const thirdGrid = new GridFillerThirdSection(this, this.isCommon);
         this.pushOnTheGridAndReinitialiseTemporaryGrid(thirdGrid.temporaryGridForVertical, thirdGrid.temporaryGridForAcross);
 
-        this.grid.gridForVertical.push(getWordOfDesiredLength(4, 5, this));
+        this.grid.gridForVertical.push(this.wordCaller.getWordOfDesiredLength(4, 5, this));
 
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
-        /*console.dir(this.grid.gridForVertical);
+        console.dir(this.grid.gridForVertical);
         console.dir(this.grid.gridForAcross);
-        formatGrid(this);
-        console.dir(this.gridDisplay);*/
+        this.wordCaller.formatGrid(this);
+        console.dir(this.gridDisplay);
         return this.grid;
     }
 
@@ -134,5 +135,5 @@ export class GridGenerator {
 
 }
 
-//let gridGenerator = new GridGenerator(Difficulty.easy);
-//console.log(gridGenerator.gridGeneration());
+let gridGenerator = new GridGenerator(Difficulty.easy);
+console.log(gridGenerator.gridGeneration());

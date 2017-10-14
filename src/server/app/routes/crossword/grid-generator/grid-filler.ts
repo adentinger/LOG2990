@@ -1,5 +1,5 @@
 import { Word } from './word';
-import { getWordOfDesiredLength, getRandomIndex } from './lexique';
+import { WordCaller } from './WordCaller';
 import { GridGenerator } from './grid-generator';
 import { lexicon } from './englishWords';
 
@@ -17,6 +17,7 @@ export abstract class GridFiller {
     protected thirdWordLenght: [number, number];
     protected untilWhichRow: number;
     protected isCommon: boolean;
+    protected wordCaller: WordCaller;
 
 
     public temporaryGridForAcross: Word[] = [];
@@ -24,6 +25,7 @@ export abstract class GridFiller {
 
     constructor(grid: GridGenerator, isCommon: boolean) {
         this.isCommon = isCommon;
+        this.wordCaller = new WordCaller();
      }
 
     public pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
@@ -33,7 +35,7 @@ export abstract class GridFiller {
     }
 
     public initialisation(grid: GridGenerator) {
-        const word = getWordOfDesiredLength(this.firstWordLenght[0], this.firstWordLenght[1], grid);
+        const word = this.wordCaller.getWordOfDesiredLength(this.firstWordLenght[0], this.firstWordLenght[1], grid);
 
         this.temporaryGridForVertical.push(word);
         this.findSecondWord(word, grid);
@@ -43,7 +45,7 @@ export abstract class GridFiller {
         let firstWordsSuggestions: string[] = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
-            word = getWordOfDesiredLength(this.secondWordLenght[0], this.secondWordLenght[1], grid);
+            word = this.wordCaller.getWordOfDesiredLength(this.secondWordLenght[0], this.secondWordLenght[1], grid);
             this.temporaryGridForVertical.push(word);
             firstWordsSuggestions = this.returnArrayOfWordsThatFitsAcross(column.second);
 
@@ -66,7 +68,7 @@ export abstract class GridFiller {
         wordsSuggestions = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
-            word = getWordOfDesiredLength(this.thirdWordLenght[0], this.thirdWordLenght[1], grid);
+            word = this.wordCaller.getWordOfDesiredLength(this.thirdWordLenght[0], this.thirdWordLenght[1], grid);
 
             this.temporaryGridForVertical.push(word);
             wordsSuggestions = this.returnArrayOfWordsThatFitsAcross(column.third);
@@ -132,7 +134,7 @@ export abstract class GridFiller {
             }
         }
 
-        returnedWord = theWords[getRandomIndex(0, theWords.length - 1)];
+        returnedWord = theWords[this.wordCaller.getRandomIndex(0, theWords.length - 1)];
 
         if (!returnedWord) {
             returnedWord = 'nothing found';
