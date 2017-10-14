@@ -1,5 +1,5 @@
-import { HttpStatus } from '../../http-response-status';
-import { Grid } from '../../common/grid';
+import { HttpStatus } from '../../../http-response-status';
+import { Grid } from '../../../common/grid';
 
 export class GridBankMiddleware {
 
@@ -11,8 +11,8 @@ export class GridBankMiddleware {
 
     private constructor() {}
 
-    public fillup(): void {
-        return;
+    public fillup(): Promise<void> {
+        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public getEasyGrid(): Promise<Grid> {
