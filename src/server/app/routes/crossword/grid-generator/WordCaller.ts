@@ -99,7 +99,7 @@ export class WordCaller {
         return alreadyChoosen;
     }
 
-     public getWords(minLength: number,
+     public getWordsAsynchronous(minLength: number,
         maxLength?: number, isCommon?: boolean,
         charConstraints?: {char: string, position: number}[]): Promise<string[]> {
         return new Promise((resolve, reject) => {
@@ -118,12 +118,19 @@ export class WordCaller {
                 let data = '';
                 response.on('data', (chunk) => data += chunk);
                 response.on('end', () => {
-                    console.log(JSON.parse(data));
                     resolve(JSON.parse(data));
                 });
                 response.on('error', reject);
             });
         });
+    }
+
+    public async getWordsSynchronous(minLength: number,
+        maxLength?: number, isCommon?: boolean,
+        charConstraints?: {char: string, position: number}[]) {
+        return await this.getWordsAsynchronous(minLength,
+            maxLength, isCommon,
+            charConstraints);
     }
 }
 
