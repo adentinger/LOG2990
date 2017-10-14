@@ -28,6 +28,7 @@ export class GridGenerator {
     public isCommon: boolean;
 
     constructor(difficulty: Difficulty) {
+        this.difficulty = difficulty;
         for (let i = 0; i < 10; i++) {
             this.gridDisplay[i] = new Array<string>(10);
         }
@@ -39,10 +40,9 @@ export class GridGenerator {
         this.wordsPositionVertical = [[0, 2, 0], [3, 5, 3], [6, 8, 7], [9, 9, 2]];
         this.wordsPositionHorizontal = [[0, 2, 0], [3, 6, 3], [7, 9, 8]];
         this.grid = new Grid(this.difficulty);
-        this.gridGeneration();
     }
 
-    public gridGeneration() {
+    public gridGeneration(): Grid {
         // the grid is separated in three cases + a final word push
         const firstGrid = new GridFillerFirstSection(this, this.isCommon);
         this.pushOnTheGridAndReinitialiseTemporaryGrid(firstGrid.temporaryGridForVertical, firstGrid.temporaryGridForAcross);
@@ -57,10 +57,11 @@ export class GridGenerator {
 
         this.putWordAcrossAndVerticalOnGridForPrintingOut();
         // prints out
-        console.dir(this.grid.gridForVertical);
+        /*console.dir(this.grid.gridForVertical);
         console.dir(this.grid.gridForAcross);
         formatGrid(this);
-        console.dir(this.gridDisplay);
+        console.dir(this.gridDisplay);*/
+        return this.grid;
     }
 
     public putWordAcrossAndVerticalOnGridForPrintingOut() {
@@ -133,4 +134,5 @@ export class GridGenerator {
 
 }
 
-const puzzle = new GridGenerator(10);
+//let gridGenerator = new GridGenerator(Difficulty.easy);
+//console.log(gridGenerator.gridGeneration());
