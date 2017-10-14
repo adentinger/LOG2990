@@ -1,8 +1,10 @@
 import { Grid } from '../../../common/grid';
 
-export interface GridBank {
+export abstract class GridBank {
 
-    fillup(): Promise<void>;
-    getGrid(): Promise<Grid>;
+    public static readonly NUMBER_OF_GRIDS = 5;
+
+    public abstract fillup(): Promise<void>;
+    public abstract getGrid(): Promise<Grid>;
 
 }
