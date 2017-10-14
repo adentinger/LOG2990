@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
-import { BasicService } from './basic.service';
 
 import { AppHeaderComponent } from './app-header/app-header.component';
 
@@ -39,7 +38,6 @@ import { MapService } from './racing/services/map.service';
         AppRoutingModule
     ],
     providers: [
-        BasicService,
         PacketManagerService,
         {provide: PacketManagerClient, useValue: packetManagerClient},
         MapService

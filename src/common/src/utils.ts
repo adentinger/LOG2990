@@ -32,3 +32,21 @@ export function toArrayBuffer(str: string): ArrayBuffer {
 export function fromArrayBuffer(data: ArrayBuffer): string {
     return String.fromCharCode.apply(null, new Uint16Array(data));
 }
+
+const CALL_STACK_REGEX = /\s*at\s(.+)\s\(.+:\d+:\d+\)/;
+
+export function getCallers(): string[] {
+    try {
+        throw new Error();
+    } catch (e) {
+        const error = e as Error;
+        try {
+            const callers = error.stack.match(new RegExp(CALL_STACK_REGEX, 'g'))
+                .map((value) => value.match(CALL_STACK_REGEX)[1]);
+            callers.shift();
+            return callers;
+        } catch (e) {
+            return null;
+        }
+    }
+}

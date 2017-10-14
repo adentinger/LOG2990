@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import * as express from 'express';
+import { Logger } from '../common';
 
 type RequestHandler = (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
 export type RouteType = 'get' | 'post' | 'put' | 'delete' | 'head' | 'all';
@@ -8,6 +9,8 @@ interface MiddleWareMetadata {
     constructor: Function;
     baseRoute: string;
 }
+
+const logger = Logger.getLogger('Router');
 
 const REGISTER_FUNCTION = Symbol('registerFunction');
 const MIDDLEWARE_ROUTES = Symbol('routes');
@@ -34,9 +37,11 @@ export function MiddleWare<T extends Function>(baseRoute: string | T): ClassDeco
                 }
                 ROUTING_ARGUMENTS.push(route.handler);
                 router[route.type].apply(router, ROUTING_ARGUMENTS);
-                console.log('Routed ' + (route.value ? route.type.toUpperCase() : '') +
-                    ' requests at "' + (route.value || '/') +
-                    '" to ' + constructor.name);
+                logger.info('%sRouted %s requests at "%s" to %s',
+                    typeof baseRoute === 'string' ? '\t' : '',
+                    route.value ? route.type.toUpperCase() : '',
+                    route.value || '/',
+                    constructor.name);
             }
         };
         MIDDLEWARES.push({
@@ -58,7 +63,7 @@ export function Route(type: RouteType | 'use', route?: string): MethodDecorator 
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
         const ORIGINAL_FUNCTION = descriptor.value;
         descriptor.value = function (...argv: any[]): any {
-            console.log('[INFO] Handling ' + (route ? type.toUpperCase() : '') +
+            logger.info('Handling ' + (route ? type.toUpperCase() : '') +
                 ' request to "' + route + '"');
             return ORIGINAL_FUNCTION.apply(this, argv);
         };
@@ -71,7 +76,6 @@ export function Route(type: RouteType | 'use', route?: string): MethodDecorator 
 
 export function registerMiddleWares(router: express.Router) {
     const EMPTY_ARGUMENT_LIST = [] as ArrayLike<any>;
-    const ORIGINAL_LOG = console.log;
     let middlewareRouter: express.Router;
     for (const middleWare of MIDDLEWARES) {
         middlewareRouter = router;
@@ -79,12 +83,8 @@ export function registerMiddleWares(router: express.Router) {
         if (middleWare.baseRoute) {
             middlewareRouter = express.Router();
             router.use(middleWare.baseRoute, middlewareRouter);
-            console.log('Registering sub-routes of "' + middleWare.baseRoute + '"');
-            console.log = console.log.bind(console, '\t');
+            logger.info('Registering sub-routes of "' + middleWare.baseRoute + '"');
         }
         Reflect.construct(middleWare.constructor, EMPTY_ARGUMENT_LIST)[REGISTER_FUNCTION](middlewareRouter);
-        if (middleWare.baseRoute) {
-            console.log = ORIGINAL_LOG;
-        }
     }
 }
