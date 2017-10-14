@@ -4,7 +4,6 @@ import { GridBank } from './grid-bank';
 import { GridBankEasy } from './grid-bank-easy';
 import { GridBankNormal } from './grid-bank-normal';
 import { GridBankHard } from './grid-bank-hard';
-import { Grid } from '../../../common/grid';
 
 class AllGridBanksTester {
 
@@ -38,17 +37,16 @@ describe('Grid Bank', () => {
         banksTester = new AllGridBanksTester();
     });
 
-    it('should fillup the bank of grid promises', () => {
+    it('should fillup the bank of grid promises', async () => {
 
         banksTester.getBankSizes().forEach((size) => {
             expect(size).to.equal(0, 'Bank size is not zero when the server starts');
         });
 
-        banksTester.fillupBanks().then(() => {
-            banksTester.getBankSizes().forEach((size) => {
-                expect(size).to.equal(GridBank.NUMBER_OF_GRIDS,
-                    'Bank is not filled to maximum capacity');
-            });
+        await banksTester.fillupBanks();
+        banksTester.getBankSizes().forEach((size) => {
+            expect(size).to.equal(GridBank.NUMBER_OF_GRIDS,
+                'Bank is not filled to maximum capacity');
         });
 
     });

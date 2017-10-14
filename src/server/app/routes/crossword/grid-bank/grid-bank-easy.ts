@@ -4,7 +4,7 @@ import { Grid } from '../../../common/grid';
 
 export class GridBankEasy implements GridBank {
 
-    private bank: Promise<Grid>[];
+    private bank: Promise<Grid>[] = [];
 
     public fillup(): Promise<void> {
         return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
