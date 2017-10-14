@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 import { SerializedMap } from '../../common/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
-import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
 
 @Injectable()
 export class MapService {
@@ -11,7 +10,6 @@ export class MapService {
         {headers: new Headers({'Content-Type': 'application/json'})};
 
     public maps: Map[];
-    private mockSerializedMaps: MockSerializedMaps = new MockSerializedMaps;
 
     constructor(private http: Http) {
     }
