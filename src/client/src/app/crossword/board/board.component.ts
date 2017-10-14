@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, ViewChildren } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
-import { Direction } from '../grid-word';
+import { Direction } from '../../common/crossword/grid-word';
 
 @Component({
     selector: 'app-board',

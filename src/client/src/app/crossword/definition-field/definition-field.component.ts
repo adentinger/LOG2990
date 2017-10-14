@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { Definition } from './class/definition';
+import { Definition } from '../../common/crossword/definition';
 import { DefinitionsService } from './definitions.service';
 
 @Component({

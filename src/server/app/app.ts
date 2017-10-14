@@ -55,7 +55,7 @@ export class Application {
         this.app = express();
 
         // Packet Manager instanciation
-        this.packetManager = new PacketManagerServer(ServerIO(new Server()).attach(3030));
+        this.packetManager = PacketManagerServer.getInstance();
 
         // configure this.application
         this.config();

@@ -1,13 +1,22 @@
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
+import { GameJoinPacket } from '../../../common/crossword/packets/game-join.packet';
+import { PacketManagerServer } from '../../../packet-manager';
+import '../../../common/crossword/packets/game-join.parser';
 
 const ID_LENGTH = 8;
 
 export class GameManager {
+
+    // private crosswordGridGenerator:
     private static instance: GameManager;
     private games: Map<string, CrosswordGame> = new Map();
+    private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
-    private constructor() { } // Singleton
+    private constructor() {
+        registerHandlers(this, this.packetManager);
+    }
 
     public static getInstance() {
         if (!GameManager.instance) {
@@ -51,6 +60,13 @@ export class GameManager {
             text += charset.charAt(Math.floor(Math.random() * charset.length));
         }
         return text;
+    }
+
+    @PacketHandler(GameJoinPacket)
+    public gameJoinHandler(event: PacketEvent<GameJoinPacket>) {
+        const GAME_TO_JOIN = event.value.gameId;
+        // add this player to the game (identified by the socket id)
+        console.log(GAME_TO_JOIN, event.socketid);
     }
 
 }

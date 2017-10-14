@@ -18,11 +18,9 @@ export class CrosswordComponent implements OnInit {
     // holds the coordinates of the tiles owned by the current selected word, the individual 
     // tiles will look at this value to decide if they should be hightlighted
     public selectedTiles: number[][] = [];
-    constructor() { }
 
     public ngOnInit(): void {
     }
-
 
     public onSelectedDefinitionChange(event) {
         this.selectedDefinition = event;

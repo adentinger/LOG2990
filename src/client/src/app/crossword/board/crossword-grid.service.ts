@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { GridWord, Direction } from '../grid-word';
+import { GridWord, Direction } from '../../common/crossword/grid-word';
 import { ARRAY_GRIDWORD } from '../mocks/grid-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 

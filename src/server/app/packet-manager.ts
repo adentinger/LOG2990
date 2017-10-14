@@ -1,10 +1,20 @@
 import { Constructor, fromArrayBuffer } from './common/utils';
 import { PacketManagerBase } from './common/communication/packet-api/packet-manager-base';
+import * as ServerIO from 'socket.io';
+import { Server } from 'http';
 
 export class PacketManagerServer extends PacketManagerBase<SocketIO.Socket> {
+    private static instance: PacketManagerServer = null;
     private readonly knownSockets: Map<string, SocketIO.Socket> = new Map();
 
-    constructor(private serverSocket: SocketIO.Server) {
+    public static getInstance(): PacketManagerServer {
+        if (!PacketManagerServer.instance) {
+            PacketManagerServer.instance = new PacketManagerServer(ServerIO(new Server()).attach(3030));
+        }
+        return PacketManagerServer.instance;
+    }
+
+    private constructor(private serverSocket: SocketIO.Server) {
         super();
         this.register();
         this.serverSocket.on('connection', this.onConnection.bind(this));

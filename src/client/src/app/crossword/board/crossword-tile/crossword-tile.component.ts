@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
-import { Direction } from '../../grid-word';
+import { Direction } from '../../../common/crossword/grid-word';
 
 @Component({
     selector: 'app-tile',

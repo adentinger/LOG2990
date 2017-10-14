@@ -4,14 +4,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 import { ResponseContentType, RequestOptions, Headers, RequestOptionsArgs } from '@angular/http';
+import { CrosswordGameService } from '../crossword-game.service';
+import '../../common/crossword/packets/game-join.parser';
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
-
-// const HEADERS: RequestOptionsArgs = {
-//     headers: new HttpHeaders({
-//         'Content-Type': 'application/json'
-//     })
-// };
 
 export interface Settings {
     [index: string]: string;
@@ -50,7 +46,8 @@ export class ConfigMenuService {
 
     constructor(private location: Location,
         private http: HttpClient,
-        @Inject('menuConfigUrl') menuConfigUrl: string) {
+        @Inject('menuConfigUrl') menuConfigUrl: string,
+        private crosswordGameService: CrosswordGameService) {
         http.get(menuConfigUrl, { responseType: 'json' }).subscribe((menuPages) => {
             this.states.push.apply(this.states, ConfigMenuState.fromJson(menuPages, http));
             if (this.states.length > 0) {
@@ -131,16 +128,13 @@ export class ConfigMenuService {
     public sendGameConfiguration(): void {
         console.log('sending to url: ' + ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH);
         console.log('sending:' + this.getDisplayedSettings().toString());
-        // const headers = new Headers({ 'Content-Type': 'application/json' });
-        // const options = new RequestOptions({
-        //     headers,
-        //     responseType: ResponseContentType.Json
-        // });
+
         this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
             this.getDisplayedSettings())
             .subscribe(
             (response) => {
                 console.log('response on client: ' + JSON.stringify(response));
+                this.crosswordGameService.setGameId(response['id']);
             },
             (error: Error) => {
                 console.log('error on client : ' + error.message);

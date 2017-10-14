@@ -1,4 +1,4 @@
-import { GridWord, Direction, Owner } from '../grid-word';
+import { GridWord, Direction, Owner } from '../../common/crossword/grid-word';
 
 
 export const ARRAY_GRIDWORD: GridWord[] = [
