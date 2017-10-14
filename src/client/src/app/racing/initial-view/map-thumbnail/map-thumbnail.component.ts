@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Input, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { MapEditorService } from '../../../admin-screen/map-editor/map-editor.service';
 import { MapRendererService } from '../../../admin-screen/map-editor/map-renderer/map-renderer.service';
 import { MapConverterService } from '../../../admin-screen/map-editor/map-converter.service';
@@ -16,7 +16,7 @@ import { SerializedMap } from '../../../common/racing/serialized-map';
         RacingUnitConversionService
     ]
 })
-export class MapThumbnailComponent implements OnInit, AfterViewChecked {
+export class MapThumbnailComponent implements OnInit, AfterViewInit {
 
     @ViewChild('mapThumbnail') private mapThumbnail: ElementRef;
 
@@ -28,12 +28,11 @@ export class MapThumbnailComponent implements OnInit, AfterViewChecked {
     public ngOnInit() {
         const CANVAS: HTMLCanvasElement = this.mapThumbnail.nativeElement;
         this.mapRenderer.canvas = CANVAS;
-
     }
 
-    public ngAfterViewChecked(): void {
+    public ngAfterViewInit(): void {
         this.mapRenderer.draw();
-        setTimeout(() => this.imageData = this.canvasToImage(), 0);
+        setTimeout(() => this.imageData = this.canvasToImage(), 500);
     }
 
     public get width(): number {
@@ -60,7 +59,9 @@ export class MapThumbnailComponent implements OnInit, AfterViewChecked {
     }
 
     private canvasToImage(): string {
-        return this.mapRenderer.canvas.toDataURL();
+        const data = this.mapRenderer.canvas.toDataURL();
+        this.mapEditor.newMap();
+        return data;
     }
 
 }

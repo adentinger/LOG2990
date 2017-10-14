@@ -43,10 +43,4 @@ export class SerializedMap {
         this.bestTimes = bestTimes;
     }
 
-    public get rating(): number {
-        return this.numberOfRatings !== 0
-               ? this.sumRatings / this.numberOfRatings
-               : -1;
-    }
-
 }
