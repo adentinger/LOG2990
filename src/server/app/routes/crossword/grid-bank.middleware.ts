@@ -8,6 +8,8 @@ import { Grid } from '../../common/grid';
 @MiddleWare('/crossword/grid-bank')
 export class GridBankMiddleWare {
 
+    private static readonly INSTANCE = new GridBankMiddleWare();
+
     @Route('post', '/fillup')
     public postFillup(req: express.Request, res: express.Response): void {
         GridBanks.getInstance().fillup()
@@ -19,17 +21,20 @@ export class GridBankMiddleWare {
 
     @Route('get', '/easy')
     public getEasy(req: express.Request, res: express.Response): void {
-        this.getGrid(GridBanks.getInstance().getEasyGrid, res);
+        GridBankMiddleWare.INSTANCE
+            .getGrid(() => GridBanks.getInstance().getEasyGrid(), res);
     }
 
     @Route('get', '/normal')
     public getNormal(req: express.Request, res: express.Response): void {
-        this.getGrid(GridBanks.getInstance().getNormalGrid, res);
+        GridBankMiddleWare.INSTANCE
+            .getGrid(GridBanks.getInstance().getNormalGrid, res);
     }
 
     @Route('get', '/hard')
     public getHard(req: express.Request, res: express.Response): void {
-        this.getGrid(GridBanks.getInstance().getHardGrid, res);
+        GridBankMiddleWare.INSTANCE
+            .getGrid(GridBanks.getInstance().getHardGrid, res);
     }
 
     private getGrid(gridGetter: () => Promise<Grid>,
