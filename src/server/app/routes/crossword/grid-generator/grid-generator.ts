@@ -5,19 +5,6 @@ import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
 import { Grid, Difficulty } from './grid';
 
-/*
-import * as express from 'express';
-import { Route, MiddleWare } from '../middle-ware';
-
-@MiddleWare
-export class GridGeneratorMiddleWare {
-    @Route('get', '/crossword/grid')
-    public pending(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        res.send(new Grid(10));
-    }
-}
-*/
-
 export class GridGenerator {
     public gridDisplay: string[][] = [];
     public grid: Grid;
