@@ -1,5 +1,5 @@
 import { Word } from './word';
-import { WordCaller} from './WordCaller';
+import { WordCaller} from './word-caller';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';

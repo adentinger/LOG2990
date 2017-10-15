@@ -1,5 +1,5 @@
 import { Word } from './word';
-import { WordCaller } from './WordCaller';
+import { WordCaller } from './word-caller';
 import { GridGenerator } from './grid-generator';
 import { lexicon } from './englishWords';
 
