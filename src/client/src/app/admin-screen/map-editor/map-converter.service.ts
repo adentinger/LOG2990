@@ -19,7 +19,7 @@ export class MapConverterService {
     public serialize(map: Map): SerializedMap {
         if (map.computeErrors() === MapError.NONE) {
             const SERIALIZED_MAP =
-                new SerializedMap(map.name,
+                new SerializedMap(map.name.trim(),
                                   map.description,
                                   map.type,
                                   0,

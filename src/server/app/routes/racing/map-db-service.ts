@@ -6,6 +6,7 @@ import { HttpStatus } from '../../http-response-status';
 export class MapDbService {
 
     public static readonly COLLECTION = 'racing-maps';
+    public static readonly VALID_MAP_NAMES_MATCHER = /^\S.*\S?$/i;
 
     public mapCollection: Collection;
 
@@ -19,7 +20,9 @@ export class MapDbService {
 
     public saveNew(serializedMap: SerializedMap): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (serializedMap.name == null) {
+            serializedMap.name = serializedMap.name.trim();
+            if (serializedMap.name == null ||
+                !MapDbService.VALID_MAP_NAMES_MATCHER.test(serializedMap.name)) {
                 reject(HttpStatus.BAD_REQUEST);
                 return;
             }

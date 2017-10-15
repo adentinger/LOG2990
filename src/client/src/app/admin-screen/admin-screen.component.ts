@@ -53,6 +53,16 @@ export class AdminScreenComponent implements OnInit {
             .catch(() => { });
     }
 
+    public alertMapCouldNotBeSavedBecuaseAlreadyExists(): void {
+        alert('Map could not be saved:\n' +
+              'A map with that name already exists.');
+    }
+
+    public alertMapCouldNotBeSavedBecauseNotFound(): void {
+        alert('Map could not be edited:\n' +
+              'No map with that name exists.');
+    }
+
     public sendSocket(): void {
         const wc: WordConstraint = { minLength: ++this.count, isCommon: true, charConstraints: [{ char: 'a', position: 0 }] };
         console.log('[AdminScreen] Sending to server ...');

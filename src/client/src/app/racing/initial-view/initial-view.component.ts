@@ -11,6 +11,8 @@ import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 })
 export class InitialViewComponent implements OnInit {
 
+    private static readonly MAX_NUMBER_OF_MAPS = 100;
+
     @ViewChild(MapBestTimeComponent)
     private child: MapBestTimeComponent;
     public maps: SerializedMap[];
@@ -26,7 +28,12 @@ export class InitialViewComponent implements OnInit {
     }
 
     public getMaps(): void {
-        this.mapService.getMaps().then(maps => this.maps = maps);
+        this.mapService.getMapNames(InitialViewComponent.MAX_NUMBER_OF_MAPS)
+            .then(mapNames => {
+                Promise.all(mapNames.map(
+                    mapName => this.mapService.getByName(mapName)
+                )).then(maps => this.maps = maps);
+            }).catch();
     }
 
     public mapSelected(map: SerializedMap): void {
