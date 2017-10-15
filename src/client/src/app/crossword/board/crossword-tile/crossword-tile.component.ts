@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
 import { Direction } from '../../../common/crossword/grid-word';
 
@@ -13,7 +13,7 @@ export class CrosswordTileComponent implements OnInit {
     @Input() public readonly tileRow: number;
     @Input() public readonly tileColumn: number;
 
-    @ViewChild('crosswordBoard') private gridElement: ElementRef;
+    // @ViewChild('crosswordBoard') private gridElement: ElementRef;
     @Input() get tileChar() {
         return this.tileValue;
     }

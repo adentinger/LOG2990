@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { Direction } from '../../common/crossword/grid-word';
 
@@ -14,7 +14,6 @@ export class BoardComponent implements OnInit {
     public wordBuffer = '';
 
     @Input('indexOfDefinition') public indexOfDefinition: number;
-    @ViewChild('crosswordBoard') private crosswordBoard: ElementRef;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
     public onSelect(): void {

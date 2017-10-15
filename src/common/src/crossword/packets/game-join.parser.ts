@@ -20,7 +20,7 @@ export class GameJoinParser extends PacketParser<GameJoinPacket> {
     public parse(data: ArrayBuffer): GameJoinPacket {
         const VIEW = new DataView(data);
         const LENGTH = VIEW.getInt32(0);
-        let buffer: string = '';
+        let buffer = '';
         for (let i = 0; i < LENGTH; i++) {
             buffer += String.fromCharCode(VIEW.getUint8(i + SIZE_UINT32));
         }

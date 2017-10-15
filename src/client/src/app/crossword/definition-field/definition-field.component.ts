@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, } from '@angular/core';
 import { Definition } from '../../common/crossword/definition';
 import { DefinitionsService } from './definitions.service';
 
@@ -9,8 +9,6 @@ import { DefinitionsService } from './definitions.service';
     providers: [DefinitionsService]
 })
 export class DefinitionFieldComponent implements OnInit {
-
-    @ViewChild('inputBuffer') private inputBuffer: ElementRef;
 
     @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
     public selectedDefinitionId: number = -1;

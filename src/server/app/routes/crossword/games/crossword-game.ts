@@ -20,7 +20,7 @@ export class CrosswordGame {
 
         this.horizontalDefinitions = DEFINITIONS_MOCK;
         this.verticalDefinitions = DEFINITIONS_MOCK;
-        console.log('new state of the game: ' + JSON.stringify(this.getGameInfo()));
+        // console.log('new state of the game: ' + JSON.stringify(this.getGameInfo()));
     }
 
     public getGameInfo(): Object {

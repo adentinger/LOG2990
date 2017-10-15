@@ -1,9 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Location } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
-import { ResponseContentType, RequestOptions, Headers, RequestOptionsArgs } from '@angular/http';
 import { CrosswordGameService } from '../crossword-game.service';
 import '../../common/crossword/packets/game-join.parser';
 
@@ -139,10 +138,6 @@ export class ConfigMenuService {
             (error: Error) => {
                 console.log('error on client : ' + error.message);
             });
-        // .subscribe((response: Response) => {
-        //     // console.log(response.json());
-        // }, console.error);
-        // console.log(this.getDisplayedSettings());
         this.isConfiguringGame = false;
     }
 }

@@ -3,13 +3,6 @@ import { GameManager } from './game-manager';
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
 
-const CONFIG_MOCK: CrosswordGameConfigs = {
-    gameMode: 'classic',
-    playerNumber: '1',
-    createJoin: 'create',
-    difficulty: 'easy'
-};
-
 function createMockGameConfigs(): CrosswordGameConfigs {
     const gameModes = ['classic', 'dynamic'];
     const playerNumbers = ['1', '2'];
