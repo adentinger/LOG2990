@@ -1,5 +1,6 @@
-import { Collection } from 'mongodb';
+import { Collection, UpdateWriteOpResult } from 'mongodb';
 import { fetchCollection } from '../../app-db';
+import { HttpStatus } from '../../common';
 
 export interface Property<T = any> {
     name: string;
@@ -12,7 +13,7 @@ export class AdminDbService {
 
     private collectionPromise: Promise<Collection<Property>> = fetchCollection(AdminDbService.ADMIN_COLLECTION);
 
-    public static get(): AdminDbService {
+    public static getInstance(): AdminDbService {
         if (!AdminDbService.instance) {
             AdminDbService.instance = new AdminDbService();
         }
@@ -23,11 +24,19 @@ export class AdminDbService {
 
     public checkPassword(password: string): Promise<boolean> {
         const PROPERTY_NAME = 'password', DEFAULT_VALUE = 'admin';
-        return this.collectionPromise.then((collection: Collection<Property>) => {
-            return this.ensurePropertyInCollection<string>(PROPERTY_NAME, DEFAULT_VALUE, collection);
-        }).then((property: Property<String>) => {
-            return property.value === password;
-        }).catch(() => false);
+        return this.collectionPromise.then((collection: Collection<Property>) =>
+            this.ensurePropertyInCollection<string>(PROPERTY_NAME, DEFAULT_VALUE, collection)
+        ).then((property: Property<String>) => property.value === password).catch(() => false);
+    }
+
+    public changePassword(password: string): Promise<boolean> {
+        if (typeof password !== 'string' || password.length === 0) {
+            return Promise.reject(HttpStatus.BAD_REQUEST);
+        }
+        const PROPERTY_NAME = 'password';
+        return this.collectionPromise.then((collection: Collection<Property>) =>
+            this.ensurePropertyInCollection<string>(PROPERTY_NAME, password, collection)
+                .then(() => this.changePropertyValue(PROPERTY_NAME, password, collection)));
     }
 
     private ensurePropertyInCollection<T>(name: string, defaultValue: T,
@@ -45,5 +54,17 @@ export class AdminDbService {
             }
             return CURSOR.limit(1).next();
         });
+    }
+
+    private changePropertyValue<T>(name: string, value: T,
+        collection: Collection<Property<T>>): Promise<boolean> {
+        return collection.updateOne({ name }, { $set: { value } })
+            .then((result: UpdateWriteOpResult) => {
+                if (result.matchedCount === 0) {
+                    throw HttpStatus.UNKNOWN_ERROR;
+                }
+                return result;
+            })
+            .then((result: UpdateWriteOpResult) => result.modifiedCount > 0);
     }
 }

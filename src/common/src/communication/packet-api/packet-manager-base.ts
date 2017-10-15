@@ -12,6 +12,8 @@ export declare interface Socket {
     send: (...argv: any[]) => this;
 }
 
+const DEFAULT_NAME = '<Annonymous>';
+
 /**
  * @class
  * @description The base class that is extended by PacketManagerClient and PacketManagerServer
@@ -102,7 +104,7 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * @returns The given handler. Usually useful to keep a reference to the handler and unregister later.
      */
     public registerHandler<T>(type: Class<T>, handler: PacketHandler<T>): PacketHandler<T> {
-        this.logger.debug(`New handler for ${type.name}`, handler.name);
+        this.logger.debug('New handler for %s: %s', type.name || DEFAULT_NAME, handler.name || DEFAULT_NAME);
         if (!this.handlers.has(type)) {
             this.handlers.set(type, new Set<PacketHandler<any>>());
         }

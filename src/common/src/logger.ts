@@ -42,7 +42,7 @@ export class Logger {
 
         if (Logger.DISPLAY_TIME) {
             const NOW = new Date();
-            prefix = `[${NOW.toLocaleString()}] ${prefix}`;
+            prefix = `[${NOW.toLocaleTimeString()}] ${prefix}`;
         }
 
         if (priorityPrefix) {

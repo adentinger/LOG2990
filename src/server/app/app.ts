@@ -80,7 +80,7 @@ export class Application {
         this.app.use(cookieParser(Application.SECRET));
         this.app.use(session({ secret: Application.SECRET, resave: false, saveUninitialized: false }));
         this.app.use(express.static(path.join(__dirname, '../client')));
-        this.app.use(cors());
+        this.app.use(cors({ credentials: true, preflightContinue: true }));
     }
 
     @PacketAPI.PacketHandler(WordConstraint)

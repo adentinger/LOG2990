@@ -10,10 +10,10 @@ export function isJson(pseudoJson: string): boolean {
     }
 }
 
-export interface Constructor<T extends Object> extends Function {
+export interface Constructor<T extends Object = Object> extends Function {
     new(...argv: any[]): T;
 }
-export declare type Class<T> = Constructor<T> | Function; // For comprehention's sake
+export declare type Class<T = any> = Constructor<T> | Function; // For comprehention's sake
 
 export interface InstanceOf<T extends Constructor<InstanceOf<T>>> extends Object {
     readonly constructor: T | Function;
@@ -49,4 +49,16 @@ export function getCallers(): string[] {
             return null;
         }
     }
+}
+
+export function warn(logger: {warn: (message: any) => void}): (error: any) => never;
+export function warn<T>(logger: {warn: (message: any) => void}, returnValue: T): (error: any) => T;
+export function warn<T>(logger: {warn: (message: any) => void}, returnValue?: T) {
+    return function (error: any): T {
+        logger.warn(error);
+        if (returnValue !== undefined) {
+            return returnValue;
+        }
+        throw error;
+    };
 }
