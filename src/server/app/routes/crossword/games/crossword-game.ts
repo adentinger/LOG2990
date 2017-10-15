@@ -4,12 +4,18 @@ export class CrosswordGame {
     public grid: GridWord[] = [];
     public definitions: string;
     private gameMode: string;
+
+    public player1Id: string = null;
+    public player2Id: string = null;
     constructor(configs: CrosswordGameConfigs) {
         this.gameMode = configs.gameMode;
         // other attributes
     }
 
-    public getStatus(): String {    // MOCK
-        return 'game of type ' + this.gameMode + 'in process';
+    public getGameInfo(): Object {
+        return {
+            'player 1 id': this.player1Id,
+            'player 2 id': this.player2Id
+        };
     }
 }

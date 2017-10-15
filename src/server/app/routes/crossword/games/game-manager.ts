@@ -64,9 +64,15 @@ export class GameManager {
 
     @PacketHandler(GameJoinPacket)
     public gameJoinHandler(event: PacketEvent<GameJoinPacket>) {
-        const GAME_TO_JOIN = event.value.gameId;
-        // add this player to the game (identified by the socket id)
-        console.log(GAME_TO_JOIN, event.socketid);
+        const gameToJoin = event.value.gameId;
+        const playerSocketId = event.socketid;
+
+        console.log('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
+        this.addPlayerToGame(event.socketid, gameToJoin);
+        console.log(this.getGame(gameToJoin).getGameInfo());
     }
 
+    private addPlayerToGame(playerId: string, gameId: string): void {
+        this.games.get(gameId).player1Id = playerId;
+    }
 }
