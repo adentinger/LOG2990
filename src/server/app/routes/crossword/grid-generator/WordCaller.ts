@@ -106,9 +106,9 @@ export class WordCaller {
                     charConstraints: {char: string, position: number}[] = []): Promise<string[]> {
         return new Promise((resolve, reject) => {
             const URL = 'http://localhost:3000/crossword/lexic/words?' +
-                        'minLength=' + minLength +
-                        '&maxLength' + maxLength +
-                        '&isCommon=' + isCommon  +
+                        'minLength='  + minLength +
+                        '&maxLength=' + maxLength +
+                        '&isCommon='  + isCommon  +
                         '&charConstraints=' + JSON.stringify(charConstraints);
             http.get(URL, (response: http.IncomingMessage) => {
                 let data = '';
