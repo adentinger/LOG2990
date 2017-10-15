@@ -5,7 +5,7 @@ import { GridGenerator } from './grid-generator/grid-generator';
 import { Difficulty } from './grid-generator/grid';
 
 @MiddleWare('/crossword/grid-generator')
-export class GridGeneratorMiddleware {
+export class GridGeneratorMiddleWare {
     @Route('get', '/easy')
     public getEasyGrid(req: express.Request, res: express.Response): void {
         const GRID_GENERATOR = new GridGenerator(Difficulty.easy);
