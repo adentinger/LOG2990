@@ -34,26 +34,24 @@ export abstract class GridFiller {
         }
     }
 
-    public initialisation(grid: GridGenerator) {
+    public async initialisation(grid: GridGenerator) {
         const word = new Word('');
-        this.wordCaller.getWordsSynchronous(this.firstWordLenght[0],
-            this.firstWordLenght[1], this.isCommon).then((words: string[]) => {
-                word.value = words[Math.round(Math.random() * words.length)];
-            });
-
+        const POSSIBLE_WORDS = await this.wordCaller.getWords(this.firstWordLenght[0],
+                                                              this.firstWordLenght[1],
+                                                              this.isCommon);
+        word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
         this.temporaryGridForVertical.push(word);
         this.findSecondWord(word, grid);
     }
 
-    public findSecondWord(word: Word, grid: GridGenerator) {
+    public async findSecondWord(word: Word, grid: GridGenerator) {
         let firstWordsSuggestions: string[] = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
-            this.wordCaller.getWordsSynchronous(this.secondWordLenght[0],
-                this.secondWordLenght[1], this.isCommon).then((words: string[]) => {
-                    word.value = words[Math.round(Math.random() * words.length)];
-                });
-            //word = this.wordCaller.getWordOfDesiredLength(this.secondWordLenght[0], this.secondWordLenght[1], grid);
+            const POSSIBLE_WORDS = await this.wordCaller.getWords(this.secondWordLenght[0],
+                                                                  this.secondWordLenght[1],
+                                                                  this.isCommon);
+            word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
             this.temporaryGridForVertical.push(word);
             firstWordsSuggestions = this.returnArrayOfWordsThatFitsAcross(column.second);
 
@@ -72,15 +70,14 @@ export abstract class GridFiller {
         }
     }
 
-    public findThirdWord(word: Word, wordsSuggestions: string[], grid: GridGenerator) {
+    public async findThirdWord(word: Word, wordsSuggestions: string[], grid: GridGenerator) {
         wordsSuggestions = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
-            //word = this.wordCaller.getWordOfDesiredLength(this.thirdWordLenght[0], this.thirdWordLenght[1], grid);
-            this.wordCaller.getWordsSynchronous(this.thirdWordLenght[0],
-                this.thirdWordLenght[1], this.isCommon).then((words: string[]) => {
-                    word.value = words[Math.round(Math.random() * words.length)];
-                });
+            const POSSIBLE_WORDS = await this.wordCaller.getWords(this.thirdWordLenght[0],
+                                                                  this.thirdWordLenght[1],
+                                                                  this.isCommon);
+            word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
             this.temporaryGridForVertical.push(word);
             wordsSuggestions = this.returnArrayOfWordsThatFitsAcross(column.third);
 

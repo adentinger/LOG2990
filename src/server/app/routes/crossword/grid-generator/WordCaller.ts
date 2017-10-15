@@ -17,7 +17,9 @@ export class WordCaller {
         let alreadyChosen = false;
         do {
             desiredWordVerified = desiredWords[this.getRandomIndex(0, desiredWords.length - 1)];
-            alreadyChosen = this.alreadyChoosen(desiredWordVerified, gridGenerator.grid.gridForVertical, gridGenerator.grid.gridForAcross);
+            alreadyChosen = this.alreadyChoosen(desiredWordVerified,
+                                                gridGenerator.grid.gridForVertical,
+                                                gridGenerator.grid.gridForAcross);
 
         }while (alreadyChosen === true);
         desiredWordVerified = this.wordFormatting(desiredWordVerified);
@@ -99,21 +101,16 @@ export class WordCaller {
         return alreadyChoosen;
     }
 
-    private getWordsAsynchronous(minLength: number,
-        maxLength?: number, isCommon?: boolean,
-        charConstraints?: {char: string, position: number}[]): Promise<string[]> {
+    public getWords(minLength: number,
+                    maxLength: number = 100, isCommon: boolean = true,
+                    charConstraints: {char: string, position: number}[] = []): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            let url = 'http://localhost:3000/crossword/lexic/words?minLength=' + minLength;
-            if (Number.isInteger(maxLength)) {
-                url += '&maxLength' + maxLength;
-            }
-            if (isCommon !== undefined) {
-                url += '&isCommon=' + Boolean(isCommon);
-            }
-            if (Array.isArray(charConstraints)) {
-                url += '&charConstraints=' + JSON.stringify(charConstraints);
-            }
-            http.get(url, (response: http.IncomingMessage) => {
+            const URL = 'http://localhost:3000/crossword/lexic/words?' +
+                        'minLength=' + minLength +
+                        '&maxLength' + maxLength +
+                        '&isCommon=' + isCommon  +
+                        '&charConstraints=' + JSON.stringify(charConstraints);
+            http.get(URL, (response: http.IncomingMessage) => {
                 let data = '';
                 response.on('data', (chunk) => data += chunk);
                 response.on('end', () => {
@@ -124,18 +121,4 @@ export class WordCaller {
         });
     }
 
-    public async getWordsSynchronous(minLength: number,
-        maxLength?: number, isCommon?: boolean,
-        charConstraints?: {char: string, position: number}[]) {
-        const DATA = await this.getWordsAsynchronous(minLength,
-            maxLength, isCommon,
-            charConstraints);
-            console.log(DATA);
-        return DATA;
-    }
 }
-
-/*getWords(3, 5, false).then((words: string[]) => {
-    const randomWord = words[Math.round(Math.random() * words.length)];
-    console.log(randomWord);
-});*/
