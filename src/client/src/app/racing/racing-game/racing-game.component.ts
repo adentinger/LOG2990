@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RacingGameService } from './racing-game.service';
+import { Point } from '../../common/math/point';
 
 @Component({
     selector: 'app-racing-game',
@@ -15,10 +16,8 @@ export class RacingGameComponent implements OnInit {
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
 
-    // private mouseX = 0;
-    // private mouseY = 0;
-    // private windowHalfX = window.innerWidth * 0.5;
-    // private windowHalfY = window.innerHeight * 0.5;
+    private windowHalfX = window.innerWidth * 0.5;
+    private windowHalfY = window.innerHeight * 0.5;
 
     constructor(private racingGameRenderer: RacingGameService) { }
 
@@ -34,22 +33,14 @@ export class RacingGameComponent implements OnInit {
         this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
         this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
-/*
+
     public onMouseMove(e) {
-        this.mouseX = (e.clientX - this.windowHalfX) * 10;
-        this.mouseY = (e.clientY - this.windowHalfY) * 10;
+        const MOUSE_POSITION = new Point(
+            (e.clientX - this.windowHalfX) / (2 * this.windowHalfX),
+            (e.clientY - this.windowHalfY) / (2 * this.windowHalfY)
+        );
+        console.log('OUSE MOVED TO', MOUSE_POSITION);
+        this.racingGameRenderer.mousePosition = MOUSE_POSITION;
     }
 
-    public mapRenderer() {
-        requestAnimationFrame(this.racingGameRenderer.renderGame);
-        this.racingGameRenderer.racingGameRendering.CAMERA.position.x += (this.mouseX -
-            this.racingGameRenderer.racingGameRendering.CAMERA.position.x)
-            * .02;
-        this.racingGameRenderer.racingGameRendering.CAMERA.position.y += (-this.mouseY -
-            this.racingGameRenderer.racingGameRendering.CAMERA.position.y)
-            * .02;
-        this.racingGameRenderer.racingGameRendering.CAMERA.lookAt(this.racingGameRenderer.racingGameRendering.SCENE.position);
-        this.racingGameRenderer.updateRenderer();
-    }
-*/
 }

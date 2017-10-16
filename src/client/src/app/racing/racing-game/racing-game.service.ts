@@ -1,5 +1,6 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { RacingGameRendering } from './racing-game-rendering';
+import { Point } from '../../common/math/point';
 
 @Injectable()
 export class RacingGameService {
@@ -7,6 +8,7 @@ export class RacingGameService {
     public racingGameRendering: RacingGameRendering;
     private animationRequestId = 0;
     private isRendering = false;
+    private mousePositionInternal = new Point(0, 0);
 
     constructor() { }
 
@@ -27,8 +29,20 @@ export class RacingGameService {
         this.racingGameRendering.setupScene();
     }
 
+    public get mousePosition(): Point {
+        return this.mousePositionInternal;
+    }
+
+    public set mousePosition(mousePosition: Point) {
+        this.racingGameRendering.CAMERA.rotateY(
+            this.mousePositionInternal.x - mousePosition.x);
+        this.racingGameRendering.CAMERA.rotateX(
+            this.mousePositionInternal.y - mousePosition.y);
+    }
+
     public renderGame(): void {
-        this.animationRequestId = requestAnimationFrame(this.renderGame.bind(this));
+        this.animationRequestId =
+            requestAnimationFrame(() => this.renderGame());
         this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
     }
 
