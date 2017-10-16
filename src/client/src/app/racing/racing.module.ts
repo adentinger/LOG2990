@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { RacingComponent } from './racing.component';
 import { InitialViewComponent } from './initial-view/initial-view.component';
@@ -10,7 +11,8 @@ import { MapThumbnailComponent } from './initial-view/map-thumbnail/map-thumbnai
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        RouterModule
     ],
     exports: [
         RacingComponent

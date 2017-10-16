@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 import { CrosswordComponent } from './crossword.component';
 import { BoardComponent } from './board/board.component';
@@ -20,7 +21,8 @@ import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.co
         CommonModule,
         FormsModule,
         HttpClientModule,
-        ClickOutsideModule
+        ClickOutsideModule,
+        RouterModule
     ],
     declarations: [
         CrosswordComponent,
