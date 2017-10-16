@@ -25,7 +25,7 @@ export class GridFillerThirdSection extends GridFiller {
             }
         }
 
-        returnedWord = theWords[this.wordCaller.getRandomIndex(0, theWords.length - 1)];
+        returnedWord = this.wordCaller.getRandomWordFrom(theWords);
 
         if (!returnedWord) {
             returnedWord = 'nothing found';

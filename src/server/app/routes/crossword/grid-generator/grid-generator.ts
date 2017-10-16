@@ -34,6 +34,7 @@ export class GridGenerator {
     public async gridGeneration(): Promise<Grid> {
         // the grid is separated in three cases + a final word push
         const firstGrid = new GridFillerFirstSection(this, this.isCommon);
+        await firstGrid.fill();
         this.pushOnTheGridAndReinitialiseTemporaryGrid(firstGrid.temporaryGridForVertical, firstGrid.temporaryGridForAcross);
 
         const secondGrid = new GridFillerSecondSection(this, this.isCommon);
