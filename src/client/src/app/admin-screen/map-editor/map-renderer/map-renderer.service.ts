@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MapEditorService } from '../map-editor.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
-import { Point } from '../point';
+import { Point } from '../../../common/math/point';
 import { PointIndex } from '../point-index';
 
 @Injectable()
@@ -28,10 +28,15 @@ export class MapRendererService implements Drawable {
         }
     }
 
+    public get canvas(): HTMLCanvasElement {
+        return this.canvasElement;
+    }
+
     public draw(): void {
         this.checkIfCanvasSet();
         this.clear();
-        this.path.updatePoints(this.mapEditor.points);
+        this.path.shouldReverse = !this.mapEditor.isMapClockwise;
+        this.path.updatePoints(this.mapEditor.points, this.mapEditor.minimumDistanceBetweenPoints);
         this.path.draw();
     }
 

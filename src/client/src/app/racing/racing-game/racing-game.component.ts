@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RacingGameService } from './racing-game.service';
 
 @Component({
@@ -15,10 +15,10 @@ export class RacingGameComponent implements OnInit {
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
 
-    private mouseX = 0;
-    private mouseY = 0;
-    private windowHalfX = window.innerWidth * 0.5;
-    private windowHalfY = window.innerHeight * 0.5;
+    // private mouseX = 0;
+    // private mouseY = 0;
+    // private windowHalfX = window.innerWidth * 0.5;
+    // private windowHalfY = window.innerHeight * 0.5;
 
     constructor(private racingGameRenderer: RacingGameService) { }
 

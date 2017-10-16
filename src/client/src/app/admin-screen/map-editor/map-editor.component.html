@@ -5,7 +5,7 @@
         <tbody>
           <tr>
             <td>
-              <button [disabled]="!isMapValid">Save Map</button>
+              <button (click)="saveMap()" [disabled]="!isMapValid">Save Map</button>
             </td>
           </tr>
           <tr>
@@ -13,7 +13,7 @@
               <label>Name:</label>
             </td>
             <td>
-              <input [(ngModel)]="currentMap.name" placeholder="name" />
+              <input [(ngModel)]="internalMap.name" placeholder="name" />
             </td>
           </tr>
           <tr>
@@ -21,7 +21,7 @@
               <label>Type:</label>
             </td>
             <td>
-              <select [(ngModel)]="currentMap.type">
+              <select [(ngModel)]="internalMap.type">
                 <option *ngFor="let type of mapTypes" value="{{type}}">{{type}}</option>
               </select>
             </td>
@@ -31,7 +31,17 @@
               <label>Description:</label>
             </td>
             <td>
-              <textarea rows=10 cols=50 [(ngModel)]="currentMap.description" placeholder="name"></textarea>
+              <textarea rows=10 cols=50 [(ngModel)]="internalMap.description" placeholder="description"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>Change item quantity: </label>
+            </td>
+            <td>
+              <button (click)="potholes()" [disabled]="!isMapValid">Potholes</button>
+              <button (click)="puddles()" [disabled]="!isMapValid">Puddle</button>
+              <button (click)="speedBoosts()" [disabled]="!isMapValid">Speed Boost</button>
             </td>
           </tr>
         </tbody>

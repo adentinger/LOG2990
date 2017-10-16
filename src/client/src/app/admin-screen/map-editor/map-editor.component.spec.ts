@@ -1,7 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { MapEditorComponent } from './map-editor.component';
-import { FormsModule } from '@angular/forms';
+import { MapService } from '../../racing/services/map.service';
 
 describe('MapEditorComponent', () => {
     let component: MapEditorComponent;
@@ -9,8 +11,16 @@ describe('MapEditorComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [MapEditorComponent],
-            imports: [FormsModule]
+            declarations: [
+                MapEditorComponent
+            ],
+            imports: [
+                FormsModule,
+                HttpModule
+            ],
+            providers: [
+                MapService
+            ]
         })
             .compileComponents();
     }));

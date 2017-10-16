@@ -2,15 +2,26 @@ import { Path } from './path';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
-import { Point } from './point';
-import { Vector } from './vector';
-import { Line, IntersectionType } from './line';
+import { Point } from '../../common/math/point';
+import { Vector } from '../../common/math/vector';
+import { Line, IntersectionType } from '../../common/math/line';
+import { ShoelaceAlgorithm } from '../../common/math/shoelace-algorithm';
 
-const MIN_ANGLE = Math.PI / 4;
+export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
 
+export enum MapError {
+    NONE = 0,       // No error
+    NOT_CLOSED,     // Map path is not closed
+    SMALL_ANGLE,    // An angle is < 45°
+    SEGMENT_LENGTH, // A segment is to small
+    LINES_CROSS     // Two lines cross
+}
+
 export class Map {
+
     public path: Path;
+    public minimumSegmentLength: number;
     public potholes: Pothole[] = [];
     public puddles: Puddle[] = [];
     public speedBoosts: SpeedBoost[] = [];
@@ -18,33 +29,31 @@ export class Map {
     public name: string;
     public description: string;
     public type: string;
-    public rating: number;
-    public plays: number;
-    public height: number;
-    public width: number;
+
+    private clockwiseCheckerAlgorithm: ShoelaceAlgorithm = new ShoelaceAlgorithm();
 
     constructor(path: Path = new Path(),
-        name: string = '',
-        description: string = '',
-        type: string = 'Amateur',
-        potholes: Pothole[] = [],
-        puddles: Puddle[] = [],
-        speedBoosts: SpeedBoost[] = [],
-        rating: number = 0,
-        plays: number = 0,
-        height: number = 500,
-        width: number = 500) {
+                minimumSegmentLength: number = Infinity,
+                name: string = '',
+                description: string = '',
+                type: string = 'Amateur',
+                potholes: Pothole[] = [],
+                puddles: Puddle[] = [],
+                speedBoosts: SpeedBoost[] = []) {
+
         this.path = path;
+        this.minimumSegmentLength = minimumSegmentLength;
         this.name = name;
         this.description = description;
         this.type = type;
         this.potholes.push.apply(this.potholes, potholes);
         this.puddles.push.apply(this.puddles, puddles);
         this.speedBoosts.push.apply(this.speedBoosts, speedBoosts);
-        this.rating = rating;
-        this.plays = plays;
-        this.height = height;
-        this.width = width;
+    }
+
+    public isClockwise(): boolean {
+        const POLYGON = this.path.points.slice(0, this.path.points.length - 1);
+        return this.clockwiseCheckerAlgorithm.algebraicAreaOf(POLYGON) > 0;
     }
 
     public computeLength(): number {
@@ -68,7 +77,44 @@ export class Map {
         }
     }
 
-    public computeBadAngles(): [Point, Point, Point][] {
+    public computeErroneousLines(): Line[] {
+        const ERRONEOUS_LINES: Line[] = [];
+
+        const BAD_ANGLES: [Point, Point, Point][] = this.computeBadAngles();
+        BAD_ANGLES.forEach((angle: [Point, Point, Point]) => {
+            ERRONEOUS_LINES.push(new Line(angle[0], angle[1]), new Line(angle[1], angle[2]));
+        });
+        const CROSSING_LINES: [Line, Line][] = this.computeCrossingLines();
+        CROSSING_LINES.forEach((lines: [Line, Line]) => {
+            ERRONEOUS_LINES.push(lines[0], lines[1]);
+        });
+        const SMALL_SEGMENTS: Line[] = this.computeSmallSegments();
+        ERRONEOUS_LINES.push.apply(ERRONEOUS_LINES, SMALL_SEGMENTS);
+
+        return ERRONEOUS_LINES;
+    }
+
+    public computeErrors(): MapError {
+        let error: MapError;
+        if (!this.isClosed()) {
+             error = MapError.NOT_CLOSED;
+        }
+        else if (this.computeBadAngles().length !== 0) {
+            error = MapError.SMALL_ANGLE;
+        }
+        else if (this.computeCrossingLines().length !== 0) {
+            error = MapError.LINES_CROSS;
+        }
+        else if (this.computeSmallSegments().length !== 0) {
+            error = MapError.SEGMENT_LENGTH;
+        }
+        else {
+            error = MapError.NONE;
+        }
+        return error;
+    }
+
+    private computeBadAngles(): [Point, Point, Point][] {
         const POINTS = [];
         POINTS.push.apply(POINTS, this.path.points);
 
@@ -90,6 +136,7 @@ export class Map {
                 BAD_ANGLES.push([POINT1, POINT2, POINT3]);
             }
         }
+
         return BAD_ANGLES;
     }
 
@@ -99,7 +146,7 @@ export class Map {
                this.path.points[this.path.points.length - 1]);
     }
 
-    public computeCrossingLines(): [Line, Line][] {
+    private computeCrossingLines(): [Line, Line][] {
         const POINTS = this.path.points;
         const LINES_THAT_CROSS: [Line, Line][] = [];
         const LINES: Line[] = [];
@@ -125,6 +172,19 @@ export class Map {
         }
 
         return LINES_THAT_CROSS;
+    }
+
+    private computeSmallSegments(): Line[] {
+        const SMALL_SEGMENTS = [];
+        let lastPoint = this.path.points[0];
+        this.path.points.slice(1).forEach((point: Point) => {
+            const LINE = new Line(lastPoint, point);
+            if (LINE.translation.norm() < this.minimumSegmentLength) {
+                SMALL_SEGMENTS.push(LINE);
+            }
+            lastPoint = point;
+        });
+        return SMALL_SEGMENTS;
     }
 
 }

@@ -1,5 +1,5 @@
 import { MapPath } from './map-path';
-import { Point } from '../point';
+import { Point } from '../../../common/math/point';
 
 class CanvasFactory {
 
@@ -31,7 +31,7 @@ describe('MapPath', () => {
         ];
 
         beforeEach(() => {
-            mapPath.updatePoints(POINTS);
+            mapPath.updatePoints(POINTS, 10.0);
         });
 
         it('should be able to find a point with given coordinates', () => {

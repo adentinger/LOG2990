@@ -16,7 +16,6 @@ export class RacingGameRendering {
     public SCENE: THREE.Scene;
     public CAMERA: THREE.PerspectiveCamera;
     public RENDERER: THREE.WebGLRenderer;
-    private readonly FLOOR: THREE.Mesh;
     private readonly SKYBOX: Skybox;
     private readonly LIGHTS: THREE.Light[] = [];
 
@@ -37,9 +36,7 @@ export class RacingGameRendering {
     public setupScene(): void {
 
         this.setupCamera();
-        // this.SCENE.add(this.CAMERA);
-        // this.SCENE.add(this.FLOOR);
-        //
+
     }
 
     private setupCamera(): void {

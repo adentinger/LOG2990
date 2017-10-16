@@ -2,6 +2,8 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { MapRendererService } from './map-renderer.service';
 import { MapEditorService } from '../map-editor.service';
+import { MapConverterService } from '../map-converter.service';
+import { RacingUnitConversionService } from '../racing-unit-conversion.service';
 
 class CanvasFactory {
     constructor() {}
@@ -15,7 +17,13 @@ describe('MapRendererService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [MapRendererService, MapEditorService, CanvasFactory]
+            providers: [
+                MapRendererService,
+                MapEditorService,
+                MapConverterService,
+                RacingUnitConversionService,
+                CanvasFactory
+            ]
         });
     });
 

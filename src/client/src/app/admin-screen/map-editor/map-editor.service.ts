@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Map } from './map';
-import { Point } from './point';
+
+import { MapConverterService } from './map-converter.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
+import { Map, MapError } from './map';
+import { SerializedMap } from '../../common/racing/serialized-map';
+import { Point } from '../../common/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
+import { Track } from '../../racing/track';
 
 @Injectable()
 export class MapEditorService {
 
+    private width = 0;
+    private height = 0;
+
     private map: Map;
 
-    constructor() {
+    constructor(private converter: RacingUnitConversionService,
+                private mapConverter: MapConverterService) {
         this.newMap();
     }
 
@@ -17,25 +26,73 @@ export class MapEditorService {
         return this.map;
     }
 
-    public newMap(): boolean {
-        let mapCreated = false;
+    public get mapWidth(): number {
+        return this.width;
+    }
 
-        this.deleteMap();
+    public set mapWidth(mapWidth: number) {
+        const ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
+        this.width = mapWidth;
+        this.height = mapWidth / ASPECT_RATIO;
+        this.converter.windowWidth = this.width;
+        this.converter.windowHeight = this.height;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
 
+    public get mapHeight(): number {
+        return this.height;
+    }
+
+    public set mapHeight(mapHeight: number) {
+        const ASPECT_RATIO = Track.WIDTH_MAX / Track.HEIGHT_MAX;
+        this.width = ASPECT_RATIO * mapHeight;
+        this.height = mapHeight;
+        this.converter.windowWidth = this.width;
+        this.converter.windowHeight = this.height;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
+
+    public newMap(): void {
         this.map = new Map();
-        if (this.map !== null) {
-            mapCreated = true;
+        this.map.minimumSegmentLength = this.minimumDistanceBetweenPoints;
+    }
+
+    public get minimumDistanceBetweenPoints(): number {
+        return this.converter.lengthFromGameUnits(2 * Track.SEGMENT_WIDTH);
+    }
+
+    public get isMapClockwise(): boolean {
+        return this.map.isClockwise() ||
+               this.map.computeErrors() !== MapError.NONE;
+    }
+
+    public serializeMap(): SerializedMap {
+        if (this.areWidthAndHeightSet()) {
+            return this.mapConverter.serialize(this.map);
         }
-
-        return mapCreated;
+        else {
+            throw new Error('Serializing map failed: ' +
+                            'Please set map width and height to a value ' +
+                            'that is >0 before attempting to deserialize.');
+        }
     }
 
-    public saveMap(): Promise<boolean> {
-        return Promise.reject(false);
-    }
-
-    public deleteMap(): void {
-        this.map = null;
+    public deserializeMap(serializedMap: SerializedMap): void {
+        if (this.areWidthAndHeightSet()) {
+            let newMap: Map;
+            try {
+                newMap = this.mapConverter.deserialize(serializedMap);
+            }
+            catch (error) {}
+            finally {
+                this.map = newMap;
+            }
+        }
+        else {
+            throw new Error('Deserializing map failed: ' +
+                            'Please set map width and height to a value ' +
+                            'that is >0 before attempting to deserialize.');
+        }
     }
 
     public get points(): Point[] {
@@ -82,8 +139,8 @@ export class MapEditorService {
     }
 
     private areValidCoordinates(coordinates: Point): boolean {
-        return coordinates.x < this.map.width && coordinates.y < this.map.height &&
-               coordinates.x > 0              && coordinates.y > 0;
+        return coordinates.x < this.mapWidth && coordinates.y < this.mapHeight &&
+               coordinates.x > 0             && coordinates.y > 0;
     }
 
     public isFirstPoint(pointIndex: PointIndex): boolean {
@@ -99,12 +156,12 @@ export class MapEditorService {
         }
     }
 
-    public isValid(): boolean {
-        if (this.map.isClosed() && this.map.computeBadAngles().length === 0 && this.map.computeCrossingLines().length === 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public computeMapErrors(): MapError {
+        return this.map.computeErrors();
     }
+
+    private areWidthAndHeightSet(): boolean {
+        return this.mapWidth > 0 && this.mapHeight > 0;
+    }
+
 }

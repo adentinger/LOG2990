@@ -32,23 +32,18 @@ export class RacingGameService {
         this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
     }
 
-    private startRendering(): void {
+    public startRendering(): void {
         if (!this.isRendering) {
             this.isRendering = true;
             this.renderGame();
         }
     }
 
-    private stopRendering(): void {
+    public stopRendering(): void {
         if (this.animationRequestId !== 0) {
             cancelAnimationFrame(this.animationRequestId);
         }
         this.isRendering = false;
     }
-/*
-    public updateRenderer(): void {
-        this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
-        this.startRendering();
-    }
-    */
+
 }

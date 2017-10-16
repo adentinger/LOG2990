@@ -1,50 +1,43 @@
 import { Injectable } from '@angular/core';
-
+import { Http, RequestOptionsArgs, Headers } from '@angular/http';
+import 'rxjs/add/operator/toPromise';
+import { SerializedMap } from '../../common/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
-import { MAPS } from './mock-maps';
-
-const MAX_IDS_PER_REQUEST = 100;
 
 @Injectable()
 export class MapService {
 
+    private static readonly HEADERS: RequestOptionsArgs =
+        {headers: new Headers({'Content-Type': 'application/json'})};
+
     public maps: Map[];
 
-    constructor() {
-        this.maps = MAPS.slice();
+    constructor(private http: Http) {
     }
 
-    public getById(id: number): Promise<Map> {
-        const MAP = this.maps[id];
-        if (MAP !== undefined) {
-            console.log('resolved');
-            return Promise.reject('');
-        }
-        else {
-            console.log('rejected');
-            return Promise.reject(`ID ${id} does not exist`);
-        }
+    public saveNew(serializedMap: SerializedMap): Promise<void> {
+        const url = 'http://localhost:3000/racing/maps';
+        return this.http.post(url, JSON.stringify(serializedMap), MapService.HEADERS).toPromise().then(() => null);
     }
 
-    public getMapIds(howMany: number): Promise<number[]> {
-        if (howMany > MAX_IDS_PER_REQUEST) {
-            const IDS = [];
-            for (let i = 0; i < howMany; ++i) {
-                IDS.push(i);
-            }
-            return Promise.resolve(IDS);
-        }
-        else {
-            return Promise.reject('Too many ids required.');
-        }
+    public saveEdited(serializedMap: SerializedMap): Promise<void> {
+        const url = 'http://localhost:3000/racing/maps/';
+        return this.http.put(url, JSON.stringify(serializedMap), MapService.HEADERS).toPromise().then(() => null);
     }
 
-    public postMap(map: Map): Promise<number> {
-        return Promise.reject('Not yet implemented');
+    public delete(name: string): Promise<void> {
+        const url = 'http://localhost:3000/racing/maps/' + name;
+        return this.http.delete(url).toPromise().then(() => null);
     }
 
-    public putMap(map: Map, id: number): Promise<void> {
-        return Promise.reject('Not yet implemented');
+    public getMapNames(count: number): Promise<string[]> {
+        const url = 'http://localhost:3000/racing/map-names/' + count;
+        return this.http.get(url).toPromise().then(response => response.json() as string[]);
+    }
+
+    public getByName(name: string): Promise<SerializedMap> {
+        const url = 'http://localhost:3000/racing/maps/' + name;
+        return this.http.get(url).toPromise().then(response => response.json() as SerializedMap);
     }
 
 }

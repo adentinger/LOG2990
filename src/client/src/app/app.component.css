@@ -1,9 +1,10 @@
 .app-component-container {
-    height: 100vh;
-    width: 100vw;
+    top: 50px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     vertical-align: top;
     overflow:hidden;
     padding: 0;
     margin: 0;
-    padding-top: 50px;
 }

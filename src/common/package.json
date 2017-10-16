@@ -1,0 +1,40 @@
+{
+  "name": "common",
+  "version": "0.0.1",
+  "description": "Common package between Client and Server side packages",
+  "main": "./index.js",
+  "private": true,
+  "engines": {
+    "npm": "<=4.6.1"
+  },
+  "config": {
+    "packetapi_mgr": "server"
+  },
+  "scripts": {
+    "test": "mocha -r ts-node/register \"src/**/*.spec.ts\"",
+    "lint": "tslint \"src/**/*.ts\" \"src/*.ts\" --force -t verbose || exit 0",
+    "tsc": "tsc",
+    "clean": "rimraf node_modules ./*.d.ts ./*.js ./**/*.js ./**/*.d.ts",
+    "install": "npm run-script tsc",
+    "uninstall": "npm run-script clean",
+    "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html"
+  },
+  "dependencies": {
+    "@types/socket.io": "^1.4.30",
+    "@types/socket.io-client": "^1.4.30",
+    "socket.io": "^1.7.2",
+    "socket.io-client": "1.7.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.42",
+    "chai": "^4.0.0",
+    "mocha": "^3.5.0",
+    "remap-istanbul": "^0.8.4",
+    "rimraf": "^2.5.4",
+    "tslint": "^4.2.0",
+    "tslint-eslint-rules": "^3.2.3",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
+  }
+}

@@ -1,18 +1,42 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { emptyMap, functionalMap1, emptyMap2 } from './mock-maps';
+
 import { MapEditorService } from './map-editor.service';
-import { Point } from './point';
+import { Map } from './map';
+import { MockMaps } from './mock-maps';
+import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
+import { MapConverterService } from './map-converter.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
+import { Point } from '../../common/math/point';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [MapEditorService]
+            providers: [
+                MapEditorService,
+                MapConverterService,
+                RacingUnitConversionService,
+                MockMaps,
+                MockSerializedMaps
+            ]
         });
     });
 
     let service: MapEditorService;
-    beforeEach(inject([MapEditorService], (injectedService: MapEditorService) => {
+    let converter: RacingUnitConversionService;
+    let mockMaps: MockMaps;
+    let mockSerializedMaps: MockSerializedMaps;
+
+    beforeEach(inject([MapEditorService, RacingUnitConversionService, MockMaps, MockSerializedMaps],
+                      (injectedService: MapEditorService,
+                       converterService: RacingUnitConversionService,
+                       mockMapFactory: MockMaps,
+                       mockSerializedMapFactory: MockSerializedMaps) => {
         service = injectedService;
+        service.mapWidth = 500;
+        service.mapHeight = 300;
+        converter = converterService;
+        mockMaps = mockMapFactory;
+        mockSerializedMaps = mockSerializedMapFactory;
     }));
 
     it('should be created', () => {
@@ -24,28 +48,40 @@ describe('MapEditorService', () => {
         const INITIAL_MAP = service['map'];
         expect(INITIAL_MAP).toBeTruthy();
 
-        expect(service.newMap()).toBe(true);
+        service.newMap();
         const NEW_MAP = service['map'];
         expect(NEW_MAP).toBeTruthy();
         expect(INITIAL_MAP).not.toBe(NEW_MAP);
     });
 
-    it('should be able to delete a map', () => {
-        service['map'] = Object.create(emptyMap);
-        expect(service['map']).not.toBeFalsy();
-        service.deleteMap();
-        expect(service['map']).toBeNull();
+    describe('isMapClockwise', () => {
+
+        it('should return true when the map is valid and clockwise', () => {
+            service['map'] = mockMaps.clockwise();
+            expect(service.isMapClockwise).toBe(true);
+        });
+
+        it('should return false when the map is valid but is counter-clockwise', () => {
+            service['map'] = mockMaps.counterClockwise();
+            expect(service.isMapClockwise).toBe(false);
+        });
+
+        it('should return true when the map is invalid', () => {
+            service['map'] = mockMaps.disfunctionalMap1();
+            expect(service.isMapClockwise).toBe(true);
+        });
+
     });
 
     it('should be able to check if a path loops back', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
         expect(service['map'].isClosed()).toBe(true);
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         expect(service['map'].isClosed()).toBe(false);
     });
 
     it('should be able to add a valid point', () => {
-        service['map'] = Object.create(emptyMap);
+        service['map'] = mockMaps.emptyMap1();
         service['map']['height'] = 500;
         service['map']['width'] = 500;
 
@@ -62,7 +98,7 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to delete a point', () => {
-        service['map'] = Object.create(emptyMap2);
+        service['map'] = mockMaps.emptyMap1();
         const POINT: Point = new Point(3, 4);
         service['map'].path.points.push(POINT);
 
@@ -72,7 +108,7 @@ describe('MapEditorService', () => {
     });
 
     it('should be able to edit a point', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
 
         service.editPoint(0, new Point(3, 3));
         expect(service['map'].path.points[0].x).toBe(3);
@@ -83,9 +119,9 @@ describe('MapEditorService', () => {
     });
 
     it('should provide points', () => {
-        service['map'] = Object.create(functionalMap1);
+        service['map'] = mockMaps.functionalMap1();
 
-        expect(service.path).toBe(functionalMap1.path);
+        expect(service.path).toEqual(mockMaps.functionalMap1().path);
     });
 
 });

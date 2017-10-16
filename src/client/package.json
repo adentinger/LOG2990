@@ -2,12 +2,18 @@
   "name": "log2990",
   "version": "0.0.0",
   "license": "MIT",
+  "engines": {
+    "npm": "<=4.6.1"
+  },
+  "config": {
+    "packetapi_mgr": "client"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check",
+    "lint": "ng lint --type-check || exit 0",
     "e2e": "ng e2e"
   },
   "private": true,
@@ -21,11 +27,14 @@
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
+    "@types/socket.io": "^1.4.30",
+    "@types/socket.io-client": "^1.4.30",
     "core-js": "^2.4.1",
+    "ng-click-outside": "^2.4.1",
     "ng2-simple-timer": "^1.3.3",
     "rxjs": "^5.4.2",
-    "socket.io": "1.4.4",
-    "socket.io-client": "1.4.4",
+    "socket.io": "1.7.2",
+    "socket.io-client": "1.7.2",
     "stats.js": "^0.17.0",
     "three": "~0.84.0",
     "zone.js": "^0.8.14"
@@ -34,13 +43,13 @@
     "@angular/cli": "1.3.2",
     "@angular/compiler-cli": "^4.2.4",
     "@angular/language-service": "^4.2.4",
+    "@types/chai": "4.0.4",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
-    "@types/three": "~0.84.20",
     "@types/stats.js": "^0.16.1",
-    "@types/socket.io": "1.4.30",
-    "@types/socket.io-client": "1.4.30",
+    "@types/three": "~0.84.20",
+    "chai": "^4.1.2",
     "codelyzer": "~3.1.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
@@ -53,6 +62,6 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.x"
   }
 }

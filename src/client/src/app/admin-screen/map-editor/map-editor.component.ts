@@ -1,47 +1,130 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 
 import { MapEditorService } from './map-editor.service';
 import { MapRendererService } from './map-renderer/map-renderer.service';
-import { Map as RacingMap, MAP_TYPES } from './map';
-import { Point } from './point';
+import { MapConverterService } from './map-converter.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
+import { Map as RacingMap, MAP_TYPES, MapError } from './map';
+import { Point } from '../../common/math/point';
 import { PointIndex } from './point-index';
+import { SerializedMap } from '../../common/racing/serialized-map';
+import { MapService } from '../../racing/services/map.service';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;
+
+const INITIAL_WIDTH = 500;
 
 @Component({
     selector: 'app-map-editor',
     templateUrl: './map-editor.component.html',
     styleUrls: ['./map-editor.component.css'],
-    providers: [MapEditorService, MapRendererService]
+    providers: [
+        MapEditorService,
+        MapRendererService,
+        MapConverterService,
+        RacingUnitConversionService
+    ]
 })
-export class MapEditorComponent implements OnInit {
+export class MapEditorComponent implements OnInit, AfterViewInit {
     @ViewChild('editingArea') private editingArea: ElementRef;
 
-    public width = 500;
-    public height = 500;
+    public displayable;
     public isDragging = false;
     private isMouseDown = false;
     private hoveredPoint: PointIndex = -1;
+    private loadedMapName = '';
+
+    @Output() public mapWasSaved = new EventEmitter<string>();
+    @Output() public mapCouldNotBeSavedBecauseAlreadyExists = new EventEmitter<string>();
+    @Output() public mapCouldNotBeSavedBecauseNotFound = new EventEmitter<string>();
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService) { }
+                private mapRenderer: MapRendererService,
+                private mapService: MapService) {
+        this.width = INITIAL_WIDTH;
+        this.displayable = true;
+    }
+
+    @Input() public set map(serializedMap: SerializedMap) {
+        if (serializedMap.name !== '') {
+            this.mapEditor.deserializeMap(serializedMap);
+        }
+        else {
+            this.mapEditor.newMap();
+        }
+        this.loadedMapName = serializedMap.name;
+        if (this.mapRenderer.canvas !== undefined) {
+            this.mapRenderer.draw();
+        }
+    }
+
+    public get internalMap(): RacingMap {
+        return this.mapEditor.currentMap;
+    }
 
     public ngOnInit(): void {
         const CANVAS: HTMLCanvasElement = this.editingArea.nativeElement;
         this.mapRenderer.canvas = CANVAS;
     }
 
-    public get mapTypes(): string[] {
-        return  MAP_TYPES;
+    public ngAfterViewInit(): void {
+        this.mapRenderer.draw();
     }
+
+    @Input() public set width(width: number) {
+        this.mapEditor.mapWidth = width;
+    }
+
+    public get width(): number {
+        return this.mapEditor.mapWidth;
+    }
+
+    @Input() public set height(height: number) {
+        this.mapEditor.mapHeight = height;
+    }
+
+    public get height(): number {
+        return this.mapEditor.mapHeight;
+    }
+
+    public get mapTypes(): string[] {
+        return MAP_TYPES;
+    }
+
     public get currentMap(): RacingMap {
         return this.mapEditor.currentMap;
     }
 
     public get isMapValid(): boolean {
-        return this.mapEditor.isValid();
+        return this.mapEditor.computeMapErrors() === MapError.NONE;
     }
+
+    public saveMap(): void {
+        const SERIALIZED_MAP = this.mapEditor.serializeMap();
+
+        let savePromise: Promise<void>;
+        if (SERIALIZED_MAP.name !== this.loadedMapName) {
+            this.internalMap.name = SERIALIZED_MAP.name;
+            savePromise = this.mapService.saveNew(SERIALIZED_MAP)
+                .catch(() => this.mapCouldNotBeSavedBecauseAlreadyExists.emit(SERIALIZED_MAP.name));
+        }
+        else {
+            savePromise = this.mapService.saveEdited(SERIALIZED_MAP)
+                .catch(() => this.mapCouldNotBeSavedBecauseNotFound.emit(SERIALIZED_MAP.name));
+        }
+
+        savePromise.then(() => {
+            this.loadedMapName = SERIALIZED_MAP.name;
+            this.mapWasSaved.emit(SERIALIZED_MAP.name);
+        });
+    }
+
+    public potholes(): void {}
+
+    public puddles(): void {}
+
+    public speedBoosts(): void {}
 
     public clicked(event: MouseEvent): void {
         event.preventDefault();

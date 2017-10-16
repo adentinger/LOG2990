@@ -4,3 +4,7 @@
     height: 60vh;
     overflow-y: auto;
 }
+
+.selected {
+    background: yellow;
+}

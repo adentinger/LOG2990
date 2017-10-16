@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
-import { BasicService } from './basic.service';
 
 import { AppHeaderComponent } from './app-header/app-header.component';
 
@@ -18,6 +17,12 @@ import { MapEditorComponent } from './admin-screen/map-editor/map-editor.compone
 
 import { AppRoutingModule } from './app-routing.module';
 
+import { PacketManagerService, packetManagerClient } from './packet-manager.service';
+import { PacketManagerClient } from './packet-manager-client';
+import { MapService } from './racing/services/map.service';
+import { AdminConfigComponent } from './admin-screen/admin-config/admin-config.component';
+import { AdminConfigService } from './admin-screen/admin-config.service';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -25,6 +30,7 @@ import { AppRoutingModule } from './app-routing.module';
         AppHeaderComponent,
         AdminScreenComponent,
         MapEditorComponent,
+        AdminConfigComponent,
     ],
     imports: [
         BrowserModule,
@@ -35,7 +41,10 @@ import { AppRoutingModule } from './app-routing.module';
         AppRoutingModule
     ],
     providers: [
-        BasicService
+        PacketManagerService,
+        {provide: PacketManagerClient, useValue: packetManagerClient},
+        MapService,
+        AdminConfigService
     ],
     bootstrap: [AppComponent]
 })
