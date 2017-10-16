@@ -17,7 +17,6 @@ export class RacingGameRendering {
     public CAMERA: THREE.PerspectiveCamera;
     public RENDERER: THREE.WebGLRenderer;
     private readonly SKYBOX: Skybox;
-    private readonly LIGHTS: THREE.Light[] = [];
 
     constructor(canvas: ElementRef) {
         this.SCENE = new THREE.Scene();
@@ -34,9 +33,7 @@ export class RacingGameRendering {
     }
 
     public setupScene(): void {
-
         this.setupCamera();
-
     }
 
     private setupCamera(): void {
