@@ -21,11 +21,9 @@ export class WordCaller {
                                                 gridGenerator.grid.gridForVertical,
                                                 gridGenerator.grid.gridForAcross);
 
-        }while (alreadyChosen === true);
+        } while (alreadyChosen === true);
         desiredWordVerified = this.wordFormatting(desiredWordVerified);
         return new Word(desiredWordVerified);
-
-
     }
 
     public getRandomWordFrom(words: string[]): string {
