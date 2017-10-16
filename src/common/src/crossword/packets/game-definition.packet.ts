@@ -1,5 +1,7 @@
-import { Definition } from "../definition";
+import { Definition } from '../definition';
 
 export class GameDefinitionPacket {
-    constructor(public definition: Definition) { }
+    constructor(
+        public index: number,
+        public definition: Definition) { }
 }

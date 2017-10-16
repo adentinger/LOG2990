@@ -73,6 +73,12 @@ export class GameManager {
         this.addPlayerToGame(event.socketid, gameToJoin);
         console.log(this.getGame(gameToJoin).getGameInfo());
         // send all definitions
+        const definitions: Definition[] =
+            this.games.get(gameToJoin).horizontalDefinitions
+                .concat(this.games.get(gameToJoin).verticalDefinitions);
+
+        // send 1 definition for testing;
+        this.sendDefinition(0, definitions[0], playerSocketId);
 
         // send all gridWords
     }
@@ -81,10 +87,10 @@ export class GameManager {
         this.games.get(gameId).player1Id = playerId;
     }
 
-    private sendDefinition(definition: Definition, socketId: string) {
+    private sendDefinition(index: number, definition: Definition, socketId: string) {
         this.packetManager.sendPacket(
             GameDefinitionPacket,
-            new GameDefinitionPacket(definition),
+            new GameDefinitionPacket(index, definition),
             socketId);
     }
 }

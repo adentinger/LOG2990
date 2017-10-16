@@ -9,7 +9,7 @@ export class CrosswordGame {
 
     public horizontalDefinitions: Definition[] = [];
     public verticalDefinitions: Definition[] = [];
-    public definitions: string;
+    // public definitions: string;
     private gameMode: string;
 
     public player1Id: string = null;
