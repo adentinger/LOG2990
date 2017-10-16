@@ -12,6 +12,8 @@ import { ConfigMenuService } from './config-menu/config-menu.service';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { ClickOutsideModule } from 'ng-click-outside';
+import { CrosswordGameService } from './crossword-game.service';
+import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
 
 @NgModule({
     imports: [
@@ -26,15 +28,19 @@ import { ClickOutsideModule } from 'ng-click-outside';
         DefinitionFieldComponent,
         ConfigMenuComponent,
         GameDetailsComponent,
+        CrosswordTileComponent,
     ],
     providers: [
         HttpClient,
         ConfigMenuService,
         SimpleTimer,
         DefinitionsService,
+        CrosswordGameService
     ],
     exports: [
         CrosswordComponent
     ]
 })
 export class CrosswordModule { }
+
+

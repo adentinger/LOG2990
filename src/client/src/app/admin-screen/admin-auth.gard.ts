@@ -13,7 +13,7 @@ export class AdminAuthGard implements CanActivate {
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
             return this.adminConfig.isLoggedIn().then((isConnected) => {
                 if (!isConnected) {
-                    const password = window.prompt('You have to be logged in to have access to this page') || '';
+                    const password = window.prompt('You have to be logged in to have access to this page (password is "admin")') || '';
                     return this.adminConfig.login(password).then((isLoggedIn) => {
                         if (!isLoggedIn) {
                             alert('Wrong password');

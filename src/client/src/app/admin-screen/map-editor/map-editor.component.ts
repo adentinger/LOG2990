@@ -36,7 +36,8 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     private loadedMapName = '';
 
     @Output() public mapWasSaved = new EventEmitter<string>();
-    @Output() public mapCouldNotBeSaved = new EventEmitter<string>();
+    @Output() public mapCouldNotBeSavedBecauseAlreadyExists = new EventEmitter<string>();
+    @Output() public mapCouldNotBeSavedBecauseNotFound = new EventEmitter<string>();
 
     constructor(private mapEditor: MapEditorService,
                 private mapRenderer: MapRendererService,
@@ -104,17 +105,18 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
 
         let savePromise: Promise<void>;
         if (SERIALIZED_MAP.name !== this.loadedMapName) {
-            savePromise = this.mapService.saveNew(SERIALIZED_MAP);
+            this.internalMap.name = SERIALIZED_MAP.name;
+            savePromise = this.mapService.saveNew(SERIALIZED_MAP)
+                .catch(() => this.mapCouldNotBeSavedBecauseAlreadyExists.emit(SERIALIZED_MAP.name));
         }
         else {
-            savePromise = this.mapService.saveEdited(SERIALIZED_MAP);
+            savePromise = this.mapService.saveEdited(SERIALIZED_MAP)
+                .catch(() => this.mapCouldNotBeSavedBecauseNotFound.emit(SERIALIZED_MAP.name));
         }
 
         savePromise.then(() => {
+            this.loadedMapName = SERIALIZED_MAP.name;
             this.mapWasSaved.emit(SERIALIZED_MAP.name);
-        })
-        .catch(() => {
-            this.mapCouldNotBeSaved.emit(SERIALIZED_MAP.name);
         });
     }
 

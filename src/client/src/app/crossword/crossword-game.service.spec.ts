@@ -1,11 +1,13 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { CrosswordGameService} from './crossword-game.service';
+import { PacketManagerClient } from '../packet-manager-client';
+import { packetManagerClient } from '../packet-manager.service';
 
 describe('CrosswordGridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [CrosswordGameService]
+            providers: [CrosswordGameService, {provide: PacketManagerClient, useValue: packetManagerClient}]
         });
     });
 

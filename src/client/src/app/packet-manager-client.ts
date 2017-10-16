@@ -9,6 +9,9 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
         super();
         this.register();
         this.registerParsersToSocket(this.socket);
+        socket.on('disconnect', () => {
+            this.diconnectHandlers.forEach((handler) => handler(socket.id));
+        });
     }
 
     public sendPacket<T>(type: Constructor<T>, data: T): boolean {
@@ -17,7 +20,7 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
             this.logger.debug(`Sending: {to server} "${type.name}" ${data}`);
             this.socket.send('packet:' + type.name,
                 fromArrayBuffer(parser.serialize(data)));
-            return true;
+            return this.socket.connected;
         } else {
             this.logger.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
             return false;

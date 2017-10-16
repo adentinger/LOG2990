@@ -12,9 +12,9 @@
     <td>{{map.name}}</td>
     <td>{{map.type}}</td>
     <td>{{map.description}}</td>
-    <td>{{(map.sumRatings / map.numberOfRatings).toPrecision(3)}}</td>
+    <td>{{map.sumRatings > 0 ? (map.sumRatings / map.numberOfRatings).toPrecision(3) : 'Not yet rated'}}</td>
     <td>{{map.numberOfPlays}}</td>
-    <td><app-map-thumbnail class="thumbnail" [width]="500" [map]="map"></app-map-thumbnail></td>
+    <td><app-map-thumbnail class="thumbnail" [width]="300" [map]="map"></app-map-thumbnail></td>
   </tr>
 </table>
 <app-map-best-time [map]="selectedMap"></app-map-best-time> 

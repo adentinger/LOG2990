@@ -24,6 +24,7 @@ export abstract class PacketManagerBase<Sock extends Socket> {
     protected logger = Logger.getLogger('Packet');
     protected parsers: Map<Class<any>, PacketParser<any>> = new Map();
     private handlers: Map<Class<any>, Set<PacketHandler<any>>> = new Map();
+    protected diconnectHandlers: Set<(socketId: string) => void> = new Set();
 
     private static isPacketMessage(message: string): boolean {
         return PacketManagerBase.PACKET_MESSAGE_MATCHER.test(message);
@@ -137,5 +138,13 @@ export abstract class PacketManagerBase<Sock extends Socket> {
     public registerParser<T>(type: Class<T>, parser: PacketParser<T>) {
         this.logger.info(`Registering parser for ${type.name}`);
         this.parsers.set(type, parser);
+    }
+
+    public registerDisconnectHandler(handler: (socketId: string) => void): void {
+        this.diconnectHandlers.add(handler);
+    }
+
+    public unregisterDisconnectHandler(handler: (socketId: string) => void): void {
+        this.diconnectHandlers.delete(handler);
     }
 }

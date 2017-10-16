@@ -14,10 +14,8 @@ import * as session from 'express-session';
 import * as cors from 'cors';
 import * as PacketAPI from './common/communication/packet-api';
 import { PacketManagerServer } from './packet-manager';
-import * as ServerIO from 'socket.io';
 
 import { WordConstraint } from './common/lexic/word-constraint';
-import { Server } from 'http';
 
 import { registerMiddleWares } from './routes/middle-ware';
 import './routes';
@@ -57,7 +55,7 @@ export class Application {
         this.app = express();
 
         // Packet Manager instanciation
-        this.packetManager = new PacketManagerServer(ServerIO(new Server()).attach(3030));
+        this.packetManager = PacketManagerServer.getInstance();
 
         // configure this.application
         this.config();
