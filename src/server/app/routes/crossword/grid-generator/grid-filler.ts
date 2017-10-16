@@ -35,12 +35,6 @@ export abstract class GridFiller {
         await this.initialisation(this.grid);
     }
 
-    private pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
-        for (let i = 0; i < wordsSuggestions.length; i++) {
-            this.temporaryGridForAcross.push(new Word(wordsSuggestions[i]));
-        }
-    }
-
     protected async initialisation(grid: GridGenerator) {
         const word = new Word('');
         const POSSIBLE_WORDS = await this.wordCaller.getWords(this.firstWordLenght[0],
@@ -100,6 +94,12 @@ export abstract class GridFiller {
             await this.findSecondWord(word, grid);
         } else {
             this.pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions);
+        }
+    }
+
+    private pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
+        for (let i = 0; i < wordsSuggestions.length; i++) {
+            this.temporaryGridForAcross.push(new Word(wordsSuggestions[i]));
         }
     }
 
