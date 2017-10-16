@@ -16,6 +16,7 @@ export class PacketManagerServer extends PacketManagerBase<SocketIO.Socket> {
         this.registerParsersToSocket(socket);
         socket.on('disconnect', () => {
             this.logger.log(`Disconnection (id: ${socket.id})`);
+            this.diconnectHandlers.forEach((handler) => handler(socket.id));
             this.knownSockets.delete(socket.id);
         });
     }
