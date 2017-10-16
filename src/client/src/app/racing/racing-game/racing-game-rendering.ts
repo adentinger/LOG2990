@@ -44,11 +44,4 @@ export class RacingGameRendering {
         this.CAMERA.lookAt(this.SCENE.position);
     }
 
-    private addLights(): void {
-        const LIGHT: THREE.PointLight = new THREE.PointLight(0xffffff);
-        [LIGHT.position.x, LIGHT.position.y, LIGHT.position.z] = [10, 50, 130];
-        this.LIGHTS.push(LIGHT);
-        this.SCENE.add(LIGHT);
-    }
-
 }
