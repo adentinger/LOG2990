@@ -10,6 +10,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { GameDetailsComponent } from './game-details/game-details.component';
 import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
 import { CrosswordGameService } from './crossword-game.service';
+import { PacketManagerClient } from '../packet-manager-client';
+import { packetManagerClient } from '../packet-manager.service';
 
 describe('CrosswordComponent', () => {
     let component: CrosswordComponent;
@@ -27,7 +29,8 @@ describe('CrosswordComponent', () => {
             ],
             providers: [HttpClient,
                 CrosswordGameService,
-                { provide: Location, useClass: SpyLocation }]
+                { provide: Location, useClass: SpyLocation },
+                {provide: PacketManagerClient, useValue: packetManagerClient}]
         })
             .compileComponents();
     }));

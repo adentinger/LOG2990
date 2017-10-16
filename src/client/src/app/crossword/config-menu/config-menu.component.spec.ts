@@ -5,6 +5,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ConfigMenuComponent } from './config-menu.component';
 import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
+import { PacketManagerClient } from '../../packet-manager-client';
+import { packetManagerClient } from '../../packet-manager.service';
+import { CrosswordGameService } from '../crossword-game.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -19,7 +22,9 @@ describe('ConfigMenuComponent', () => {
             providers: [
                 ConfigMenuService,
                 {provide: Location, useClass: SpyLocation},
-                { provide: MENU_CONFIG_URL, useValue: '/crossword/games/pending/10' }
+                { provide: MENU_CONFIG_URL, useValue: '/crossword/games/pending/10' },
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                CrosswordGameService
             ]
         })
             .compileComponents();

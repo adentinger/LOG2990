@@ -9,17 +9,20 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
         super();
         this.register();
         this.registerParsersToSocket(this.socket);
+        socket.on('disconnect', () => {
+            this.diconnectHandlers.forEach((handler) => handler(socket.id));
+        });
     }
 
     public sendPacket<T>(type: Constructor<T>, data: T): boolean {
         if (this.parsers.has(type)) {
             const parser = this.parsers.get(type);
-            console.log(`[Packet] Sending: {to server} "${type.name}" ${data}`);
+            this.logger.debug(`Sending: {to server} "${type.name}" ${data}`);
             this.socket.send('packet:' + type.name,
                 fromArrayBuffer(parser.serialize(data)));
-            return true;
+            return this.socket.connected;
         } else {
-            console.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
+            this.logger.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
             return false;
         }
     }
