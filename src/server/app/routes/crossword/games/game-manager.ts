@@ -2,8 +2,10 @@ import { CrosswordGameConfigs } from '../../../common/communication/game-configs
 import { CrosswordGame } from './crossword-game';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
 import { GameJoinPacket } from '../../../common/crossword/packets/game-join.packet';
+import { GameDefinitionPacket } from '../../../common/crossword/packets/game-definition.packet';
 import { PacketManagerServer } from '../../../packet-manager';
 import '../../../common/crossword/packets/game-join.parser';
+import { Definition } from '../../../common/crossword/definition';
 
 const ID_LENGTH = 8;
 
@@ -70,9 +72,19 @@ export class GameManager {
         console.log('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
         this.addPlayerToGame(event.socketid, gameToJoin);
         console.log(this.getGame(gameToJoin).getGameInfo());
+        // send all definitions
+
+        // send all gridWords
     }
 
     private addPlayerToGame(playerId: string, gameId: string): void {
         this.games.get(gameId).player1Id = playerId;
+    }
+
+    private sendDefinition(definition: Definition, socketId: string) {
+        this.packetManager.sendPacket(
+            GameDefinitionPacket,
+            new GameDefinitionPacket(definition),
+            socketId);
     }
 }
