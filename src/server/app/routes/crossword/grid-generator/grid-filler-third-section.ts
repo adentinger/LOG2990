@@ -10,7 +10,7 @@ export class GridFillerThirdSection extends GridFiller {
         this.secondWordLenght = [3, 3];
         this.thirdWordLenght = [3, 3];
         this.untilWhichRow = 3;
-        this.acrossWordLenght = [[3, 3], [3, 4], [3, 9]];
+        this.acrossWordLenght = [[3, 3], [3, 3], [3, 9]];
     }
 
     protected returnARandomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
