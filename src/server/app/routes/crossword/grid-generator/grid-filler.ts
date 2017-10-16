@@ -40,7 +40,7 @@ export abstract class GridFiller {
         const POSSIBLE_WORDS = await this.wordCaller.getWords(this.firstWordLenght[0],
                                                               this.firstWordLenght[1],
                                                               this.isCommon);
-        word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
+        word.value = this.wordCaller.getRandomWordFrom(POSSIBLE_WORDS);
         this.temporaryGridForVertical.push(word);
         await this.findSecondWord(word, grid);
     }
@@ -52,7 +52,7 @@ export abstract class GridFiller {
             const POSSIBLE_WORDS = await this.wordCaller.getWords(this.secondWordLenght[0],
                                                                   this.secondWordLenght[1],
                                                                   this.isCommon);
-            word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
+            word.value = this.wordCaller.getRandomWordFrom(POSSIBLE_WORDS);
             this.temporaryGridForVertical.push(word);
             firstWordsSuggestions = this.returnArrayOfWordsThatFitsAcross(column.second);
 
@@ -78,7 +78,7 @@ export abstract class GridFiller {
             const POSSIBLE_WORDS = await this.wordCaller.getWords(this.thirdWordLenght[0],
                                                                   this.thirdWordLenght[1],
                                                                   this.isCommon);
-            word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
+            word.value = this.wordCaller.getRandomWordFrom(POSSIBLE_WORDS);
             this.temporaryGridForVertical.push(word);
             wordsSuggestions = this.returnArrayOfWordsThatFitsAcross(column.third);
 
