@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders, HttpRequest, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import { Logger, warn } from '../common';
 
@@ -45,6 +45,10 @@ export class AdminConfigService {
     }
 
     public changePassword(password: string, confirmation: string): Promise<boolean> {
+        if (!password || password !== confirmation) {
+            return Promise.resolve(false);
+        }
+
         const URL = AdminConfigService.ADDRESS + AdminConfigService.AUTHENTICATION_PATH + 'password/';
         const RESPONSE = this.http.patch(URL, {password, confirmation}, AdminConfigService.REQUEST_OPTIONS);
         return this.isResponseOk(RESPONSE.toPromise());
