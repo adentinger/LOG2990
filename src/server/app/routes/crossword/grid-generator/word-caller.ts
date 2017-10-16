@@ -20,7 +20,6 @@ export class WordCaller {
             alreadyChosen = this.alreadyChoosen(desiredWordVerified,
                                                 gridGenerator.grid.gridForVertical,
                                                 gridGenerator.grid.gridForAcross);
-
         } while (alreadyChosen === true);
         desiredWordVerified = this.wordFormatting(desiredWordVerified);
         return new Word(desiredWordVerified);
@@ -28,9 +27,12 @@ export class WordCaller {
 
     public getRandomWordFrom(words: string[]): string {
         const MIN = 0;
-        const MAX = words.length - 1;
-        const RANDOM_INDEX = (Math.floor(Math.random() * (MAX - MIN)) + MIN);
-        return words[RANDOM_INDEX];
+        const MAX = words.length;
+        let randomIndex = words.length;
+        while (randomIndex >= words.length) {
+            randomIndex = (Math.floor(Math.random() * (MAX - MIN)) + MIN);
+        }
+        return words[randomIndex];
     }
 
     public formatGrid(crossword: GridGenerator) {
