@@ -21,7 +21,8 @@ export class GridGenerator {
         }
         if (difficulty === Difficulty.easy || difficulty === Difficulty.normal) {
             this.isCommon = true;
-        } else if (difficulty === Difficulty.hard) {
+        }
+        else if (difficulty === Difficulty.hard) {
             this.isCommon = false;
         }
         this.wordsPositionVertical = [[0, 2, 0], [3, 5, 3], [6, 8, 7], [9, 9, 2]];
@@ -88,7 +89,8 @@ export class GridGenerator {
                 if (row < 7) {
                     column = this.wordsPositionHorizontal[index][2];
                     word.position = [row, this.wordsPositionHorizontal[index][2]];
-                }else {
+                }
+                else {
                     column = this.wordsPositionHorizontal[index][2] - (word.value.length - 1);
                     word.position = [row, this.wordsPositionHorizontal[index][2] - (word.value.length - 1)];
                 }
@@ -99,7 +101,8 @@ export class GridGenerator {
             for (let i = 0; i < word.value.length; i++) {
                 this.gridDisplay[row][column + i] = word.value[i];
             }
-        }else {
+        }
+        else {
             let wordIndex = word.value.length - 1;
             for (let i = 0; i < word.value.length; i++) {
                 this.gridDisplay[row][column + i] = word.value[i];
