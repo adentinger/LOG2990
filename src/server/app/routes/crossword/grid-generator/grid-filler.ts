@@ -115,7 +115,7 @@ export abstract class GridFiller {
             beginningOfTheWordOnAcross = [];
             let returnedWord;
 
-            returnedWord = this.returnARandomWordFromSuggestions(beginningOfTheWordOnAcrossString, row);
+            returnedWord = this.randomWordFromSuggestions(beginningOfTheWordOnAcrossString, row);
             firstLettersWordsArray.push(returnedWord);
         }
 
@@ -138,7 +138,7 @@ export abstract class GridFiller {
         }
     }
 
-    protected returnARandomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
+    protected randomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
         let returnedWord;
         const theWords: string[] = [];
         for (let i = 0; i < lexicon.length; i++) {  // if the beginning of 2 words matches

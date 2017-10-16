@@ -13,7 +13,7 @@ export class GridFillerThirdSection extends GridFiller {
         this.acrossWordLenght = [[3, 3], [3, 3], [3, 9]];
     }
 
-    protected returnARandomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
+    protected randomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
         beginningOfTheWordAcross = this.wordCaller.reverseString(beginningOfTheWordAcross);
         let returnedWord;
         const theWords: string[] = [];
