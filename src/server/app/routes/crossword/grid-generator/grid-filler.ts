@@ -10,6 +10,8 @@ export enum row { first, second, third }
 
 export abstract class GridFiller {
 
+    protected grid: GridGenerator;
+
     protected acrossWordLenght: [number, number][];
 
     protected firstWordLenght: [number, number];
@@ -24,6 +26,7 @@ export abstract class GridFiller {
     public temporaryGridForVertical: Word[] = [];
 
     constructor(grid: GridGenerator, isCommon: boolean) {
+        this.grid = grid;
         this.isCommon = isCommon;
         this.wordCaller = new WordCaller();
      }

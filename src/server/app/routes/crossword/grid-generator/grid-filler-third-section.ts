@@ -11,10 +11,13 @@ export class GridFillerThirdSection extends GridFiller {
         this.thirdWordLenght = [3, 3];
         this.untilWhichRow = 3;
         this.acrossWordLenght = [[3, 3], [3, 4], [3, 9]];
-        this.initialisation(grid);
     }
 
-    public returnARandomWordFromSuggestions (beginningOfTheWordAcross: string, rowNumber: number): string {
+    public async fill(): Promise<void> {
+        await this.initialisation(this.grid);
+    }
+
+    public returnARandomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
         beginningOfTheWordAcross = this.wordCaller.reverseString(beginningOfTheWordAcross);
         let returnedWord;
         const theWords: string[] = [];

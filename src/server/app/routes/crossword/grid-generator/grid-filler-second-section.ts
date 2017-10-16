@@ -12,6 +12,10 @@ export class GridFillerSecondSection extends GridFiller {
         this.secondWordLenght = [3, 4];
         this.thirdWordLenght = [3, 3];
         this.untilWhichRow = 4;
-        this.initialisation(grid);
     }
+
+    public async fill(): Promise<void> {
+        await this.initialisation(this.grid);
+    }
+
 }
