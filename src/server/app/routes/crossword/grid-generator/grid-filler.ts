@@ -29,7 +29,11 @@ export abstract class GridFiller {
         this.grid = grid;
         this.isCommon = isCommon;
         this.wordCaller = new WordCaller();
-     }
+    }
+
+    public async fill(): Promise<void> {
+        await this.initialisation(this.grid);
+    }
 
     private pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
         for (let i = 0; i < wordsSuggestions.length; i++) {

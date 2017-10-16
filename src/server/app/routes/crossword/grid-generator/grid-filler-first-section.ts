@@ -12,8 +12,4 @@ export class GridFillerFirstSection extends GridFiller {
         this.acrossWordLenght = [[3, 9], [3, 4], [3, 3]];
     }
 
-    public async fill(): Promise<void> {
-        await this.initialisation(this.grid);
-    }
-
 }

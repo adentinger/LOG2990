@@ -14,8 +14,4 @@ export class GridFillerSecondSection extends GridFiller {
         this.untilWhichRow = 4;
     }
 
-    public async fill(): Promise<void> {
-        await this.initialisation(this.grid);
-    }
-
 }
