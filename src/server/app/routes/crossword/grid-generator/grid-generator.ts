@@ -31,7 +31,7 @@ export class GridGenerator {
         this.wordCaller = new WordCaller();
     }
 
-    public gridGeneration(): Grid {
+    public async gridGeneration(): Promise<Grid> {
         // the grid is separated in three cases + a final word push
         const firstGrid = new GridFillerFirstSection(this, this.isCommon);
         this.pushOnTheGridAndReinitialiseTemporaryGrid(firstGrid.temporaryGridForVertical, firstGrid.temporaryGridForAcross);
