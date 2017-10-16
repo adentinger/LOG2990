@@ -37,7 +37,7 @@ export abstract class GridFiller {
         }
     }
 
-    public async initialisation(grid: GridGenerator) {
+    protected async initialisation(grid: GridGenerator) {
         const word = new Word('');
         const POSSIBLE_WORDS = await this.wordCaller.getWords(this.firstWordLenght[0],
                                                               this.firstWordLenght[1],
