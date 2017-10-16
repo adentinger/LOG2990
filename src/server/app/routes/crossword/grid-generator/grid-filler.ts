@@ -28,7 +28,7 @@ export abstract class GridFiller {
         this.wordCaller = new WordCaller();
      }
 
-    public pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
+    private pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions: string[]) {
         for (let i = 0; i < wordsSuggestions.length; i++) {
             this.temporaryGridForAcross.push(new Word(wordsSuggestions[i]));
         }
@@ -41,10 +41,10 @@ export abstract class GridFiller {
                                                               this.isCommon);
         word.value = POSSIBLE_WORDS[Math.round(Math.random() * POSSIBLE_WORDS.length)];
         this.temporaryGridForVertical.push(word);
-        this.findSecondWord(word, grid);
+        await this.findSecondWord(word, grid);
     }
 
-    public async findSecondWord(word: Word, grid: GridGenerator) {
+    private async findSecondWord(word: Word, grid: GridGenerator) {
         let firstWordsSuggestions: string[] = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
@@ -64,13 +64,13 @@ export abstract class GridFiller {
         }
         if (maxAttempt === 0) {
             this.temporaryGridForVertical.pop();
-            this.initialisation(grid);
+            await this.initialisation(grid);
         } else {
-            this.findThirdWord(word, firstWordsSuggestions, grid);
+            await this.findThirdWord(word, firstWordsSuggestions, grid);
         }
     }
 
-    public async findThirdWord(word: Word, wordsSuggestions: string[], grid: GridGenerator) {
+    private async findThirdWord(word: Word, wordsSuggestions: string[], grid: GridGenerator) {
         wordsSuggestions = [];
         let maxAttempt = WORD_SEARCH_MAX_ATTEMPT;
         while (maxAttempt !== 0) {
@@ -90,13 +90,13 @@ export abstract class GridFiller {
         }
         if (maxAttempt === 0) {
             this.temporaryGridForVertical.pop();
-            this.findSecondWord(word, grid);
+            await this.findSecondWord(word, grid);
         } else {
             this.pushOnTheTemporaryGridAcrossWordsSuggestions(wordsSuggestions);
         }
     }
 
-    public returnArrayOfWordsThatFitsAcross(onColumnNow: number) {
+    private returnArrayOfWordsThatFitsAcross(onColumnNow: number) {
         const firstLettersWordsArray: string[] = [];
         let beginningOfTheWordOnAcross: string[] = [];
 
@@ -115,7 +115,7 @@ export abstract class GridFiller {
         return firstLettersWordsArray;
     }
 
-    public suggestionsContainsNothing(arrayOfSuggestions: string[]) {
+    private suggestionsContainsNothing(arrayOfSuggestions: string[]) {
         for (let i = 0; i < arrayOfSuggestions.length; i++) {
             if (arrayOfSuggestions[i] === 'nothing found') {
                 return true;
@@ -131,7 +131,7 @@ export abstract class GridFiller {
         }
     }
 
-    public returnARandomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
+    protected returnARandomWordFromSuggestions(beginningOfTheWordAcross: string, rowNumber: number): string {
         let returnedWord;
         const theWords: string[] = [];
         for (let i = 0; i < lexicon.length; i++) {  // if the beginning of 2 words matches
@@ -149,5 +149,6 @@ export abstract class GridFiller {
         }
         return returnedWord;
     }
+
 }
 
