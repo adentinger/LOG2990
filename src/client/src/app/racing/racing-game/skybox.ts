@@ -69,21 +69,7 @@ export class Skybox extends THREE.Mesh {
         if (mode === 'Day') {
             this.mode = 'Day';
             (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureDay);
-        }/*
-        else if (mode === 'Night') {
-            this.mode = 'Night';
-            if (Skybox.textureNight === null) {
-                Skybox.textureNightPromise.then((material: THREE.ShaderMaterial) => {
-                    if (this.mode === 'Night') {
-                        (this.cube.material as THREE.ShaderMaterial).setValues(Skybox.textureNight);
-                    }
-                });
-            }
-            else {
-                (this.cube.material as THREE.Material).update();
-            }
-        }*/
+        }
     }
-
 
 }
