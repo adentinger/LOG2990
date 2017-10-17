@@ -7,7 +7,11 @@ export class Grid {
     public vertical: Word[] = [];
     public difficulty: Difficulty;
 
-    constructor (difficulty: Difficulty) {
+    constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public isCurrentlyValid(): boolean {
+        return false;
     }
 }
