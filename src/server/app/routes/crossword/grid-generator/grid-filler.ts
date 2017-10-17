@@ -25,9 +25,14 @@ export abstract class GridFiller {
 
     public async fill(grid: Grid): Promise<void> {
         await this.placeAcrossWords();
+        await this.placeVerticalWords();
     }
 
     private async placeAcrossWords(): Promise<void> {
+        await null;
+    }
+
+    private async placeVerticalWords(): Promise<void> {
         await null;
     }
 
