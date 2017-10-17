@@ -59,18 +59,20 @@ export function PacketHandlerClass() {
     };
 }
 
-const TRY_COUNT_MAX = 100;
 export function registerHandlers<T extends InstanceOf<Constructor<T>>>(that: T, packetManager: PacketManagerBase<Socket>) {
     logger.info(`(class %s) Registering handlers`, that.constructor.name || DEFAULT_CLASSNAME);
+    const TRY_COUNT_MAX = 100;
     let prototype = that, i = 0;
     let thatHandlers: Map<Class<any>, Set<string>>;
     while (!handlers.has(prototype.constructor) && ++i < TRY_COUNT_MAX) {
         prototype = Object.getPrototypeOf(prototype);
     }
     thatHandlers = handlers.get(prototype.constructor);
-    thatHandlers.forEach((handlerList, type) => {
-        for (const handler of handlerList) {
-            packetManager.registerHandler(type, that[handler].bind(that));
-        }
-    });
+    if (thatHandlers !== undefined) {
+        thatHandlers.forEach((handlerList, type) => {
+            for (const handler of handlerList) {
+                packetManager.registerHandler(type, that[handler].bind(that));
+            }
+        });
+    }
 }
