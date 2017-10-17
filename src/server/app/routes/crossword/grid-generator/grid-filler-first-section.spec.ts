@@ -10,12 +10,23 @@ describe('GridFillerFirstSection', () => {
         filler = new GridFillerFirstSection();
     });
 
+    it('should be created', () => {
+        expect(filler).to.be.ok;
+    });
+
     it('should fill grids', () => {
         const GRID = new Grid(Difficulty.easy);
         filler.fill(GRID);
         expect(GRID.isCurrentlyValid).to.be.true;
-        GRID.across.forEach((acrossWord) => {
-            expect(acrossWord.position)
+        filler.acrossPlacement.forEach((placement) => {
+            const MATCH_INDEX = GRID.across.findIndex((acrossWord) => {
+                const WORD_LENGTH_MATCHES =
+                    acrossWord.value.length >= placement.minLength &&
+                    acrossWord.value.length <= placement.maxLength;
+                const PLACEMENT_MATCHES = placement.position.equals(acrossWord.position);
+                return WORD_LENGTH_MATCHES && PLACEMENT_MATCHES;
+            });
+            expect(MATCH_INDEX).to.be.gte(0, 'Placement requirement not met');
         });
     });
 
