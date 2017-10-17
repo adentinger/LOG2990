@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 import { RacingGameRendering } from './racing-game-rendering';
 import { Point } from '../../common/math/point';
+import { Interval } from '../../common/math/interval';
 
 @Injectable()
 export class RacingGameService {
@@ -42,9 +43,20 @@ export class RacingGameService {
     }
 
     public set cursorPosition(cursorPosition: Point) {
-        this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
-        this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
-        this.cursorPositionInternal = cursorPosition;
+        const VALID_INTERVAL = new Interval(-1, 1);
+        const IS_CURSOR_VALID =
+            VALID_INTERVAL.contains(cursorPosition.x) &&
+            VALID_INTERVAL.contains(cursorPosition.y);
+
+        if (IS_CURSOR_VALID) {
+            this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
+            this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
+            this.cursorPositionInternal = cursorPosition;
+        }
+        else {
+            throw new Error('Cursor position invalid: (' +
+                cursorPosition.x + ', ' + cursorPosition.y + ')');
+        }
     }
 
     public renderGame(): void {
