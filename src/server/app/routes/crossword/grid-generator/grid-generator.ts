@@ -20,10 +20,10 @@ export class GridGenerator {
         const FILLER_SECOND_SECTION = new GridFillerSecondSection(difficulty);
         const FILLER_THIRD_SECTION  = new GridFillerThirdSection(difficulty);
         const FILLER_FOURTH_SECTION = new GridFillerFourthSection(difficulty);
-        GRID.fillUsing(FILLER_FIRST_SECTION);
-        GRID.fillUsing(FILLER_SECOND_SECTION);
-        GRID.fillUsing(FILLER_THIRD_SECTION);
-        GRID.fillUsing(FILLER_FOURTH_SECTION);
+        await GRID.fillUsing(FILLER_FIRST_SECTION);
+        await GRID.fillUsing(FILLER_SECOND_SECTION);
+        await GRID.fillUsing(FILLER_THIRD_SECTION);
+        await GRID.fillUsing(FILLER_FOURTH_SECTION);
         return GRID;
     }
 
