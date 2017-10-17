@@ -8,8 +8,8 @@ export enum SkyboxMode {
 
 export class Skybox extends THREE.Mesh {
 
-    private static cubeDay: THREE.Mesh = Skybox.createCube(SkyboxMode.DAY);
     private static cubeNight: THREE.Mesh = Skybox.createCube(SkyboxMode.NIGHT);
+    private static cubeDay: THREE.Mesh = Skybox.createCube(SkyboxMode.DAY);
 
     private modeInternal: SkyboxMode;
     private currentCube: THREE.Mesh;
