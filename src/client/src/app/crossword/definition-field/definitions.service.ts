@@ -5,6 +5,8 @@ import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGridService } from '../board/crossword-grid.service';
 
+const TIME_MAX = 9999;
+
 @Injectable()
 export class DefinitionsService {
 
@@ -12,14 +14,21 @@ export class DefinitionsService {
     private changeTimerValueOn = false;
     private timerValueInSeconds: number;
     private definitions: Definition[];
+    private words: string[];
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
     public getDefinitions(): Definition[] {
         return this.definitions;
     }
+
+    public getWords(): string[] {
+        return this.words;
+    }
+
     constructor(public crosswordGameService: CrosswordGameService, public crosswordGridService: CrosswordGridService) {
         this.definitions = DEFINITIONS_MOCK;
+        this.words = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
     }
 
     public get selectedDefinitionId() {
@@ -63,10 +72,10 @@ export class DefinitionsService {
 
     public getCheatModeStateText(): string {
         if (this.cheatModeOn) {
-            return 'On';
+            return 'Hide words';
         }
         else {
-            return 'Off';
+            return 'Show words';
         }
     }
 
@@ -80,10 +89,10 @@ export class DefinitionsService {
 
     public getTimerStateText(): string {
         if (this.changeTimerValueOn) {
-            return 'On';
+            return 'Disable';
         }
         else {
-            return 'Off';
+            return 'Set time';
         }
     }
 
@@ -92,7 +101,10 @@ export class DefinitionsService {
     }
 
     // not done
-    public changeTimerValue(seconds: number): void {
-        this.timerValueInSeconds = seconds;
+    public changeTimerValue(seconds: string) {
+        let time = Number(seconds);
+        if (Number.isNaN(time)) {
+            time = TIME_MAX;
+        }
     }
 }

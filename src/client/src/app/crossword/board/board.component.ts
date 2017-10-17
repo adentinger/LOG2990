@@ -70,7 +70,7 @@ export class BoardComponent implements OnInit {
         }
     }
 
-    // socketIO
+    // TODO Verify the word entered if it matches the word on the server
     private sendWordToServer(input: string) {
         //
     }
@@ -98,7 +98,7 @@ export class BoardComponent implements OnInit {
         }
     }
 
-    // junk function
+    // TODO handle the response from server when the word is found or not
     private handleResponseFromServer() {
         const wordFound = false;
         if (wordFound) {
