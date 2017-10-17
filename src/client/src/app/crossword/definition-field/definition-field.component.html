@@ -1,8 +1,22 @@
-<button (click)='setCheatModeOnOff()'>Cheat mode : {{getCheatModeState()}}</button>
-<div id="definition-box" (clickOutside)='onClickOutside()'>
-  <div *ngFor='let definition of definitions; let i = index;'>
-    <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
-      {{definition.text}}
+<div>Cheat mode:
+  <br> 
+  <button (click)='setCheatModeOnOff()'>show words: {{getCheatModeStateText()}}</button>
+  <button (click)='setTimerOnOff()'>set timer: {{getTimerStateText()}}</button>
+  <input *ngIf='getTimerState()' type='text'/>
+</div>
+<br>
+<div [ngSwitch]='getCheatModeState()'>
+  <div *ngSwitchCase='false' id="definition-box" (clickOutside)='onClickOutside()'>
+    <div *ngFor='let definition of definitions; let i = index;'>
+      <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
+        {{definition.text}}
+      </div>
     </div>
   </div>
+  <div *ngSwitchCase='true' id="definition-box" (clickOutside)='onClickOutside()'>
+      <div *ngFor='let definition of definitions; let i = index;'>
+        <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
+        </div>
+      </div>
+    </div>
 </div>

@@ -9,6 +9,8 @@ import { CrosswordGridService } from '../board/crossword-grid.service';
 export class DefinitionsService {
 
     private cheatModeOn = false;
+    private changeTimerValueOn = false;
+    private timerValueInSeconds: number;
     private definitions: Definition[];
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
@@ -53,11 +55,44 @@ export class DefinitionsService {
         this.crosswordGameService.aDefinitionIsSelected = false;
     }
 
-    public getCheatModeState(): string {
-        return this.cheatModeOn.toString();
+    ////////////// Cheat Mode //////////////
+
+    public getCheatModeState(): boolean {
+        return this.cheatModeOn;
+    }
+
+    public getCheatModeStateText(): string {
+        if (this.cheatModeOn) {
+            return 'On';
+        }
+        else {
+            return 'Off';
+        }
     }
 
     public setCheatModeOnOff(): void {
         this.cheatModeOn = !this.cheatModeOn;
+    }
+
+    public getTimerState(): boolean {
+        return this.changeTimerValueOn;
+    }
+
+    public getTimerStateText(): string {
+        if (this.changeTimerValueOn) {
+            return 'On';
+        }
+        else {
+            return 'Off';
+        }
+    }
+
+    public setTimerOnOff(): void {
+        this.changeTimerValueOn = !this.changeTimerValueOn;
+    }
+
+    // not done
+    public changeTimerValue(seconds: number): void {
+        this.timerValueInSeconds = seconds;
     }
 }

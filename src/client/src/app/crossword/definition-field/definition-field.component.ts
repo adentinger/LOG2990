@@ -39,7 +39,11 @@ export class DefinitionFieldComponent implements OnInit {
         this.definitionService.onClickOutside();
     }
 
-    public getCheatModeState(): string {
+    public getCheatModeStateText(): string {
+        return this.definitionService.getCheatModeStateText();
+    }
+
+    public getCheatModeState(): boolean {
         return this.definitionService.getCheatModeState();
     }
 
@@ -47,4 +51,20 @@ export class DefinitionFieldComponent implements OnInit {
         this.definitionService.setCheatModeOnOff();
     }
 
+    public getTimerState(): boolean {
+        return this.definitionService.getTimerState();
+    }
+
+    public getTimerStateText(): string {
+        return this.definitionService.getTimerStateText();
+    }
+
+    public setTimerOnOff(): void {
+        return this.definitionService.setTimerOnOff();
+    }
+
+    // not done
+    public changeTimerValue(seconds: number): void {
+        this.definitionService.changeTimerValue(seconds);
+    }
 }
