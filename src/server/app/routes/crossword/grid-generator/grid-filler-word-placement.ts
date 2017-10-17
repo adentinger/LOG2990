@@ -1,6 +1,6 @@
 import { WordPosition } from './word-position';
 
-export class WordPlacement {
+export class GridFillerWordPlacement {
 
     public minLength: number;
     public maxLength: number;
