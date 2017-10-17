@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+
 import { RacingGameService } from './racing-game.service';
 import { Point } from '../../common/math/point';
+import { SkyboxMode } from './skybox';
+
+const LEFT_MOUSE_BUTTON = 0;
+const RIGHT_MOUSE_BUTTON = 2;
 
 @Component({
     selector: 'app-racing-game',
@@ -36,12 +41,23 @@ export class RacingGameComponent implements OnInit {
         this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
 
-    public onMouseMove(e) {
+    public onMouseMove(e: MouseEvent) {
         const MOUSE_POSITION = new Point(
             (e.clientX - this.windowHalfX) / (this.windowHalfX),
             (e.clientY - this.windowHalfY) / (this.windowHalfY)
         );
         this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
+    }
+
+    public onClick(e: MouseEvent) {
+        if (e.button === LEFT_MOUSE_BUTTON) {
+            const SKYBOX = this.racingGameRenderer.racingGameRendering.SKYBOX;
+            switch (SKYBOX.mode) {
+                case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
+                case SkyboxMode.NIGHT: SKYBOX.mode = SkyboxMode.DAY; break;
+                default: break;
+            }
+        }
     }
 
 }

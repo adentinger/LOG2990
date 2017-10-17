@@ -26,7 +26,7 @@ export class RacingGameRendering {
             this.ASPECT,
             this.NEAR,
             this.FAR);
-        this.SKYBOX = new Skybox(SkyboxMode.DAY);
+        this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
 
         this.SCENE.add(this.SKYBOX);
         this.SCENE.add(this.CAMERA);
