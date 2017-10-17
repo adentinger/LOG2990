@@ -1,16 +1,20 @@
 import * as THREE from 'three';
 
+export enum SkyboxMode {
+    DAY = 0,
+    NIGHT
+}
+
 export class Skybox extends THREE.Mesh {
 
     private static textureNight: THREE.ShaderMaterial = Skybox.createShaderMaterial('Night');
     private static textureDay: THREE.ShaderMaterial = Skybox.createShaderMaterial('Day');
-    private modeInternal: string;
+    private modeInternal: SkyboxMode;
 
     public cube: THREE.Mesh;
 
-    constructor(mode: string) {
+    constructor(mode: SkyboxMode = SkyboxMode.DAY) {
         super();
-        this.modeInternal = mode;
         this.cube = new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1), new THREE.ShaderMaterial());
         this.add(this.cube);
         this.mode = mode;
@@ -34,16 +38,16 @@ export class Skybox extends THREE.Mesh {
         return images;
     }
 
-    public get mode(): string {
+    public get mode(): SkyboxMode {
         return this.modeInternal;
     }
 
-    public set mode(mode: string) {
-        if (mode === 'Day') {
+    public set mode(mode: SkyboxMode) {
+        if (mode === SkyboxMode.DAY) {
             this.modeInternal = mode;
             (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureDay);
         }
-        else if (mode === 'Night') {
+        else if (mode === SkyboxMode.NIGHT) {
             this.modeInternal = mode;
             (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureNight);
         }

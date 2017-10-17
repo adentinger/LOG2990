@@ -1,4 +1,4 @@
-import { Skybox } from './skybox';
+import { Skybox, SkyboxMode } from './skybox';
 import * as THREE from 'three';
 import { ElementRef } from '@angular/core';
 
@@ -13,10 +13,10 @@ export class RacingGameRendering {
     public readonly NEAR: number = 1;
     public readonly FAR: number = 1000000;
 
-    public SCENE: THREE.Scene;
-    public CAMERA: THREE.PerspectiveCamera;
-    public RENDERER: THREE.WebGLRenderer;
-    private readonly SKYBOX: Skybox;
+    public readonly SCENE: THREE.Scene;
+    public readonly CAMERA: THREE.PerspectiveCamera;
+    public readonly RENDERER: THREE.WebGLRenderer;
+    public readonly SKYBOX: Skybox;
 
     constructor(canvas: ElementRef) {
         this.SCENE = new THREE.Scene();
@@ -26,7 +26,7 @@ export class RacingGameRendering {
             this.ASPECT,
             this.NEAR,
             this.FAR);
-        this.SKYBOX = new Skybox('Day');
+        this.SKYBOX = new Skybox(SkyboxMode.DAY);
 
         this.SCENE.add(this.SKYBOX);
         this.SCENE.add(this.CAMERA);
