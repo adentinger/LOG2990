@@ -4,6 +4,9 @@ import { Definition } from '../../common/crossword/definition';
 import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGridService } from '../board/crossword-grid.service';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../common/index';
+import { GameDefinitionPacket } from '../../common/crossword/packets/game-definition.packet';
+import { PacketManagerClient } from '../../packet-manager-client';
 
 @Injectable()
 export class DefinitionsService {
@@ -18,8 +21,11 @@ export class DefinitionsService {
     public getDefinitions(): Definition[] {
         return this.definitions;
     }
-    constructor(public crosswordGameService: CrosswordGameService, public crosswordGridService: CrosswordGridService) {
+    constructor(public crosswordGameService: CrosswordGameService,
+        public crosswordGridService: CrosswordGridService,
+        private packetManager: PacketManagerClient) {
         this.definitions = DEFINITIONS_MOCK;
+        registerHandlers(this, this.packetManager);
     }
 
     public get selectedDefinitionId() {
@@ -55,6 +61,13 @@ export class DefinitionsService {
         this.crosswordGameService.aDefinitionIsSelected = false;
     }
 
+    @PacketHandler(GameDefinitionPacket)
+    public gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
+        const definitionIndex = event.value.index;
+        const definition = event.value.definition;
+
+        // TODO update game definitions with incomming definition
+    }
     ////////////// Cheat Mode //////////////
 
     public getCheatModeState(): boolean {

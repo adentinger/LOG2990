@@ -7,6 +7,12 @@ import { GameJoinPacket } from '../common/crossword/packets/game-join.packet';
 import { registerHandlers, PacketHandler, PacketEvent } from '../common/index';
 import { GameDefinitionPacket } from '../common/crossword/packets/game-definition.packet';
 
+/**
+ * @class CrosswordGameService
+ * Has the purpose of sending all packets from the client to the server
+ * The response from the server usually goes directly to the appropriate
+ * service
+ */
 @Injectable()
 export class CrosswordGameService {
 
@@ -19,7 +25,7 @@ export class CrosswordGameService {
     public crosswordGame: CrosswordGame = CROSSWORD_GAME;
 
     public constructor(private packetManager: PacketManagerClient) {
-        registerHandlers(this, this.packetManager);
+        // registerHandlers(this, this.packetManager);
     }
 
     public getCurrentGame(): CrosswordGame {
@@ -33,11 +39,4 @@ export class CrosswordGameService {
         }
     }
 
-    @PacketHandler(GameJoinPacket)
-    public gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
-        const definitionIndex = event.value.index;
-        const definition = event.value.definition;
-
-        // TODO update game definitions with incomming definition
-    }
 }
