@@ -7,6 +7,9 @@ import { MapEditorComponent } from './map-editor/map-editor.component';
 import { PacketManagerService, packetManagerClient } from '../packet-manager.service';
 import { PacketManagerClient } from '../packet-manager-client';
 import { MapService } from '../racing/services/map.service';
+import { AdminConfigComponent } from './admin-config/admin-config.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AdminConfigService } from './admin-config.service';
 
 describe('AdminScreenComponent', () => {
   let component: AdminScreenComponent;
@@ -16,16 +19,19 @@ describe('AdminScreenComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        HttpModule
+        HttpModule,
+        HttpClientModule
       ],
       declarations: [
         AdminScreenComponent,
-        MapEditorComponent
+        MapEditorComponent,
+        AdminConfigComponent
       ],
       providers: [
           PacketManagerService,
           {provide: PacketManagerClient, useValue: packetManagerClient},
-          MapService
+          MapService,
+          AdminConfigService
       ]
     })
     .compileComponents();

@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
-import { HttpStatus } from '../../http-response-status';
+import { HttpStatus } from '../../common/http-status';
 import { GridGenerator } from './grid-generator/grid-generator';
 import { Difficulty } from './grid-generator/grid';
 

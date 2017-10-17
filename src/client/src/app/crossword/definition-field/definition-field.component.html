@@ -1,7 +1,6 @@
-<div id="definition-box" (clickOutside)='selectedDefinition = null'>
-  <div *ngFor="let definition of definitions">
-    <div [class.selected]='selectedDefinition===definition'
-         (click)='selectedDefinition = definition'>
+<div id="definition-box" (clickOutside)='onClickOutside()'>
+  <div *ngFor='let definition of definitions; let i = index;'>
+    <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $even)'>
       {{definition.text}}
     </div>
   </div>

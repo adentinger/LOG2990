@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
+import { CrosswordGameService } from '../crossword-game.service';
+import '../../common/crossword/packets/game-join.parser';
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
 
@@ -20,6 +22,8 @@ export abstract class ConfigMenuStateConfirm extends ConfigMenuState {
 
 @Injectable()
 export class ConfigMenuService {
+    private static readonly SERVER_ADDRESS = 'http://localhost:3000';
+    private static readonly GAMES_PATH = '/crossword/games/';
     private static readonly STATE_CONFIRM = -1;
     private static readonly STATE_SEND = -2;
     private static confirmState: ConfigMenuStateConfirm = {
@@ -27,7 +31,7 @@ export class ConfigMenuService {
         name: 'Confirm Settings',
         settings: {},
         options: [
-            {name: 'Start', nextPage: ConfigMenuService.STATE_SEND}
+            { name: 'Start', nextPage: ConfigMenuService.STATE_SEND }
         ]
     };
     public isConfiguringGame = true;
@@ -37,10 +41,13 @@ export class ConfigMenuService {
     private gameConfiguration: SavedSettings = {};
     private stateStack: number[] = [];
 
+    public createdGameId;
+
     constructor(private location: Location,
-                http: HttpClient,
-                @Inject('menuConfigUrl') menuConfigUrl: string) {
-        http.get(menuConfigUrl, {responseType: 'json'}).subscribe((menuPages) => {
+        private http: HttpClient,
+        @Inject('menuConfigUrl') menuConfigUrl: string,
+        private crosswordGameService: CrosswordGameService) {
+        http.get(menuConfigUrl, { responseType: 'json' }).subscribe((menuPages) => {
             this.states.push.apply(this.states, ConfigMenuState.fromJson(menuPages, http));
             if (this.states.length > 0) {
                 const firstState = this.states.find((value: ConfigMenuState) => value.id === 0);
@@ -69,8 +76,8 @@ export class ConfigMenuService {
         }
     }
 
-    private setDisplayedSettings() {
-        const displayedSettings = [];
+    private getDisplayedSettings(): Object {
+        const displayedSettings = {};
         for (const setting in this.gameConfiguration) {
             if (this.gameConfiguration.hasOwnProperty(setting)) {
                 const state = this.states.find((value: ConfigMenuState) => value.id === +setting);
@@ -78,7 +85,7 @@ export class ConfigMenuService {
                 if (ConfigMenuState.hasFetchableOptions(state)) {
                     options = (state.options as FetchableOptionList).fetchedOptions
                         .map((option: FetchedPendingGame) =>
-                        FetchedPendingGame.prototype.toString.apply(option));
+                            FetchedPendingGame.prototype.toString.apply(option));
                 } else {
                     options = (state.options as ConfigMenuOption[])
                         .map((option: ConfigMenuOption) => option.name);
@@ -86,7 +93,7 @@ export class ConfigMenuService {
                 displayedSettings[state.name] = options[this.gameConfiguration[setting]];
             }
         }
-        (this.getCurrentState())['settings'] = displayedSettings;
+        return displayedSettings;
     }
 
     public selectOption(optionId: number): void {
@@ -99,7 +106,7 @@ export class ConfigMenuService {
             this.nextState(optionId);
         }
         if (this.currentStateId === ConfigMenuService.STATE_CONFIRM) {
-            this.setDisplayedSettings();
+            (this.getCurrentState())['settings'] = this.getDisplayedSettings();
         }
         if (this.currentStateId === ConfigMenuService.STATE_SEND) {
             delete this.gameConfiguration[currentState.name];
@@ -117,8 +124,20 @@ export class ConfigMenuService {
         const currentState = this.getCurrentState();
         delete this.gameConfiguration[currentState.id];
     }
-
     public sendGameConfiguration(): void {
+        console.log('sending to url: ' + ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH);
+        console.log('sending:' + this.getDisplayedSettings().toString());
+
+        this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
+            this.getDisplayedSettings())
+            .subscribe(
+            (response) => {
+                console.log('response on client: ' + JSON.stringify(response));
+                this.crosswordGameService.setGameId(response['id']);
+            },
+            (error: Error) => {
+                console.log('error on client : ' + error.message);
+            });
         this.isConfiguringGame = false;
     }
 }

@@ -1,10 +1,10 @@
-<div id="crossword-board-container">
-  <div id="crossword-board">
-    <div *ngFor="let row of crosswordGrid">
-      <input *ngFor="let square of row" 
-        class="crossword-board-item " 
-        [class.black-square]='square===" "' 
-        [disabled]='square===" "' maxlength="1">
+<div id='crossword-board-container'>
+  <div #crosswordBoard id='crossword-board'>
+    <div *ngFor='let row of crosswordGrid; let j = index'>
+      <label *ngFor='let square of row; let i = index'>
+      <app-tile [tileRow]='j' [tileColumn]='i' [tileChar]='crosswordGrid[j][i]'></app-tile>
+      </label>
     </div>
+    <input type='text' #inputBuffer (keyup)='onChange($event.target.value)' id='inputText'/>
   </div>
 </div>

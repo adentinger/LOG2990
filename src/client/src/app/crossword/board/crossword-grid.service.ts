@@ -1,22 +1,59 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import { CROSSWORD } from '../mocks/grid-mock';
+import { GridWord, Direction } from '../../common/crossword/grid-word';
+import { ARRAY_GRIDWORD } from '../mocks/grid-mock';
+import { CrosswordGameService } from '../crossword-game.service';
 
 @Injectable()
 export class CrosswordGridService {
 
-    public grid: string[][] = [];
-    private url = 'http://localhost:3000/crossword/grid';
+    public grid: GridWord[];
+    private viewableGrid: string[][];
 
-    constructor(private http: HttpClient) { };
-
-    public getGrid(): string[][] {
-        return this.grid;
+    constructor(public crosswordGameService: CrosswordGameService) {
+        this.grid = ARRAY_GRIDWORD;
+        this.fill();
+        this.fillAll();
     }
-    public fetchGrid(): void {
-        // return CROSSWORD;
-        this.http.get(this.url).subscribe((response: any) => {this.grid = response.grid});
-        // .toPromise().then((response: Response) => {this.grid = response.})
+
+    public getViewableGrid(): string[][] {
+        const CROSSWORD = this.viewableGrid;
+        return CROSSWORD;
+    }
+
+    public fillAll() {
+        this.fill();
+        for (let i = 0; i < this.grid.length; i++) {
+            this.fillAcrossAndVertical(this.grid[i]);
+        }
+    }
+
+    public fillAcrossAndVertical(gridWord: GridWord) { // (y,x,length,direction,owner,string)
+        if (gridWord.direction === Direction.across) {
+            for (let i = 0; i < gridWord.length; i++) {
+                this.viewableGrid[gridWord.y][i + gridWord.x] = '';
+            }
+        }
+
+        else if (gridWord.direction === Direction.vertical) {
+            for (let i = 0; i < gridWord.length; i++) {
+                this.viewableGrid[i + gridWord.y][gridWord.x] = '';
+            }
+        }
+    }
+
+    public fill() {
+        this.viewableGrid = [
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+        ];
     }
 }

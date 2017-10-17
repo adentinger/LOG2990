@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers } from '@angular/http';
+import 'rxjs/add/operator/toPromise';
 import { SerializedMap } from '../../common/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
-import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
 
 @Injectable()
 export class MapService {
@@ -11,7 +11,6 @@ export class MapService {
         {headers: new Headers({'Content-Type': 'application/json'})};
 
     public maps: Map[];
-    private mockSerializedMaps: MockSerializedMaps = new MockSerializedMaps;
 
     constructor(private http: Http) {
     }
@@ -39,11 +38,6 @@ export class MapService {
     public getByName(name: string): Promise<SerializedMap> {
         const url = 'http://localhost:3000/racing/maps/' + name;
         return this.http.get(url).toPromise().then(response => response.json() as SerializedMap);
-    }
-
-    // To be deleted ; mock method.
-    public getMaps(): Promise<SerializedMap[]> {
-        return Promise.resolve(this.mockSerializedMaps.functionnalMaps());
     }
 
 }

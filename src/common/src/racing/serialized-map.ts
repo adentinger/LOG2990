@@ -3,10 +3,6 @@ import { SerializedPothole } from './serialized-pothole';
 import { SerializedPuddle } from './serialized-puddle';
 import { SerializedSpeedBoost } from './serialized-speed-boost';
 
-// This class is meant to be used as a container object that can be
-// sent to / retrieved from a database via a web service. Do NOT add any
-// methods to this class.
-
 export class SerializedMap {
 
     public name: string;
