@@ -1,6 +1,6 @@
-import { Skybox, SkyboxMode } from './skybox';
 import * as THREE from 'three';
-import { ElementRef } from '@angular/core';
+
+import { Skybox, SkyboxMode } from './skybox';
 
 export class RacingGameRendering {
 

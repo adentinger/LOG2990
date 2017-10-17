@@ -1,5 +1,4 @@
-import { Injectable, ElementRef } from '@angular/core';
-import * as THREE from 'three';
+import { Injectable } from '@angular/core';
 
 import { RacingGameRendering } from './racing-game-rendering';
 import { Point } from '../../common/math/point';

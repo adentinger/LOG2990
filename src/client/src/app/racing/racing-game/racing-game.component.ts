@@ -5,7 +5,6 @@ import { Point } from '../../common/math/point';
 import { SkyboxMode } from './skybox';
 
 const LEFT_MOUSE_BUTTON = 0;
-const RIGHT_MOUSE_BUTTON = 2;
 
 @Component({
     selector: 'app-racing-game',
