@@ -18,9 +18,9 @@ export class RacingGameRendering {
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
 
-    constructor(canvas: ElementRef) {
+    constructor(canvas: HTMLCanvasElement) {
         this.SCENE = new THREE.Scene();
-        this.RENDERER = new THREE.WebGLRenderer({canvas: canvas.nativeElement});
+        this.RENDERER = new THREE.WebGLRenderer({canvas: canvas});
         this.CAMERA = new THREE.PerspectiveCamera(
             this.VIEW_ANGLE,
             this.ASPECT,

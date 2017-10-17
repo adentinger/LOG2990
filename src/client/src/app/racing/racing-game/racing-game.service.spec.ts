@@ -16,6 +16,10 @@ describe('RacingGameService', () => {
 
     beforeEach(inject([RacingGameService], (injectedService: RacingGameService) => {
         service = injectedService;
+        const CANVAS = document.createElement('CANVAS') as HTMLCanvasElement;
+        CANVAS.width = 1000;
+        CANVAS.height = 500;
+        service.initialise(CANVAS);
     }));
 
     it('should be created', () => {
@@ -40,7 +44,7 @@ describe('RacingGameService', () => {
             ];
 
             INVALID_CURSORS.forEach((point) => {
-                expect(service.cursorPosition = point).toThrow();
+                expect(() => service.cursorPosition = point).toThrow();
                 expect(service.cursorPosition).toBe(INITIAL_POSITION);
             });
         });

@@ -15,10 +15,11 @@ export class RacingGameService {
 
     constructor() { }
 
-    private newRacingGame(canvas: ElementRef): boolean {
+    private newRacingGame(canvas: HTMLCanvasElement): boolean {
         let gameCreated = false;
 
         this.racingGameRendering = new RacingGameRendering(canvas);
+        console.log('RACING GAME RENDERER: ', this.racingGameRendering);
         if (this.racingGameRendering !== null) {
             gameCreated = true;
         }
@@ -26,7 +27,7 @@ export class RacingGameService {
         return gameCreated;
     }
 
-    public initialise(canvas: ElementRef): void {
+    public initialise(canvas: HTMLCanvasElement): void {
         this.newRacingGame(canvas);
         this.startRendering();
         this.racingGameRendering.setupScene();
@@ -49,6 +50,7 @@ export class RacingGameService {
             VALID_INTERVAL.contains(cursorPosition.y);
 
         if (IS_CURSOR_VALID) {
+            console.log(this.racingGameRendering);
             this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
             this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
             this.cursorPositionInternal = cursorPosition;

@@ -27,7 +27,7 @@ export class RacingGameComponent implements OnInit {
     constructor(private racingGameRenderer: RacingGameService) { }
 
     public ngOnInit(): void {
-        this.racingGameRenderer.initialise(this.racingGameCanvas);
+        this.racingGameRenderer.initialise(this.racingGameCanvas.nativeElement);
     }
 
     public onResize() {
