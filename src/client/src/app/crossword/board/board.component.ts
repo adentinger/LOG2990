@@ -16,12 +16,16 @@ export class BoardComponent implements OnInit {
     public wordBuffer = '';
     public disableInput = false;
 
-    @Input('indexOfDefinition') public indexOfDefinition: number;
+    public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    public onSelect(): void {
-        this.inputBuffer.nativeElement.focus();
-        this.inputBuffer.nativeElement.value = '';
+    public onSelect(indexDefinition: number): void {
+        this.indexOfDefinition = indexDefinition;
+        if (this.indexOfDefinition !== null) {
+            this.inputBuffer.nativeElement.focus();
+            this.inputBuffer.nativeElement.value = '';
+        }
+
         this.clearGridOfUselessLetters();
     }
 

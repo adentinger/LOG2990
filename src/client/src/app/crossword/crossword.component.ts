@@ -26,6 +26,6 @@ export class CrosswordComponent implements OnInit {
 
     public onSelectedDefinitionChange(event) {
         this.selectedDefinition = event;
-        this.gameBoard.onSelect();
+        this.gameBoard.onSelect(event);
     }
 }

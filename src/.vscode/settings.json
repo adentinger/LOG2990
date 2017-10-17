@@ -7,6 +7,6 @@
         // exclude .js and .js.map files, when in a TypeScript project
         "**/*.js": { "when": "$(basename).ts"},
         "**/*.js.map": true,
-        "**/*.spec.ts": true
+        "**/*.spec.ts": false
     }
 }
