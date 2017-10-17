@@ -7,7 +7,7 @@ describe('GridFillerThirdSection', () => {
     let filler: GridFillerThirdSection;
 
     beforeEach(() => {
-        filler = new GridFillerThirdSection();
+        filler = new GridFillerThirdSection(Difficulty.easy);
     });
 
     it('should be created', () => {
@@ -15,7 +15,7 @@ describe('GridFillerThirdSection', () => {
     });
 
     it('should fill grids', () => {
-        const GRID = new Grid(Difficulty.easy);
+        const GRID = new Grid();
         filler.fill(GRID);
         expect(GRID.isCurrentlyValid).to.be.true;
         filler.acrossPlacement.forEach((placement) => {

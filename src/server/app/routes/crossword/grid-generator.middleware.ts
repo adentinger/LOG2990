@@ -9,25 +9,22 @@ export class GridGeneratorMiddleWare {
 
     @Route('get', '/easy')
     public async getEasyGrid(req: express.Request, res: express.Response): Promise<void> {
-        const GRID_GENERATOR = new GridGenerator(Difficulty.easy);
         res.status(HttpStatus.OK);
-        res.json(await GRID_GENERATOR.gridGeneration());
+        res.json(await GridGenerator.getInstance().gridGeneration(Difficulty.easy));
         res.send();
     }
 
     @Route('get', '/normal')
     public async getNormalGrid(req: express.Request, res: express.Response): Promise<void> {
-        const GRID_GENERATOR = new GridGenerator(Difficulty.normal);
         res.status(HttpStatus.OK);
-        res.json(await GRID_GENERATOR.gridGeneration());
+        res.json(await GridGenerator.getInstance().gridGeneration(Difficulty.normal));
         res.send();
     }
 
     @Route('get', '/hard')
     public async getHardGrid(req: express.Request, res: express.Response): Promise<void> {
-        const GRID_GENERATOR = new GridGenerator(Difficulty.hard);
         res.status(HttpStatus.OK);
-        res.json(await GRID_GENERATOR.gridGeneration());
+        res.json(await GridGenerator.getInstance().gridGeneration(Difficulty.hard));
         res.send();
     }
 
