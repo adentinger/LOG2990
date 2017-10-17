@@ -6,6 +6,14 @@ export class GridFillerWordPlacement {
     public maxLength: number;
     public position: WordPosition;
 
+    constructor(minLength: number,
+                maxLength: number,
+                position: WordPosition) {
+        this.minLength = minLength;
+        this.maxLength = maxLength;
+        this.position = position;
+    }
+
     public equals(that: GridFillerWordPlacement): boolean {
         return this.minLength === that.minLength &&
                this.maxLength === that.maxLength &&
