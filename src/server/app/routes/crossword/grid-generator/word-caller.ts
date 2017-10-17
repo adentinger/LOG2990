@@ -3,6 +3,14 @@ import * as http from 'http';
 
 export class WordCaller {
 
+    private static readonly INSTANCE = new WordCaller();
+
+    private constructor() {}
+
+    public static getInstance(): WordCaller {
+        return WordCaller.INSTANCE;
+    }
+
     public getRandomWordFrom(words: string[]): string {
         const MIN = 0;
         const MAX = words.length;
