@@ -1,13 +1,16 @@
 import { Grid, Difficulty } from './grid';
 
 export class GridGenerator {
-    public difficulty: Difficulty;
 
-    constructor(difficulty: Difficulty) {
-        this.difficulty = difficulty;
+    private static readonly INSTANCE = new GridGenerator();
+
+    private constructor() {}
+
+    public static getInstance(): GridGenerator {
+        return GridGenerator.INSTANCE;
     }
 
-    public async gridGeneration(): Promise<Grid> {
+    public async gridGeneration(difficulty: Difficulty): Promise<Grid> {
         return null;
     }
 
