@@ -6,9 +6,9 @@ export class GridFillerWordPlacement {
     public maxLength: number;
     public position: WordPosition;
 
-    constructor(minLength: number,
-                maxLength: number,
-                position: WordPosition) {
+    constructor(position: WordPosition,
+                minLength: number,
+                maxLength: number) {
         this.minLength = minLength;
         this.maxLength = maxLength;
         this.position = position;
