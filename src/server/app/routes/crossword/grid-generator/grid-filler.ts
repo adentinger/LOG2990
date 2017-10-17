@@ -1,4 +1,4 @@
-import { WordPlacement } from './word-placement';
+import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { Grid } from './grid';
 
 export const WORD_SEARCH_MAX_ATTEMPT = 200;
@@ -12,6 +12,14 @@ export abstract class GridFiller {
 
     public async fill(grid: Grid): Promise<void> {
         await null;
+    }
+
+    public get acrossPlacement(): WordPlacement[] {
+        return this.acrossWords.slice();
+    }
+
+    public get verticalPlacement(): WordPlacement[] {
+        return this.verticalWords.slice();
     }
 
 }
