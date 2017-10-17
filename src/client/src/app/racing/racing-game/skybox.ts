@@ -4,16 +4,16 @@ export class Skybox extends THREE.Mesh {
 
     private static textureNight: THREE.ShaderMaterial = Skybox.createShaderMaterial('Night');
     private static textureDay: THREE.ShaderMaterial = Skybox.createShaderMaterial('Day');
+    private modeInternal: string;
 
-    private mode: string;
     public cube: THREE.Mesh;
 
     constructor(mode: string) {
         super();
-        this.mode = mode;
+        this.modeInternal = mode;
         this.cube = new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1), new THREE.ShaderMaterial());
         this.add(this.cube);
-        this.swapMode(mode);
+        this.mode = mode;
     }
 
     private static findTextures(mode: string): string[] {
@@ -34,6 +34,23 @@ export class Skybox extends THREE.Mesh {
         return images;
     }
 
+    public get mode(): string {
+        return this.modeInternal;
+    }
+
+    public set mode(mode: string) {
+        if (mode === 'Day') {
+            this.modeInternal = mode;
+            (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureDay);
+        }
+        else if (mode === 'Night') {
+            this.modeInternal = mode;
+            (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureNight);
+        }
+        else {
+            throw new Error('Invalid skybox mode: "' + mode + '"');
+        }
+    }
 
     private static setShaders(texture: THREE.CubeTexture): THREE.ShaderMaterial {
         const SHADER = THREE.ShaderLib['cube'];
@@ -63,17 +80,6 @@ export class Skybox extends THREE.Mesh {
         }
 
         return Skybox.setShaders(texture);
-    }
-
-    public swapMode(mode: string): void {
-        if (mode === 'Day') {
-            this.mode = 'Day';
-            (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureDay);
-        }
-        else if (mode === 'Night') {
-            this.mode = 'Night';
-            (this.cube.material as THREE.ShaderMaterial) = (Skybox.textureNight);
-        }
     }
 
 }
