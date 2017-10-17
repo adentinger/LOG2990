@@ -15,16 +15,20 @@ export abstract class GridFiller {
         this.difficulty = difficulty;
     }
 
-    public async fill(grid: Grid): Promise<void> {
-        await null;
-    }
-
     public get acrossPlacement(): WordPlacement[] {
         return this.acrossWords.slice();
     }
 
     public get verticalPlacement(): WordPlacement[] {
         return this.verticalWords.slice();
+    }
+
+    public async fill(grid: Grid): Promise<void> {
+        await this.placeAcrossWords();
+    }
+
+    private async placeAcrossWords(): Promise<void> {
+        await null;
     }
 
 }
