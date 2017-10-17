@@ -19,6 +19,8 @@ export class CrosswordComponent implements OnInit {
     // tiles will look at this value to decide if they should be hightlighted
     public selectedTiles: number[][] = [];
 
+    constructor() { }
+
     public ngOnInit(): void {
     }
 
@@ -26,5 +28,4 @@ export class CrosswordComponent implements OnInit {
         this.selectedDefinition = event;
         this.gameBoard.onSelect();
     }
-
 }

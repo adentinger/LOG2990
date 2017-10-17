@@ -1,6 +1,7 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
-import { Direction } from '../../../common/crossword/grid-word';
+import { Direction, GridWord } from '../../../common/crossword/grid-word';
+import { CrosswordGameService } from '../../crossword-game.service';
 
 @Component({
     selector: 'app-tile',
@@ -23,29 +24,50 @@ export class CrosswordTileComponent implements OnInit {
         this.tileValueChange.emit(this.tileValue);
     }
 
+    @ViewChild('caseInput') public caseInput: ElementRef;
+
     public ngOnInit() {
     }
 
-    constructor(private crosswordGridService: CrosswordGridService) { }
 
-    public checkIfHighlighted(j: number, i: number): boolean {
-        const y = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].y,
-            x = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].x;
-        const wordLength = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].length;
-        const direction = this.crosswordGridService.grid[this.crosswordGridService.crosswordGameService.selectedWordIndex].direction;
-        const aDefinitionIsSelected = this.crosswordGridService.crosswordGameService.aDefinitionIsSelected;
+    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService) { }
 
-        if (aDefinitionIsSelected) {
-            if (direction === Direction.across) {
-                return (j === y && i >= x && i <= wordLength + x - 1);
-            }
-            else if (direction === Direction.vertical) {
-                return (i === x && j >= y && j <= wordLength + y - 1);
-            }
+    public checkIfTileIsInWordTiles(word: GridWord): boolean {
+        if (word.direction === Direction.across) {
+            return (this.tileRow === word.y && this.tileColumn >= word.x && this.tileColumn <= word.length + word.x - 1);
+        }
+        else if (word.direction === Direction.vertical) {
+            return (this.tileColumn === word.x && this.tileRow >= word.y && this.tileRow <= word.length + word.y - 1);
         }
         else {
             return false;
         }
     }
 
+    public checkIfHighlighted(): boolean {
+        const word = this.crosswordGridService.grid[this.crosswordGameService.selectedWordIndex];
+        const aDefinitionIsSelected = this.crosswordGameService.aDefinitionIsSelected;
+
+        if (aDefinitionIsSelected) {
+            return this.checkIfTileIsInWordTiles(word);
+        }
+        else {
+            return false;
+        }
+    }
+
+    /*
+    public checkIfGreyed(): boolean {
+        const word = this.crosswordGridService.grid[this.crosswordGameService.lastSelectedWordIndex];
+        const aDefinitionIsSelected = this.crosswordGameService.aDefinitionIsSelected;
+
+        if (this.checkIfTileIsInWordTiles(word)) {
+            if (this.tileChar !== '' && word.string !== '') {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }*/
 }
