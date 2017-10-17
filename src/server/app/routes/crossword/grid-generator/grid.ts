@@ -12,7 +12,7 @@ export class Grid {
     }
 
     public async fillUsing(filler: GridFiller): Promise<void> {
-        await(filler.fill(this));
+        await filler.fill(this);
     }
 
 }
