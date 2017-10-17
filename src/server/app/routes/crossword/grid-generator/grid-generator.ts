@@ -1,4 +1,8 @@
 import { Grid, Difficulty } from './grid';
+import { GridFillerFirstSection } from './grid-filler-first-section';
+import { GridFillerSecondSection } from './grid-filler-second-section';
+import { GridFillerThirdSection } from './grid-filler-third-section';
+import { GridFillerFourthSection } from './grid-filler-fourth-section';
 
 export class GridGenerator {
 
@@ -11,7 +15,16 @@ export class GridGenerator {
     }
 
     public async gridGeneration(difficulty: Difficulty): Promise<Grid> {
-        return null;
+        const GRID = new Grid();
+        const FILLER_FIRST_SECTION  = new GridFillerFirstSection(difficulty);
+        const FILLER_SECOND_SECTION = new GridFillerSecondSection(difficulty);
+        const FILLER_THIRD_SECTION  = new GridFillerThirdSection(difficulty);
+        const FILLER_FOURTH_SECTION = new GridFillerFourthSection(difficulty);
+        GRID.fillUsing(FILLER_FIRST_SECTION);
+        GRID.fillUsing(FILLER_SECOND_SECTION);
+        GRID.fillUsing(FILLER_THIRD_SECTION);
+        GRID.fillUsing(FILLER_FOURTH_SECTION);
+        return GRID;
     }
 
 }
