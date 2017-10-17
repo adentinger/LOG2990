@@ -38,4 +38,13 @@ export class DefinitionFieldComponent implements OnInit {
     public onClickOutside(): void {
         this.definitionService.onClickOutside();
     }
+
+    public getCheatModeState(): string {
+        return this.definitionService.getCheatModeState();
+    }
+
+    public setCheatModeOnOff(): void {
+        this.definitionService.setCheatModeOnOff();
+    }
+
 }

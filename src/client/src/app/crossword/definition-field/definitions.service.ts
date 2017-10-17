@@ -3,10 +3,12 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Definition } from '../../common/crossword/definition';
 import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
 import { CrosswordGameService } from '../crossword-game.service';
+import { CrosswordGridService } from '../board/crossword-grid.service';
 
 @Injectable()
 export class DefinitionsService {
 
+    private cheatModeOn = false;
     private definitions: Definition[];
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
@@ -14,7 +16,7 @@ export class DefinitionsService {
     public getDefinitions(): Definition[] {
         return this.definitions;
     }
-    constructor(public crosswordGameService: CrosswordGameService) {
+    constructor(public crosswordGameService: CrosswordGameService, public crosswordGridService: CrosswordGridService) {
         this.definitions = DEFINITIONS_MOCK;
     }
 
@@ -34,11 +36,14 @@ export class DefinitionsService {
     }
 
     public onSelect(index: number, event): void {
-        this.selectedDefinitionId = index;
-        this.crosswordGameService.selectedWordIndex = index;
-        this.crosswordGameService.lastSelectedWordIndex = index;
+        if (this.crosswordGridService.grid[index].string === '') {
 
-        this.crosswordGameService.aDefinitionIsSelected = true;
+            this.selectedDefinitionId = index;
+            this.crosswordGameService.selectedWordIndex = index;
+            this.crosswordGameService.lastSelectedWordIndex = index;
+
+            this.crosswordGameService.aDefinitionIsSelected = true;
+        }
     }
 
     public onClickOutside(): void {
@@ -46,5 +51,13 @@ export class DefinitionsService {
         this.crosswordGameService.selectedWordIndex = 0;
 
         this.crosswordGameService.aDefinitionIsSelected = false;
+    }
+
+    public getCheatModeState(): string {
+        return this.cheatModeOn.toString();
+    }
+
+    public setCheatModeOnOff(): void {
+        this.cheatModeOn = !this.cheatModeOn;
     }
 }

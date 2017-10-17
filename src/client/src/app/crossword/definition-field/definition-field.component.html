@@ -1,3 +1,4 @@
+<button (click)='setCheatModeOnOff()'>Cheat mode : {{getCheatModeState()}}</button>
 <div id="definition-box" (clickOutside)='onClickOutside()'>
   <div *ngFor='let definition of definitions; let i = index;'>
     <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>

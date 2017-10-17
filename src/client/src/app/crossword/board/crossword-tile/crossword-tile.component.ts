@@ -55,19 +55,4 @@ export class CrosswordTileComponent implements OnInit {
             return false;
         }
     }
-
-    /*
-    public checkIfGreyed(): boolean {
-        const word = this.crosswordGridService.grid[this.crosswordGameService.lastSelectedWordIndex];
-        const aDefinitionIsSelected = this.crosswordGameService.aDefinitionIsSelected;
-
-        if (this.checkIfTileIsInWordTiles(word)) {
-            if (this.tileChar !== '' && word.string !== '') {
-                return true;
-            }
-        }
-        else {
-            return false;
-        }
-    }*/
 }
