@@ -1,4 +1,6 @@
 import { Injectable, ElementRef } from '@angular/core';
+import * as THREE from 'three';
+
 import { RacingGameRendering } from './racing-game-rendering';
 import { Point } from '../../common/math/point';
 
@@ -8,7 +10,7 @@ export class RacingGameService {
     public racingGameRendering: RacingGameRendering;
     private animationRequestId = 0;
     private isRendering = false;
-    private mousePositionInternal = new Point(0, 0);
+    private cursorPositionInternal = new Point(0, 0);
 
     constructor() { }
 
@@ -29,15 +31,20 @@ export class RacingGameService {
         this.racingGameRendering.setupScene();
     }
 
-    public get mousePosition(): Point {
-        return this.mousePositionInternal;
+    /**
+     * @returns A point where x and y belong to [-1, 1],
+     * -1 corresponding (respectively) to left and top,
+     * and 1 corresponding (respectively) to right and bottom
+     * of the screen.
+     */
+    public get cursorPosition(): Point {
+        return this.cursorPositionInternal;
     }
 
-    public set mousePosition(mousePosition: Point) {
-        this.racingGameRendering.CAMERA.rotateY(
-            this.mousePositionInternal.x - mousePosition.x);
-        this.racingGameRendering.CAMERA.rotateX(
-            this.mousePositionInternal.y - mousePosition.y);
+    public set cursorPosition(cursorPosition: Point) {
+        this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
+        this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
+        this.cursorPositionInternal = cursorPosition;
     }
 
     public renderGame(): void {

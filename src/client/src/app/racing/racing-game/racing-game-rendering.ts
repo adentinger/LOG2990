@@ -37,6 +37,7 @@ export class RacingGameRendering {
     }
 
     private setupCamera(): void {
+        this.CAMERA.rotation.order = 'YXZ';
         this.CAMERA.position.set(0, 500, 1000);
         this.CAMERA.lookAt(this.SCENE.position);
     }

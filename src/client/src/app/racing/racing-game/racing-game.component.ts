@@ -30,17 +30,18 @@ export class RacingGameComponent implements OnInit {
         const width = (window).innerWidth;
         console.log('height', height, 'width', width);
 
+        this.windowHalfX = width * 0.5;
+        this.windowHalfY = height * 0.5;
         this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
         this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
 
     public onMouseMove(e) {
         const MOUSE_POSITION = new Point(
-            (e.clientX - this.windowHalfX) / (2 * this.windowHalfX),
-            (e.clientY - this.windowHalfY) / (2 * this.windowHalfY)
+            (e.clientX - this.windowHalfX) / (this.windowHalfX),
+            (e.clientY - this.windowHalfY) / (this.windowHalfY)
         );
-        console.log('OUSE MOVED TO', MOUSE_POSITION);
-        this.racingGameRenderer.mousePosition = MOUSE_POSITION;
+        this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
     }
 
 }
