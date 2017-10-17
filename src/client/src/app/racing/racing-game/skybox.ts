@@ -2,7 +2,8 @@ import * as THREE from 'three';
 
 export enum SkyboxMode {
     DAY = 0,
-    NIGHT
+    NIGHT,
+    NUMBER_OF_MODES
 }
 
 export class Skybox extends THREE.Mesh {

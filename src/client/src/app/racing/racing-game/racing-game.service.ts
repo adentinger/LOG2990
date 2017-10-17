@@ -19,7 +19,6 @@ export class RacingGameService {
         let gameCreated = false;
 
         this.racingGameRendering = new RacingGameRendering(canvas);
-        console.log('RACING GAME RENDERER: ', this.racingGameRendering);
         if (this.racingGameRendering !== null) {
             gameCreated = true;
         }
@@ -50,7 +49,6 @@ export class RacingGameService {
             VALID_INTERVAL.contains(cursorPosition.y);
 
         if (IS_CURSOR_VALID) {
-            console.log(this.racingGameRendering);
             this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
             this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
             this.cursorPositionInternal = cursorPosition;

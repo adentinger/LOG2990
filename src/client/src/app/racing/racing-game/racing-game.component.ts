@@ -33,7 +33,6 @@ export class RacingGameComponent implements OnInit {
     public onResize() {
         const height = (window).innerHeight;
         const width = (window).innerWidth;
-        console.log('height', height, 'width', width);
 
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;
