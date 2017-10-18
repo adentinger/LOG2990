@@ -10,18 +10,26 @@ import { DefinitionsService } from './definitions.service';
 export class DefinitionFieldComponent implements OnInit {
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
-
     @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
-    public definitions: Definition[] = [];
+    // public definitions: Definition[] = [];
+
     public words: string[] = [];
 
     constructor(private definitionService: DefinitionsService) {
         this.selectedDefinition = definitionService.internalSelectedDefinition;
     }
 
+    public get horizontalDefinitions(): Definition[] {
+        return <Definition[]>Array.from(this.definitionService.horizontalDefinitions.values());
+    }
+
+    public get verticalDefinitions(): Definition[] {
+        return <Definition[]>Array.from(this.definitionService.verticalDefinitions.values());
+    }
+
     public ngOnInit(): void {
-        this.definitions = this.definitionService.getDefinitions();
+        // this.definitions = this.definitionService.getDefinitions();
         this.words = this.definitionService.getWords();
     }
 

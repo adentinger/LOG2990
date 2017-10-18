@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
-import { Direction, GridWord } from '../../common/crossword/grid-word';
+import { GridWord } from '../../common/crossword/grid-word';
+import { Direction } from '../../common/crossword/crossword-enums';
 import { CrosswordGameService } from '../crossword-game.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { DefinitionFieldComponent } from '../definition-field/definition-field.component';
@@ -42,7 +43,7 @@ export class BoardComponent implements OnInit {
 
     private inputLettersOnGrid(word: GridWord, input: string) {
         for (let i = 0; i < word.length; i++) {
-            if (word.direction === Direction.across) {
+            if (word.direction === Direction.horizontal) {
                 if (i < input.length) {
                     this.crosswordGrid[word.y][word.x + i] = input[i];
                 }

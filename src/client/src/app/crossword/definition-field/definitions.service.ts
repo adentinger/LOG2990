@@ -20,8 +20,10 @@ export class DefinitionsService {
     private changeTimerValueOn = false;
     private timerValueInSeconds: number;
 
-    private horizontalDefinitions: Map<number, Definition> = new Map();
-    private verticalDefinitions: Map<number, Definition> = new Map();
+    public horizontalDefinitions: Map<number, Definition> = new Map();
+    public verticalDefinitions: Map<number, Definition> = new Map();
+
+    public mockDefinitions: Definition[] = [];
     private words: string[];
 
     public internalSelectedDefinitionId: number = -1;
@@ -35,14 +37,14 @@ export class DefinitionsService {
         public crosswordGridService: CrosswordGridService,
         private packetManager: PacketManagerClient) {
 
-        this.horizontalDefinitions = new Map(
-            DEFINITIONS_MOCK.map(
-                (definition: Definition, id: number) =>
-                    <[number, Definition]>[id, definition]));
-        this.verticalDefinitions = new Map(
-            DEFINITIONS_MOCK.map(
-                (definition: Definition, id: number) =>
-                    <[number, Definition]>[id, definition]));
+        // this.horizontalDefinitions = new Map(
+        //     DEFINITIONS_MOCK.map(
+        //         (definition: Definition, id: number) =>
+        //             <[number, Definition]>[id, definition]));
+        // this.verticalDefinitions = new Map(
+        //     DEFINITIONS_MOCK.map(
+        //         (definition: Definition, id: number) =>
+        //             <[number, Definition]>[id, definition]));
 
         registerHandlers(this, this.packetManager);
         this.words = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];

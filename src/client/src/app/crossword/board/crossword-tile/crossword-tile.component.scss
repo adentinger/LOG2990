@@ -27,6 +27,8 @@ $color-focus-item: #EDFF71;
 	height: $crossword-item-size;
 	border: 1px solid black;
 
+	user-select: none;
+
 	&:active:not(.black-square),
 	&:focus:not(.black-square) {
 		background: $color-focus-item;
