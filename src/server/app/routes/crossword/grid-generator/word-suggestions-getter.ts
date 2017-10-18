@@ -3,13 +3,12 @@ import { WordSuggestions } from './word-suggestions';
 import { WordPosition } from './word-position';
 import { CharConstraint } from '../../../common/index';
 import { LexiconCaller } from '../lexic/lexicon-caller';
+import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 
-export class WordSuggestionsGetter {
-
-    private difficulty: Difficulty;
+export class WordSuggestionsGetter extends AbstractWordSuggestionsGetter {
 
     constructor(difficulty: Difficulty) {
-        this.difficulty = difficulty;
+        super(difficulty);
     }
 
     public async getSuggestions(minLength: number,
