@@ -5,7 +5,7 @@ import { CharConstraint } from '../../../common/index';
 import { LexiconCaller } from '../lexic/lexicon-caller';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 
-export class WordSuggestionsGetter extends AbstractWordSuggestionsGetter {
+export class NormalWordSuggestionsGetter extends AbstractWordSuggestionsGetter {
 
     constructor(difficulty: Difficulty) {
         super(difficulty);
