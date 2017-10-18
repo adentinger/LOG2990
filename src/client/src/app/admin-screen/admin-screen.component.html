@@ -1,6 +1,7 @@
-<div class="container">
+<div class="outer-container">
   <div class="listContainer">
     <h1>Admin page</h1>
+    <app-admin-config></app-admin-config>
     <button routerLink="map-editor">map editor</button>
     <div class="mapList">
       <div class="tableTitle">Map name</div>
@@ -17,5 +18,5 @@
         (mapCouldNotBeSavedBecauseNotFound)="alertMapCouldNotBeSavedBecauseNotFound()">
       </app-map-editor> 
   </div>
-  <button (click)="sendSocket()">Send word constraint</button>
+  <!--<button (click)="sendSocket()">Send word constraint</button>-->
 </div>

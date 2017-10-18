@@ -2,13 +2,17 @@ import { Constructor, Class, InstanceOf } from '../../utils';
 import { PacketParser } from './packet-parser';
 import { PacketEvent } from './packet-event';
 import { PacketManagerBase, Socket } from './packet-manager-base';
+import { Logger } from '../../logger';
 
 const parsers: [Class<any>, Constructor<PacketParser<any>>][] = [];
+
+const logger = Logger.getLogger('Packet Decorators');
+const DEFAULT_CLASSNAME = '<Annonymous>';
 
 // Decorator
 export function Parser<T>(type: Class<T>) {
     return function Parser<P extends PacketParser<T>>(constructor: Constructor<P>) {
-        console.log(`[Packet] New parser for ${type.name} [${constructor.name}]`);
+        logger.info(`New parser for ${type.name} [${constructor.name}]`);
         parsers.push([type, constructor]);
     };
 }
@@ -25,7 +29,7 @@ export declare type PacketHandler<T> = (event: PacketEvent<T>) => void;
 // Decorator
 export function PacketHandler<T>(dataType: Class<T>): MethodDecorator {
     return function <U extends Class<any>>(target: U, propertyKey: string, descriptor: PropertyDescriptor & { value?: PacketHandler<T> }) {
-        console.log(`[Packet] New handler for ${dataType.name} [${target.constructor.name}.${propertyKey}]`);
+        logger.info(`New handler for %s [%s.%s]`, dataType.name, target.constructor.name || DEFAULT_CLASSNAME, propertyKey);
         if (!handlers.has(target.constructor)) {
             handlers.set(target.constructor, new Map());
         }
@@ -42,7 +46,7 @@ export declare interface PacketManagerContainter<S extends Socket> {
 
 export function PacketHandlerClass() {
     return function <T extends Constructor<PacketManagerContainter<Socket>>>(target: T) {
-        console.log(`[Packet] New class of handlers: ${target.name}`);
+        logger.info('New class of handlers: %s', target.name || DEFAULT_CLASSNAME);
         if (!handlers.has(target)) {
             handlers.set(target, new Map());
         }
@@ -55,18 +59,20 @@ export function PacketHandlerClass() {
     };
 }
 
-const TRY_COUNT_MAX = 100;
 export function registerHandlers<T extends InstanceOf<Constructor<T>>>(that: T, packetManager: PacketManagerBase<Socket>) {
-    console.log(`[Packet] [${that.constructor.name}] Registering handlers`);
+    logger.info(`(class %s) Registering handlers`, that.constructor.name || DEFAULT_CLASSNAME);
+    const TRY_COUNT_MAX = 100;
     let prototype = that, i = 0;
     let thatHandlers: Map<Class<any>, Set<string>>;
     while (!handlers.has(prototype.constructor) && ++i < TRY_COUNT_MAX) {
         prototype = Object.getPrototypeOf(prototype);
     }
     thatHandlers = handlers.get(prototype.constructor);
-    thatHandlers.forEach((handlerList, type) => {
-        for (const handler of handlerList) {
-            packetManager.registerHandler(type, that[handler].bind(that));
-        }
-    });
+    if (thatHandlers !== undefined) {
+        thatHandlers.forEach((handlerList, type) => {
+            for (const handler of handlerList) {
+                packetManager.registerHandler(type, that[handler].bind(that));
+            }
+        });
+    }
 }

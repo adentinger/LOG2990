@@ -7,6 +7,7 @@
 
 import { Application } from './app';
 import * as http from 'http';
+import { Logger } from './common/logger';
 
 const application: Application = Application.bootstrap();
 
@@ -51,11 +52,11 @@ function onError(error: NodeJS.ErrnoException): void {
   const bind = (typeof appPort === 'string') ? 'Pipe ' + appPort : 'Port ' + appPort;
   switch (error.code) {
     case 'EACCES':
-      console.error(`${bind} requires elevated privileges`);
+      Logger.getLogger().error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(`${bind} is already in use`);
+      Logger.getLogger().error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:
@@ -69,5 +70,5 @@ function onError(error: NodeJS.ErrnoException): void {
 function onListening(): void {
   const addr = server.address();
   const bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
-  console.log(`Listening on ${bind}`);
+  Logger.getLogger().log(`Listening on ${bind}`);
 }

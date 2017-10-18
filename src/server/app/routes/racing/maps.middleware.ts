@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import { MiddleWare, Route } from '../middle-ware';
-import { HttpStatus, getStatusOrDefault } from '../../http-response-status';
+import { HttpStatus, getStatusOrDefault } from '../../common';
 import { provideDatabase } from '../../app-db';
 import { MapDbService } from './map-db-service';
 import { SerializedMap } from '../../common/racing/serialized-map';

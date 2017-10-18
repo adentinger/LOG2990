@@ -2,6 +2,7 @@ import { toArrayBuffer, Class } from '../../utils';
 import { PacketParser } from './packet-parser';
 import { PacketHandler, registerParsers } from './packet-handler';
 import { PacketEvent } from './packet-event';
+import { Logger } from '../../logger';
 
 export declare type Listener = (...args: any[]) => void;
 export declare type On = (event: string, listener: Function | Listener) => { on: On };
@@ -11,14 +12,19 @@ export declare interface Socket {
     send: (...argv: any[]) => this;
 }
 
+const DEFAULT_NAME = '<Annonymous>';
+
 /**
  * @class
  * @description The base class that is extended by PacketManagerClient and PacketManagerServer
  */
 export abstract class PacketManagerBase<Sock extends Socket> {
     private static readonly PACKET_MESSAGE_MATCHER = /^packet:([a-zA-Z_][a-zA-Z0-9_$]*)$/i;
+
+    protected logger = Logger.getLogger('Packet');
     protected parsers: Map<Class<any>, PacketParser<any>> = new Map();
     private handlers: Map<Class<any>, Set<PacketHandler<any>>> = new Map();
+    protected diconnectHandlers: Set<(socketId: string) => void> = new Set();
 
     private static isPacketMessage(message: string): boolean {
         return PacketManagerBase.PACKET_MESSAGE_MATCHER.test(message);
@@ -51,16 +57,16 @@ export abstract class PacketManagerBase<Sock extends Socket> {
                 let dataType: Class<any>, parser: PacketParser<any>;
                 if (this.hasEventType(eventType) &&
                     ([dataType, parser] = this.getParser(eventType)) !== null) {
-                    console.log(`[Packet] Reception "${eventType}"`);
+                    this.logger.debug(`Reception "${eventType}"`);
                     try {
                         const object = parser.parse(toArrayBuffer(data));
                         this.callHandlers(dataType, new PacketEvent(object, socket.id));
                     } catch (error) {
-                        console.warn(`[Packet] An error occured while parsing ${eventType}: `,
+                        this.logger.warn(`An error occured while parsing ${eventType}:`,
                             error instanceof Error ? error.message : error);
                     }
                 } else {
-                    console.warn(`No parser for packet with "${eventType}" type. Packet dropped`);
+                    this.logger.warn(`No parser for packet with "${eventType}" type. Packet dropped`);
                 }
             }
         };
@@ -99,7 +105,7 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * @returns The given handler. Usually useful to keep a reference to the handler and unregister later.
      */
     public registerHandler<T>(type: Class<T>, handler: PacketHandler<T>): PacketHandler<T> {
-        console.log(`[Packet] New handler for ${type.name}`);
+        this.logger.debug('New handler for %s: %s', type.name || DEFAULT_NAME, handler.name || DEFAULT_NAME);
         if (!this.handlers.has(type)) {
             this.handlers.set(type, new Set<PacketHandler<any>>());
         }
@@ -122,7 +128,7 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * @param socketid (For server side only) The id of the connection to send the data to.
      * @returns True if the packet was succesfully sent, false otherwise (no matching parser, connection error, ...).
      */
-    public abstract sendPacket<T>(type: Class<T>, data: T, socketid: string): boolean;
+    public abstract sendPacket<T>(type: Class<T>, data: T, socketid: string | string[]): boolean | boolean[];
 
     /**
      * Register a parser for a given type of object.
@@ -130,7 +136,15 @@ export abstract class PacketManagerBase<Sock extends Socket> {
      * @param parser An instance of a class extending PacketParser and implements parse and serialize.
      */
     public registerParser<T>(type: Class<T>, parser: PacketParser<T>) {
-        console.log(`[Packet] Registering parser for ${type.name}`);
+        this.logger.info(`Registering parser for ${type.name}`);
         this.parsers.set(type, parser);
+    }
+
+    public registerDisconnectHandler(handler: (socketId: string) => void): void {
+        this.diconnectHandlers.add(handler);
+    }
+
+    public unregisterDisconnectHandler(handler: (socketId: string) => void): void {
+        this.diconnectHandlers.delete(handler);
     }
 }

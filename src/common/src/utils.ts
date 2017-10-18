@@ -10,10 +10,10 @@ export function isJson(pseudoJson: string): boolean {
     }
 }
 
-export interface Constructor<T extends Object> extends Function {
+export interface Constructor<T extends Object = Object> extends Function {
     new(...argv: any[]): T;
 }
-export declare type Class<T> = Constructor<T> | Function; // For comprehention's sake
+export declare type Class<T = any> = Constructor<T> | Function; // For comprehention's sake
 
 export interface InstanceOf<T extends Constructor<InstanceOf<T>>> extends Object {
     readonly constructor: T | Function;
@@ -31,4 +31,34 @@ export function toArrayBuffer(str: string): ArrayBuffer {
 
 export function fromArrayBuffer(data: ArrayBuffer): string {
     return String.fromCharCode.apply(null, new Uint16Array(data));
+}
+
+const CALL_STACK_REGEX = /\s*at\s(.+)\s\(.+:\d+:\d+\)/;
+
+export function getCallers(): string[] {
+    try {
+        throw new Error();
+    } catch (e) {
+        const error = e as Error;
+        try {
+            const callers = error.stack.match(new RegExp(CALL_STACK_REGEX, 'g'))
+                .map((value) => value.match(CALL_STACK_REGEX)[1]);
+            callers.shift();
+            return callers;
+        } catch (e) {
+            return null;
+        }
+    }
+}
+
+export function warn(logger: {warn: (message: any) => void}): (error: any) => never;
+export function warn<T>(logger: {warn: (message: any) => void}, returnValue: T): (error: any) => T;
+export function warn<T>(logger: {warn: (message: any) => void}, returnValue?: T) {
+    return function (error: any): T {
+        logger.warn(error);
+        if (returnValue !== undefined) {
+            return returnValue;
+        }
+        throw error;
+    };
 }

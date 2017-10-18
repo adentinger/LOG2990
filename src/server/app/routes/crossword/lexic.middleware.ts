@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import { Route, MiddleWare } from '../middle-ware';
-import { HttpStatus } from '../../http-response-status';
+import { HttpStatus } from '../../common';
 import { WordConstraint, isWordConstraint, parseWordConstraint } from '../../common/lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
 import { isJson } from '../../common/utils';
@@ -9,10 +9,12 @@ import { CharConstraint } from '../../common/lexic/char-constraint';
 import { RegexBuilder } from './lexic/regex-builder';
 import { Lexic } from './lexic';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
+import { Logger } from '../../common/logger';
 
 
 @MiddleWare('/crossword/lexic')
 export class LexicMiddleWare {
+    private static readonly logger = Logger.getLogger('Lexic');
     private static readonly LEXIC = new Lexic(provideDatabase(), new RegexBuilder(), new ExternalWordApiService());
 
     private static parseQuery(query: any): WordConstraint {
@@ -50,7 +52,7 @@ export class LexicMiddleWare {
             LexicMiddleWare.LEXIC.getWords(CONSTRAINT).then((words) => {
                 res.json(words);
             }).catch((status: HttpStatus) => res.sendStatus(status)).catch((error: Error) => {
-                console.warn(error.message);
+                LexicMiddleWare.logger.warn(error.message);
                 res.status(HttpStatus.INTERNAL_SERVER_ERROR);
                 res.send(error.message);
             }).catch((reason: any) => {
@@ -71,7 +73,7 @@ export class LexicMiddleWare {
         LexicMiddleWare.LEXIC.getDefinitions(req.params.word).then((definitions: string[]) => {
             res.json(definitions);
         }).catch((error: any) => {
-            console.warn(error instanceof Error ? error.message : error);
+            LexicMiddleWare.logger.warn(error instanceof Error ? error.message : error);
             res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         });
     }

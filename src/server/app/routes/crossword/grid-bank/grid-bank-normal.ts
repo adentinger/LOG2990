@@ -1,4 +1,4 @@
-import { HttpStatus } from '../../../http-response-status';
+import { HttpStatus } from '../../../common/http-status';
 import { GridBank } from './grid-bank';
 import { Grid } from '../../../common/grid';
 

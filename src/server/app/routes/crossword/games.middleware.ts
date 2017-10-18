@@ -1,5 +1,7 @@
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
+import { HttpStatus } from '../../common/http-status';
+import { GameManager } from './games/game-manager';
 
 type CrosswordGameMode = 'classic' | 'dynamic';
 type CrosswordGameDifficulty = 'easy' | 'normal' | 'brutal';
@@ -10,9 +12,9 @@ interface MockCrosswordPendingGame {
     difficulty: CrosswordGameDifficulty;
 }
 
-@MiddleWare
+@MiddleWare('/crossword/games')
 export class CrosswordGamesMiddleWare {
-    @Route('get', '/crossword/games/pending/:count')
+    @Route('get', '/pending/:count')
     public pending(req: express.Request, res: express.Response, next: express.NextFunction): void {
         const MODES: CrosswordGameMode[] = ['classic', 'dynamic'];
         const DIFFICULTIES: CrosswordGameDifficulty[] = ['easy', 'normal', 'brutal'];
@@ -27,5 +29,31 @@ export class CrosswordGamesMiddleWare {
             });
         }
         res.send(MOCK_PENDING_GAMES);
+    }
+
+    @Route('post', '/')
+    public postGame(req: express.Request, res: express.Response): void {
+        // console.log('MIDDLEWARE TRIGGERED');
+        res.status(HttpStatus.ACCEPTED);
+
+        console.log(req.body);
+        const newGameId = GameManager.getInstance().newGame(req.body);
+        res.json({
+            'id': newGameId
+        });
+    }
+    @Route('get', '/:id')
+    public getGame(req: express.Request, res: express.Response): void {
+        // res.status(HttpStatus.ACCEPTED);
+        let game;
+        console.log('\nprocessing req =' + req.body);
+        try {
+            game = GameManager.getInstance().getGame(req.params.id);
+        } catch (error) {
+            res.sendStatus(HttpStatus.NOT_FOUND);
+            return;
+        }
+        res.status(HttpStatus.OK);
+        res.send(game);
     }
 }
