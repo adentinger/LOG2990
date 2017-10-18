@@ -3,7 +3,7 @@ import { GridFillerFourthSection } from './grid-filler-fourth-section';
 import { Grid } from './grid';
 import { DifficultyEasy } from './difficulty-easy';
 
-describe('GridFillerSecondSection', () => {
+describe('GridFillerFourthSection', () => {
 
     let filler: GridFillerFourthSection;
 
