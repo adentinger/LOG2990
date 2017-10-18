@@ -18,7 +18,6 @@ describe('GridFillerSecondSection', () => {
     it('should fill grids', () => {
         const GRID = new Grid();
         filler.fill(GRID);
-        expect(GRID.isCurrentlyValid).to.be.true;
         filler.acrossPlacement.forEach((placement) => {
             const MATCH_INDEX = GRID.across.findIndex((acrossWord) => {
                 const WORD_LENGTH_MATCHES =
