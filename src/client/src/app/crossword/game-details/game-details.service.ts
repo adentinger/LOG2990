@@ -6,7 +6,7 @@ import '../../common/crossword/packets/crossword-timer.parser';
 
 @Injectable()
 export class GameDetailsService {
-    public countdown: number;
+    public countdown = 0;
 
     constructor(private packetManager: PacketManagerClient) {
         registerHandlers(this, packetManager);
