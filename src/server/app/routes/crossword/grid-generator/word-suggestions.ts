@@ -13,7 +13,13 @@ export class WordSuggestions {
 
     public get randomSuggestion(): string {
         if (this.length >= 0) {
-            return null;
+            const MIN = 0;
+            const MAX = this.suggestions.length;
+            let randomIndex = this.suggestions.length;
+            while (randomIndex >= this.suggestions.length) {
+                randomIndex = (Math.floor(Math.random() * (MAX - MIN)) + MIN);
+            }
+            return this.suggestions[randomIndex];
         }
         else {
             throw new Error('Cannot get random suggestion: no suggestions');
