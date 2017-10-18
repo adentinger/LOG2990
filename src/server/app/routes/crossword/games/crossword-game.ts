@@ -7,8 +7,10 @@ import { CrosswordTimerPacket } from '../../../common/crossword/packets/crosswor
 import '../../../common/crossword/packets/crossword-timer.parser';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
 
+const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 minute
+
 export class CrosswordGame {
-    public countdown = 10000;
+    public countdown = COUNTDOWN_DEFAULT_VALUE;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
     public horizontalGrid: GridWord[] = [];
@@ -67,7 +69,6 @@ export class CrosswordGame {
         setInterval(() => {
             if (this.player1Id !== null) {
                 this.countdown--;
-                console.log('hello this is the timer');
                 this.packetManager.sendPacket(CrosswordTimerPacket, new CrosswordTimerPacket(this.countdown), this.player1Id);
             }
         }, 1000);

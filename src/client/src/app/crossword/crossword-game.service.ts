@@ -9,7 +9,7 @@ import { GameDefinitionPacket } from '../common/crossword/packets/game-definitio
 import { CrosswordTimerPacket } from '../common/crossword/packets/crossword-timer.packet';
 import '../common/crossword/packets/crossword-timer.parser';
 
-const TIME_MAX = 9999;
+const TIME_MAX = 3600000; // 1 hour
 
 /**
  * @class CrosswordGameService
@@ -32,9 +32,7 @@ export class CrosswordGameService {
 
     public crosswordGame: CrosswordGame = CROSSWORD_GAME;
 
-    public constructor(private packetManager: PacketManagerClient) {
-        // registerHandlers(this, this.packetManager);
-    }
+    public constructor(private packetManager: PacketManagerClient) { }
 
     public getCurrentGame(): CrosswordGame {
         return this.crosswordGame;
@@ -47,11 +45,11 @@ export class CrosswordGameService {
         }
     }
 
-    public getCheatModeState(): boolean {
+    public getShowWordsState(): boolean {
         return this.cheatModeOn;
     }
 
-    public getCheatModeStateText(): string {
+    public getShowWordsStateText(): string {
         if (this.cheatModeOn) {
             return 'Hide words';
         }
@@ -60,7 +58,7 @@ export class CrosswordGameService {
         }
     }
 
-    public setCheatModeOnOff(): void {
+    public setShowWordsOnOff(): void {
         this.cheatModeOn = !this.cheatModeOn;
     }
 

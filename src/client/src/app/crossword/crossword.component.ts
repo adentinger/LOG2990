@@ -30,16 +30,16 @@ export class CrosswordComponent implements OnInit {
         this.gameBoard.onSelect(event);
     }
 
-    public getCheatModeStateText(): string {
-        return this.crosswordGameService.getCheatModeStateText();
+    public getShowWordsState(): boolean {
+        return this.crosswordGameService.getShowWordsState();
     }
 
-    public getCheatModeState(): boolean {
-        return this.crosswordGameService.getCheatModeState();
+    public getShowWordsStateText(): string {
+        return this.crosswordGameService.getShowWordsStateText();
     }
 
-    public setCheatModeOnOff(): void {
-        this.crosswordGameService.setCheatModeOnOff();
+    public setShowWordsOnOff(): void {
+        this.crosswordGameService.setShowWordsOnOff();
     }
 
     public getTimerState(): boolean {
