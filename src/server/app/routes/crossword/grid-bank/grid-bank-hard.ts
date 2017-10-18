@@ -4,18 +4,7 @@ import { Grid } from '../../../common/grid';
 
 export class GridBankHard implements GridBank {
 
-    private bank: Promise<Grid>[] = [];
-
-    public fillup(): Promise<void> {
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    public getGrid(): Promise<Grid> {
-        return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    public getSize(): number {
-        return this.bank.length;
-    }
-
+    public getGridFromGenerator: Promise<Grid>{
+		GridBank.getGridFromGenerator('http://localhost:3000/crossword/grid-generator/hard');
+	}
 }

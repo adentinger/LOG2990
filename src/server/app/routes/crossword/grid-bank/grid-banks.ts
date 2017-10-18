@@ -19,12 +19,10 @@ export class GridBanks {
 		gridBankHard = new gridBankHard();
 	}
 
-    public fillup(): Promise<void> {
-		return async function waitFillingAllGridBanks(): Promise<void>{
-			await gridBankEasy.fillup();
-			await gridBankNormal.fillup();
-			await gridBankHard.fillup();
-		}
+    public async fillup(): Promise<void> {
+		await gridBankEasy.fillup();
+		await gridBankNormal.fillup();
+		await gridBankHard.fillup();
     }
 
     public getEasyGrid(): Promise<Grid> {
