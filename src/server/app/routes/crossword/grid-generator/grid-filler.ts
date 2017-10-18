@@ -1,6 +1,7 @@
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { Grid } from './grid';
 import { Difficulty } from './difficulty';
+import { WordCaller } from './word-caller';
 
 export const WORD_SEARCH_MAX_ATTEMPT = 200;
 export enum column { first, second, third }
@@ -25,16 +26,21 @@ export abstract class GridFiller {
     }
 
     public async fill(grid: Grid): Promise<void> {
-        await this.placeAcrossWords();
-        await this.placeVerticalWords();
+        await this.placeAcrossWords(grid);
+        await this.placeVerticalWords(grid);
     }
 
-    private async placeAcrossWords(): Promise<void> {
-        await null;
+    private async placeAcrossWords(grid: Grid): Promise<void> {
+        // We assume that the words in acrossWords and verticalWords
+        // are given top to bottom and left to right (respectively).
     }
 
-    private async placeVerticalWords(): Promise<void> {
-        await null;
+    private async placeVerticalWords(grid: Grid): Promise<void> {
+        this.verticalWords.forEach((placement) => {
+            WordCaller.getInstance().getWords(placement.minLength,
+                                              placement.maxLength,
+                                              this.difficulty.isWordCommon());
+        });
     }
 
 }

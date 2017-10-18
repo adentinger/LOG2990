@@ -44,33 +44,19 @@ export class WordConstraintChecker {
                               decrementIteratedAxis: PositionModifier): CharConstraint[] {
         const CONSTRAINTS: CharConstraint[] = [];
 
-        let characterPosition = 0;
-        let shouldTryToFindNextChar = true;
         const CURRENT_POSITION = new WordPosition(constantAxisGetter(position),
                                                   iteratedAxisGetter(position));
 
-        const INITIAL_CHAR = '8';
-        let charAtCurrentPosition = INITIAL_CHAR;
-        while (iteratedAxisGetter(CURRENT_POSITION) >= 1 &&
-               charAtCurrentPosition.length !== 0) {
-            decrementIteratedAxis(CURRENT_POSITION);
-            const WORD_THAT_CONTAINS_POSITION =
-                this.findWordThatContainsPosition(
-                    words,
-                    CURRENT_POSITION,
-                    constantAxisGetter,
-                    iteratedAxisGetter
-                );
-            if (WORD_THAT_CONTAINS_POSITION !== undefined) {
-                charAtCurrentPosition =
-                    this.charOfWordAtPosition(
-                        WORD_THAT_CONTAINS_POSITION,
-                        CURRENT_POSITION,
-                        constantAxisGetter
-                    );
-            }
-        }
+        this.changePositionToConstraintBeginning(
+            CURRENT_POSITION,
+            words,
+            iteratedAxisGetter,
+            constantAxisGetter,
+            decrementIteratedAxis
+        );
 
+        let characterPosition = 0;
+        let shouldTryToFindNextChar = true;
         while (shouldTryToFindNextChar) {
 
             const WORD_THAT_CONTAINS_POSITION =
@@ -103,6 +89,34 @@ export class WordConstraintChecker {
         }
 
         return CONSTRAINTS;
+    }
+
+    private changePositionToConstraintBeginning(position: WordPosition,
+                                                words: Word[],
+                                                iteratedAxisGetter: AxisGetter,
+                                                constantAxisGetter: AxisGetter,
+                                                decrementIteratedAxis: PositionModifier): void {
+        const DUMMY_INITIAL_CHAR = '8';
+        let charAtCurrentPosition = DUMMY_INITIAL_CHAR;
+        while (iteratedAxisGetter(position) >= 1 &&
+               charAtCurrentPosition.length !== 0) {
+            decrementIteratedAxis(position);
+            const WORD_THAT_CONTAINS_POSITION =
+                this.findWordThatContainsPosition(
+                    words,
+                    position,
+                    constantAxisGetter,
+                    iteratedAxisGetter
+                );
+            if (WORD_THAT_CONTAINS_POSITION !== undefined) {
+                charAtCurrentPosition =
+                    this.charOfWordAtPosition(
+                        WORD_THAT_CONTAINS_POSITION,
+                        position,
+                        constantAxisGetter
+                    );
+            }
+        }
     }
 
     private findWordThatContainsPosition(words: Word[],
