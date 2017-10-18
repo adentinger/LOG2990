@@ -19,7 +19,8 @@ export class WordConstraintChecker {
             position,
             (wordPosition) => wordPosition.column,
             (wordPosition) => wordPosition.row,
-            (wordPosition) => { ++wordPosition.column; });
+            (wordPosition) => { ++wordPosition.column; },
+            (wordPosition) => { --wordPosition.column; });
     }
 
     public getVerticalWordConstraint(grid: Grid, position: WordPosition): CharConstraint[] {
@@ -28,20 +29,44 @@ export class WordConstraintChecker {
             position,
             (wordPosition) => wordPosition.row,
             (wordPosition) => wordPosition.column,
-            (wordPosition) => { ++wordPosition.row; });
+            (wordPosition) => { ++wordPosition.row; },
+            (wordPosition) => { --wordPosition.row; });
     }
 
     private getWordConstraint(words: Word[],
                               position: WordPosition,
                               iteratedAxisGetter: (position: WordPosition) => number,
                               constantAxisGetter: (position: WordPosition) => number,
-                              incrementIteratedAxis: (position: WordPosition) => void): CharConstraint[] {
+                              incrementIteratedAxis: (position: WordPosition) => void,
+                              decrementIteratedAxis: (position: WordPosition) => void): CharConstraint[] {
         const CONSTRAINTS: CharConstraint[] = [];
 
         let characterPosition = 0;
         let shouldTryToFindNextChar = true;
         const CURRENT_POSITION = new WordPosition(constantAxisGetter(position),
                                                   iteratedAxisGetter(position));
+
+        const INITIAL_CHAR = '8';
+        let charAtCurrentPosition = INITIAL_CHAR;
+        while (iteratedAxisGetter(CURRENT_POSITION) >= 1 &&
+               charAtCurrentPosition.length !== 0) {
+            decrementIteratedAxis(CURRENT_POSITION);
+            const WORD_THAT_CONTAINS_POSITION =
+                this.findWordThatContainsPosition(
+                    words,
+                    CURRENT_POSITION,
+                    constantAxisGetter,
+                    iteratedAxisGetter
+                );
+            if (WORD_THAT_CONTAINS_POSITION !== undefined) {
+                charAtCurrentPosition =
+                    this.charOfWordAtPosition(
+                        WORD_THAT_CONTAINS_POSITION,
+                        CURRENT_POSITION,
+                        constantAxisGetter
+                    );
+            }
+        }
 
         while (shouldTryToFindNextChar) {
 
@@ -50,14 +75,18 @@ export class WordConstraintChecker {
                     words,
                     CURRENT_POSITION,
                     constantAxisGetter,
-                    iteratedAxisGetter);
+                    iteratedAxisGetter
+                );
 
             const CHAR_FOUND = (WORD_THAT_CONTAINS_POSITION !== undefined);
 
             if (CHAR_FOUND) {
-                const CHARACTER = WORD_THAT_CONTAINS_POSITION.value
-                                    .charAt(constantAxisGetter(CURRENT_POSITION) -
-                                            constantAxisGetter(WORD_THAT_CONTAINS_POSITION.position));
+                const CHARACTER =
+                    this.charOfWordAtPosition(
+                        WORD_THAT_CONTAINS_POSITION,
+                        CURRENT_POSITION,
+                        constantAxisGetter
+                    );
                 const CHAR_CONSTRAINT: CharConstraint = {
                     char: CHARACTER,
                     position: characterPosition
@@ -87,6 +116,14 @@ export class WordConstraintChecker {
                 constantAxisGetter(position) <= MAX_CONSTANT_AXIS;
             return WORD_CONTAINS_POSITION;
         });
+    }
+
+    private charOfWordAtPosition(word: Word,
+                                 position: WordPosition,
+                                 constantAxisGetter: (position: WordPosition) => number): string {
+        return word.value
+            .charAt(constantAxisGetter(position) -
+                    constantAxisGetter(word.position));
     }
 
 }
