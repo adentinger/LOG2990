@@ -1,4 +1,4 @@
-import { Difficulty } from './difficulty';
+import { Difficulty } from '../../../common/crossword/difficulty';
 import { WordSuggestions } from './word-suggestions';
 import { CharConstraint } from '../../../common/index';
 import { WordPosition } from './word-position';

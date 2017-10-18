@@ -3,9 +3,9 @@ import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../common/http-status';
 import { GridGenerator } from './grid-generator/grid-generator';
-import { DifficultyEasy } from './grid-generator/difficulty-easy';
-import { DifficultyNormal } from './grid-generator/difficulty-normal';
-import { DifficultyHard } from './grid-generator/difficulty-hard';
+import { DifficultyEasy } from '../../common/crossword/difficulty-easy';
+import { DifficultyNormal } from '../../common/crossword/difficulty-normal';
+import { DifficultyHard } from '../../common/crossword/difficulty-hard';
 import { NormalWordSuggestionsGetter } from './grid-generator/normal-word-suggestions-getter';
 
 @MiddleWare('/crossword/grid-generator')
