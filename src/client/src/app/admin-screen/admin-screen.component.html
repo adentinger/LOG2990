@@ -2,7 +2,6 @@
   <div class="listContainer">
     <h1>Admin page</h1>
     <app-admin-config></app-admin-config>
-    <button routerLink="map-editor">map editor</button>
     <div class="mapList">
       <div class="tableTitle">Map name</div>
       <div class="maps" *ngFor="let map of mapNames" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
