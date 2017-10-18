@@ -7,6 +7,9 @@ import { CrosswordGridService } from '../board/crossword-grid.service';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../common/index';
 import { GameDefinitionPacket } from '../../common/crossword/packets/game-definition.packet';
 import { PacketManagerClient } from '../../packet-manager-client';
+import { Direction } from '../../common/crossword/crossword-enums';
+
+import '../../common/crossword/packets/game-definition.parser';
 
 @Injectable()
 export class DefinitionsService {
@@ -14,17 +17,30 @@ export class DefinitionsService {
     private cheatModeOn = false;
     private changeTimerValueOn = false;
     private timerValueInSeconds: number;
-    private definitions: Definition[];
+
+    private horizontalDefinitions: Map<number, Definition> = new Map();
+    private verticalDefinitions: Map<number, Definition> = new Map();
+
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
     public getDefinitions(): Definition[] {
-        return this.definitions;
+        return [...this.horizontalDefinitions.values(), ...this.verticalDefinitions.values()];
     }
+
     constructor(public crosswordGameService: CrosswordGameService,
         public crosswordGridService: CrosswordGridService,
         private packetManager: PacketManagerClient) {
-        this.definitions = DEFINITIONS_MOCK;
+
+        this.horizontalDefinitions = new Map(
+            DEFINITIONS_MOCK.map(
+                (definition: Definition, id: number) =>
+                    <[number, Definition]>[id, definition]));
+        this.verticalDefinitions = new Map(
+            DEFINITIONS_MOCK.map(
+                (definition: Definition, id: number) =>
+                    <[number, Definition]>[id, definition]));
+
         registerHandlers(this, this.packetManager);
     }
 
@@ -65,10 +81,18 @@ export class DefinitionsService {
     public gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
         const definitionIndex = event.value.index;
         const definition = event.value.definition;
+        const direction = event.value.direction;
+        if (direction === Direction.horizontal) {
+            this.horizontalDefinitions.set(definitionIndex, definition);
+        } else if (direction === Direction.vertical) {
+            this.verticalDefinitions.set(definitionIndex, definition);
+        }
+        console.log('Definition Added');
 
         // TODO update game definitions with incomming definition
     }
-    ////////////// Cheat Mode //////////////
+
+    ////////////// Cheat Mode ////////////// TODO new class ??
 
     public getCheatModeState(): boolean {
         return this.cheatModeOn;
