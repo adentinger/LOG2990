@@ -23,7 +23,12 @@ export class WordConstraintChecker {
     }
 
     public getVerticalWordConstraint(grid: Grid, position: WordPosition): CharConstraint[] {
-        return null;
+        return this.getWordConstraint(
+            grid.across,
+            position,
+            (wordPosition) => wordPosition.row,
+            (wordPosition) => wordPosition.column,
+            (wordPosition) => { ++wordPosition.row; });
     }
 
     private getWordConstraint(words: Word[],

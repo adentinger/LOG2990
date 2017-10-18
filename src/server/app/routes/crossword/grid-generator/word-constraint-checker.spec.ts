@@ -6,13 +6,29 @@ import { Word } from './word';
 import { WordPosition } from './word-position';
 import { CharConstraint } from '../../../common/index';
 
-function getTestData(): {words: Word[],
-                         positions: WordPosition[],
-                         expectedConstraints: CharConstraint[][]} {
+function getTestData(isForAcross: boolean): {words: Word[],
+                                               positions: WordPosition[],
+                                               expectedConstraints: CharConstraint[][]} {
+    let wordPositions: WordPosition[];
+    if (isForAcross) {
+        wordPositions = [
+            new WordPosition(0, 0),
+            new WordPosition(0, 1),
+            new WordPosition(0, 2)
+        ];
+    }
+    else {
+        wordPositions = [
+            new WordPosition(0, 0),
+            new WordPosition(1, 0),
+            new WordPosition(2, 0)
+        ];
+    }
+
     const WORDS: Word[] = [
-        new Word('hello', new WordPosition(0, 0)),
-        new Word('baz',   new WordPosition(0, 1)),
-        new Word('qux',   new WordPosition(0, 2))
+        new Word('hello', wordPositions[0]),
+        new Word('baz',   wordPositions[1]),
+        new Word('qux',   wordPositions[2])
     ];
     const POSITIONS: WordPosition[] = [
         new WordPosition(0, 0),
@@ -51,7 +67,7 @@ describe('WordConstraintChecker', () => {
                 words: VERTICAL_WORDS,
                 positions: POSITIONS,
                 expectedConstraints: EXPECTED_CONSTRAINTS
-            } = getTestData();
+            } = getTestData(true);
             const GRID = new Grid();
             GRID.vertical = VERTICAL_WORDS;
 
@@ -69,13 +85,14 @@ describe('WordConstraintChecker', () => {
                 words: ACROSS_WORDS,
                 positions: POSITIONS,
                 expectedConstraints: EXPECTED_CONSTRAINTS
-            } = getTestData();
+            } = getTestData(false);
             const GRID = new Grid();
             GRID.across = ACROSS_WORDS;
 
             for (let i = 0; i < POSITIONS.length; ++i) {
-                expect(WordConstraintChecker.getInstance()
-                    .getAcrossWordConstraint(GRID, POSITIONS[i]))
+                const CONSTRAINTS = WordConstraintChecker.getInstance()
+                        .getVerticalWordConstraint(GRID, POSITIONS[i]);
+                expect(CONSTRAINTS)
                     .to.deep.equal(EXPECTED_CONSTRAINTS[i]);
             }
         });
