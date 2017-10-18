@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
-import { Direction, GridWord } from '../../../common/crossword/grid-word';
+import { GridWord } from '../../../common/crossword/grid-word';
+import { Direction } from '../../../common/crossword/crossword-enums';
 import { CrosswordGameService } from '../../crossword-game.service';
 
 @Component({
@@ -33,7 +34,7 @@ export class CrosswordTileComponent implements OnInit {
     constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService) { }
 
     public checkIfTileIsInWordTiles(word: GridWord): boolean {
-        if (word.direction === Direction.across) {
+        if (word.direction === Direction.horizontal) {
             return (this.tileRow === word.y && this.tileColumn >= word.x && this.tileColumn <= word.length + word.x - 1);
         }
         else if (word.direction === Direction.vertical) {

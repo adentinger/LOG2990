@@ -1,5 +1,5 @@
-import { GridWord, } from '../../common/crossword/grid-word';
-import { Direction, Owner } from '../../common/crossword/crossword-enums';
+import { GridWord } from '../../../common/crossword/grid-word';
+import { Direction, Owner } from '../../../common/crossword/crossword-enums';
 
 export const ARRAY_GRIDWORD: GridWord[] = [
     { 'y': 0, 'x': 0, 'length': 7, 'direction': Direction.horizontal, 'owner': Owner.none, 'string': '' },

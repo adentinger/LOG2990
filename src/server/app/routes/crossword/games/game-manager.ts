@@ -76,14 +76,25 @@ export class GameManager {
         this.addPlayerToGame(event.socketid, gameToJoin);
         console.log(this.getGame(gameToJoin).getGameInfo());
         // send all definitions
-        const definitions: Definition[] =
-            this.games.get(gameToJoin).horizontalDefinitions
-                .concat(this.games.get(gameToJoin).verticalDefinitions);
+        this.sendAllDefinitions(gameToJoin, playerSocketId);
 
         // send 1 definition for testing;
-        this.sendDefinition(0, Direction.horizontal, definitions[0], playerSocketId);
+        // this.sendDefinition(0, Direction.horizontal, definitions[0], playerSocketId);
+        // this.getGame(gameToJoin).horizontalDefinitions.map(this.sendDefinition())
+
 
         // send all gridWords
+    }
+    private sendAllDefinitions(gameId: string, socketId: string): void {
+        const horizontalDefinitions: Map<number, Definition> = this.games.get(gameId).horizontalDefinitions;
+        const verticalDefinitions: Map<number, Definition> = this.games.get(gameId).verticalDefinitions;
+
+        for (let i = 0; i < horizontalDefinitions.size; i++) {
+            this.sendDefinition(i, Direction.horizontal, horizontalDefinitions.get(i), socketId);
+        }
+        for (let i = 0; i < verticalDefinitions.size; i++) {
+            this.sendDefinition(i, Direction.vertical, verticalDefinitions.get(i), socketId);
+        }
     }
 
     private addPlayerToGame(playerId: string, gameId: string): void {

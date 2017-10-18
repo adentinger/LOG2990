@@ -1,13 +1,4 @@
-export enum Direction {
-    across,
-    vertical,
-}
-
-export enum Owner {
-    none,
-    player1,
-    player2,
-}
+import { Direction, Owner } from './crossword-enums';
 
 export interface GridWord {
     y: number;
