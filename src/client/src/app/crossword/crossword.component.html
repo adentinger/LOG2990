@@ -5,7 +5,13 @@
     </div>
     <div class="col-md-4">
       <app-game-details></app-game-details>
-      <app-definition-field (selectedDefinition)="onSelectedDefinitionChange($event)"></app-definition-field>
+      <div>Cheat mode:
+        <br>
+        <button (click)='setCheatModeOnOff()'>{{getCheatModeStateText()}}</button>
+        <button (click)='setTimerOnOff()'>{{getTimerStateText()}}</button>
+        <input #timerInput *ngIf='getTimerState()' type='text' (keyup.enter)='changeTimerValue(timerInput.value)' size='5px' />
+      </div>
+      <app-definition-field [cheatMode]='getCheatModeState()' (selectedDefinition)="onSelectedDefinitionChange($event)"></app-definition-field>
     </div>
   </div>
 </div>

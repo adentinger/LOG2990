@@ -3,6 +3,6 @@
     <li class="list-group-item">Game Mode: {{gameMode}}</li>
     <li class="list-group-item">Difficulty: {{difficulty}}</li>
     <li class="list-group-item">
-      Game Time: {{gameTimeMinutes | number : '2.0'}}:{{gameTimeSeconds | number : '2.0'}}
+      Game Time: {{timerValue | date:'mm:ss'}}
     </li>
   </ul>

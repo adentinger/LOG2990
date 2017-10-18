@@ -11,19 +11,10 @@ import { Direction } from '../../common/crossword/crossword-enums';
 
 import '../../common/crossword/packets/game-definition.parser';
 
-const TIME_MAX = 9999;
-
 @Injectable()
 export class DefinitionsService {
-
-    private cheatModeOn = false;
-    private changeTimerValueOn = false;
-    private timerValueInSeconds: number;
-
     public horizontalDefinitions: Map<number, Definition> = new Map();
     public verticalDefinitions: Map<number, Definition> = new Map();
-
-    public mockDefinitions: Definition[] = [];
     private words: string[];
 
     public internalSelectedDefinitionId: number = -1;
@@ -100,49 +91,5 @@ export class DefinitionsService {
         console.log('Definition Added');
 
         // TODO update game definitions with incomming definition
-    }
-
-    ////////////// Cheat Mode ////////////// TODO new class ??
-
-    public getCheatModeState(): boolean {
-        return this.cheatModeOn;
-    }
-
-    public getCheatModeStateText(): string {
-        if (this.cheatModeOn) {
-            return 'Hide words';
-        }
-        else {
-            return 'Show words';
-        }
-    }
-
-    public setCheatModeOnOff(): void {
-        this.cheatModeOn = !this.cheatModeOn;
-    }
-
-    public getTimerState(): boolean {
-        return this.changeTimerValueOn;
-    }
-
-    public getTimerStateText(): string {
-        if (this.changeTimerValueOn) {
-            return 'Disable';
-        }
-        else {
-            return 'Set time';
-        }
-    }
-
-    public setTimerOnOff(): void {
-        this.changeTimerValueOn = !this.changeTimerValueOn;
-    }
-
-    // not done
-    public changeTimerValue(seconds: string) {
-        let time = Number(seconds);
-        if (Number.isNaN(time)) {
-            time = TIME_MAX;
-        }
     }
 }
