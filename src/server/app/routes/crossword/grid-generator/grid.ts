@@ -15,4 +15,9 @@ export class Grid {
         await filler.fill(this);
     }
 
+    public doesWordAlreadyExists(word: Word) {
+        return this.across.findIndex((acrossWord) => acrossWord.equals(word)) >= 0 ||
+               this.vertical.findIndex((verticalWord) => verticalWord.equals(word)) >= 0;
+    }
+
 }
