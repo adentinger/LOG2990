@@ -1,7 +1,6 @@
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { Grid } from './grid';
-import { Difficulty } from './difficulty';
-import { LexiconCaller } from '../lexic/lexicon-caller';
+import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 
 export const WORD_SEARCH_MAX_ATTEMPT = 200;
 export enum column { first, second, third }
@@ -11,10 +10,10 @@ export abstract class GridFiller {
 
     protected acrossWords: WordPlacement[] = [];
     protected verticalWords: WordPlacement[] = [];
-    protected difficulty: Difficulty;
+    protected suggestionsGetter: AbstractWordSuggestionsGetter;
 
-    constructor(difficulty: Difficulty) {
-        this.difficulty = difficulty;
+    constructor(suggestionsGetter: AbstractWordSuggestionsGetter) {
+        this.suggestionsGetter = suggestionsGetter;
     }
 
     public get acrossPlacement(): WordPlacement[] {
@@ -36,11 +35,7 @@ export abstract class GridFiller {
     }
 
     private async placeVerticalWords(grid: Grid): Promise<void> {
-        this.verticalWords.forEach((placement) => {
-            LexiconCaller.getInstance().getWords(placement.minLength,
-                                              placement.maxLength,
-                                              this.difficulty.isWordCommon());
-        });
+        // TODO
     }
 
 }

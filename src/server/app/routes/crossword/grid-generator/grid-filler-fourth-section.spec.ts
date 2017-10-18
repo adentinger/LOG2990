@@ -2,13 +2,15 @@ import { expect } from 'chai';
 import { GridFillerFourthSection } from './grid-filler-fourth-section';
 import { Grid } from './grid';
 import { DifficultyEasy } from './difficulty-easy';
+import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
 
 describe('GridFillerFourthSection', () => {
 
     let filler: GridFillerFourthSection;
 
     beforeEach(() => {
-        filler = new GridFillerFourthSection(new DifficultyEasy());
+        filler = new GridFillerFourthSection(
+            new NormalWordSuggestionsGetter(new DifficultyEasy()));
     });
 
     it('should be created', () => {
