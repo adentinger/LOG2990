@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input, } from '@angular/core';
 import { Definition } from '../../common/crossword/definition';
 import { DefinitionsService } from './definitions.service';
 
@@ -10,6 +10,8 @@ import { DefinitionsService } from './definitions.service';
 export class DefinitionFieldComponent implements OnInit {
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
+
+    @Input() public cheatMode: boolean;
 
     @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
@@ -39,34 +41,5 @@ export class DefinitionFieldComponent implements OnInit {
 
     public onClickOutside(): void {
         this.definitionService.onClickOutside();
-    }
-
-    public getCheatModeStateText(): string {
-        return this.definitionService.getCheatModeStateText();
-    }
-
-    public getCheatModeState(): boolean {
-        return this.definitionService.getCheatModeState();
-    }
-
-    public setCheatModeOnOff(): void {
-        this.definitionService.setCheatModeOnOff();
-    }
-
-    public getTimerState(): boolean {
-        return this.definitionService.getTimerState();
-    }
-
-    public getTimerStateText(): string {
-        return this.definitionService.getTimerStateText();
-    }
-
-    public setTimerOnOff(): void {
-        return this.definitionService.setTimerOnOff();
-    }
-
-    // not done
-    public changeTimerValue(seconds: string): void {
-        this.definitionService.changeTimerValue(seconds);
     }
 }

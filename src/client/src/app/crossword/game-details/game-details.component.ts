@@ -1,14 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGame } from '../class/crossword-game';
-import { SimpleTimer } from 'ng2-simple-timer';
+import { GameDetailsService } from './game-details.service';
 
 @Component({
     selector: 'app-game-details',
     templateUrl: './game-details.component.html',
-    styleUrls: ['./game-details.component.css'],
-    providers: [CrosswordGameService,
-                SimpleTimer]
+    styleUrls: ['./game-details.component.css']
 })
 export class GameDetailsComponent implements OnInit {
     public crosswordGame: CrosswordGame;
@@ -16,29 +14,23 @@ export class GameDetailsComponent implements OnInit {
     public difficulty: string;
     public gameMode: string;
 
-    public gameTimeMinutes = 0;
-    public gameTimeSeconds = 0;
     private timerId: string;
 
-    constructor(private crosswordGameService: CrosswordGameService,
-                private simpleTimerService: SimpleTimer) { }
+    constructor(private crosswordGameService: CrosswordGameService, private gameDetailsService: GameDetailsService,
+        private ngZone: NgZone) { }
 
     public ngOnInit(): void {
         this.crosswordGame = this.crosswordGameService.getCurrentGame();
         this.player1 = this.crosswordGameService.getCurrentGame().player1;
         this.difficulty = this.crosswordGameService.getCurrentGame().difficulty;
         this.gameMode = this.crosswordGameService.getCurrentGame().gameMode;
-        this.simpleTimerService.newTimer('GameTime', 1);
 
-        this.timerId = this.simpleTimerService.subscribe('GameTime', () => this.timerCallback());
+        setInterval( () => {
+            this.ngZone.run(() => {});
+        }, 1000);
     }
 
-    private timerCallback(): void {
-        if (this.gameTimeSeconds !== 60 ) {
-            this.gameTimeSeconds++;
-        } else {
-            this.gameTimeSeconds = 0;
-            this.gameTimeMinutes++;
-        }
+    public get timerValue() {
+        return this.gameDetailsService.countdown * 1000;
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { BoardComponent } from './board/board.component';
+import { CrosswordGameService } from './crossword-game.service';
 
 @Component({
     selector: 'app-crossword',
@@ -19,7 +20,7 @@ export class CrosswordComponent implements OnInit {
     // tiles will look at this value to decide if they should be hightlighted
     public selectedTiles: number[][] = [];
 
-    constructor() { }
+    constructor(private crosswordGameService: CrosswordGameService) { }
 
     public ngOnInit(): void {
     }
@@ -27,5 +28,33 @@ export class CrosswordComponent implements OnInit {
     public onSelectedDefinitionChange(event) {
         this.selectedDefinition = event;
         this.gameBoard.onSelect(event);
+    }
+
+    public getCheatModeStateText(): string {
+        return this.crosswordGameService.getCheatModeStateText();
+    }
+
+    public getCheatModeState(): boolean {
+        return this.crosswordGameService.getCheatModeState();
+    }
+
+    public setCheatModeOnOff(): void {
+        this.crosswordGameService.setCheatModeOnOff();
+    }
+
+    public getTimerState(): boolean {
+        return this.crosswordGameService.getTimerState();
+    }
+
+    public getTimerStateText(): string {
+        return this.crosswordGameService.getTimerStateText();
+    }
+
+    public setTimerOnOff(): void {
+        return this.crosswordGameService.setTimerOnOff();
+    }
+
+    public changeTimerValue(seconds: string): void {
+        this.crosswordGameService.changeTimerValue(seconds);
     }
 }

@@ -6,6 +6,10 @@ import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../common/crossword/packets/game-join.packet';
 import { registerHandlers, PacketHandler, PacketEvent } from '../common/index';
 import { GameDefinitionPacket } from '../common/crossword/packets/game-definition.packet';
+import { CrosswordTimerPacket } from '../common/crossword/packets/crossword-timer.packet';
+import '../common/crossword/packets/crossword-timer.parser';
+
+const TIME_MAX = 9999;
 
 /**
  * @class CrosswordGameService
@@ -15,6 +19,10 @@ import { GameDefinitionPacket } from '../common/crossword/packets/game-definitio
  */
 @Injectable()
 export class CrosswordGameService {
+
+    private cheatModeOn = false;
+    private changeTimerValueOn = false;
+    private timerValueInSeconds: number;
 
     private gameId: string = null;
 
@@ -39,4 +47,46 @@ export class CrosswordGameService {
         }
     }
 
+    public getCheatModeState(): boolean {
+        return this.cheatModeOn;
+    }
+
+    public getCheatModeStateText(): string {
+        if (this.cheatModeOn) {
+            return 'Hide words';
+        }
+        else {
+            return 'Show words';
+        }
+    }
+
+    public setCheatModeOnOff(): void {
+        this.cheatModeOn = !this.cheatModeOn;
+    }
+
+    public getTimerState(): boolean {
+        return this.changeTimerValueOn;
+    }
+
+    public getTimerStateText(): string {
+        if (this.changeTimerValueOn) {
+            return 'Disable';
+        }
+        else {
+            return 'Set time';
+        }
+    }
+
+    public setTimerOnOff(): void {
+        this.changeTimerValueOn = !this.changeTimerValueOn;
+    }
+
+    public changeTimerValue(seconds: string) {
+        let time = Number(seconds);
+        if (Number.isNaN(time)) {
+            time = TIME_MAX;
+        }
+
+        this.packetManager.sendPacket(CrosswordTimerPacket, new CrosswordTimerPacket(time));
+    }
 }

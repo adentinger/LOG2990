@@ -16,6 +16,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { CrosswordGameService } from './crossword-game.service';
 import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
 import { CrosswordGridService } from './board/crossword-grid.service';
+import { GameDetailsService } from './game-details/game-details.service';
 
 @NgModule({
     imports: [
@@ -39,7 +40,8 @@ import { CrosswordGridService } from './board/crossword-grid.service';
         SimpleTimer,
         DefinitionsService,
         CrosswordGameService,
-        CrosswordGridService
+        CrosswordGridService,
+        GameDetailsService
     ],
     exports: [
         CrosswordComponent
