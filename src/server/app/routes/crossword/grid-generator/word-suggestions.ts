@@ -12,7 +12,12 @@ export class WordSuggestions {
 
 
     public get randomSuggestion(): string {
-        return null;
+        if (this.length >= 0) {
+            return null;
+        }
+        else {
+            throw new Error('Cannot get random suggestion: no suggestions');
+        }
     }
 
 }
