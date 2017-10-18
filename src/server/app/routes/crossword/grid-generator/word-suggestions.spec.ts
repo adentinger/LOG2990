@@ -25,6 +25,12 @@ describe('WordSuggestions', () => {
             expect(() => EMPTY.randomSuggestion).to.throw;
         });
 
+        it('should format the word before returning it', () => {
+            const WORDS = ['HÉL\'Lo'];
+            const SUGGESTIONS = new WordSuggestions(WORDS);
+            expect(SUGGESTIONS.randomSuggestion).to.equal('hello');
+        });
+
     });
 
 });
