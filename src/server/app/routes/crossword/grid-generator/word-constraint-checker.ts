@@ -3,6 +3,9 @@ import { Grid } from './grid';
 import { WordPosition } from './word-position';
 import { Word } from './word';
 
+type AxisGetter = (position: WordPosition) => number;
+type PositionModifier = (position: WordPosition) => void;
+
 export class WordConstraintChecker {
 
     private static INSTANCE = new WordConstraintChecker();
@@ -35,10 +38,10 @@ export class WordConstraintChecker {
 
     private getWordConstraint(words: Word[],
                               position: WordPosition,
-                              iteratedAxisGetter: (position: WordPosition) => number,
-                              constantAxisGetter: (position: WordPosition) => number,
-                              incrementIteratedAxis: (position: WordPosition) => void,
-                              decrementIteratedAxis: (position: WordPosition) => void): CharConstraint[] {
+                              iteratedAxisGetter: AxisGetter,
+                              constantAxisGetter: AxisGetter,
+                              incrementIteratedAxis: PositionModifier,
+                              decrementIteratedAxis: PositionModifier): CharConstraint[] {
         const CONSTRAINTS: CharConstraint[] = [];
 
         let characterPosition = 0;
@@ -104,8 +107,8 @@ export class WordConstraintChecker {
 
     private findWordThatContainsPosition(words: Word[],
                                          position: WordPosition,
-                                         constantAxisGetter: (position: WordPosition) => number,
-                                         iteratedAxisGetter: (position: WordPosition) => number): Word {
+                                         constantAxisGetter: AxisGetter,
+                                         iteratedAxisGetter: AxisGetter): Word {
         return words.find((word) => {
             const MIN_CONSTANT_AXIS = constantAxisGetter(word.position);
             const MAX_CONSTANT_AXIS = MIN_CONSTANT_AXIS + word.value.length - 1;
@@ -120,7 +123,7 @@ export class WordConstraintChecker {
 
     private charOfWordAtPosition(word: Word,
                                  position: WordPosition,
-                                 constantAxisGetter: (position: WordPosition) => number): string {
+                                 constantAxisGetter: AxisGetter): string {
         return word.value
             .charAt(constantAxisGetter(position) -
                     constantAxisGetter(word.position));
