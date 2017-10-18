@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 import { CrosswordComponent } from './crossword.component';
 import { BoardComponent } from './board/board.component';
@@ -21,7 +22,8 @@ import { CrosswordGridService } from './board/crossword-grid.service';
         CommonModule,
         FormsModule,
         HttpClientModule,
-        ClickOutsideModule
+        ClickOutsideModule,
+        RouterModule
     ],
     declarations: [
         CrosswordComponent,

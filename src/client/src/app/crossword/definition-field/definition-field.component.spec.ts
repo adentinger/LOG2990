@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DefinitionFieldComponent } from './definition-field.component';
 import { CrosswordGameService } from '../crossword-game.service';
+import { PacketManagerClient } from '../../packet-manager-client';
+import { packetManagerClient } from '../../packet-manager.service';
 
 describe('DefinitionFieldComponent', () => {
     let component: DefinitionFieldComponent;
@@ -10,7 +12,7 @@ describe('DefinitionFieldComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DefinitionFieldComponent],
-            providers:    [CrosswordGameService]
+            providers:    [CrosswordGameService, {provide: PacketManagerClient, useValue: packetManagerClient}]
         })
             .compileComponents();
     }));

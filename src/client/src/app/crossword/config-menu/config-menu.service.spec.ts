@@ -7,6 +7,9 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
 import { ConfigMenuState } from './config-menu-state';
 import { ConfigMenuOption } from './config-menu-option';
+import { PacketManagerClient } from '../../packet-manager-client';
+import { packetManagerClient } from '../../packet-manager.service';
+import { CrosswordGameService } from '../crossword-game.service';
 
 const mockStates1: ConfigMenuState[] = [
     {
@@ -39,7 +42,9 @@ describe('ConfigMenuService', () => {
                 ConfigMenuService,
                 HttpClient,
                 { provide: Location, useClass: SpyLocation },
-                { provide: MENU_CONFIG_URL, useValue: MOCK_MENU_CONFIG_URL }
+                { provide: MENU_CONFIG_URL, useValue: MOCK_MENU_CONFIG_URL },
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                CrosswordGameService
             ]
         });
         httpController = TestBed.get(HttpTestingController);

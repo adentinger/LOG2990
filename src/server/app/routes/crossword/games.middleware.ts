@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
-import { HttpStatus } from '../../http-response-status';
+import { HttpStatus } from '../../common/http-status';
 import { GameManager } from './games/game-manager';
 
 type CrosswordGameMode = 'classic' | 'dynamic';

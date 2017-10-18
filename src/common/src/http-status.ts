@@ -84,7 +84,6 @@ export function getStatusOrDefault(status: any): HttpStatus {
         return status;
     }
     else {
-        console.warn(new Error('Status is not a HttpStatus instance.'));
         return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 }

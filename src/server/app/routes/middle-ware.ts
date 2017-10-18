@@ -1,48 +1,64 @@
-import 'reflect-metadata';
 import * as express from 'express';
+import { Logger, Class, Constructor } from '../common';
 
 type RequestHandler = (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
-export type RouteType = 'get' | 'post' | 'put' | 'delete' | 'head' | 'all';
+export type RouteType = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'all' | 'use';
 
-interface MiddleWareMetadata {
-    constructor: Function;
-    baseRoute: string;
-}
-
-const REGISTER_FUNCTION = Symbol('registerFunction');
-const MIDDLEWARE_ROUTES = Symbol('routes');
-const MIDDLEWARES: MiddleWareMetadata[] = [];
 
 interface RouteEntry {
-    type: RouteType | 'use';
+    type: RouteType | RouteType[];
     value: string;
     handler: RequestHandler;
+    handlerName: string;
 }
 
+const logger = Logger.getLogger('Router');
+
+const DEFAULT_NAME = '<Annonymous>';
+const REGISTER_FUNCTION = Symbol('registerFunction');
+const MIDDLEWARES: Map<Constructor, string[]> = new Map();
+const ROUTE_ENTRIES: Map<Class, RouteEntry[]> = new Map();
+
 // Decorator
-export function MiddleWare<T extends Function>(constructor: T): void;
+export function MiddleWare<T extends Function>(constructor: T, ...handlers: express.RequestHandler[]): void;
 // Decorator Factory
-export function MiddleWare<T extends Function>(baseRoute: string): ClassDecorator;
-export function MiddleWare<T extends Function>(baseRoute: string | T): ClassDecorator | void {
-    const MIDDLEWARE_DECORATOR: ClassDecorator = function (constructor: Function): void {
+export function MiddleWare<T extends Function>(baseRoute: string, ...handlers: express.RequestHandler[]): ClassDecorator;
+export function MiddleWare<T extends Function>(baseRoute: string | T, ...handlers: express.RequestHandler[]): ClassDecorator | void {
+    const MIDDLEWARE_DECORATOR: ClassDecorator = (constructor: Function): void => {
         constructor.prototype[REGISTER_FUNCTION] = (router: express.Router): void => {
-            const routes: RouteEntry[] = Reflect.getOwnMetadata(MIDDLEWARE_ROUTES, constructor) || [];
+            if (handlers.length > 0) {
+                router.use(...handlers);
+            }
+            const routes: RouteEntry[] = ROUTE_ENTRIES.get(constructor) || [];
+            baseRoute = (typeof baseRoute === 'string' ? baseRoute : '');
             for (const route of routes) {
                 const ROUTING_ARGUMENTS: any[] = [];
                 if (route.value) {
-                    ROUTING_ARGUMENTS.push(route.value);
+                    ROUTING_ARGUMENTS.push((route.value || ''));
                 }
                 ROUTING_ARGUMENTS.push(route.handler);
-                router[route.type].apply(router, ROUTING_ARGUMENTS);
-                console.log('Routed ' + (route.value ? route.type.toUpperCase() : '') +
-                    ' requests at "' + (route.value || '/') +
-                    '" to ' + constructor.name);
+                if (Array.isArray(route.type)) {
+                    for (const type of route.type) {
+                        router[type].apply(router, ROUTING_ARGUMENTS);
+                    }
+                }
+                else {
+                    router[route.type].apply(router, ROUTING_ARGUMENTS);
+                }
+                const DISPLAYABLE_TYPE = Array.isArray(route.type) ?
+                    route.type.map((type) => type.toUpperCase()) :
+                    route.type.toUpperCase();
+                logger.info('%sRouted %s requests at "%s" to %s',
+                    baseRoute ? '\t' : '',
+                    route.value ? DISPLAYABLE_TYPE : 'all',
+                    route.value || '/',
+                    (constructor.name || DEFAULT_NAME) + '.' + (route.handlerName || DEFAULT_NAME));
             }
         };
-        MIDDLEWARES.push({
-            constructor,
-            baseRoute: typeof baseRoute === 'string' && baseRoute || null
-        });
+        if (!MIDDLEWARES.has(constructor as Constructor)) {
+            MIDDLEWARES.set(constructor as Constructor, []);
+        }
+        MIDDLEWARES.get(constructor as Constructor).push(typeof baseRoute === 'string' && baseRoute || null);
     };
     if (typeof baseRoute === 'string') {
         return MIDDLEWARE_DECORATOR;
@@ -52,39 +68,46 @@ export function MiddleWare<T extends Function>(baseRoute: string | T): ClassDeco
 }
 
 // Decorator factory
-export function Route(type: RouteType, route: string): MethodDecorator;
+export function Route(type: RouteType | RouteType[], route: string): MethodDecorator;
 export function Route(type: 'use'): MethodDecorator;
-export function Route(type: RouteType | 'use', route?: string): MethodDecorator {
+export function Route(type: RouteType | RouteType[], route?: string): MethodDecorator {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
         const ORIGINAL_FUNCTION = descriptor.value;
-        descriptor.value = function (...argv: any[]): any {
-            console.log('[INFO] Handling ' + (route !== undefined ? type.toUpperCase() : '') +
-                ' request to "' + route + '"');
-            return ORIGINAL_FUNCTION.apply(this, argv);
+        descriptor.value = function (req: express.Request, res: express.Response, next?: express.NextFunction): any {
+            logger.info('Handling %s request to "%s" (%s)',
+                req.method,
+                req.url,
+                ORIGINAL_FUNCTION.name || DEFAULT_NAME);
+            return ORIGINAL_FUNCTION.call(this, req, res, next);
         };
 
-        const routes: RouteEntry[] = Reflect.getOwnMetadata(MIDDLEWARE_ROUTES, target.constructor) || [];
-        routes.push({ type: type, value: route, handler: descriptor.value } as RouteEntry);
-        Reflect.defineMetadata(MIDDLEWARE_ROUTES, routes, target.constructor);
+        if (!ROUTE_ENTRIES.has(target.constructor)) {
+            ROUTE_ENTRIES.set(target.constructor, []);
+        }
+        const ENTRY: RouteEntry = {
+            type: type,
+            value: route,
+            handler: descriptor.value,
+            handlerName: ORIGINAL_FUNCTION.name
+        };
+        ROUTE_ENTRIES.get(target.constructor).push(ENTRY);
     };
 }
 
 export function registerMiddleWares(router: express.Router) {
-    const EMPTY_ARGUMENT_LIST = [] as ArrayLike<any>;
-    const ORIGINAL_LOG = console.log;
     let middlewareRouter: express.Router;
-    for (const middleWare of MIDDLEWARES) {
-        middlewareRouter = router;
+    for (const [constructor, baseRoutes] of MIDDLEWARES) {
+        for (const baseRoute of baseRoutes) {
+            middlewareRouter = router;
 
-        if (middleWare.baseRoute) {
-            middlewareRouter = express.Router();
-            router.use(middleWare.baseRoute, middlewareRouter);
-            console.log('Registering sub-routes of "' + middleWare.baseRoute + '"');
-            console.log = console.log.bind(console, '\t');
-        }
-        Reflect.construct(middleWare.constructor, EMPTY_ARGUMENT_LIST)[REGISTER_FUNCTION](middlewareRouter);
-        if (middleWare.baseRoute) {
-            console.log = ORIGINAL_LOG;
+            if (baseRoute) {
+                middlewareRouter = express.Router();
+                router.use(baseRoute, middlewareRouter);
+                logger.info('Registering sub-routes of "%s" (%s)',
+                    baseRoute,
+                    constructor.name || DEFAULT_NAME);
+            }
+            (new constructor)[REGISTER_FUNCTION](middlewareRouter);
         }
     }
 }

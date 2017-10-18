@@ -1,4 +1,4 @@
-import { HttpStatus } from '../../http-response-status';
+import { HttpStatus } from '../../common/http-status';
 import { Grid } from '../../common/grid';
 
 export class GridBankMiddleware {

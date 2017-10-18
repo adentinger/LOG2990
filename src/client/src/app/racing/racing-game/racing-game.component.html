@@ -1,0 +1,6 @@
+<div #racingGame>
+  <canvas id="viewSpace" #racingGameCanvas
+    (window:resize)="onResize()"
+    (mousemove)="onMouseMove($event)"
+    (click)="onClick($event)"></canvas>
+</div>

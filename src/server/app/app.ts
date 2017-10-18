@@ -14,19 +14,19 @@ import * as session from 'express-session';
 import * as cors from 'cors';
 import * as PacketAPI from './common/communication/packet-api';
 import { PacketManagerServer } from './packet-manager';
-import * as ServerIO from 'socket.io';
 
 import { WordConstraint } from './common/lexic/word-constraint';
-import { Server } from 'http';
 
 import { registerMiddleWares } from './routes/middle-ware';
 import './routes';
 import './common/lexic/word-packet';
+import { Logger } from './common';
 
 @PacketAPI.PacketHandlerClass()
 export class Application {
 
     public static readonly SECRET = '<Put random string here>';
+    public static readonly logger: Logger = Logger.getLogger('App');
 
     public app: express.Application;
     public packetManager: PacketManagerServer;
@@ -76,14 +76,14 @@ export class Application {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(cookieParser(Application.SECRET));
-        this.app.use(session({ secret: Application.SECRET }));
+        this.app.use(session({ secret: Application.SECRET, resave: false, saveUninitialized: false }));
         this.app.use(express.static(path.join(__dirname, '../client')));
-        this.app.use(cors());
+        this.app.use(cors({ credentials: true, preflightContinue: true }));
     }
 
     @PacketAPI.PacketHandler(WordConstraint)
     public wordConstraintHandler(event: PacketAPI.PacketEvent<WordConstraint>): void {
-        console.log('[TEST Handler]', event.value);
+        Application.logger.debug('TEST Handler', event.value);
         this.packetManager.sendPacket(WordConstraint, event.value, event.socketid);
     }
 

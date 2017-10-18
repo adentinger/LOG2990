@@ -1,30 +1,41 @@
 import * as express from 'express';
+import * as cors from 'cors';
+
 import { MiddleWare, Route } from '../middle-ware';
-import { HttpStatus } from '../../http-response-status';
 import { AdminDbService } from './admin-db.service';
+import { Logger } from '../../common/logger';
+import { HttpStatus, warn } from '../../common';
 
-@MiddleWare('/admin')
+const logger = Logger.getLogger('Admin');
+
+@MiddleWare('/admin', cors({
+    credentials: true,
+    origin: (origin, callback) => callback(null, true),
+    optionsSuccessStatus: HttpStatus.NO_CONTENT,
+    methods: ['POST', 'GET', 'PATCH']
+}))
 export class AdminMiddleWare {
-    @Route('use')
-    public originMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const hostHeaderIndex = req.rawHeaders.indexOf('Origin') + 1;
-        const host = hostHeaderIndex ? req.rawHeaders[hostHeaderIndex] : undefined;
-
-        res.header('Access-Control-Allow-Origin', host);
-        res.header('Access-Control-Allow-Credentials', 'true');
-        next();
+    @Route('get', '/authentication')
+    public checkLogin(req: express.Request, res: express.Response) {
+        if (req.session.isConnected) {
+            res.sendStatus(HttpStatus.OK);
+        }
+        else {
+            res.sendStatus(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     /**
      * Login route
      */
-    @Route('post', '/authentication/:password?')
+    @Route('post', '/authentication')
     public login(req: express.Request, res: express.Response) {
-        const PASSWORD: string = req.params.password || '';
-        AdminDbService.get().checkPassword(PASSWORD).then((ok) => {
+        const PASSWORD: string = ('password' in req.body && req.body.password) || '';
+        logger.debug('Password "%s"', PASSWORD, req.body);
+        AdminDbService.getInstance().checkPassword(PASSWORD).then((ok) => {
             if (ok) {
                 req.session.isConnected = true;
-                res.sendStatus(HttpStatus.ACCEPTED);
+                res.sendStatus(HttpStatus.OK);
             }
             else {
                 req.session.isConnected = false;
@@ -36,10 +47,23 @@ export class AdminMiddleWare {
         });
     }
 
-    @Route('get', '/authentication')
-    public checkLogin(req: express.Request, res: express.Response) {
+    @Route('patch', '/authentication/password')
+    public changePassword(req: express.Request, res: express.Response) {
         if (req.session.isConnected) {
-            res.sendStatus(HttpStatus.OK);
+            if ('password' in req.body && 'confirmation' in req.body &&
+                req.body.password === req.body.confirmation) {
+                AdminDbService.getInstance().changePassword(req.body.password)
+                .then((updated: boolean) => {
+                    if (updated) {
+                        res.sendStatus(HttpStatus.ACCEPTED);
+                    }
+                    else {
+                        res.sendStatus(HttpStatus.NOT_MODIFIED);
+                    }
+                }).catch(warn(logger))
+                .catch((status: HttpStatus) => res.sendStatus(status))
+                .catch(() => res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+            }
         }
         else {
             res.sendStatus(HttpStatus.UNAUTHORIZED);
