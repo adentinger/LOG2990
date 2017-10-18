@@ -21,6 +21,7 @@ const TIME_MAX = 3600000; // 1 hour
 export class CrosswordGameService {
 
     private cheatModeOn = false;
+    private showWordsOn = false;
     private changeTimerValueOn = false;
     private timerValueInSeconds: number;
 
@@ -37,6 +38,7 @@ export class CrosswordGameService {
     public getCurrentGame(): CrosswordGame {
         return this.crosswordGame;
     }
+
     public setGameId(id: string): void {
         if (!this.gameId) {
             this.gameId = id;
@@ -45,12 +47,33 @@ export class CrosswordGameService {
         }
     }
 
-    public getShowWordsState(): boolean {
+    public setCheatModeOnOff(): void {
+        this.cheatModeOn = !this.cheatModeOn;
+    }
+
+    public getCheatModeState(): boolean {
         return this.cheatModeOn;
     }
 
-    public getShowWordsStateText(): string {
+    public getCheatModeStateText(): string {
         if (this.cheatModeOn) {
+            return 'Disable';
+        }
+        else {
+            return 'Enable';
+        }
+    }
+
+    public setShowWordsOnOff(): void {
+        this.showWordsOn = !this.showWordsOn;
+    }
+
+    public getShowWordsState(): boolean {
+        return this.showWordsOn;
+    }
+
+    public getShowWordsStateText(): string {
+        if (this.showWordsOn) {
             return 'Hide words';
         }
         else {
@@ -58,8 +81,8 @@ export class CrosswordGameService {
         }
     }
 
-    public setShowWordsOnOff(): void {
-        this.cheatModeOn = !this.cheatModeOn;
+    public setTimerOnOff(): void {
+        this.changeTimerValueOn = !this.changeTimerValueOn;
     }
 
     public getTimerState(): boolean {
@@ -73,10 +96,6 @@ export class CrosswordGameService {
         else {
             return 'Set time';
         }
-    }
-
-    public setTimerOnOff(): void {
-        this.changeTimerValueOn = !this.changeTimerValueOn;
     }
 
     public changeTimerValue(seconds: string) {

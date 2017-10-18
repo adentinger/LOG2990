@@ -7,9 +7,10 @@
       <app-game-details></app-game-details>
       <div>Cheat mode:
         <br>
-        <button (click)='setShowWordsOnOff()'>{{getShowWordsStateText()}}</button>
-        <button (click)='setTimerOnOff()'>{{getTimerStateText()}}</button>
-        <input #timerInput *ngIf='getTimerState()' type='text' (keyup.enter)='changeTimerValue(timerInput.value)' size='5px'/>
+        <button (click)='setCheatModeOnOff()'>{{getCheatModeStateText()}}</button>
+        <button *ngIf='getCheatModeState()' (click)='setShowWordsOnOff()'>{{getShowWordsStateText()}}</button>
+        <button *ngIf='getCheatModeState()' (click)='setTimerOnOff()'>{{getTimerStateText()}}</button>
+        <input #timerInput *ngIf='getTimerState() && getCheatModeState()' type='text' (keyup.enter)='changeTimerValue(timerInput.value)' size='5px'/>
       </div>
       <app-definition-field [cheatMode]='getShowWordsState()' (selectedDefinition)="onSelectedDefinitionChange($event)"></app-definition-field>
     </div>
