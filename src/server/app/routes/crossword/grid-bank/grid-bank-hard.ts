@@ -14,7 +14,7 @@ export class GridBankHard implements GridBank {
         return Promise.reject(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public get size(): number {
+    public getSize(): number {
         return this.bank.length;
     }
 
