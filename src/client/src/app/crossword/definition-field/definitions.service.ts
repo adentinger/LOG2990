@@ -11,6 +11,8 @@ import { Direction } from '../../common/crossword/crossword-enums';
 
 import '../../common/crossword/packets/game-definition.parser';
 
+const TIME_MAX = 9999;
+
 @Injectable()
 export class DefinitionsService {
 
@@ -20,6 +22,7 @@ export class DefinitionsService {
 
     private horizontalDefinitions: Map<number, Definition> = new Map();
     private verticalDefinitions: Map<number, Definition> = new Map();
+    private words: string[];
 
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
@@ -42,6 +45,11 @@ export class DefinitionsService {
                     <[number, Definition]>[id, definition]));
 
         registerHandlers(this, this.packetManager);
+        this.words = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
+    }
+
+    public getWords(): string[] {
+        return this.words;
     }
 
     public get selectedDefinitionId() {
@@ -100,10 +108,10 @@ export class DefinitionsService {
 
     public getCheatModeStateText(): string {
         if (this.cheatModeOn) {
-            return 'On';
+            return 'Hide words';
         }
         else {
-            return 'Off';
+            return 'Show words';
         }
     }
 
@@ -117,10 +125,10 @@ export class DefinitionsService {
 
     public getTimerStateText(): string {
         if (this.changeTimerValueOn) {
-            return 'On';
+            return 'Disable';
         }
         else {
-            return 'Off';
+            return 'Set time';
         }
     }
 
@@ -129,7 +137,10 @@ export class DefinitionsService {
     }
 
     // not done
-    public changeTimerValue(seconds: number): void {
-        this.timerValueInSeconds = seconds;
+    public changeTimerValue(seconds: string) {
+        let time = Number(seconds);
+        if (Number.isNaN(time)) {
+            time = TIME_MAX;
+        }
     }
 }

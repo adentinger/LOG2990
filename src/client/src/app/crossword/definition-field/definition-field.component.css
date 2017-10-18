@@ -5,6 +5,13 @@
     overflow-y: auto;
 }
 
+#word-box {
+    padding: 18px;
+    background: lightblue;
+    height: 60vh;
+    overflow-y: auto;
+}
+
 .selected {
     background: yellow;
 }

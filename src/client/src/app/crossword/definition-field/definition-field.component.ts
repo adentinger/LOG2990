@@ -14,6 +14,7 @@ export class DefinitionFieldComponent implements OnInit {
     @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
     public definitions: Definition[] = [];
+    public words: string[] = [];
 
     constructor(private definitionService: DefinitionsService) {
         this.selectedDefinition = definitionService.internalSelectedDefinition;
@@ -21,6 +22,7 @@ export class DefinitionFieldComponent implements OnInit {
 
     public ngOnInit(): void {
         this.definitions = this.definitionService.getDefinitions();
+        this.words = this.definitionService.getWords();
     }
 
     public get selectedDefinitionId() {
@@ -64,7 +66,7 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     // not done
-    public changeTimerValue(seconds: number): void {
+    public changeTimerValue(seconds: string): void {
         this.definitionService.changeTimerValue(seconds);
     }
 }
