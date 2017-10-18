@@ -4,7 +4,7 @@ import { Grid } from '../../../common/grid';
 
 export class GridBankEasy implements GridBank {
 
-    public getGridFromGenerator: Promise<Grid>{
+    public getGridFromGenerator(): Promise<Grid>{
 		GridBank.getGridFromGenerator('http://localhost:3000/crossword/grid-generator/easy');
 	}
 
