@@ -25,6 +25,7 @@ export class GridGenerator {
         await GRID.fillUsing(FILLER_SECOND_SECTION);
         await GRID.fillUsing(FILLER_THIRD_SECTION);
         await GRID.fillUsing(FILLER_FOURTH_SECTION);
+        console.log(GRID.toString());
         return GRID;
     }
 
