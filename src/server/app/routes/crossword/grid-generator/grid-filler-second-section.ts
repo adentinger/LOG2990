@@ -1,5 +1,5 @@
 import { GridFiller } from './grid-filler';
-import { Difficulty } from './grid';
+import { Difficulty } from './difficulty';
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { WordPosition } from './word-position';
 

@@ -1,4 +1,5 @@
-import { Grid, Difficulty } from './grid';
+import { Grid } from './grid';
+import { Difficulty } from './difficulty';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';

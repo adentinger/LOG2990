@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { GridFillerSecondSection } from './grid-filler-second-section';
-import { Grid, Difficulty } from './grid';
+import { Grid } from './grid';
+import { DifficultyEasy } from './difficulty-easy';
 
 describe('GridFillerSecondSection', () => {
 
     let filler: GridFillerSecondSection;
 
     beforeEach(() => {
-        filler = new GridFillerSecondSection(Difficulty.easy);
+        filler = new GridFillerSecondSection(new DifficultyEasy());
     });
 
     it('should be created', () => {
