@@ -37,6 +37,16 @@ function testGridFiller<T extends GridFiller>(testName: string,
                 });
                 expect(MATCH_INDEX).to.be.gte(0, 'Placement requirement not met');
             });
+            filler.verticalPlacement.forEach((placement) => {
+                const MATCH_INDEX = GRID.vertical.findIndex((verticalWord) => {
+                    const WORD_LENGTH_MATCHES =
+                        verticalWord.value.length >= placement.minLength &&
+                        verticalWord.value.length <= placement.maxLength;
+                    const PLACEMENT_MATCHES = placement.position.equals(verticalWord.position);
+                    return WORD_LENGTH_MATCHES && PLACEMENT_MATCHES;
+                });
+                expect(MATCH_INDEX).to.be.gte(0, 'Placement requirement not met');
+            });
         });
 
     });
