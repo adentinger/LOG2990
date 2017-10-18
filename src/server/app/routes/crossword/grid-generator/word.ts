@@ -3,7 +3,8 @@ import { WordPosition } from './word-position';
 export class Word {
     public value: string;
     public position: WordPosition;
-    constructor(value: string) {
+    constructor(value: string, position: WordPosition) {
         this.value = value;
+        this.position = position;
     }
 }
