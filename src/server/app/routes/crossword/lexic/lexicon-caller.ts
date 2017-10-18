@@ -1,13 +1,15 @@
 import * as http from 'http';
 
-export class WordCaller {
+// This class gets words from the Lexical microservice.
 
-    private static readonly INSTANCE = new WordCaller();
+export class LexiconCaller {
+
+    private static readonly INSTANCE = new LexiconCaller();
 
     private constructor() {}
 
-    public static getInstance(): WordCaller {
-        return WordCaller.INSTANCE;
+    public static getInstance(): LexiconCaller {
+        return LexiconCaller.INSTANCE;
     }
 
     public getWords(minLength: number,
