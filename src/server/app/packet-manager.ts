@@ -52,8 +52,16 @@ export class PacketManagerServer extends PacketManagerBase<SocketIO.Socket> {
         if (this.parsers.has(type) && this.knownSockets.has(socketId)) {
             const parser = this.parsers.get(type);
             this.logger.debug(`Sending: {socket "${socketId}"} "${type.name}" ${data}`);
+            let serializedData;
+            try {
+                serializedData = parser.serialize(data);
+            } catch (error) {
+                this.logger.warn(`An error occured while serializing ${type.name}:`,
+                    error instanceof Error ? error.message : error);
+                return false;
+            }
             this.knownSockets.get(socketId).send('packet:' + type.name,
-                fromArrayBuffer(parser.serialize(data)));
+                fromArrayBuffer(serializedData));
             return true;
         } else if (!this.parsers.has(type)) {
             this.logger.warn(`No parser for packet with "${type.name}" type. Packet dropped`);
