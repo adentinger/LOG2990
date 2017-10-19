@@ -54,25 +54,17 @@ export abstract class GridFiller {
                     WORD_PLACEMENT.position
                 );
 
-            if (SUGGESTIONS.length > 0) {
-                let done = false;
-                let numTriesLeft =
-                    (SUGGESTIONS.length !== 1) ?
-                    GridFiller.NUM_TRIES :
-                    SUGGESTIONS.length;
-                while (numTriesLeft > 0 && !done) {
-                    done = await this.trySuggestion(
-                        grid,
-                        SUGGESTIONS.randomSuggestion,
-                        current
-                    );
-                    --numTriesLeft;
-                }
-                return done;
+            let done = false;
+            let numTriesLeft = GridFiller.NUM_TRIES;
+            while (numTriesLeft > 0 && SUGGESTIONS.length > 0 && !done) {
+                done = await this.trySuggestion(
+                    grid,
+                    SUGGESTIONS.consumeRandomSuggestion(),
+                    current
+                );
+                --numTriesLeft;
             }
-            else {
-                return false;
-            }
+            return done;
         }
         else {
             return true;
@@ -94,8 +86,9 @@ export abstract class GridFiller {
                 CONSTRAINT,
                 PLACEMENT.position
             );
+            // We know that there is at least one suggestion
             const WORD = new Word(
-                SUGGESTIONS.randomSuggestion,
+                SUGGESTIONS.consumeRandomSuggestion(),
                 PLACEMENT.position
             );
             grid.vertical.push(WORD);

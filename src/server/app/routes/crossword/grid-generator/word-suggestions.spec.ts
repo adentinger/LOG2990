@@ -12,23 +12,23 @@ describe('WordSuggestions', () => {
         expect(SUGGESTIONS.length).to.equal(WORDS.length);
     });
 
-    describe('randomSuggestion', () => {
+    describe('consumeRandomSuggestion', () => {
 
-        it('should get a random suggestion', () => {
+        it('should get a random suggestion and pop it', () => {
             const WORDS = ['hello', 'world'];
             const SUGGESTIONS = new WordSuggestions(WORDS);
-            expect(WORDS).to.contain(SUGGESTIONS.randomSuggestion);
+            expect(WORDS).to.not.contain(SUGGESTIONS.consumeRandomSuggestion());
         });
 
         it('should throw if there are no suggestions', () => {
             const EMPTY = new WordSuggestions([]);
-            expect(() => EMPTY.randomSuggestion).to.throw;
+            expect(() => EMPTY.consumeRandomSuggestion()).to.throw;
         });
 
         it('should format the word before returning it', () => {
             const WORDS = ['HÉL\'Lo'];
             const SUGGESTIONS = new WordSuggestions(WORDS);
-            expect(SUGGESTIONS.randomSuggestion).to.equal('hello');
+            expect(SUGGESTIONS.consumeRandomSuggestion()).to.equal('hello');
         });
 
     });

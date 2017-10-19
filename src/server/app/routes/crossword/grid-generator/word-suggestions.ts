@@ -11,7 +11,7 @@ export class WordSuggestions {
     }
 
 
-    public get randomSuggestion(): string {
+    public consumeRandomSuggestion(): string {
         if (this.length >= 0) {
             const MIN = 0;
             const MAX = this.suggestions.length;
@@ -21,6 +21,7 @@ export class WordSuggestions {
             }
             let word = this.suggestions[randomIndex];
             word = this.formatWord(word);
+            this.suggestions.splice(randomIndex, 1);
             return word;
         }
         else {
