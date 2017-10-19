@@ -15,13 +15,19 @@ export class NormalWordSuggestionsGetter extends AbstractWordSuggestionsGetter {
                                 maxLength: number,
                                 charConstraints: CharConstraint[],
                                 positionHint: WordPosition): Promise<WordSuggestions> {
-        const STRING_SUGGESTIONS = await LexiconCaller.getInstance().getWords(
-            minLength,
-            maxLength,
-            this.difficulty.isWordCommon(),
-            charConstraints
-        );
-        const WORD_SUGGESTIONS = new WordSuggestions(STRING_SUGGESTIONS);
+        let stringSuggestions: string[];
+        try {
+            stringSuggestions = await LexiconCaller.getInstance().getWords(
+                minLength,
+                maxLength,
+                this.difficulty.isWordCommon(),
+                charConstraints
+            );
+        }
+        catch (e) {
+            stringSuggestions = [];
+        }
+        const WORD_SUGGESTIONS = new WordSuggestions(stringSuggestions);
         return WORD_SUGGESTIONS;
     }
 
@@ -29,12 +35,17 @@ export class NormalWordSuggestionsGetter extends AbstractWordSuggestionsGetter {
                                     maxLength: number,
                                     charConstraints: CharConstraint[],
                                     positionHint: WordPosition): Promise<boolean> {
-        return await LexiconCaller.getInstance().doWordsExist(
-            minLength,
-            maxLength,
-            this.difficulty.isWordCommon(),
-            charConstraints
-        );
+        try {
+            return await LexiconCaller.getInstance().doWordsExist(
+                minLength,
+                maxLength,
+                this.difficulty.isWordCommon(),
+                charConstraints
+            );
+        }
+        catch (e) {
+            return false;
+        }
     }
 
 }
