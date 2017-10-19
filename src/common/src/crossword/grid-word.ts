@@ -1,10 +1,11 @@
 import { Direction, Owner } from './crossword-enums';
 
-export interface GridWord {
-    y: number;
-    x: number;
-    length: number;
-    direction: Direction;
-    owner: Owner;
-    string: string;
+export class GridWord {
+    public id: number;
+    public y: number;
+    public x: number;
+    public length: number;
+    public direction: Direction;
+    public owner: Owner;
+    public string: string;
 }

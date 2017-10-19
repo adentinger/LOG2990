@@ -9,6 +9,8 @@ import { CrosswordTimerPacket } from '../../../common/crossword/packets/crosswor
 import '../../../common/crossword/packets/crossword-timer.parser';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
 import { Logger } from '../../../common/logger';
+import { WordTryPacket } from '../../../common/crossword/packets/word-try.packet';
+import '../../../common/crossword/packets/word-try.parser';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -20,6 +22,7 @@ export class CrosswordGame {
 
     public readonly id: number;
     public countdown = CrosswordGame.COUNTDOWN_INITAL;
+    public gridWordReceived: GridWord;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
     public horizontalGrid: GridWord[] = [];
@@ -116,5 +119,31 @@ export class CrosswordGame {
     // tslint:disable-next-line:no-unused-variable
     private getCheatModeTimerValue(event: PacketEvent<CrosswordTimerPacket>) {
         this.countdown = event.value.countdown;
+    }
+
+    @PacketHandler(WordTryPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private getWordFromClient(event: PacketEvent<WordTryPacket>) {
+        this.gridWordReceived = event.value.wordTry;
+        this.handleUserAnswer();
+        this.sendWordResultToClient();
+    }
+
+    private handleUserAnswer() {
+        if (this.userAnswerMatchesTheRightAnswer()) {
+            // do nothing
+        }
+        else {
+            this.gridWordReceived.string = '';
+        }
+    }
+
+    // TODO
+    private userAnswerMatchesTheRightAnswer(): boolean {
+        return true;
+    }
+
+    private sendWordResultToClient(): void {
+        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(this.gridWordReceived), this.player1Id);
     }
 }
