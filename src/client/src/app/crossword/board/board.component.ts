@@ -1,9 +1,8 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { Direction, GridWord } from '../../common/crossword/grid-word';
 import { CrosswordGameService } from '../crossword-game.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import { DefinitionFieldComponent } from '../definition-field/definition-field.component';
 
 @Component({
     selector: 'app-board',

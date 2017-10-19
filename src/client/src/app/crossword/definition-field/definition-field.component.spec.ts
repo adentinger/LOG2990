@@ -4,6 +4,8 @@ import { DefinitionFieldComponent } from './definition-field.component';
 import { CrosswordGameService } from '../crossword-game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
+import { DefinitionsService } from './definitions.service';
+import { CrosswordGridService } from '../board/crossword-grid.service';
 
 describe('DefinitionFieldComponent', () => {
     let component: DefinitionFieldComponent;
@@ -12,7 +14,12 @@ describe('DefinitionFieldComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DefinitionFieldComponent],
-            providers:    [CrosswordGameService, {provide: PacketManagerClient, useValue: packetManagerClient}]
+            providers: [
+                CrosswordGameService,
+                { provide: PacketManagerClient, useValue: packetManagerClient },
+                DefinitionsService,
+                CrosswordGridService
+            ]
         })
             .compileComponents();
     }));

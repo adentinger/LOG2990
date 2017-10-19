@@ -5,6 +5,8 @@ import { CrosswordTileComponent } from './crossword-tile/crossword-tile.componen
 import { CrosswordGameService } from '../crossword-game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
+import { CrosswordGridService } from './crossword-grid.service';
+import { DefinitionsService } from '../definition-field/definitions.service';
 
 describe('BoardComponent', () => {
     let component: BoardComponent;
@@ -15,7 +17,9 @@ describe('BoardComponent', () => {
             declarations: [BoardComponent, CrosswordTileComponent],
             providers: [
                 CrosswordGameService,
-                {provide: PacketManagerClient, useValue: packetManagerClient}
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                DefinitionsService,
+                CrosswordGridService
             ]
         })
             .compileComponents();
