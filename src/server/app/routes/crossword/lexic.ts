@@ -3,7 +3,7 @@ import { Db, Collection, Cursor } from 'mongodb';
 import { RegexBuilder } from './lexic/regex-builder';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
 import { WordConstraint } from '../../common/lexic/word-constraint';
-import { HttpStatus } from '../../common';
+import { HttpStatus, warn, Logger } from '../../common';
 
 export interface WordDocument {
     _id: string;
@@ -11,61 +11,57 @@ export interface WordDocument {
     frequency: number;
 }
 
+const logger = Logger.getLogger('Lexic');
+
 export class Lexic {
     public static readonly LEXIC_WORDS_COLLECTION = 'crossword-lexic-words';
     public static readonly COMMONALITY_FREQUENCY_THRESHOLD = 1000;
-    private wordCollection: Collection<WordDocument> = null;
+    private readonly wordCollectionPromise: Promise<Collection<WordDocument>>;
 
     constructor(private databaseProvider: Promise<Db>,
         private regexBuilder: RegexBuilder,
         private externalWordApiService: ExternalWordApiService) {
-        this.getCollection().then((wordCollection: Collection<WordDocument>) => {
-            this.wordCollection = wordCollection;
-        });
-    }
-
-    private getCollection(): Promise<Collection<WordDocument>> {
-        return this.databaseProvider.then((db: Db) => {
+        this.wordCollectionPromise = this.databaseProvider.then((db: Db) => {
             return db.collection<WordDocument>(Lexic.LEXIC_WORDS_COLLECTION);
         });
     }
 
-    private fetchWords(constraint: WordConstraint, resolve: (value: string[]) => void, reject: (reason?: any) => void) {
+    private getSearchFilter(constraint: WordConstraint): any {
         const REGEX = this.regexBuilder.buildFromConstraint(constraint);
         if (REGEX === null) {
-            reject(HttpStatus.BAD_REQUEST);
-            return;
+            throw HttpStatus.BAD_REQUEST;
         }
 
-        const SEARCH_OPTION = { value: { $regex: REGEX } };
+        const SEARCH_FILTER = { value: { $regex: REGEX } };
         if ('isCommon' in constraint && constraint.isCommon !== null) {
-            SEARCH_OPTION['frequency'] = constraint.isCommon ?
+            SEARCH_FILTER['frequency'] = constraint.isCommon ?
                 { $gte: Lexic.COMMONALITY_FREQUENCY_THRESHOLD } :
                 { $lt: Lexic.COMMONALITY_FREQUENCY_THRESHOLD };
         }
-        const CURSOR: Cursor<any> = this.wordCollection.find(SEARCH_OPTION, { value: true })
-            .map((value: WordDocument) => value.value);
-        CURSOR.toArray().then((words: string[]) => {
-            if (words.length === 0) {
-                throw HttpStatus.NOT_FOUND;
-            }
-            resolve(words);
-        }).catch(reject);
+
+        return SEARCH_FILTER;
     }
 
     public getWords(constraint: WordConstraint): Promise<string[]> {
-        return new Promise((resolve, reject) => {
-            this.databaseProvider.then((db: Db) => {
-                if (this.wordCollection !== null) {
-                    this.fetchWords(constraint, resolve, reject);
-                } else {
-                    this.getCollection()
-                        .then((wordCollection: Collection<WordDocument>) => {
-                            this.wordCollection = wordCollection;
-                            this.fetchWords(constraint, resolve, reject);
-                        }).catch(reject);
+        return this.wordCollectionPromise.then((wordCollection: Collection<WordDocument>) => {
+            const SEARCH_FILTER = this.getSearchFilter(constraint);
+            const CURSOR: Cursor<any> = wordCollection.find(SEARCH_FILTER, { value: true })
+                .map((value: WordDocument) => value.value);
+            return CURSOR.toArray().then((words: string[]) => {
+                if (words.length === 0) {
+                    throw HttpStatus.NOT_FOUND;
                 }
+                return words;
             });
+        });
+    }
+
+    public hasWord(constraint: WordConstraint): Promise<boolean> {
+        return this.wordCollectionPromise.then((wordCollection: Collection<WordDocument>) => {
+            const SEARCH_FILTER = this.getSearchFilter(constraint);
+            return wordCollection.findOne(SEARCH_FILTER).then(
+                (value: WordDocument) => value != null,
+                warn(logger, false));
         });
     }
 

@@ -11,7 +11,7 @@ const RX_BUILDER = new RegexBuilder();
 
 class ExternalWordApiServiceMock extends ExternalWordApiService {
 
-    private readonly mockDefinitions: {[index: string]: string[]} = {
+    private readonly mockDefinitions: { [index: string]: string[] } = {
         banana: ['fruit', 'boomrang-like object']
     };
 
@@ -86,10 +86,43 @@ describe('The lexic MicroService', () => {
         });
     });
 
+    it('should be able to tell if there exists a word for a given constraint', (done) => {
+        const PROMISES = [];
+
+        const NON_EXISTING_CONSTRAINT = {
+            minLength: 4, isCommon: true, charConstraints: [
+                { char: 'a', position: 0 },
+                { char: 'b', position: 1 },
+                { char: 'b', position: 2 },
+                { char: 'c', position: 3 }
+            ]
+        } as WordConstraint;
+        PROMISES.push(
+            lexic.hasWord(NON_EXISTING_CONSTRAINT).then((hasWord) => {
+                expect(hasWord).to.be.false;
+            })
+        );
+
+        const EXISTING_CONSTRAINT = {
+            minLength: 4, isCommon: true, charConstraints: [
+                { char: 'a', position: 0 },
+                { char: 'b', position: 1 },
+                { char: 'b', position: 2 }
+            ]
+        } as WordConstraint;
+        PROMISES.push(
+            lexic.hasWord(EXISTING_CONSTRAINT).then((hasWord) => {
+                expect(hasWord).to.be.true;
+            })
+        );
+
+        Promise.all(PROMISES).then(done.call(null), done);
+    });
+
     it('should fetch the definitions of a given word', (done) => {
         lexic.getDefinitions('banana').then((definitions: string[]) => {
             expect(definitions).to.contain('fruit').and.to.contain('boomrang-like object');
             done();
-        });
+        }).catch(done);
     });
 });
