@@ -1,5 +1,7 @@
-import { Grid } from '../../../common/grid';
-import * as http from 'http';
+import { Grid } from '../grid-generator/grid';
+import { GridGenerator } from '../grid-generator/grid-generator';
+import { NormalWordSuggestionsGetter } from '../grid-generator/normal-word-suggestions-getter';
+import { Difficulty } from '../../../common/crossword/difficulty';
 
 export abstract class GridBank {
 
@@ -25,17 +27,9 @@ export abstract class GridBank {
 
     protected abstract getGridFromGenerator(): Promise<Grid>;
 
-    protected getGridFromGeneratorWithUrl(url: string): Promise<Grid> {
-        return new Promise((resolve, reject) => {
-            http.get(url, (response: http.IncomingMessage) => {
-                let data = '';
-                response.on('data', (chunk) => data += chunk);
-                response.on('end', () => {
-                    resolve(JSON.parse(data));
-                });
-                response.on('error', reject);
-            }).setTimeout(0).end();
-        });
+    protected getGridFromGeneratorWithUrl(difficulty: Difficulty): Promise<Grid> {
+        return GridGenerator.getInstance()
+               .gridGeneration(new NormalWordSuggestionsGetter(difficulty));
     }
 
     private addGridToBank(): void {

@@ -1,4 +1,4 @@
-import { Grid } from '../../../common/grid';
+import { Grid } from '../grid-generator/grid';
 import { GridBankEasy } from './grid-bank-easy';
 import { GridBankNormal } from './grid-bank-normal';
 import { GridBankHard } from './grid-bank-hard';
