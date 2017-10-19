@@ -48,12 +48,12 @@ export class WordConstraintChecker {
 
         const CURRENT_POSITION = new WordPosition(position.row,
                                                   position.column);
-
         this.changePositionToConstraintBeginning(
             CURRENT_POSITION,
             words,
             iteratedAxisGetter,
             constantAxisGetter,
+            incrementIteratedAxis,
             decrementIteratedAxis
         );
 
@@ -68,7 +68,7 @@ export class WordConstraintChecker {
                     constantAxisGetter,
                     iteratedAxisGetter
                 );
-
+            
             const CHAR_FOUND = (WORD_THAT_CONTAINS_POSITION !== undefined);
 
             if (CHAR_FOUND) {
@@ -89,7 +89,6 @@ export class WordConstraintChecker {
             incrementIteratedAxis(CURRENT_POSITION);
             ++characterPosition;
         }
-
         return CONSTRAINTS;
     }
 
@@ -97,10 +96,11 @@ export class WordConstraintChecker {
                                                 words: Word[],
                                                 iteratedAxisGetter: AxisGetter,
                                                 constantAxisGetter: AxisGetter,
+                                                incrementIteratedAxis: PositionModifier,
                                                 decrementIteratedAxis: PositionModifier): void {
         const DUMMY_INITIAL_CHAR = '8';
         let charAtCurrentPosition = DUMMY_INITIAL_CHAR;
-        while (iteratedAxisGetter(position) >= 1 &&
+        while (iteratedAxisGetter(position) >= 0 &&
                charAtCurrentPosition.length !== 0) {
             decrementIteratedAxis(position);
             const WORD_THAT_CONTAINS_POSITION =
@@ -118,7 +118,11 @@ export class WordConstraintChecker {
                         constantAxisGetter
                     );
             }
+            else {
+                charAtCurrentPosition = '';
+            }
         }
+        incrementIteratedAxis(position);
     }
 
     private findWordThatContainsPosition(words: Word[],

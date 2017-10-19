@@ -24,6 +24,7 @@ function getTestData(isForAcross: boolean): {words: Word[],
         new WordPosition(0, 0),
         new WordPosition(2, 1),
         new WordPosition(3, 2),
+        new WordPosition(3, 0),
         new WordPosition(5, 0)
     ];
     const EXPECTED_CONSTRAINTS: CharConstraint[][] = [
@@ -37,10 +38,11 @@ function getTestData(isForAcross: boolean): {words: Word[],
             {char: 'z', position: 1},
             {char: 'x', position: 2}
         ],
+        [],
         [
             {char: 'l', position: 0}
         ],
-        [ ]
+        []
     ];
     if (!isForAcross) {
         const SWAP_ROW_COLUMN = (position: WordPosition) => {
