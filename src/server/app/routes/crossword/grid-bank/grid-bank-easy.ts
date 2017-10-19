@@ -1,11 +1,10 @@
-import { HttpStatus } from '../../../common/http-status';
 import { GridBank } from './grid-bank';
 import { Grid } from '../../../common/grid';
 
-export class GridBankEasy implements GridBank {
+export class GridBankEasy extends GridBank {
 
-    public getGridFromGenerator(): Promise<Grid>{
-		GridBank.getGridFromGenerator('http://localhost:3000/crossword/grid-generator/easy');
-	}
+    public getGridFromGenerator(): Promise<Grid> {
+        return this.getGridFromGeneratorWithUrl('http://localhost:3000/crossword/grid-generator/easy');
+    }
 
 }

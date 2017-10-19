@@ -2,7 +2,7 @@ import * as express from 'express';
 
 import { MiddleWare, Route } from '../middle-ware';
 import { GridBanks } from './grid-bank/grid-banks';
-import { HttpStatus, getStatusOrDefault } from '../../http-response-status';
+import { HttpStatus, getStatusOrDefault } from '../../common/http-status';
 import { Grid } from '../../common/grid';
 
 @MiddleWare('/crossword/grid-bank')

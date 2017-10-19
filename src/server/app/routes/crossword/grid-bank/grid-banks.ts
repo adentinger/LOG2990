@@ -1,39 +1,41 @@
-import { HttpStatus } from '../../../common/http-status';
 import { Grid } from '../../../common/grid';
+import { GridBankEasy } from './grid-bank-easy';
+import { GridBankNormal } from './grid-bank-normal';
+import { GridBankHard } from './grid-bank-hard';
 
 export class GridBanks {
 
     private static readonly INSTANCE = new GridBanks();
-	
-	private gridBankEasy: GridBankEasy;
-	private gridBankNormal: GridBankNormal;
-	private gridBankHard: GridBankHard;
+
+    private gridBankEasy: GridBankEasy;
+    private gridBankNormal: GridBankNormal;
+    private gridBankHard: GridBankHard;
 
     public static getInstance(): GridBanks {
         return GridBanks.INSTANCE;
     }
 
     private constructor() {
-		gridBankEasy = new GridBankEasy();
-		gridBankNormal = new GridBankNormal();
-		gridBankHard = new gridBankHard();
-	}
+        this.gridBankEasy = new GridBankEasy();
+        this.gridBankNormal = new GridBankNormal();
+        this.gridBankHard = new GridBankHard();
+    }
 
     public async fillup(): Promise<void> {
-		await gridBankEasy.fillup();
-		await gridBankNormal.fillup();
-		await gridBankHard.fillup();
+        await this.gridBankEasy.fillup();
+        await this.gridBankNormal.fillup();
+        await this.gridBankHard.fillup();
     }
 
     public getEasyGrid(): Promise<Grid> {
-        return gridBankEasy.getGrid();
+        return this.gridBankEasy.getGrid();
     }
 
     public getNormalGrid(): Promise<Grid> {
-		return gridBankNormal.getGrid();    }
+        return this.gridBankNormal.getGrid();    }
 
     public getHardGrid(): Promise<Grid> {
-        return gridBankHard.getGrid();
+        return this.gridBankHard.getGrid();
     }
 
 }
