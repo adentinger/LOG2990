@@ -2,6 +2,7 @@ import { Grid } from '../grid-generator/grid';
 import { GridBankEasy } from './grid-bank-easy';
 import { GridBankNormal } from './grid-bank-normal';
 import { GridBankHard } from './grid-bank-hard';
+import { Difficulty } from '../../../common/crossword/crossword-enums';
 
 export class GridBanks {
 
@@ -24,8 +25,13 @@ export class GridBanks {
 
     public async fillup(): Promise<void> {
         await this.gridBankEasy.fillup();
-        // await this.gridBankNormal.fillup();
-        // await this.gridBankHard.fillup();
+        await this.gridBankNormal.fillup();
+        await this.gridBankHard.fillup();
+    }
+
+    public getGrid(difficulty: Difficulty) {
+        const functions = [this.gridBankEasy, this.gridBankNormal, this.gridBankHard];
+        return functions[difficulty];
     }
 
     public getEasyGrid(): Promise<Grid> {
