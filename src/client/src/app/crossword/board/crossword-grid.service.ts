@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { GridWord, Direction } from '../../common/crossword/grid-word';
 import { ARRAY_GRIDWORD } from '../mocks/grid-mock';
-import { CrosswordGameService } from '../crossword-game.service';
 
 @Injectable()
 export class CrosswordGridService {
@@ -10,7 +9,7 @@ export class CrosswordGridService {
     public grid: GridWord[];
     private viewableGrid: string[][];
 
-    constructor(private crosswordGameService: CrosswordGameService) {
+    constructor() {
         this.grid = ARRAY_GRIDWORD;
         this.fill();
         this.fillAll();

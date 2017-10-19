@@ -7,7 +7,6 @@ import { RacingComponent } from './racing/racing.component';
 import { RacingGameComponent } from './racing/racing-game/racing-game.component';
 
 import { AdminScreenComponent } from './admin-screen/admin-screen.component';
-import { MapEditorComponent } from './admin-screen/map-editor/map-editor.component';
 import { AdminAuthGard } from './admin-screen/admin-auth.gard';
 
 const routes: Routes = [

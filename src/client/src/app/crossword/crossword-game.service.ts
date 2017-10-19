@@ -4,8 +4,6 @@ import { CrosswordGame } from './class/crossword-game';
 import { CROSSWORD_GAME } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../common/crossword/packets/game-join.packet';
-import { registerHandlers, PacketHandler, PacketEvent } from '../common/index';
-import { GameDefinitionPacket } from '../common/crossword/packets/game-definition.packet';
 
 /**
  * @class CrosswordGameService

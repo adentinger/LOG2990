@@ -26,7 +26,7 @@ export class Lexic {
         });
     }
 
-    private getSearchFilter(constraint: WordConstraint): any {
+    private getSearchFilter(constraint: WordConstraint): any {
         const REGEX = this.regexBuilder.buildFromConstraint(constraint);
         if (REGEX === null) {
             throw HttpStatus.BAD_REQUEST;

@@ -104,7 +104,7 @@ describe('The lexic MicroService', () => {
         );
 
         const EXISTING_CONSTRAINT = {
-            minLength: 4, isCommon: true, charConstraints: [
+            minLength: 4, charConstraints: [
                 { char: 'a', position: 0 },
                 { char: 'b', position: 1 },
                 { char: 'b', position: 2 }

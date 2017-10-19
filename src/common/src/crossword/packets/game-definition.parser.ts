@@ -3,7 +3,7 @@ import { Parser } from '../../communication/packet-api/packet-handler';
 import { GameDefinitionPacket } from './game-definition.packet';
 import { Definition } from '../definition';
 
-const SIZE_UINT8 = 1, SIZE_UINT16 = 2, SIZE_UINT32 = 4;
+const SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 
 /**
  * @class GameJoinParser

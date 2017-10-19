@@ -18,7 +18,6 @@ export class DefinitionsService {
 
     private cheatModeOn = false;
     private changeTimerValueOn = false;
-    private timerValueInSeconds: number;
 
     private horizontalDefinitions: Map<number, Definition> = new Map();
     private verticalDefinitions: Map<number, Definition> = new Map();
