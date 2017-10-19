@@ -7,6 +7,7 @@ import { DefinitionsService } from '../definition-field/definitions.service';
 import { DefinitionFieldComponent } from '../definition-field/definition-field.component';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { WordTryPacket } from '../../common/crossword/packets/word-try.packet';
+import '../../common/crossword/packets/word-try.parser';
 
 @Component({
     selector: 'app-board',
