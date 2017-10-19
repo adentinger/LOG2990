@@ -72,16 +72,11 @@ export class GameManager {
         const gameToJoin = event.value.gameId;
         const playerSocketId = event.socketid;
 
-        console.log('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
+        console.debug('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
         this.addPlayerToGame(event.socketid, gameToJoin);
-        console.log(this.getGame(gameToJoin).getGameInfo());
+
         // send all definitions
         this.sendAllDefinitions(gameToJoin, playerSocketId);
-
-        // send 1 definition for testing;
-        // this.sendDefinition(0, Direction.horizontal, definitions[0], playerSocketId);
-        // this.getGame(gameToJoin).horizontalDefinitions.map(this.sendDefinition())
-
 
         // send all gridWords
     }
