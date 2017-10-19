@@ -6,6 +6,9 @@ import { GameDefinitionPacket } from '../../../common/crossword/packets/game-def
 import { PacketManagerServer } from '../../../packet-manager';
 import '../../../common/crossword/packets/game-join.parser';
 import { Definition } from '../../../common/crossword/definition';
+import { Direction } from '../../../common/crossword/crossword-enums';
+
+import '../../../common/crossword/packets/game-definition.parser';
 
 const ID_LENGTH = 8;
 
@@ -78,7 +81,7 @@ export class GameManager {
                 .concat(this.games.get(gameToJoin).verticalDefinitions);
 
         // send 1 definition for testing;
-        this.sendDefinition(0, definitions[0], playerSocketId);
+        this.sendDefinition(0, Direction.horizontal, definitions[0], playerSocketId);
 
         // send all gridWords
     }
@@ -87,10 +90,10 @@ export class GameManager {
         this.games.get(gameId).player1Id = playerId;
     }
 
-    private sendDefinition(index: number, definition: Definition, socketId: string) {
+    private sendDefinition(index: number, direction: Direction, definition: Definition, socketId: string) {
         this.packetManager.sendPacket(
             GameDefinitionPacket,
-            new GameDefinitionPacket(index, definition),
+            new GameDefinitionPacket(index, direction, definition),
             socketId);
     }
 }

@@ -74,7 +74,7 @@ export function Route(type: RouteType | RouteType[], route?: string): MethodDeco
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
         const ORIGINAL_FUNCTION = descriptor.value;
         descriptor.value = function (req: express.Request, res: express.Response, next?: express.NextFunction): any {
-            logger.info('Handling %s request to "%s" (%s)',
+            logger.debug('Handling %s request to "%s" (%s)',
                 req.method,
                 req.url,
                 ORIGINAL_FUNCTION.name || DEFAULT_NAME);

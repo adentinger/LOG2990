@@ -11,7 +11,6 @@ import { MapEditorComponent } from './admin-screen/map-editor/map-editor.compone
 import { AdminAuthGard } from './admin-screen/admin-auth.gard';
 
 const routes: Routes = [
-    { path: 'admin/map-editor', component: MapEditorComponent, canActivate: [AdminAuthGard] },
     {
         path: 'admin',
         component: AdminScreenComponent,

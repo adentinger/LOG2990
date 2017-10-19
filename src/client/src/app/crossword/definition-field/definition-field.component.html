@@ -1,7 +1,30 @@
-<div id="definition-box" (clickOutside)='onClickOutside()'>
-  <div *ngFor='let definition of definitions; let i = index;'>
-    <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $even)'>
-      {{definition.text}}
+<div>Cheat mode:
+  <br> 
+  <button (click)='setCheatModeOnOff()'>{{getCheatModeStateText()}}</button>
+  <button (click)='setTimerOnOff()'>{{getTimerStateText()}}</button>
+  <input #timerInput *ngIf='getTimerState()' type='text' (keyup.enter)='changeTimerValue(timerInput.value)' size='5px'/>
+</div>
+<br>
+<div [ngSwitch]='getCheatModeState()'>
+  <div *ngSwitchCase='false' id="definition-box" (clickOutside)='onClickOutside()'>
+    Across Words
+    <div *ngFor='let definition of definitions; let i = index;'>
+      <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
+        {{i+1}}. {{definition.text}}
+      </div>
+    </div>
+    Vertical Words
+    <div *ngFor='let definition of definitions; let j = index;'>
+      <div [class.selected]='selectedDefinitionId===j' (click)='onSelect(j, $event)'>
+        {{j+1}}. {{definition.text}}
+      </div>
+    </div>
+  </div>
+  <div *ngSwitchCase='true' id="word-box" (clickOutside)='onClickOutside()'>
+    <div *ngFor='let word of words; let i = index;'>
+      <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
+        {{i+1}}. {{word}}
+      </div>
     </div>
   </div>
 </div>

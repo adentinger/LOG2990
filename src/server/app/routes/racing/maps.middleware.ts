@@ -19,7 +19,6 @@ export class MapsMiddleWare {
             .then((serializedMap: SerializedMap) => {
                 res.status(HttpStatus.OK);
                 res.json(serializedMap);
-                res.send();
             })
             .catch((reason: any) => {
                 res.sendStatus(getStatusOrDefault(reason));
@@ -32,8 +31,7 @@ export class MapsMiddleWare {
         const SERIALIZED_MAP: SerializedMap = req.body;
         MapsMiddleWare.MAP_DB_SERVICE.saveNew(SERIALIZED_MAP)
             .then(() => {
-                res.status(HttpStatus.CREATED);
-                res.send();
+                res.sendStatus(HttpStatus.CREATED);
             })
             .catch((reason: any) => {
                 res.sendStatus(getStatusOrDefault(reason));
