@@ -23,7 +23,8 @@ export class WordConstraintChecker {
             (wordPosition) => wordPosition.column,
             (wordPosition) => wordPosition.row,
             (wordPosition) => { ++wordPosition.column; },
-            (wordPosition) => { --wordPosition.column; });
+            (wordPosition) => { --wordPosition.column; }
+        );
     }
 
     public getVerticalWordConstraint(grid: Grid, position: WordPosition): CharConstraint[] {
@@ -33,7 +34,8 @@ export class WordConstraintChecker {
             (wordPosition) => wordPosition.row,
             (wordPosition) => wordPosition.column,
             (wordPosition) => { ++wordPosition.row; },
-            (wordPosition) => { --wordPosition.row; });
+            (wordPosition) => { --wordPosition.row; }
+        );
     }
 
     private getWordConstraint(words: Word[],
@@ -44,8 +46,8 @@ export class WordConstraintChecker {
                               decrementIteratedAxis: PositionModifier): CharConstraint[] {
         const CONSTRAINTS: CharConstraint[] = [];
 
-        const CURRENT_POSITION = new WordPosition(constantAxisGetter(position),
-                                                  iteratedAxisGetter(position));
+        const CURRENT_POSITION = new WordPosition(position.row,
+                                                  position.column);
 
         this.changePositionToConstraintBeginning(
             CURRENT_POSITION,
