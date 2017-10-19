@@ -8,7 +8,17 @@ import { Grid } from '../../common/grid';
 @MiddleWare('/crossword/grid-bank')
 export class GridBankMiddleWare {
 
-    private static readonly INSTANCE = new GridBankMiddleWare();
+    private static getGrid(gridGetter: () => Promise<Grid>,
+        res: express.Response): void {
+        gridGetter()
+            .then((grid) => {
+                res.status(HttpStatus.OK);
+                res.json(grid);
+            })
+            .catch((reason: any) => {
+                res.sendStatus(getStatusOrDefault(reason));
+            });
+    }
 
     @Route('post', '/fillup')
     public postFillup(req: express.Request, res: express.Response): void {
@@ -21,33 +31,20 @@ export class GridBankMiddleWare {
 
     @Route('get', '/easy')
     public getEasy(req: express.Request, res: express.Response): void {
-        GridBankMiddleWare.INSTANCE
-            .getGrid(() => GridBanks.getInstance().getEasyGrid(), res);
+        GridBankMiddleWare
+            .getGrid(GridBanks.getInstance().getEasyGrid, res);
     }
 
     @Route('get', '/normal')
     public getNormal(req: express.Request, res: express.Response): void {
-        GridBankMiddleWare.INSTANCE
+        GridBankMiddleWare
             .getGrid(GridBanks.getInstance().getNormalGrid, res);
     }
 
     @Route('get', '/hard')
     public getHard(req: express.Request, res: express.Response): void {
-        GridBankMiddleWare.INSTANCE
+        GridBankMiddleWare
             .getGrid(GridBanks.getInstance().getHardGrid, res);
-    }
-
-    private getGrid(gridGetter: () => Promise<Grid>,
-                    res: express.Response): void {
-        gridGetter()
-            .then((grid) => {
-                res.status(HttpStatus.OK);
-                res.json(grid);
-                res.send();
-            })
-            .catch((reason: any) => {
-                res.sendStatus(getStatusOrDefault(reason));
-            });
     }
 
 }
