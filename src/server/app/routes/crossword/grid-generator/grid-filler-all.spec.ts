@@ -24,30 +24,8 @@ function testGridFiller<T extends GridFiller>(testName: string,
             expect(filler).to.be.ok;
         });
 
-        it('should fill grids', () => {
-            const GRID = new Grid();
-            filler.fill(GRID);
-            filler.acrossPlacement.forEach((placement) => {
-                const MATCH_INDEX = GRID.across.findIndex((acrossWord) => {
-                    const WORD_LENGTH_MATCHES =
-                        acrossWord.value.length >= placement.minLength &&
-                        acrossWord.value.length <= placement.maxLength;
-                    const PLACEMENT_MATCHES = placement.position.equals(acrossWord.position);
-                    return WORD_LENGTH_MATCHES && PLACEMENT_MATCHES;
-                });
-                expect(MATCH_INDEX).to.be.gte(0, 'Placement requirement not met');
-            });
-            filler.verticalPlacement.forEach((placement) => {
-                const MATCH_INDEX = GRID.vertical.findIndex((verticalWord) => {
-                    const WORD_LENGTH_MATCHES =
-                        verticalWord.value.length >= placement.minLength &&
-                        verticalWord.value.length <= placement.maxLength;
-                    const PLACEMENT_MATCHES = placement.position.equals(verticalWord.position);
-                    return WORD_LENGTH_MATCHES && PLACEMENT_MATCHES;
-                });
-                expect(MATCH_INDEX).to.be.gte(0, 'Placement requirement not met');
-            });
-        });
+        // Testing if the GridFiller fills grid is a bit compicated
+        // because it requires requests
 
     });
 }
