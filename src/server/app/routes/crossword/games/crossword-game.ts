@@ -33,6 +33,7 @@ export class CrosswordGame {
 
     public verticalDefinitions: Map<number, Definition> = new Map;
     public horizontalDefinitions: Map<number, Definition> = new Map;
+
     private gameMode: string;
 
     public player1Id: string = null;
