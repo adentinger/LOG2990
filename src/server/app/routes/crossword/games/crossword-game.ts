@@ -125,7 +125,25 @@ export class CrosswordGame {
     // tslint:disable-next-line:no-unused-variable
     private getWordFromClient(event: PacketEvent<WordTryPacket>) {
         this.gridWordReceived = event.value.wordTry;
-        console.log('HIIIIII this is the GRID WORD RECEIVED');
-        console.dir(this.gridWordReceived);
+        this.handleUserAnswer();
+        this.sendWordResultToClient();
+    }
+
+    private handleUserAnswer() {
+        if (this.userAnswerMatchesTheRightAnswer()) {
+            // do nothing
+        }
+        else {
+            this.gridWordReceived.string = '';
+        }
+    }
+
+    // TODO
+    private userAnswerMatchesTheRightAnswer(): boolean {
+        return true;
+    }
+
+    private sendWordResultToClient(): void {
+        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(this.gridWordReceived), this.player1Id);
     }
 }
