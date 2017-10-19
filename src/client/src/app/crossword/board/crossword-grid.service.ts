@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { GridWord } from '../../common/crossword/grid-word';
 import { Direction } from '../../common/crossword/crossword-enums';
-import { ARRAY_GRIDWORD, ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
+import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { registerHandlers, PacketHandler, PacketEvent } from '../../common/index';
