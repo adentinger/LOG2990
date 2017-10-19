@@ -72,7 +72,6 @@ export class GameManager {
         const gameToJoin = event.value.gameId;
         const playerSocketId = event.socketid;
 
-        //console.debug('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
         this.addPlayerToGame(event.socketid, gameToJoin);
 
         // send all definitions

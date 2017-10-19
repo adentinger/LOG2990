@@ -25,7 +25,6 @@ export class CrosswordGridService {
         this.grid = ARRAY_GRIDWORD;
         this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-        this.fill();
         this.fillAll();
     }
 
@@ -36,11 +35,6 @@ export class CrosswordGridService {
 
     public fillAll() {
         this.fill();
-        /*
-        for (let i = 0; i < this.grid.length; i++) {
-            this.fillAcrossAndVertical(this.grid[i]);
-        }
-        */
         for (let i = 0; i < this.horizontalGridWords.size; i++) {
             this.fillHorizontal(this.horizontalGridWords.get(i));
         }
