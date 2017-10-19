@@ -33,7 +33,7 @@ export class BoardComponent implements OnInit {
         this.clearGridOfUselessLetters();
     }
 
-    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService, 
+    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService,
         private definitionsService: DefinitionsService, private packetManager: PacketManagerClient) { }
 
     public ngOnInit(): void {
