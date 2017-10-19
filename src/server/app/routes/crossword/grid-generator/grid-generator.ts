@@ -22,9 +22,9 @@ export class GridGenerator {
         const FILLER_THIRD_SECTION  = new GridFillerThirdSection(suggestionsGetter);
         const FILLER_FOURTH_SECTION = new GridFillerFourthSection(suggestionsGetter);
         await GRID.fillUsing(FILLER_FIRST_SECTION);
-        // await GRID.fillUsing(FILLER_SECOND_SECTION);
-        // await GRID.fillUsing(FILLER_THIRD_SECTION);
-        // await GRID.fillUsing(FILLER_FOURTH_SECTION);
+        await GRID.fillUsing(FILLER_SECOND_SECTION);
+        await GRID.fillUsing(FILLER_THIRD_SECTION);
+        await GRID.fillUsing(FILLER_FOURTH_SECTION);
         console.log(GRID.toString());
         return GRID;
     }
