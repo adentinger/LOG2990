@@ -3,7 +3,7 @@ import * as http from 'http';
 
 export abstract class GridBank {
 
-    public static readonly NUMBER_OF_GRIDS = 5;
+    public static readonly NUMBER_OF_GRIDS = 1;
 
     protected bank: Promise<Grid>[] = [];
 
