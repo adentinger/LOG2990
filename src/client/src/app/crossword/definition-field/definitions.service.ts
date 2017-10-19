@@ -66,9 +66,10 @@ export class DefinitionsService {
 
     public onSelect(index: number, direction: Direction, event): void {
         this.selectedDefinitionId = index;
+        this.selectedDirection = direction;
+
         this.crosswordGameService.selectedWordIndex = index;
         this.crosswordGameService.lastSelectedWordIndex = index;
-        this.selectedDirection = direction;
 
         this.crosswordGameService.aDefinitionIsSelected = true;
     }

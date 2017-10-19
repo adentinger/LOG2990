@@ -17,7 +17,6 @@ import '../../common/crossword/packets/grid-word.parser';
 export class CrosswordGridService {
     public crosswordGrid: string[][];
     public wordIsFound = false;
-    public grid: GridWord[];
     public horizontalGridWords: Map<number, GridWord>;
     public verticalGridWords: Map<number, GridWord>;
     private viewableGrid: string[][];
@@ -25,7 +24,6 @@ export class CrosswordGridService {
     constructor(private crosswordGameService: CrosswordGameService, private packetManager: PacketManagerClient,
         private definitionsService: DefinitionsService) {
         registerHandlers(this, packetManager);
-        this.grid = ARRAY_GRIDWORD;
         this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.fillAll();
@@ -130,7 +128,9 @@ export class CrosswordGridService {
     }
 
     public clearGridOfUselessLetters(): void {
-        const words = this.grid;
+        // const words = this.grid;
+        const words = [...this.horizontalGridWords.values(), ...this.verticalGridWords.values()];
+
         for (let i = 0; i < words.length; i++) {
             if (words[i].string === '') {
                 this.inputLettersOnGrid(words[i], '');
