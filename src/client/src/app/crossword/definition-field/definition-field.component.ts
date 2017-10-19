@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input }
 import { Definition } from '../../common/crossword/definition';
 import { DefinitionsService } from './definitions.service';
 import { Direction } from '../../common/crossword/crossword-enums';
+import { CrosswordGridService } from '../board/crossword-grid.service';
 
 @Component({
     selector: 'app-definition-field',
@@ -23,7 +24,7 @@ export class DefinitionFieldComponent implements OnInit {
 
     public answers: string[] = [];
 
-    constructor(private definitionService: DefinitionsService) {
+    constructor(private definitionService: DefinitionsService, private crosswordGridService: CrosswordGridService) {
         this.selectedDefinition = definitionService.internalSelectedDefinition;
     }
 
@@ -53,7 +54,9 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public onSelect(index: number, direction: Direction, event): void {
-        this.definitionService.onSelect(index, direction, event);
+        if (this.crosswordGridService.grid[index].string === '') {
+            this.definitionService.onSelect(index, direction, event);
+        }
     }
 
     public onClickOutside(): void {

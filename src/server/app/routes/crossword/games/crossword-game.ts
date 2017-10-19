@@ -31,11 +31,8 @@ export class CrosswordGame {
     public horizontalGridWords: Map<number, GridWord> = new Map();
     public verticalGridWords: Map<number, GridWord> = new Map();
 
-    // public horizontalDefinitions: Definition[] = [];
-    // public verticalDefinitions: Definition[] = [];
     public verticalDefinitions: Map<number, Definition> = new Map;
     public horizontalDefinitions: Map<number, Definition> = new Map;
-    // public definitions: string;
     private gameMode: string;
 
     public player1Id: string = null;
@@ -65,10 +62,6 @@ export class CrosswordGame {
         for (let i = 0; i < DEFINITIONS_MOCK.length; i++) {
             this.horizontalDefinitions.set(i, DEFINITIONS_MOCK[i]);
         }
-
-        // this.horizontalDefinitions = DEFINITIONS_MOCK;
-        // this.verticalDefinitions = DEFINITIONS_MOCK;
-        // console.log('new state of the game: ' + JSON.stringify(this.getGameInfo()));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
             if (this.player1Id === socketId) {

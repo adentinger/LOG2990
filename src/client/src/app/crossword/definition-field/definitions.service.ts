@@ -26,7 +26,6 @@ export class DefinitionsService {
     }
 
     constructor(public crosswordGameService: CrosswordGameService,
-        public crosswordGridService: CrosswordGridService,
         private packetManager: PacketManagerClient) {
 
         // this.horizontalDefinitions = new Map(
@@ -70,15 +69,12 @@ export class DefinitionsService {
     }
 
     public onSelect(index: number, direction: Direction, event): void {
-        if (this.crosswordGridService.grid[index].string === '') {
+        this.selectedDefinitionId = index;
+        this.crosswordGameService.selectedWordIndex = index;
+        this.crosswordGameService.lastSelectedWordIndex = index;
+        this.selectedDirection = direction;
 
-            this.selectedDefinitionId = index;
-            this.crosswordGameService.selectedWordIndex = index;
-            this.crosswordGameService.lastSelectedWordIndex = index;
-            this.selectedDirection = direction;
-
-            this.crosswordGameService.aDefinitionIsSelected = true;
-        }
+        this.crosswordGameService.aDefinitionIsSelected = true;
     }
 
     public onClickOutside(): void {
