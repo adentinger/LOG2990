@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
 import { Definition } from '../../common/crossword/definition';
-import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
+// import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGridService } from '../board/crossword-grid.service';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../common/index';

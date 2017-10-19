@@ -1,5 +1,5 @@
 import { Definition } from '../../common/crossword/definition';
-
+/*
 export const DEFINITIONS_MOCK: Definition[] = [
     {
         text:
@@ -119,3 +119,4 @@ export const DEFINITIONS_MOCK: Definition[] = [
             provident.`
     },
 ];
+*/
