@@ -6,7 +6,7 @@ import { Word } from './word';
 
 export abstract class GridFiller {
 
-    protected static readonly NUM_TRIES = 100;
+    protected static readonly NUM_TRIES = 5;
 
     protected acrossWords: WordPlacement[] = [];
     protected verticalWords: WordPlacement[] = [];
@@ -25,8 +25,20 @@ export abstract class GridFiller {
     }
 
     public async fill(grid: Grid): Promise<void> {
-        await this.placeAcrossWords(grid);
-        await this.placeVerticalWords(grid);
+        let doneAcross = false;
+        while (!doneAcross) {
+            doneAcross = await this.placeAcrossWords(grid);
+        }
+        let doneVertical = false;
+        while (!doneVertical) {
+            doneVertical = await this.placeVerticalWords(grid);
+        }
+        console.log('--------------------');
+        console.log('- SECTION COMPLETE -');
+        console.log('--------------------');
+        console.log(grid.toString());
+        console.log('ACROSS WORDS: ', grid.across);
+        console.log('VERTICAL WORDS: ', grid.vertical);
     }
 
     private async placeAcrossWords(grid: Grid, current: number = 0): Promise<boolean> {
@@ -49,18 +61,11 @@ export abstract class GridFiller {
                     GridFiller.NUM_TRIES :
                     SUGGESTIONS.length;
                 while (numTriesLeft > 0 && !done) {
-                    const WORD = new Word(
+                    done = await this.trySuggestion(
+                        grid,
                         SUGGESTIONS.randomSuggestion,
-                        WORD_PLACEMENT.position
+                        current
                     );
-                    grid.across.push(WORD);
-                    if (await this.areConstraintsMetFor(grid) &&
-                        await this.placeAcrossWords(grid, current + 1)) {
-                        done = true;
-                    }
-                    else {
-                        grid.across.pop();
-                    }
                     --numTriesLeft;
                 }
                 return done;
@@ -76,7 +81,7 @@ export abstract class GridFiller {
 
     private async placeVerticalWords(grid: Grid, current: number = 0): Promise<boolean> {
         // TODO
-        return false;
+        return true;
     }
 
     private async areConstraintsMetFor(grid: Grid): Promise<boolean> {
@@ -99,6 +104,34 @@ export abstract class GridFiller {
             }
         }
         return true;
+    }
+
+    private async trySuggestion(grid: Grid, suggestion: string, current: number): Promise<boolean> {
+        const WORD_PLACEMENT = this.acrossPlacement[current];
+        const WORD = new Word(
+            suggestion,
+            WORD_PLACEMENT.position
+        );
+        grid.across.push(WORD);
+        try {
+            if (await this.areConstraintsMetFor(grid)) {
+                if (await this.placeAcrossWords(grid, current + 1)) {
+                    return true;
+                }
+                else {
+                    grid.across.pop();
+                    return false;
+                }
+            }
+            else {
+                grid.across.pop();
+                return false;
+            }
+        }
+        catch (e) {
+            grid.across.pop();
+            return false;
+        }
     }
 
 }

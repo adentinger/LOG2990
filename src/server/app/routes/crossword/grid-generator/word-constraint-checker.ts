@@ -68,7 +68,7 @@ export class WordConstraintChecker {
                     constantAxisGetter,
                     iteratedAxisGetter
                 );
-            
+
             const CHAR_FOUND = (WORD_THAT_CONTAINS_POSITION !== undefined);
 
             if (CHAR_FOUND) {
