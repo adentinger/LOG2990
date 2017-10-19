@@ -19,6 +19,7 @@ export class GridBanks {
         this.gridBankEasy = new GridBankEasy();
         this.gridBankNormal = new GridBankNormal();
         this.gridBankHard = new GridBankHard();
+        this.fillup();
     }
 
     public async fillup(): Promise<void> {
