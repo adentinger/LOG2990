@@ -53,10 +53,6 @@ export class CrosswordGame {
             this.horizontalDefinitions.set(i, DEFINITIONS_MOCK[i]);
         }
 
-        // this.horizontalDefinitions = DEFINITIONS_MOCK;
-        // this.verticalDefinitions = DEFINITIONS_MOCK;
-        // console.log('new state of the game: ' + JSON.stringify(this.getGameInfo()));
-
         this.packetManager.registerDisconnectHandler((socketId: string) => {
             if (this.player1Id === socketId) {
                 this.player1Id = null;

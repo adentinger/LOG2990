@@ -1,6 +1,6 @@
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
+import { PacketEvent, PacketHandler, registerHandlers, Logger } from '../../../common/index';
 import { GameJoinPacket } from '../../../common/crossword/packets/game-join.packet';
 import { GameDefinitionPacket } from '../../../common/crossword/packets/game-definition.packet';
 import { PacketManagerServer } from '../../../packet-manager';
@@ -11,6 +11,7 @@ import { Direction } from '../../../common/crossword/crossword-enums';
 import '../../../common/crossword/packets/game-definition.parser';
 
 const ID_LENGTH = 8;
+const logger = Logger.getLogger('GameManager');
 
 export class GameManager {
 
@@ -72,9 +73,11 @@ export class GameManager {
         const gameToJoin = event.value.gameId;
         const playerSocketId = event.socketid;
 
-        console.log('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
+        logger.debug('Player from socket' + playerSocketId + ' requesting to join game: ' + gameToJoin);
         this.addPlayerToGame(event.socketid, gameToJoin);
+
         console.log(this.getGame(gameToJoin).getGameInfo());
+
         // send all definitions
         this.sendAllDefinitions(gameToJoin, playerSocketId);
 
@@ -85,6 +88,7 @@ export class GameManager {
 
         // send all gridWords
     }
+
     private sendAllDefinitions(gameId: string, socketId: string): void {
         const horizontalDefinitions: Map<number, Definition> = this.games.get(gameId).horizontalDefinitions;
         const verticalDefinitions: Map<number, Definition> = this.games.get(gameId).verticalDefinitions;
@@ -106,5 +110,9 @@ export class GameManager {
             GameDefinitionPacket,
             new GameDefinitionPacket(index, direction, definition),
             socketId);
+    }
+
+    private sendGridWord(socketId: string) {
+        //
     }
 }
