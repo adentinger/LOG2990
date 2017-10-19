@@ -134,7 +134,10 @@ export class CrosswordGame {
 
     // TODO
     private userAnswerMatchesTheRightAnswer(): boolean {
-        return true;
+        if (true) {
+            this.countdown = COUNTDOWN_DEFAULT_VALUE;
+            return true;
+        }
     }
 
     private sendWordResultToClient(): void {

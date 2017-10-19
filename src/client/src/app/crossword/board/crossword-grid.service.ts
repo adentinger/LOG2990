@@ -28,7 +28,6 @@ export class CrosswordGridService {
         this.grid = ARRAY_GRIDWORD;
         this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-        this.fill();
         this.fillAll();
     }
 
@@ -148,7 +147,7 @@ export class CrosswordGridService {
     }
 
     @PacketHandler(WordTryPacket)
-    public isTheGoodAnswer(event: PacketEvent<WordTryPacket>) {
+    public isTheRightAnswer(event: PacketEvent<WordTryPacket>) {
         if (event.value.wordTry.string !== '') {
             this.wordIsFound = true;
         }

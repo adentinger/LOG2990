@@ -37,10 +37,17 @@ export class BoardComponent implements OnInit {
     }
 
     public onChange(inputValue) {
-        const word = this.crosswordGridService.grid[this.indexOfDefinition];
+
         const input = this.crosswordGridService.stripSymbols(inputValue);
         this.inputBuffer.nativeElement.value = input;
-        this.crosswordGridService.onInputChange(input, word);
+        if (this.definitionsService.selectedDirection === Direction.horizontal) {
+            const word = this.crosswordGridService.horizontalGridWords.get(this.indexOfDefinition);
+            this.crosswordGridService.onInputChange(input, word);
+        }
+        else if (this.definitionsService.selectedDirection === Direction.vertical) {
+            const word = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
+            this.crosswordGridService.onInputChange(input, word);
+        }
     }
 
     public get crosswordGrid() {
