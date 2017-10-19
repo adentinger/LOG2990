@@ -4,11 +4,6 @@ import { CrosswordTimerPacket } from './crossword-timer.packet';
 
 const SIZE_UINT8 = 1, SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 
-/**
- * @class GameJoinParser
- * format:
- *     |index|direction|text_length|text...|
- */
 @Parser(CrosswordTimerPacket)
 export class GameJoinParser extends PacketParser<CrosswordTimerPacket> {
     public serialize(value: CrosswordTimerPacket): ArrayBuffer {

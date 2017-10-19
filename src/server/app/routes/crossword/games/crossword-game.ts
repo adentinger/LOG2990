@@ -8,9 +8,21 @@ import { PacketManagerServer } from '../../../packet-manager';
 import { CrosswordTimerPacket } from '../../../common/crossword/packets/crossword-timer.packet';
 import '../../../common/crossword/packets/crossword-timer.parser';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
+import { Logger } from '../../../common/logger';
+import { WordTryPacket } from '../../../common/crossword/packets/word-try.packet';
+import '../../../common/crossword/packets/word-try.parser';
+
+const logger = Logger.getLogger('CrosswordGame');
+
+const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 minute
 
 export class CrosswordGame {
-    public countdown = 10000;
+    private static readonly COUNTDOWN_INITAL = COUNTDOWN_DEFAULT_VALUE;
+    private static idCounter = 0;
+
+    public readonly id: number;
+    public countdown = CrosswordGame.COUNTDOWN_INITAL;
+    public gridWordReceived: GridWord;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
     public horizontalGrid: GridWord[] = [];
@@ -30,6 +42,7 @@ export class CrosswordGame {
     public player2Id: string = null;
 
     constructor(configs: CrosswordGameConfigs) {
+        this.id = CrosswordGame.idCounter++;
         this.gameMode = configs.gameMode;
 
         // MOCK : will get gridwords from gridstore by http
@@ -94,16 +107,25 @@ export class CrosswordGame {
 
     private startTimer() {
         setInterval(() => {
+            this.countdown--;
             if (this.player1Id !== null) {
-                this.countdown--;
-                console.log('hello this is the timer');
+                logger.log('(game #%s) Timer: %d', this.id, this.countdown);
                 this.packetManager.sendPacket(CrosswordTimerPacket, new CrosswordTimerPacket(this.countdown), this.player1Id);
             }
         }, 1000);
     };
 
     @PacketHandler(CrosswordTimerPacket)
+    // tslint:disable-next-line:no-unused-variable
     private getCheatModeTimerValue(event: PacketEvent<CrosswordTimerPacket>) {
         this.countdown = event.value.countdown;
+    }
+
+    @PacketHandler(WordTryPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private getWordFromClient(event: PacketEvent<WordTryPacket>) {
+        this.gridWordReceived = event.value.wordTry;
+        console.log('HIIIIII this is the GRID WORD RECEIVED');
+        console.dir(this.gridWordReceived);
     }
 }

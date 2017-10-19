@@ -15,10 +15,11 @@ import '../../common/crossword/packets/game-definition.parser';
 export class DefinitionsService {
     public horizontalDefinitions: Map<number, Definition> = new Map();
     public verticalDefinitions: Map<number, Definition> = new Map();
-    private words: string[];
+    private answers: string[];
 
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    public internalSelectedDirection: Direction;
 
     public getDefinitions(): Definition[] {
         return [...this.horizontalDefinitions.values(), ...this.verticalDefinitions.values()];
@@ -38,11 +39,11 @@ export class DefinitionsService {
         //             <[number, Definition]>[id, definition]));
 
         registerHandlers(this, this.packetManager);
-        this.words = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
+        this.answers = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
     }
 
-    public getWords(): string[] {
-        return this.words;
+    public getAnswers(): string[] {
+        return this.answers;
     }
 
     public get selectedDefinitionId() {
@@ -60,12 +61,21 @@ export class DefinitionsService {
         }
     }
 
-    public onSelect(index: number, event): void {
+    public get selectedDirection() {
+        return this.internalSelectedDirection;
+    }
+
+    public set selectedDirection(selectedDirection) {
+        this.internalSelectedDirection = selectedDirection;
+    }
+
+    public onSelect(index: number, direction: Direction, event): void {
         if (this.crosswordGridService.grid[index].string === '') {
 
             this.selectedDefinitionId = index;
             this.crosswordGameService.selectedWordIndex = index;
             this.crosswordGameService.lastSelectedWordIndex = index;
+            this.selectedDirection = direction;
 
             this.crosswordGameService.aDefinitionIsSelected = true;
         }

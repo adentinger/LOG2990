@@ -4,23 +4,23 @@
 
     <h3>Across Words</h3>
     <div *ngFor='let definition of this.horizontalDefinitions; let i = index;'>
-      <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
+      <div [class.selected]='selectedDefinitionId===i && selectedDirection===HORIZONTAL' (click)='onSelect(i, HORIZONTAL, $event)'>
         <p>{{i+1}}. {{definition.text}}</p>
       </div>
     </div>
 
     <h3>Vertical Words</h3>
     <div *ngFor='let definition of this.verticalDefinitions; let j = index;'>
-      <div [class.selected]='selectedDefinitionId===j' (click)='onSelect(j, $event)'>
+      <div [class.selected]='selectedDefinitionId===j && selectedDirection===VERTICAL' (click)='onSelect(j, VERTICAL, $event)'>
         <p>{{j+1}}. {{definition.text}}</p>
       </div>
     </div>
   </div>
 
   <div *ngSwitchCase='true' id="word-box" (clickOutside)='onClickOutside()'>
-    <div *ngFor='let word of words; let i = index;'>
+    <div *ngFor='let answer of answers; let i = index;'>
       <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
-        {{i+1}}. {{word}}
+        {{i+1}}. {{answer}}
       </div>
     </div>
   </div>
