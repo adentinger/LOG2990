@@ -1,7 +1,7 @@
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { GridWord } from '../../../common/crossword/grid-word';
 import { DEFINITIONS_MOCK_H, DEFINITIONS_MOCK_V } from '../mocks/definitions-mock';
-import { ARRAY_GRIDWORD } from '../mocks/gridwords-mock';
+import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/gridwords-mock';
 import { Definition } from '../../../common/crossword/definition';
 import { Direction } from '../../../common/crossword/crossword-enums';
 import { PacketManagerServer } from '../../../packet-manager';
@@ -44,16 +44,22 @@ export class CrosswordGame {
         this.gameMode = configs.gameMode;
 
         // MOCK : will get gridwords from gridstore by http
-        for (let i = 0; i < ARRAY_GRIDWORD.length; i++) {
-            if (ARRAY_GRIDWORD[i].direction === Direction.horizontal) {
-                this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
-            } else {
-                this.verticalGridWords.set(i, ARRAY_GRIDWORD[i]);
-            }
-            this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
+        // for (let i = 0; i < ARRAY_GRIDWORD.length; i++) {
+        //     if (ARRAY_GRIDWORD[i].direction === Direction.horizontal) {
+        //         this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
+        //     } else {
+        //         this.verticalGridWords.set(i, ARRAY_GRIDWORD[i]);
+        //     }
+        //     this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
+        // }
+        // for (let i = 0; i < ARRAY_GRIDWORD.length; i++) {
+        //     this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
+        // }
+        for (let i = 0; i < ARRAY_GRIDWORD_H.length; i++) {
+            this.horizontalGridWords.set(ARRAY_GRIDWORD_H[i].id, ARRAY_GRIDWORD_H);
         }
-        for (let i = 0; i < ARRAY_GRIDWORD.length; i++) {
-            this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
+        for (let i = 0; i < ARRAY_GRIDWORD_V.length; i++) {
+            this.verticalGridWords.set(ARRAY_GRIDWORD_V[i].id, ARRAY_GRIDWORD_V);
         }
 
         /// MOCK : will get definitions from lexic by http requests
