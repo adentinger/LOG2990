@@ -82,7 +82,7 @@ export class GameManager {
 
         // send all gridWords
         const gw = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
-        console.log('sending :' + gw);
+        console.log('sending :' + JSON.stringify(gw));
         this.sendGridWord(
             gw,
             playerSocketId);

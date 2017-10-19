@@ -11,6 +11,8 @@ import '../../common/crossword/packets/word-try.parser';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridWordPacket } from '../../common/crossword/packets/grid-word.packet';
 
+import '../../common/crossword/packets/grid-word.parser';
+
 @Injectable()
 export class CrosswordGridService {
     public crosswordGrid: string[][];
@@ -157,6 +159,7 @@ export class CrosswordGridService {
 
     @PacketHandler(GridWordPacket)
     public updateGridWord(event: PacketEvent<GridWordPacket>) {
-        console.log('received grid word: ' + event.value.gridword);
+        console.dir(event.value.gridword);
+        // send change to grid
     }
 }
