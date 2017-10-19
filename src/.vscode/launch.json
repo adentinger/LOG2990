@@ -14,10 +14,19 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "Debug Mocha Tests",
+        "name": "Debug Server Mocha Tests",
         "cwd": "${workspaceFolder}/server",
         "program": "${workspaceFolder}/server/node_modules/mocha/bin/_mocha",
         "args": [ "-r", "ts-node/register", "app/**/*.spec.ts" ],
+        "internalConsoleOptions": "openOnSessionStart"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Debug Common Mocha Tests",
+        "cwd": "${workspaceFolder}/common",
+        "program": "${workspaceFolder}/common/node_modules/mocha/bin/_mocha",
+        "args": [ "-r", "ts-node/register", "src/**/*.spec.ts" ],
         "internalConsoleOptions": "openOnSessionStart"
       },
       {
