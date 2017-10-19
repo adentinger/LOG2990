@@ -17,7 +17,7 @@ export class DefinitionFieldComponent implements OnInit {
 
     // public definitions: Definition[] = [];
 
-    public words: string[] = [];
+    public answers: string[] = [];
 
     constructor(private definitionService: DefinitionsService) {
         this.selectedDefinition = definitionService.internalSelectedDefinition;
@@ -33,7 +33,7 @@ export class DefinitionFieldComponent implements OnInit {
 
     public ngOnInit(): void {
         // this.definitions = this.definitionService.getDefinitions();
-        this.words = this.definitionService.getWords();
+        this.answers = this.definitionService.getAnswers();
     }
 
     public get selectedDefinitionId() {

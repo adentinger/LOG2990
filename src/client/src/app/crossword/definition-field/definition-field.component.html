@@ -18,9 +18,9 @@
   </div>
 
   <div *ngSwitchCase='true' id="word-box" (clickOutside)='onClickOutside()'>
-    <div *ngFor='let word of words; let i = index;'>
+    <div *ngFor='let answer of answers; let i = index;'>
       <div [class.selected]='selectedDefinitionId===i' (click)='onSelect(i, $event)'>
-        {{i+1}}. {{word}}
+        {{i+1}}. {{answer}}
       </div>
     </div>
   </div>
