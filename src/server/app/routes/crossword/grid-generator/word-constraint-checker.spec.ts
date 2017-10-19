@@ -9,26 +9,16 @@ import { CharConstraint } from '../../../common/index';
 function getTestData(isForAcross: boolean): {words: Word[],
                                                positions: WordPosition[],
                                                expectedConstraints: CharConstraint[][]} {
-    let wordPositions: WordPosition[];
-    if (isForAcross) {
-        wordPositions = [
-            new WordPosition(0, 0),
-            new WordPosition(0, 1),
-            new WordPosition(0, 2)
-        ];
-    }
-    else {
-        wordPositions = [
-            new WordPosition(0, 0),
-            new WordPosition(1, 0),
-            new WordPosition(2, 0)
-        ];
-    }
+    const WORD_POSITIONS: WordPosition[] = [
+        new WordPosition(0, 0),
+        new WordPosition(0, 1),
+        new WordPosition(0, 2)
+    ];
 
     const WORDS: Word[] = [
-        new Word('hello', wordPositions[0]),
-        new Word('baz',   wordPositions[1]),
-        new Word('qux',   wordPositions[2])
+        new Word('hello', WORD_POSITIONS[0]),
+        new Word('baz',   WORD_POSITIONS[1]),
+        new Word('qux',   WORD_POSITIONS[2])
     ];
     const POSITIONS: WordPosition[] = [
         new WordPosition(0, 0),
@@ -52,6 +42,16 @@ function getTestData(isForAcross: boolean): {words: Word[],
         ],
         [ ]
     ];
+    if (!isForAcross) {
+        const SWAP_ROW_COLUMN = (position: WordPosition) => {
+                const ROW = position.column;
+                const COLUMN = position.row;
+                position.row = ROW;
+                position.column = COLUMN;
+            };
+        WORD_POSITIONS.forEach(SWAP_ROW_COLUMN);
+        POSITIONS.forEach(SWAP_ROW_COLUMN);
+    }
     return {
         words: WORDS,
         positions: POSITIONS,
