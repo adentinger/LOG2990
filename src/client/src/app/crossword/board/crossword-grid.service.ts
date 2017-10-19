@@ -9,6 +9,7 @@ import { registerHandlers, PacketHandler, PacketEvent } from '../../common/index
 import { WordTryPacket } from '../../common/crossword/packets/word-try.packet';
 import '../../common/crossword/packets/word-try.parser';
 import { DefinitionsService } from '../definition-field/definitions.service';
+import { GridWordPacket } from '../../common/crossword/packets/grid-word.packet';
 
 @Injectable()
 export class CrosswordGridService {
@@ -36,11 +37,7 @@ export class CrosswordGridService {
 
     public fillAll() {
         this.fill();
-        /*
-        for (let i = 0; i < this.grid.length; i++) {
-            this.fillAcrossAndVertical(this.grid[i]);
-        }
-        */
+
         for (let i = 0; i < this.horizontalGridWords.size; i++) {
             this.fillHorizontal(this.horizontalGridWords.get(i));
         }
@@ -156,5 +153,10 @@ export class CrosswordGridService {
         else {
             this.wordIsFound = false;
         }
+    }
+
+    @PacketHandler(GridWordPacket)
+    public updateGridWord(event: PacketEvent<GridWordPacket>) {
+        console.log('received grid word: ' + event.value.gridword);
     }
 }

@@ -4,10 +4,15 @@ import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/in
 import { GameJoinPacket } from '../../../common/crossword/packets/game-join.packet';
 import { GameDefinitionPacket } from '../../../common/crossword/packets/game-definition.packet';
 import { PacketManagerServer } from '../../../packet-manager';
-import '../../../common/crossword/packets/game-join.parser';
+
 import { Definition } from '../../../common/crossword/definition';
 import { Direction } from '../../../common/crossword/crossword-enums';
 
+
+import { GridWord } from '../../../common/crossword/grid-word';
+import { GridWordPacket } from '../../../common/crossword/packets/grid-word.packet';
+import '../../../common/crossword/packets/grid-word.parser';
+import '../../../common/crossword/packets/game-join.parser';
 import '../../../common/crossword/packets/game-definition.parser';
 
 const ID_LENGTH = 8;
@@ -75,11 +80,18 @@ export class GameManager {
         console.debug('Player from socket ' + playerSocketId + ' requesting to join game: ' + gameToJoin);
         this.addPlayerToGame(event.socketid, gameToJoin);
 
+        // send all gridWords
+        const gw = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
+        console.log('sending :' + gw);
+        this.sendGridWord(
+            gw,
+            playerSocketId);
+
         // send all definitions
         this.sendAllDefinitions(gameToJoin, playerSocketId);
 
-        // send all gridWords
     }
+
     private sendAllDefinitions(gameId: string, socketId: string): void {
         const horizontalDefinitions: Map<number, Definition> = this.games.get(gameId).horizontalDefinitions;
         const verticalDefinitions: Map<number, Definition> = this.games.get(gameId).verticalDefinitions;
@@ -100,6 +112,13 @@ export class GameManager {
         this.packetManager.sendPacket(
             GameDefinitionPacket,
             new GameDefinitionPacket(index, direction, definition),
+            socketId);
+    }
+
+    private sendGridWord(gridWord: GridWord, socketId: string) {
+        this.packetManager.sendPacket(
+            GridWordPacket,
+            new GridWordPacket(gridWord),
             socketId);
     }
 }
