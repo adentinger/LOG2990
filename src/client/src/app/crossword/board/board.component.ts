@@ -16,10 +16,6 @@ import '../../common/crossword/packets/word-try.parser';
 })
 
 export class BoardComponent implements OnInit {
-    public crosswordGrid: string[][];
-    public wordBuffer = '';
-    public disableInput = false;
-
     public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
@@ -30,7 +26,7 @@ export class BoardComponent implements OnInit {
             this.inputBuffer.nativeElement.value = '';
         }
 
-        this.clearGridOfUselessLetters();
+        this.crosswordGridService.clearGridOfUselessLetters();
     }
 
     constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService,
@@ -40,79 +36,18 @@ export class BoardComponent implements OnInit {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
     }
 
-    private stripSymbols(input) {
-        return input.replace(/[^a-zA-Z]/g, '');
-    }
-
-    private inputLettersOnGrid(word: GridWord, input: string) {
-        for (let i = 0; i < word.length; i++) {
-            if (word.direction === Direction.horizontal) {
-                if (i < input.length) {
-                    this.crosswordGrid[word.y][word.x + i] = input[i];
-                }
-                else {
-                    this.crosswordGrid[word.y][word.x + i] = '';
-                }
-            }
-            else if (word.direction === Direction.vertical) {
-                if (i < input.length) {
-                    this.crosswordGrid[word.y + i][word.x] = input[i];
-                }
-                else {
-                    this.crosswordGrid[word.y + i][word.x] = '';
-                }
-            }
-        }
-    }
-
-    public clearGridOfUselessLetters(): void {
-        const words = this.crosswordGridService.grid;
-        for (let i = 0; i < words.length; i++) {
-            if (words[i].string === '') {
-                this.inputLettersOnGrid(words[i], '');
-            }
-        }
-    }
-
-    // TODO Verify the word entered if it matches the word on the server
-    private sendWordToServer(input: string, word: GridWord) {
-        const newGridWord = Object.assign(new GridWord, word);
-        newGridWord.string = input;
-
-        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(newGridWord));
-    }
-
     public onChange(inputValue) {
         const word = this.crosswordGridService.grid[this.indexOfDefinition];
-
-        const input = this.stripSymbols(inputValue);
-
+        const input = this.crosswordGridService.stripSymbols(inputValue);
         this.inputBuffer.nativeElement.value = input;
-
-        if (this.crosswordGameService.aDefinitionIsSelected) {
-            if (input.length < word.length) {
-                this.inputLettersOnGrid(word, input);
-            }
-            else if (input.length === word.length) {
-                this.inputLettersOnGrid(word, input);
-                this.sendWordToServer(input, word);
-
-                this.handleResponseFromServer();
-
-                this.definitionsService.internalSelectedDefinitionId = -1;
-                this.crosswordGameService.aDefinitionIsSelected = false;
-            }
-        }
+        this.crosswordGridService.onInputChange(input, word);
     }
 
-    // TODO handle the response from server when the word is found or not
-    private handleResponseFromServer() {
-        const wordFound = false;
-        if (wordFound) {
-            //
-        }
-        if (!wordFound) {
-            this.clearGridOfUselessLetters();
-        }
+    public get crosswordGrid() {
+        return this.crosswordGridService.crosswordGrid;
+    }
+
+    public set crosswordGrid(value: string[][]) {
+        this.crosswordGridService.crosswordGrid = value;
     }
 }
