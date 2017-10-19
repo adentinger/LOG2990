@@ -5,6 +5,8 @@ import { Direction } from '../../common/crossword/crossword-enums';
 import { CrosswordGameService } from '../crossword-game.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { DefinitionFieldComponent } from '../definition-field/definition-field.component';
+import { PacketManagerClient } from '../../packet-manager-client';
+import { WordTryPacket } from '../../common/crossword/packets/word-try.packet';
 
 @Component({
     selector: 'app-board',
@@ -30,8 +32,8 @@ export class BoardComponent implements OnInit {
         this.clearGridOfUselessLetters();
     }
 
-    constructor(private crosswordGridService: CrosswordGridService,
-        private crosswordGameService: CrosswordGameService, private definitionsService: DefinitionsService) { }
+    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService, 
+        private definitionsService: DefinitionsService, private packetManager: PacketManagerClient) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
@@ -72,8 +74,11 @@ export class BoardComponent implements OnInit {
     }
 
     // TODO Verify the word entered if it matches the word on the server
-    private sendWordToServer(input: string) {
-        //
+    private sendWordToServer(input: string, word: GridWord) {
+        const newGridWord = Object.assign(new GridWord, word);
+        newGridWord.string = input;
+
+        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(newGridWord));
     }
 
     public onChange(inputValue) {
@@ -89,7 +94,7 @@ export class BoardComponent implements OnInit {
             }
             else if (input.length === word.length) {
                 this.inputLettersOnGrid(word, input);
-                this.sendWordToServer(input);
+                this.sendWordToServer(input, word);
 
                 this.handleResponseFromServer();
 
