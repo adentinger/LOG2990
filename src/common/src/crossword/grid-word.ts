@@ -1,6 +1,7 @@
 import { Direction, Owner } from './crossword-enums';
 
 export class GridWord {
+    public id: number;
     public y: number;
     public x: number;
     public length: number;

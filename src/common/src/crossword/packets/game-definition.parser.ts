@@ -3,7 +3,7 @@ import { Parser } from '../../communication/packet-api/packet-handler';
 import { GameDefinitionPacket } from './game-definition.packet';
 import { Definition } from '../definition';
 
-const SIZE_UINT8 = 1, SIZE_UINT16 = 2, SIZE_UINT32 = 4;
+const SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 
 /**
  * @class GameJoinParser
@@ -38,6 +38,6 @@ export class GameJoinParser extends PacketParser<GameDefinitionPacket> {
         for (let i = 0; i < DEFINITION_TEXT_LENGTH; i++) {
             buffer += String.fromCharCode(VIEW.getUint16(i * SIZE_UINT16 + 3 * SIZE_UINT32));
         }
-        return new GameDefinitionPacket(INDEX, DIRECTION, new Definition(buffer));
+        return new GameDefinitionPacket(INDEX, DIRECTION, new Definition(buffer, DIRECTION));
     }
 }

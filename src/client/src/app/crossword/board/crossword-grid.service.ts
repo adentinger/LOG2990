@@ -36,8 +36,29 @@ export class CrosswordGridService {
 
     public fillAll() {
         this.fill();
+        /*
         for (let i = 0; i < this.grid.length; i++) {
             this.fillAcrossAndVertical(this.grid[i]);
+        }
+        */
+        for (let i = 0; i < this.horizontalGridWords.size; i++) {
+            this.fillHorizontal(this.horizontalGridWords.get(i));
+        }
+
+        for (let i = 0; i < this.verticalGridWords.size; i++) {
+            this.fillVertical(this.verticalGridWords.get(i));
+        }
+    }
+
+    public fillHorizontal(gridWord: GridWord): void {
+        for (let i = 0; i < gridWord.length; i++) {
+            this.viewableGrid[gridWord.y][i + gridWord.x] = '';
+        }
+    }
+
+    public fillVertical(gridWord: GridWord): void {
+        for (let i = 0; i < gridWord.length; i++) {
+            this.viewableGrid[i + gridWord.y][gridWord.x] = '';
         }
     }
 

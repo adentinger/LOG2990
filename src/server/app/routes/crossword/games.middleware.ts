@@ -2,6 +2,7 @@ import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
 import { HttpStatus } from '../../common/http-status';
 import { GameManager } from './games/game-manager';
+import { Logger } from '../../common';
 
 type CrosswordGameMode = 'classic' | 'dynamic';
 type CrosswordGameDifficulty = 'easy' | 'normal' | 'brutal';
@@ -11,6 +12,8 @@ interface MockCrosswordPendingGame {
     mode: CrosswordGameMode;
     difficulty: CrosswordGameDifficulty;
 }
+
+const logger = Logger.getLogger('CrosswordGamesMiddleWare');
 
 @MiddleWare('/crossword/games')
 export class CrosswordGamesMiddleWare {
@@ -33,10 +36,10 @@ export class CrosswordGamesMiddleWare {
 
     @Route('post', '/')
     public postGame(req: express.Request, res: express.Response): void {
-        // console.log('MIDDLEWARE TRIGGERED');
+        // logger.log('MIDDLEWARE TRIGGERED');
         res.status(HttpStatus.ACCEPTED);
 
-        console.log(req.body);
+        logger.log(req.body);
         const newGameId = GameManager.getInstance().newGame(req.body);
         res.json({
             'id': newGameId
@@ -46,7 +49,7 @@ export class CrosswordGamesMiddleWare {
     public getGame(req: express.Request, res: express.Response): void {
         // res.status(HttpStatus.ACCEPTED);
         let game;
-        console.log('\nprocessing req =' + req.body);
+        logger.log('\nprocessing req =' + req.body);
         try {
             game = GameManager.getInstance().getGame(req.params.id);
         } catch (error) {

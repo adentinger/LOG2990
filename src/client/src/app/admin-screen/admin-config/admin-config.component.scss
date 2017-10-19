@@ -46,6 +46,8 @@
             border: 1px solid #888;
             border-left: none;
             padding-left: 5px;
+            -moz-transform: scaleX(0.92);
+            -moz-transform-origin: left;
 
             &:focus {
                 box-shadow: none;

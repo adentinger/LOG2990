@@ -1,6 +1,6 @@
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { GridWord } from '../../../common/crossword/grid-word';
-import { DEFINITIONS_MOCK } from '../mocks/definitions-mock';
+import { DEFINITIONS_MOCK_H, DEFINITIONS_MOCK_V } from '../mocks/definitions-mock';
 import { ARRAY_GRIDWORD } from '../mocks/gridwords-mock';
 import { Definition } from '../../../common/crossword/definition';
 import { Direction } from '../../../common/crossword/crossword-enums';
@@ -56,11 +56,11 @@ export class CrosswordGame {
         }
 
         /// MOCK : will get definitions from lexic by http requests
-        for (let i = 0; i < DEFINITIONS_MOCK.length; i++) {
-            this.verticalDefinitions.set(i, DEFINITIONS_MOCK[i]);
+        for (let i = 0; i < DEFINITIONS_MOCK_V.length; i++) {
+            this.verticalDefinitions.set(i, DEFINITIONS_MOCK_V[i]);
         }
-        for (let i = 0; i < DEFINITIONS_MOCK.length; i++) {
-            this.horizontalDefinitions.set(i, DEFINITIONS_MOCK[i]);
+        for (let i = 0; i < DEFINITIONS_MOCK_H.length; i++) {
+            this.horizontalDefinitions.set(i, DEFINITIONS_MOCK_H[i]);
         }
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
