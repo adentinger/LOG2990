@@ -17,6 +17,11 @@ export class DefinitionsService {
     public verticalDefinitions: Map<number, Definition> = new Map();
     private answers: string[];
 
+    private cheatModeOn = false;
+    private changeTimerValueOn = false;
+
+    private words: string[];
+
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
     public internalSelectedDirection: Direction;
@@ -28,15 +33,6 @@ export class DefinitionsService {
     constructor(public crosswordGameService: CrosswordGameService,
         public crosswordGridService: CrosswordGridService,
         private packetManager: PacketManagerClient) {
-
-        // this.horizontalDefinitions = new Map(
-        //     DEFINITIONS_MOCK.map(
-        //         (definition: Definition, id: number) =>
-        //             <[number, Definition]>[id, definition]));
-        // this.verticalDefinitions = new Map(
-        //     DEFINITIONS_MOCK.map(
-        //         (definition: Definition, id: number) =>
-        //             <[number, Definition]>[id, definition]));
 
         registerHandlers(this, this.packetManager);
         this.answers = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];

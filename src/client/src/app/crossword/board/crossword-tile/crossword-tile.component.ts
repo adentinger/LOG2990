@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { CrosswordGridService } from '../crossword-grid.service';
 import { GridWord } from '../../../common/crossword/grid-word';
 import { Direction } from '../../../common/crossword/crossword-enums';

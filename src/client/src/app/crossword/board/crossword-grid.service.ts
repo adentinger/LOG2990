@@ -13,7 +13,7 @@ export class CrosswordGridService {
     public verticalGridWords: Map<number, GridWord>;
     private viewableGrid: string[][];
 
-    constructor(private crosswordGameService: CrosswordGameService) {
+    constructor() {
         this.grid = ARRAY_GRIDWORD;
         this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
