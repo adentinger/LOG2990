@@ -16,4 +16,9 @@ export abstract class AbstractWordSuggestionsGetter {
                                          charConstraints: CharConstraint[],
                                          positionHint: WordPosition): Promise<WordSuggestions>;
 
+    public abstract async doSuggestionsExist(minLength: number,
+                                             maxLength: number,
+                                             charConstraints: CharConstraint[],
+                                             positionHint: WordPosition): Promise<boolean>;
+
 }

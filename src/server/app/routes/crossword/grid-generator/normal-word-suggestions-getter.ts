@@ -25,4 +25,16 @@ export class NormalWordSuggestionsGetter extends AbstractWordSuggestionsGetter {
         return WORD_SUGGESTIONS;
     }
 
+    public async doSuggestionsExist(minLength: number,
+                                    maxLength: number,
+                                    charConstraints: CharConstraint[],
+                                    positionHint: WordPosition): Promise<boolean> {
+        return await LexiconCaller.getInstance().doWordsExist(
+            minLength,
+            maxLength,
+            this.difficulty.isWordCommon(),
+            charConstraints
+        );
+    }
+
 }
