@@ -143,7 +143,7 @@ export class CrosswordGridService {
     }
 
     @PacketHandler(WordTryPacket)
-    public isTheGoodAnswer(event: PacketEvent<WordTryPacket>) {
+    public isTheRightAnswer(event: PacketEvent<WordTryPacket>) {
         if (event.value.wordTry.string !== '') {
             this.wordIsFound = true;
         }
