@@ -33,7 +33,8 @@ export class GridBanks {
     }
 
     public getNormalGrid(): Promise<Grid> {
-        return this.gridBankNormal.getGrid();    }
+        return this.gridBankNormal.getGrid();
+    }
 
     public getHardGrid(): Promise<Grid> {
         return this.gridBankHard.getGrid();
