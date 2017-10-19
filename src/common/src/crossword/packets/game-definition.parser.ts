@@ -38,6 +38,6 @@ export class GameJoinParser extends PacketParser<GameDefinitionPacket> {
         for (let i = 0; i < DEFINITION_TEXT_LENGTH; i++) {
             buffer += String.fromCharCode(VIEW.getUint16(i * SIZE_UINT16 + 3 * SIZE_UINT32));
         }
-        return new GameDefinitionPacket(INDEX, DIRECTION, new Definition(buffer));
+        return new GameDefinitionPacket(INDEX, DIRECTION, new Definition(buffer, DIRECTION));
     }
 }

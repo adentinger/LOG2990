@@ -7,6 +7,7 @@ import { GameJoinPacket } from '../common/crossword/packets/game-join.packet';
 import { registerHandlers, PacketHandler, PacketEvent } from '../common/index';
 import { GameDefinitionPacket } from '../common/crossword/packets/game-definition.packet';
 import { CrosswordTimerPacket } from '../common/crossword/packets/crossword-timer.packet';
+import { Direction } from '../common/crossword/crossword-enums';
 import '../common/crossword/packets/crossword-timer.parser';
 
 const TIME_MAX = 9999;
@@ -27,6 +28,7 @@ export class CrosswordGameService {
     private gameId: string = null;
 
     public selectedWordIndex = 0;
+    public direction: Direction;
     public lastSelectedWordIndex = 0;
     public aDefinitionIsSelected = false;
 
