@@ -35,7 +35,7 @@ export class LexiconCaller {
                     }
                 });
                 response.on('error', reject);
-            });
+            }).setTimeout(0).end();
         });
     }
 
@@ -57,7 +57,7 @@ export class LexiconCaller {
                     case HttpStatus.NOT_FOUND: resolve(false); break;
                     default: reject('Unexected http status code: ' + STATUS_CODE); break;
                 }
-            });
+            }).setTimeout(0).end();
         });
     }
 }

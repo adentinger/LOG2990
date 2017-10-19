@@ -34,7 +34,7 @@ export abstract class GridBank {
                     resolve(JSON.parse(data));
                 });
                 response.on('error', reject);
-            });
+            }).setTimeout(0).end();
         });
     }
 
