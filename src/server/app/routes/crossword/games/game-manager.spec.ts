@@ -60,7 +60,9 @@ describe('The Game Manager Service', () => {
 
     it('should be able to delete a specific game among others', (done) => {
         const MAX_N = 8;
-        const nGames = Math.floor(Math.random() * MAX_N);
+        // console.log('max n:' + MAX_N);
+
+        const nGames = Math.floor(Math.random() * MAX_N) + 1;
         const gameIds: string[] = [];
         for (let i = 0; i < nGames; i++) {
             gameIds.push(gameManager.newGame(createMockGameConfigs()));

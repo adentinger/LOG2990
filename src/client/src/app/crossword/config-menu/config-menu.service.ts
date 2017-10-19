@@ -134,6 +134,7 @@ export class ConfigMenuService {
             (response) => {
                 console.log('response on client: ' + JSON.stringify(response));
                 this.crosswordGameService.setGameId(response['id']);
+                // get informations to init game on client
             },
             (error: Error) => {
                 console.log('error on client : ' + error.message);

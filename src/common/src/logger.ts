@@ -10,6 +10,8 @@ export enum Level {
     NONE
 }
 
+const DEFAULT_NAME = '<Anonymous>';
+
 // declare const process: { env: any };
 declare var global: any;
 eval.call(null, 'var global = global || this || window;');
@@ -75,7 +77,8 @@ export class Logger {
 
     public debug(message?: any, ...optionalParams: any[]): void {
         if (SYSTEM_LEVEL <= Level.DEBUG) {
-            this.printLog(`DEBUG] [${getCallers()[1]}`, message, ...optionalParams);
+            const callers = getCallers();
+            this.printLog(`DEBUG] [${callers && callers[1] || DEFAULT_NAME}`, message, ...optionalParams);
         }
     }
 
@@ -87,13 +90,15 @@ export class Logger {
 
     public warn(message?: any, ...optionalParams: any[]): void {
         if (SYSTEM_LEVEL <= Level.WARN) {
-            this.printError(`WARN] [${getCallers()[1]}`, message, ...optionalParams);
+            const callers = getCallers();
+            this.printError(`WARN] [${callers && callers[1] || DEFAULT_NAME}`, message, ...optionalParams);
         }
     }
 
     public error(message?: any, ...optionalParams: any[]): void {
         if (SYSTEM_LEVEL <= Level.ERROR) {
-            this.printError(`ERROR] [${getCallers()[1]}`, message, ...optionalParams);
+            const callers = getCallers();
+            this.printError(`ERROR] [${callers && callers[1] || DEFAULT_NAME}`, message, ...optionalParams);
         }
     }
 }
