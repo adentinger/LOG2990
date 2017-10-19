@@ -1,9 +1,8 @@
 import { PacketParser } from '../../communication/packet-api';
-import { Parser } from '../../communication/packet-api/packet-handler';
+import { Parser, SIZE_UINT16, SIZE_UINT32 } from '../../communication/packet-api/packet-handler';
 import { WordTryPacket } from './word-try.packet';
 import { GridWord } from '../grid-word';
 
-const SIZE_UINT8 = 1, SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 
 @Parser(WordTryPacket)
 export class GameJoinParser extends PacketParser<WordTryPacket> {

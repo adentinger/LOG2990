@@ -1,8 +1,7 @@
 import { PacketParser } from '../../communication/packet-api';
-import { Parser } from '../../communication/packet-api/packet-handler';
+import { Parser, SIZE_UINT32 } from '../../communication/packet-api/packet-handler';
 import { CrosswordTimerPacket } from './crossword-timer.packet';
 
-const SIZE_UINT8 = 1, SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 
 @Parser(CrosswordTimerPacket)
 export class GameJoinParser extends PacketParser<CrosswordTimerPacket> {

@@ -9,6 +9,8 @@ const parsers: [Class<any>, Constructor<PacketParser<any>>][] = [];
 const logger = Logger.getLogger('Packet Decorators');
 const DEFAULT_CLASSNAME = '<Annonymous>';
 
+export const SIZE_UINT8 = 1, SIZE_UINT16 = 2, SIZE_UINT32 = 4;
+
 // Decorator
 export function Parser<T>(type: Class<T>) {
     return function Parser<P extends PacketParser<T>>(constructor: Constructor<P>) {

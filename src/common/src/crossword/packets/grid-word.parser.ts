@@ -1,11 +1,7 @@
 import { PacketParser } from '../../communication/packet-api';
-import { Parser } from '../../communication/packet-api/packet-handler';
+import { Parser, SIZE_UINT16, SIZE_UINT32 } from '../../communication/packet-api/packet-handler';
 import { GridWordPacket } from './grid-word.packet';
 import { GridWord } from '../grid-word';
-
-const SIZE_UINT8 = 1,
-    SIZE_UINT16 = 2,
-    SIZE_UINT32 = 4;
 
 @Parser(GridWordPacket)
 export class GridWordParser extends PacketParser<GridWordPacket> {
@@ -21,10 +17,10 @@ export class GridWordParser extends PacketParser<GridWordPacket> {
         DATA.setInt32(3 * SIZE_UINT32, value.gridword.length);
         DATA.setInt32(4 * SIZE_UINT32, value.gridword.direction);
         DATA.setInt32(5 * SIZE_UINT32, value.gridword.owner);
-        DATA.setInt32(6 * SIZE_UINT32, STRING_LENGTH)
+        DATA.setInt32(6 * SIZE_UINT32, STRING_LENGTH);
 
         for (let i = 0; i < STRING_LENGTH; i++) {
-            DATA.setUint16(7 * SIZE_UINT32 + i * SIZE_UINT16, value.gridword.string.charCodeAt(i))
+            DATA.setUint16(7 * SIZE_UINT32 + i * SIZE_UINT16, value.gridword.string.charCodeAt(i));
         }
         return BUFFER;
     }
