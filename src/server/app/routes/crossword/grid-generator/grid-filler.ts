@@ -6,7 +6,7 @@ import { Word } from './word';
 
 export abstract class GridFiller {
 
-    protected static readonly NUM_TRIES = 5;
+    protected static readonly NUM_TRIES = 20;
 
     protected acrossWords: WordPlacement[] = [];
     protected verticalWords: WordPlacement[] = [];
@@ -80,7 +80,26 @@ export abstract class GridFiller {
     }
 
     private async placeVerticalWords(grid: Grid, current: number = 0): Promise<boolean> {
-        // TODO
+        for (let i = 0; i < this.verticalWords.length; ++i) {
+            const PLACEMENT = this.verticalWords[i];
+            console.log(PLACEMENT);
+            const CONSTRAINT =
+            WordConstraintChecker.getInstance().getVerticalWordConstraint(
+                grid,
+                PLACEMENT.position
+            );
+            const SUGGESTIONS = await this.suggestionsGetter.getSuggestions(
+                PLACEMENT.minLength,
+                PLACEMENT.maxLength,
+                CONSTRAINT,
+                PLACEMENT.position
+            );
+            const WORD = new Word(
+                SUGGESTIONS.randomSuggestion,
+                PLACEMENT.position
+            );
+            grid.vertical.push(WORD);
+        }
         return true;
     }
 
