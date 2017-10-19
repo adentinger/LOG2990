@@ -12,8 +12,10 @@ import { Logger } from '../../../common/logger';
 
 const logger = Logger.getLogger('CrosswordGame');
 
+const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 minute
+
 export class CrosswordGame {
-    private static readonly COUNTDOWN_INITAL = 10000;
+    private static readonly COUNTDOWN_INITAL = COUNTDOWN_DEFAULT_VALUE;
     private static idCounter = 0;
 
     public readonly id: number;

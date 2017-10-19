@@ -30,16 +30,32 @@ export class CrosswordComponent implements OnInit {
         this.gameBoard.onSelect(event);
     }
 
-    public getCheatModeStateText(): string {
-        return this.crosswordGameService.getCheatModeStateText();
+    public setCheatModeOnOff(): void {
+        this.crosswordGameService.setCheatModeOnOff();
     }
 
     public getCheatModeState(): boolean {
         return this.crosswordGameService.getCheatModeState();
     }
 
-    public setCheatModeOnOff(): void {
-        this.crosswordGameService.setCheatModeOnOff();
+    public getCheatModeStateText(): string {
+        return this.crosswordGameService.getCheatModeStateText();
+    }
+
+    public setShowWordsOnOff(): void {
+        this.crosswordGameService.setShowWordsOnOff();
+    }
+
+    public getShowWordsState(): boolean {
+        return this.crosswordGameService.getShowWordsState();
+    }
+
+    public getShowWordsStateText(): string {
+        return this.crosswordGameService.getShowWordsStateText();
+    }
+
+    public setTimerOnOff(): void {
+        this.crosswordGameService.setTimerOnOff();
     }
 
     public getTimerState(): boolean {
@@ -48,10 +64,6 @@ export class CrosswordComponent implements OnInit {
 
     public getTimerStateText(): string {
         return this.crosswordGameService.getTimerStateText();
-    }
-
-    public setTimerOnOff(): void {
-        return this.crosswordGameService.setTimerOnOff();
     }
 
     public changeTimerValue(seconds: string): void {

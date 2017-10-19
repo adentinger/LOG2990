@@ -30,7 +30,6 @@ export class CrosswordTileComponent implements OnInit {
     public ngOnInit() {
     }
 
-
     constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService) { }
 
     public checkIfTileIsInWordTiles(word: GridWord): boolean {

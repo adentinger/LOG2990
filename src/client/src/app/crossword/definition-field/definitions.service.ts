@@ -15,7 +15,7 @@ import '../../common/crossword/packets/game-definition.parser';
 export class DefinitionsService {
     public horizontalDefinitions: Map<number, Definition> = new Map();
     public verticalDefinitions: Map<number, Definition> = new Map();
-    private words: string[];
+    private answers: string[];
 
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
@@ -39,11 +39,11 @@ export class DefinitionsService {
         //             <[number, Definition]>[id, definition]));
 
         registerHandlers(this, this.packetManager);
-        this.words = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
+        this.answers = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
     }
 
-    public getWords(): string[] {
-        return this.words;
+    public getAnswers(): string[] {
+        return this.answers;
     }
 
     public get selectedDefinitionId() {

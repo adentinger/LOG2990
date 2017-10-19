@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input, } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { Definition } from '../../common/crossword/definition';
 import { DefinitionsService } from './definitions.service';
 import { Direction } from '../../common/crossword/crossword-enums';
@@ -21,7 +21,7 @@ export class DefinitionFieldComponent implements OnInit {
 
     // public definitions: Definition[] = [];
 
-    public words: string[] = [];
+    public answers: string[] = [];
 
     constructor(private definitionService: DefinitionsService) {
         this.selectedDefinition = definitionService.internalSelectedDefinition;
@@ -37,7 +37,7 @@ export class DefinitionFieldComponent implements OnInit {
 
     public ngOnInit(): void {
         // this.definitions = this.definitionService.getDefinitions();
-        this.words = this.definitionService.getWords();
+        this.answers = this.definitionService.getAnswers();
     }
 
     public get selectedDefinitionId() {
