@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { Definition } from '../../common/crossword/definition';
 import { DefinitionsService } from './definitions.service';
+import { Direction } from '../../common/crossword/crossword-enums';
 
 @Component({
     selector: 'app-definition-field',
@@ -8,6 +9,9 @@ import { DefinitionsService } from './definitions.service';
     styleUrls: ['./definition-field.component.css']
 })
 export class DefinitionFieldComponent implements OnInit {
+
+    public readonly HORIZONTAL = Direction.horizontal;
+    public readonly VERTICAL = Direction.vertical;
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
@@ -37,15 +41,19 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public get selectedDefinitionId() {
-        return this.definitionService.internalSelectedDefinitionId;
+        return this.definitionService.selectedDefinitionId;
     }
 
     public set selectedDefinitionId(selectedDefinitionId) {
         this.definitionService.selectedDefinitionId = selectedDefinitionId;
     }
 
-    public onSelect(index: number, event): void {
-        this.definitionService.onSelect(index, event);
+    public get selectedDirection() {
+        return this.definitionService.selectedDirection;
+    }
+
+    public onSelect(index: number, direction: Direction, event): void {
+        this.definitionService.onSelect(index, direction, event);
     }
 
     public onClickOutside(): void {

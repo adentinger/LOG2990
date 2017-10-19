@@ -19,6 +19,7 @@ export class DefinitionsService {
 
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();
+    public internalSelectedDirection: Direction;
 
     public getDefinitions(): Definition[] {
         return [...this.horizontalDefinitions.values(), ...this.verticalDefinitions.values()];
@@ -60,12 +61,21 @@ export class DefinitionsService {
         }
     }
 
-    public onSelect(index: number, event): void {
+    public get selectedDirection() {
+        return this.internalSelectedDirection;
+    }
+
+    public set selectedDirection(selectedDirection) {
+        this.internalSelectedDirection = selectedDirection;
+    }
+
+    public onSelect(index: number, direction: Direction, event): void {
         if (this.crosswordGridService.grid[index].string === '') {
 
             this.selectedDefinitionId = index;
             this.crosswordGameService.selectedWordIndex = index;
             this.crosswordGameService.lastSelectedWordIndex = index;
+            this.selectedDirection = direction;
 
             this.crosswordGameService.aDefinitionIsSelected = true;
         }

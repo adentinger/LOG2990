@@ -2,17 +2,21 @@ import { Injectable } from '@angular/core';
 
 import { GridWord } from '../../common/crossword/grid-word';
 import { Direction } from '../../common/crossword/crossword-enums';
-import { ARRAY_GRIDWORD } from '../mocks/grid-mock';
+import { ARRAY_GRIDWORD, ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 
 @Injectable()
 export class CrosswordGridService {
 
     public grid: GridWord[];
+    public horizontalGridWords: Map<number, GridWord>;
+    public verticalGridWords: Map<number, GridWord>;
     private viewableGrid: string[][];
 
     constructor(private crosswordGameService: CrosswordGameService) {
         this.grid = ARRAY_GRIDWORD;
+        this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
+        this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.fill();
         this.fillAll();
     }
