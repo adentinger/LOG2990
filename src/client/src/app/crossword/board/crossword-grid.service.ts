@@ -23,8 +23,10 @@ export class CrosswordGridService {
     constructor(private crosswordGameService: CrosswordGameService, private packetManager: PacketManagerClient,
         private definitionsService: DefinitionsService) {
         registerHandlers(this, packetManager);
-        this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-        this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map((value: GridWord, index: number) => <[number, GridWord]>[index, value]));
+        this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map(
+            (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
+        this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map(
+            (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.fillAll();
     }
 

@@ -2,7 +2,7 @@ import { GridWord, } from '../../common/crossword/grid-word';
 import { Direction, Owner } from '../../common/crossword/crossword-enums';
 
 export const ARRAY_GRIDWORD_H: GridWord[] = [
-    { 'id': 0, 'y': 0, 'x': 0, 'length': 7, 'direction': Direction.horizontal, 'owner': Owner.none, 'string': '' },
+    { 'id': 0, 'y': 0, 'x': 0, 'length': 7, 'direction': Direction.horizontal, 'owner': Owner.none, 'string': 'jacuzzi' },
     { 'id': 1, 'y': 1, 'x': 0, 'length': 4, 'direction': Direction.horizontal, 'owner': Owner.none, 'string': '' },
     { 'id': 2, 'y': 2, 'x': 0, 'length': 3, 'direction': Direction.horizontal, 'owner': Owner.none, 'string': '' },
     { 'id': 3, 'y': 3, 'x': 3, 'length': 5, 'direction': Direction.horizontal, 'owner': Owner.none, 'string': '' },
