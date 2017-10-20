@@ -17,6 +17,9 @@ export class ExternalWordApiService {
                 ...requestOptions
             };
             const req = http.request(REQUEST_OPTIONS);
+            req.setTimeout(0).socket.on('error', () => {
+                console.log('SOCKET ERROR HANDLED');
+            });
             req.on('response', (res: http.IncomingMessage) => {
                 let resp = '';
                 res.on('data', (chunck: string) => resp += chunck);

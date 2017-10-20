@@ -72,7 +72,7 @@ export class Application {
      */
     private config() {
         // Middlewares configuration
-        this.app.use(logger('dev'));
+        // this.app.use(logger('tiny'));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(cookieParser(Application.SECRET));
