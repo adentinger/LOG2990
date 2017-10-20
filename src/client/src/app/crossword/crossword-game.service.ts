@@ -22,7 +22,6 @@ export class CrosswordGameService {
     private cheatModeOn = false;
     private showWordsOn = false;
     private changeTimerValueOn = false;
-    private timerValueInSeconds: number;
 
     private gameId: string = null;
 

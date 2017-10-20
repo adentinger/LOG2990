@@ -3,7 +3,6 @@ import { GridWord } from '../../../common/crossword/grid-word';
 import { DEFINITIONS_MOCK_H, DEFINITIONS_MOCK_V } from '../mocks/definitions-mock';
 import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/gridwords-mock';
 import { Definition } from '../../../common/crossword/definition';
-import { Direction } from '../../../common/crossword/crossword-enums';
 import { PacketManagerServer } from '../../../packet-manager';
 import { CrosswordTimerPacket } from '../../../common/crossword/packets/crossword-timer.packet';
 import '../../../common/crossword/packets/crossword-timer.parser';
