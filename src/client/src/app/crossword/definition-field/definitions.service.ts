@@ -3,7 +3,6 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Definition } from '../../common/crossword/definition';
 // import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
 import { CrosswordGameService } from '../crossword-game.service';
-import { CrosswordGridService } from '../board/crossword-grid.service';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../common/index';
 import { GameDefinitionPacket } from '../../common/crossword/packets/game-definition.packet';
 import { PacketManagerClient } from '../../packet-manager-client';
@@ -16,11 +15,6 @@ export class DefinitionsService {
     public horizontalDefinitions: Map<number, Definition> = new Map();
     public verticalDefinitions: Map<number, Definition> = new Map();
     private answers: string[];
-
-    private cheatModeOn = false;
-    private changeTimerValueOn = false;
-
-    private words: string[];
 
     public internalSelectedDefinitionId: number = -1;
     public internalSelectedDefinition: EventEmitter<number> = new EventEmitter<number>();

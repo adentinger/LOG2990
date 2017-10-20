@@ -4,9 +4,7 @@ import { GridWord } from '../../common/crossword/grid-word';
 import { Direction } from '../../common/crossword/crossword-enums';
 import { CrosswordGameService } from '../crossword-game.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import { DefinitionFieldComponent } from '../definition-field/definition-field.component';
 import { PacketManagerClient } from '../../packet-manager-client';
-import { WordTryPacket } from '../../common/crossword/packets/word-try.packet';
 import '../../common/crossword/packets/word-try.parser';
 
 @Component({
@@ -29,8 +27,8 @@ export class BoardComponent implements OnInit {
         this.crosswordGridService.clearGridOfUselessLetters();
     }
 
-    constructor(private crosswordGridService: CrosswordGridService, private crosswordGameService: CrosswordGameService,
-        private definitionsService: DefinitionsService, private packetManager: PacketManagerClient) { }
+    constructor(private crosswordGridService: CrosswordGridService,
+        private definitionsService: DefinitionsService) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
