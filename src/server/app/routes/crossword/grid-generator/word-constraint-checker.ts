@@ -1,4 +1,4 @@
-import { CharConstraint } from '../../../common/index';
+import { CharConstraint } from '../../../../../common/src/index';
 import { Grid } from './grid';
 import { WordPosition } from './word-position';
 import { Word } from './word';

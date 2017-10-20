@@ -1,10 +1,10 @@
 import * as express from 'express';
 
 import { MiddleWare, Route } from '../middle-ware';
-import { HttpStatus, getStatusOrDefault } from '../../common';
+import { HttpStatus, getStatusOrDefault } from '../../../../common/src';
 import { provideDatabase } from '../../app-db';
 import { MapDbService } from './map-db-service';
-import { SerializedMap } from '../../common/racing/serialized-map';
+import { SerializedMap } from '../../../../common/src/racing/serialized-map';
 
 @MiddleWare('/racing/maps')
 export class MapsMiddleWare {

@@ -1,6 +1,6 @@
-import { Difficulty } from '../../../common/crossword/difficulty';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { WordSuggestions } from './word-suggestions';
-import { CharConstraint } from '../../../common/index';
+import { CharConstraint } from '../../../../../common/src/index';
 import { WordPosition } from './word-position';
 
 export abstract class AbstractWordSuggestionsGetter {

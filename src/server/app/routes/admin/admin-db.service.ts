@@ -1,6 +1,6 @@
 import { Collection, UpdateWriteOpResult } from 'mongodb';
 import { fetchCollection } from '../../app-db';
-import { HttpStatus } from '../../common';
+import { HttpStatus } from '../../../../common/src';
 
 export interface Property<T = any> {
     name: string;

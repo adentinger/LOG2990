@@ -2,8 +2,8 @@ import { Db, Collection, Cursor } from 'mongodb';
 
 import { RegexBuilder } from './lexic/regex-builder';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
-import { WordConstraint } from '../../common/lexic/word-constraint';
-import { HttpStatus, warn, Logger } from '../../common';
+import { WordConstraint } from '../../../../common/src/lexic/word-constraint';
+import { HttpStatus, warn, Logger } from '../../../../common/src';
 
 export interface WordDocument {
     _id: string;

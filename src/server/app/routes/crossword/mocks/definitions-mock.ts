@@ -1,5 +1,5 @@
-import { Definition } from '../../../common/crossword/definition';
-import { Direction } from '../../../common/crossword/crossword-enums';
+import { Definition } from '../../../../../common/src/crossword/definition';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 export const DEFINITIONS_MOCK_H: Definition[] = [
     {

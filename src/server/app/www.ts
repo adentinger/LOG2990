@@ -7,7 +7,7 @@
 
 import { Application } from './app';
 import * as http from 'http';
-import { Logger } from './common/logger';
+import { Logger } from '../../common/src/logger';
 
 const application: Application = Application.bootstrap();
 

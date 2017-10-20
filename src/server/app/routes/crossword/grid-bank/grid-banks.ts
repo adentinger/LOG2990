@@ -2,7 +2,7 @@ import { Grid } from '../grid-generator/grid';
 import { GridBankEasy } from './grid-bank-easy';
 import { GridBankNormal } from './grid-bank-normal';
 import { GridBankHard } from './grid-bank-hard';
-// import { Difficulty } from '../../../common/crossword/crossword-enums';
+// import { Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 
 export class GridBanks {
 

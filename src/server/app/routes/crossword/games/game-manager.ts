@@ -1,19 +1,19 @@
-import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
-import { GameJoinPacket } from '../../../common/crossword/packets/game-join.packet';
-import { GameDefinitionPacket } from '../../../common/crossword/packets/game-definition.packet';
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
+import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import { PacketManagerServer } from '../../../packet-manager';
 
-import { Definition } from '../../../common/crossword/definition';
-import { Direction } from '../../../common/crossword/crossword-enums';
+import { Definition } from '../../../../../common/src/crossword/definition';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 
-import { GridWord } from '../../../common/crossword/grid-word';
-import { GridWordPacket } from '../../../common/crossword/packets/grid-word.packet';
-import '../../../common/crossword/packets/grid-word.parser';
-import '../../../common/crossword/packets/game-join.parser';
-import '../../../common/crossword/packets/game-definition.parser';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
+import '../../../../../common/src/crossword/packets/grid-word.parser';
+import '../../../../../common/src/crossword/packets/game-join.parser';
+import '../../../../../common/src/crossword/packets/game-definition.parser';
 
 const ID_LENGTH = 8;
 

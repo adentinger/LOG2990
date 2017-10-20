@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { GridFillerFirstSection } from './grid-filler-first-section';
-import { DifficultyEasy } from '../../../common/crossword/difficulty-easy';
+import { DifficultyEasy } from '../../../../../common/src/crossword/difficulty-easy';
 import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
 import { GridFiller } from './grid-filler';
-import { Constructor } from '../../../common';
+import { Constructor } from '../../../../../common/src';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
 import { GridFillerFourthSection } from './grid-filler-fourth-section';

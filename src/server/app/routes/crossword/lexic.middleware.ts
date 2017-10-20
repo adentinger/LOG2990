@@ -1,15 +1,15 @@
 import * as express from 'express';
 
 import { Route, MiddleWare } from '../middle-ware';
-import { HttpStatus } from '../../common';
-import { WordConstraint, isWordConstraint, parseWordConstraint } from '../../common/lexic/word-constraint';
+import { HttpStatus } from '../../../../common/src';
+import { WordConstraint, isWordConstraint, parseWordConstraint } from '../../../../common/src/lexic/word-constraint';
 import { provideDatabase } from '../../app-db';
-import { isJson } from '../../common/utils';
-import { CharConstraint } from '../../common/lexic/char-constraint';
+import { isJson } from '../../../../common/src/utils';
+import { CharConstraint } from '../../../../common/src/lexic/char-constraint';
 import { RegexBuilder } from './lexic/regex-builder';
 import { Lexic } from './lexic';
 import { ExternalWordApiService } from './lexic/external-word-api.service';
-import { Logger } from '../../common/logger';
+import { Logger } from '../../../../common/src/logger';
 
 
 @MiddleWare('/crossword/lexic')

@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { CharConstraint, HttpStatus } from '../../../common';
+import { CharConstraint, HttpStatus } from '../../../../../common/src';
 
 // This class gets words from the Lexical microservice.
 

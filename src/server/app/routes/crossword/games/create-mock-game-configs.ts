@@ -1,5 +1,5 @@
-import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
-import { Difficulty } from '../../../common/crossword/crossword-enums';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 
 export function createMockGameConfigs(): CrosswordGameConfigs {
     const gameModes = ['classic', 'dynamic'];

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { WordConstraint } from '../../../common/lexic/word-constraint';
+import { WordConstraint } from '../../../../../common/src/lexic/word-constraint';
 import { RegexBuilder } from './regex-builder';
 
 describe('RegexBuilder', () => {

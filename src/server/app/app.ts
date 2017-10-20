@@ -11,15 +11,15 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
 import * as cors from 'cors';
-import * as PacketAPI from './common/communication/packet-api';
+import * as PacketAPI from '../../common/src/communication/packet-api';
 import { PacketManagerServer } from './packet-manager';
 
-import { WordConstraint } from './common/lexic/word-constraint';
+import { WordConstraint } from '../../common/src/lexic/word-constraint';
 
 import { registerMiddleWares } from './routes/middle-ware';
 import './routes';
-import './common/lexic/word-packet';
-import { Logger } from './common';
+import '../../common/src/lexic/word-packet';
+import { Logger } from '../../common/src';
 
 @PacketAPI.PacketHandlerClass()
 export class Application {

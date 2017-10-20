@@ -4,7 +4,7 @@ import { WordConstraintChecker } from './word-constraint-checker';
 import { Grid } from './grid';
 import { Word } from './word';
 import { WordPosition } from './word-position';
-import { CharConstraint } from '../../../common/index';
+import { CharConstraint } from '../../../../../common/src/index';
 
 function getTestData(isForAcross: boolean): {words: Word[],
                                                positions: WordPosition[],

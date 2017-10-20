@@ -1,5 +1,5 @@
-import { fromArrayBuffer, Class } from './common/utils';
-import { PacketManagerBase } from './common/communication/packet-api/packet-manager-base';
+import { fromArrayBuffer, Class } from '../../common/src/utils';
+import { PacketManagerBase } from '../../common/src/communication/packet-api/packet-manager-base';
 import * as ServerIO from 'socket.io';
 import { Server } from 'http';
 

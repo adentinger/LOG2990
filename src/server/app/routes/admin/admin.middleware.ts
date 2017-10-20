@@ -3,8 +3,8 @@ import * as cors from 'cors';
 
 import { MiddleWare, Route } from '../middle-ware';
 import { AdminDbService } from './admin-db.service';
-import { Logger } from '../../common/logger';
-import { HttpStatus, warn } from '../../common';
+import { Logger } from '../../../../common/src/logger';
+import { HttpStatus, warn } from '../../../../common/src';
 
 const logger = Logger.getLogger('Admin');
 

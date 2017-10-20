@@ -1,8 +1,8 @@
 import * as express from 'express';
 import { Route, MiddleWare } from '../middle-ware';
-import { HttpStatus } from '../../common/http-status';
+import { HttpStatus } from '../../../../common/src/http-status';
 import { GameManager } from './games/game-manager';
-import { Logger } from '../../common';
+import { Logger } from '../../../../common/src';
 
 type CrosswordGameMode = 'classic' | 'dynamic';
 type CrosswordGameDifficulty = 'easy' | 'normal' | 'brutal';

@@ -1,5 +1,5 @@
 import { MongoClient, Db, MongoError, Collection } from 'mongodb';
-import { Logger } from './common';
+import { Logger } from '../../common/src';
 
 const logger = Logger.getLogger('MongoDB');
 

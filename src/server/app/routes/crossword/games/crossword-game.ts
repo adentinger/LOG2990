@@ -1,15 +1,15 @@
-import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
-import { GridWord } from '../../../common/crossword/grid-word';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DEFINITIONS_MOCK_H, DEFINITIONS_MOCK_V } from '../mocks/definitions-mock';
 import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/gridwords-mock';
-import { Definition } from '../../../common/crossword/definition';
+import { Definition } from '../../../../../common/src/crossword/definition';
 import { PacketManagerServer } from '../../../packet-manager';
-import { CrosswordTimerPacket } from '../../../common/crossword/packets/crossword-timer.packet';
-import '../../../common/crossword/packets/crossword-timer.parser';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../common/index';
-import { Logger } from '../../../common/logger';
-import { WordTryPacket } from '../../../common/crossword/packets/word-try.packet';
-import '../../../common/crossword/packets/word-try.parser';
+import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
+import '../../../../../common/src/crossword/packets/crossword-timer.parser';
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { Logger } from '../../../../../common/src/logger';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 
 const logger = Logger.getLogger('CrosswordGame');
 

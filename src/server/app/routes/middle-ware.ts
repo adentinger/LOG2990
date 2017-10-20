@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Logger, Class, Constructor } from '../common';
+import { Logger, Class, Constructor } from '../../../common/src';
 
 type RequestHandler = (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
 export type RouteType = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'all' | 'use';

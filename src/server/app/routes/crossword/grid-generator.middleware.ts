@@ -1,11 +1,11 @@
 import * as express from 'express';
 
 import { Route, MiddleWare } from '../middle-ware';
-import { HttpStatus } from '../../common/http-status';
+import { HttpStatus } from '../../../../common/src/http-status';
 import { GridGenerator } from './grid-generator/grid-generator';
-import { DifficultyEasy } from '../../common/crossword/difficulty-easy';
-import { DifficultyNormal } from '../../common/crossword/difficulty-normal';
-import { DifficultyHard } from '../../common/crossword/difficulty-hard';
+import { DifficultyEasy } from '../../../../common/src/crossword/difficulty-easy';
+import { DifficultyNormal } from '../../../../common/src/crossword/difficulty-normal';
+import { DifficultyHard } from '../../../../common/src/crossword/difficulty-hard';
 import { NormalWordSuggestionsGetter } from './grid-generator/normal-word-suggestions-getter';
 
 @MiddleWare('/crossword/grid-generator')

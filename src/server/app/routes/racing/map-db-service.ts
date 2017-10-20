@@ -1,7 +1,7 @@
 import { Db, Collection, MongoError, FindAndModifyWriteOpResultObject } from 'mongodb';
 
-import { SerializedMap } from '../../common/racing/serialized-map';
-import { HttpStatus } from '../../common';
+import { SerializedMap } from '../../../../common/src/racing/serialized-map';
+import { HttpStatus } from '../../../../common/src';
 
 export class MapDbService {
 

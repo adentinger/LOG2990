@@ -1,7 +1,7 @@
 import { Grid } from '../grid-generator/grid';
 import { GridGenerator } from '../grid-generator/grid-generator';
 import { NormalWordSuggestionsGetter } from '../grid-generator/normal-word-suggestions-getter';
-import { Difficulty } from '../../../common/crossword/difficulty';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 export abstract class GridBank {
 

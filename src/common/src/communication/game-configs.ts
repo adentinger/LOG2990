@@ -1,4 +1,4 @@
-import { Difficulty } from '../../common/crossword/crossword-enums';
+import { Difficulty } from '../crossword/crossword-enums';
 
 export interface CrosswordGameConfigs {
     gameMode: string;
