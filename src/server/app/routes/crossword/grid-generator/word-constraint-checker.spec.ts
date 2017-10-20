@@ -22,7 +22,7 @@ function getTestData(isForAcross: boolean): {words: Word[],
     ];
     const POSITIONS: WordPosition[] = [
         new WordPosition(0, 0),
-        new WordPosition(2, 1),
+        new WordPosition(2, 0),
         new WordPosition(3, 2),
         new WordPosition(3, 0),
         new WordPosition(5, 0)
