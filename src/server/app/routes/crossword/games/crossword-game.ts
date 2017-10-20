@@ -42,18 +42,7 @@ export class CrosswordGame {
         this.id = CrosswordGame.idCounter++;
         this.gameMode = configs.gameMode;
 
-        // MOCK : will get gridwords from gridstore by http
-        // for (let i = 0; i < ARRAY_GRIDWORD.length; i++) {
-        //     if (ARRAY_GRIDWORD[i].direction === Direction.horizontal) {
-        //         this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
-        //     } else {
-        //         this.verticalGridWords.set(i, ARRAY_GRIDWORD[i]);
-        //     }
-        //     this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
-        // }
-        // for (let i = 0; i < ARRAY_GRIDWORD.length; i++) {
-        //     this.horizontalGridWords.set(i, ARRAY_GRIDWORD[i]);
-        // }
+        // MOCK : get grid words from mock
         for (let i = 0; i < ARRAY_GRIDWORD_H.length; i++) {
             this.horizontalGridWords.set(ARRAY_GRIDWORD_H[i].id, ARRAY_GRIDWORD_H);
         }
