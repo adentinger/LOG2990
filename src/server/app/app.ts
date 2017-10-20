@@ -7,6 +7,7 @@
 
 import * as express from 'express';
 import * as path from 'path';
+import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
@@ -71,7 +72,7 @@ export class Application {
      */
     private config() {
         // Middlewares configuration
-        // this.app.use(logger('tiny'));
+        this.app.use(logger('dev', { skip: (req, res) => !/\/lexic\/words/i.test(req.baseUrl) }));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(cookieParser(Application.SECRET));
