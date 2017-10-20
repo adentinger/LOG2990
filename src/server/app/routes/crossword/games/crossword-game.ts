@@ -24,8 +24,8 @@ export class CrosswordGame {
     public gridWordReceived: GridWord;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
-    public horizontalGrid: GridWord[] = [];
-    public verticalGrid: GridWord[] = [];
+    // public horizontalGrid: GridWord[] = [];
+    // public verticalGrid: GridWord[] = [];
 
     public horizontalGridWords: Map<number, GridWord> = new Map();
     public verticalGridWords: Map<number, GridWord> = new Map();
@@ -100,8 +100,8 @@ export class CrosswordGame {
     }
 
     private getNumberOfWordsInGrid(): number {
-        return this.horizontalGrid.length
-            + this.verticalGrid.length;
+        return this.horizontalGridWords.size +
+            this.verticalGridWords.size;
     }
 
     private startTimer() {

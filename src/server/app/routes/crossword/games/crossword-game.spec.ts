@@ -1,24 +1,24 @@
 import { expect } from 'chai';
-import { GameManager } from './game-manager';
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 
-describe('The Game Manager Service', () => {
+describe('The crossword game', () => {
     it('should be created', (done) => {
-        const CONSTRUCTOR = () => GameManager.getInstance();
-        expect(CONSTRUCTOR).to.not.throw();
+        const mockConfig = createMockGameConfigs();
+        const game = new CrosswordGame(mockConfig);
+        expect(game).to.be.not.null;
         done();
     });
 
-    const gameManager: GameManager = GameManager.getInstance();
+    let gameToTest: CrosswordGame;
     beforeEach(() => {
-        gameManager['games'].clear();
+        gameToTest = new CrosswordGame(createMockGameConfigs());
     });
 
-    it('should return an id upon game creation', (done) => {
-        const idObtained: string = gameManager.newGame(createMockGameConfigs());
-        expect(idObtained).to.be.not.null;
+    it('should contain horizontal and vertical grid words', (done) => {
+        expect(gameToTest.horizontalGridWords).to.be.not.null;
+        expect(gameToTest.verticalGridWords).to.be.not.null;
         done();
     });
 
