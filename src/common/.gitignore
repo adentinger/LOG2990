@@ -6,6 +6,8 @@ false/
 # Exclusion des fichiers Javascripts
 *.js
 *.d.ts
+**/*.js
+**/*.d.ts
 lib/
 
 # NPM Debug Log
