@@ -15,7 +15,7 @@ export class GridFillerSecondSection extends GridFiller {
         ];
         this.verticalWords = [
             new WordPlacement(new WordPosition(3, 3), 4, 5),
-            new WordPlacement(new WordPosition(2, 3), 3, 3),
+            new WordPlacement(new WordPosition(2, 4), 3, 3),
             new WordPlacement(new WordPosition(3, 5), 4, 4)
         ];
     }

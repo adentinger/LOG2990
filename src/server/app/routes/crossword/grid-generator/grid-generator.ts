@@ -6,6 +6,7 @@ import { GridFillerFourthSection } from './grid-filler-fourth-section';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 
 export class GridGenerator {
+    private static count = 0;
 
     private static readonly INSTANCE = new GridGenerator();
 
@@ -25,6 +26,7 @@ export class GridGenerator {
         await GRID.fillUsing(FILLER_SECOND_SECTION);
         await GRID.fillUsing(FILLER_THIRD_SECTION);
         await GRID.fillUsing(FILLER_FOURTH_SECTION);
+        console.log('count: %d', ++GridGenerator.count);
         console.log(GRID.toString());
         return GRID;
     }

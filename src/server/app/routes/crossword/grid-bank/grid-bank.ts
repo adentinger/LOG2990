@@ -5,7 +5,7 @@ import { Difficulty } from '../../../common/crossword/difficulty';
 
 export abstract class GridBank {
 
-    public static readonly NUMBER_OF_GRIDS = 1;
+    public static readonly NUMBER_OF_GRIDS = 5;
 
     protected bank: Promise<Grid>[] = [];
 

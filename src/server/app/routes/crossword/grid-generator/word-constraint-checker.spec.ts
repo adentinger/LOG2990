@@ -75,7 +75,7 @@ describe('WordConstraintChecker', () => {
 
             for (let i = 0; i < POSITIONS.length; ++i) {
                 expect(WordConstraintChecker.getInstance()
-                    .getAcrossWordConstraint(GRID, POSITIONS[i]))
+                    .getAcrossWordConstraint(GRID, POSITIONS[i], 3))
                     .to.deep.equal(EXPECTED_CONSTRAINTS[i]);
             }
         });
@@ -93,7 +93,7 @@ describe('WordConstraintChecker', () => {
 
             for (let i = 0; i < POSITIONS.length; ++i) {
                 const CONSTRAINTS = WordConstraintChecker.getInstance()
-                        .getVerticalWordConstraint(GRID, POSITIONS[i]);
+                        .getVerticalWordConstraint(GRID, POSITIONS[i], 3);
                 expect(CONSTRAINTS)
                     .to.deep.equal(EXPECTED_CONSTRAINTS[i]);
             }

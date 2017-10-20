@@ -33,12 +33,12 @@ export abstract class GridFiller {
         while (!doneVertical) {
             doneVertical = await this.placeVerticalWords(grid);
         }
-        console.log('--------------------');
-        console.log('- SECTION COMPLETE -');
-        console.log('--------------------');
-        console.log(grid.toString());
-        console.log('ACROSS WORDS: ', grid.across);
-        console.log('VERTICAL WORDS: ', grid.vertical);
+        // console.log('--------------------');
+        // console.log('- SECTION COMPLETE -');
+        // console.log('--------------------');
+        // console.log(grid.toString());
+        // console.log('ACROSS WORDS: ', grid.across);
+        // console.log('VERTICAL WORDS: ', grid.vertical);
     }
 
     private async placeAcrossWords(grid: Grid, current: number = 0): Promise<boolean> {
@@ -74,11 +74,12 @@ export abstract class GridFiller {
     private async placeVerticalWords(grid: Grid, current: number = 0): Promise<boolean> {
         for (let i = 0; i < this.verticalWords.length; ++i) {
             const PLACEMENT = this.verticalWords[i];
-            console.log(PLACEMENT);
+            // console.log(PLACEMENT);
             const CONSTRAINT =
             WordConstraintChecker.getInstance().getVerticalWordConstraint(
                 grid,
-                PLACEMENT.position
+                PLACEMENT.position,
+                PLACEMENT.minLength
             );
             const SUGGESTIONS = await this.suggestionsGetter.getSuggestions(
                 PLACEMENT.minLength,
@@ -102,7 +103,8 @@ export abstract class GridFiller {
             const VERTICAL_WORD_CONSTRAINT =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,
-                    VERTICAL_WORD.position
+                    VERTICAL_WORD.position,
+                    VERTICAL_WORD.minLength
                 );
             const SUGGESTIONS_EXIST =
                 await this.suggestionsGetter.doSuggestionsExist(
