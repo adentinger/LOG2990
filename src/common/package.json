@@ -4,9 +4,6 @@
   "description": "Common package between Client and Server side packages",
   "main": "./index.js",
   "private": true,
-  "engines": {
-    "npm": "<=4.6.1"
-  },
   "config": {
     "packetapi_mgr": "server"
   },
