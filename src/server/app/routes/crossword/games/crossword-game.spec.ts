@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 
