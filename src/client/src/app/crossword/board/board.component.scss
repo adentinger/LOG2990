@@ -16,25 +16,6 @@ $color-focus-item: #EDFF71;
 	margin: 0;
 }
 
-.crossword-board-item {
-	background: transparent;
-	position: relative;
-	text-align: center;
-	font-size: 20px;
-	font-weight: bold;
-	text-transform: uppercase;
-  	width: $crossword-item-size;
-	height: $crossword-item-size;
-	border: 1px solid black;
-
-	&:active:not(.black-square),
-	&:focus:not(.black-square), {
-		background: $color-focus-item;
-		border: 1px solid #000000;
-		outline: 1px solid #000000;
-	}
-}
-
 #inputText { // invisible
 	height: 0;
     border: 0;

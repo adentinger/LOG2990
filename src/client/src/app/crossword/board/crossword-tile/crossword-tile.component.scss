@@ -4,18 +4,6 @@ $crossword-dimension: 10;
 $color-valid-item: #76C84B;
 $color-focus-item: #EDFF71;
 
-#crossword-board-container {
-  	margin: 10px;
-  	height: 100%;
-  	text-align: center;
-	vertical-align: center;
-}
-
-#crossword-board-container * {
-	padding: 0;
-	margin: 0;
-}
-
 .crossword-board-item {
 	background: transparent;
 	position: relative;
@@ -37,15 +25,11 @@ $color-focus-item: #EDFF71;
 	}
 }
 
-.black-square {
-	background: black;
-	color: transparent;
-}
-
 .highlighted {
 	border: 2px solid #002FFF; //lightblue
 }
 
-.greyed:not(.black-square) {
-	background: #A7A7A7; //lightgrey
+.black-square {
+	background: black;
+	color: transparent;
 }

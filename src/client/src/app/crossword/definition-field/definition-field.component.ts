@@ -54,10 +54,6 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public onSelect(index: number, direction: Direction, event): void {
-        console.log('on select');
-        // if (this.crosswordGridService.grid[index].string === '') {
-        //     this.definitionService.onSelect(index, direction, event);
-        // }
 
         if (direction === Direction.horizontal) {
             if (this.crosswordGridService.horizontalGridWords.get(index).string === '') {
@@ -68,7 +64,6 @@ export class DefinitionFieldComponent implements OnInit {
                 this.definitionService.onSelect(index, direction, event);
             }
         }
-        console.log(this.definitionService.selectedDefinitionId);
     }
     public onClickOutside(): void {
         this.definitionService.onClickOutside();

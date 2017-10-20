@@ -99,9 +99,10 @@ export class CrosswordGridService {
             else if (input.length === word.length) {
                 this.inputLettersOnGrid(word, input);
                 this.sendWordToServer(input, word);
+                this.definitionsService.selectedDefinitionId = -1;
 
 
-                this.definitionsService.internalSelectedDefinitionId = -1;
+                // this.definitionsService.internalSelectedDefinitionId = -1;
                 this.crosswordGameService.aDefinitionIsSelected = false;
             }
         }
@@ -129,7 +130,6 @@ export class CrosswordGridService {
     }
 
     public clearGridOfUselessLetters(): void {
-        // const words = this.grid;
         const words = [...this.horizontalGridWords.values(), ...this.verticalGridWords.values()];
 
         for (let i = 0; i < words.length; i++) {

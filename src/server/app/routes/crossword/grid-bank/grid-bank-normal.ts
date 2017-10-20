@@ -1,10 +1,11 @@
 import { GridBank } from './grid-bank';
-import { Grid } from '../../../common/grid';
+import { Grid } from '../grid-generator/grid';
+import { DifficultyNormal } from '../../../common/crossword/difficulty-normal';
 
 export class GridBankNormal extends GridBank {
 
     public getGridFromGenerator(): Promise<Grid> {
-        return this.getGridFromGeneratorWithUrl('http://localhost:3000/crossword/grid-generator/normal');
+        return this.getGridFromGeneratorWithUrl(new DifficultyNormal());
     }
 
 }
