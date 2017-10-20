@@ -33,12 +33,6 @@ export abstract class GridFiller {
         while (!doneVertical) {
             doneVertical = await this.placeVerticalWords(grid);
         }
-        // console.log('--------------------');
-        // console.log('- SECTION COMPLETE -');
-        // console.log('--------------------');
-        // console.log(grid.toString());
-        // console.log('ACROSS WORDS: ', grid.across);
-        // console.log('VERTICAL WORDS: ', grid.vertical);
     }
 
     private async placeAcrossWords(grid: Grid, current: number = 0): Promise<boolean> {
@@ -74,7 +68,6 @@ export abstract class GridFiller {
     private async placeVerticalWords(grid: Grid, current: number = 0): Promise<boolean> {
         for (let i = 0; i < this.verticalWords.length; ++i) {
             const PLACEMENT = this.verticalWords[i];
-            // console.log(PLACEMENT);
             const CONSTRAINT =
             WordConstraintChecker.getInstance().getVerticalWordConstraint(
                 grid,

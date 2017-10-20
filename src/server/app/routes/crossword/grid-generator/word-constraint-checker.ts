@@ -54,14 +54,6 @@ export class WordConstraintChecker {
 
         const CURRENT_POSITION = new WordPosition(position.row,
                                                   position.column);
-        // this.changePositionToConstraintBeginning(
-        //     CURRENT_POSITION,
-        //     transversalWords,
-        //     iteratedAxisGetter,
-        //     constantAxisGetter,
-        //     incrementIteratedAxis,
-        //     decrementIteratedAxis
-        // );
 
         let characterPosition = 0;
         let shouldTryToFindNextChar = true;
@@ -96,39 +88,6 @@ export class WordConstraintChecker {
         }
         return CONSTRAINTS;
     }
-
-    // private changePositionToConstraintBeginning(position: WordPosition,
-    //                                             words: Word[],
-    //                                             iteratedAxisGetter: AxisGetter,
-    //                                             constantAxisGetter: AxisGetter,
-    //                                             incrementIteratedAxis: PositionModifier,
-    //                                             decrementIteratedAxis: PositionModifier): void {
-    //     const DUMMY_INITIAL_CHAR = '8';
-    //     let charAtCurrentPosition = DUMMY_INITIAL_CHAR;
-    //     while (iteratedAxisGetter(position) >= 0 &&
-    //            charAtCurrentPosition.length !== 0) {
-    //         decrementIteratedAxis(position);
-    //         const WORD_THAT_CONTAINS_POSITION =
-    //             this.findWordThatContainsPosition(
-    //                 words,
-    //                 position,
-    //                 constantAxisGetter,
-    //                 iteratedAxisGetter
-    //             );
-    //         if (WORD_THAT_CONTAINS_POSITION !== undefined) {
-    //             charAtCurrentPosition =
-    //                 this.charOfWordAtPosition(
-    //                     WORD_THAT_CONTAINS_POSITION,
-    //                     position,
-    //                     constantAxisGetter
-    //                 );
-    //         }
-    //         else {
-    //             charAtCurrentPosition = '';
-    //         }
-    //     }
-    //     incrementIteratedAxis(position);
-    // }
 
     private findWordThatContainsPosition(words: Word[],
                                          position: WordPosition,
