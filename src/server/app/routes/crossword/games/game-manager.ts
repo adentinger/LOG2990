@@ -80,10 +80,9 @@ export class GameManager {
         this.addPlayerToGame(event.socketid, gameToJoin);
 
         // send all gridWords
-        const gw = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
-        console.log('sending :' + JSON.stringify(gw));
+        const gridWord = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
         this.sendGridWord(
-            gw,
+            gridWord,
             playerSocketId);
 
         // send all definitions
