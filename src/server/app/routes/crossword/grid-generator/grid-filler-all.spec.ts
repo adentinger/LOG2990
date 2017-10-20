@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { GridFillerFirstSection } from './grid-filler-first-section';
-import { Grid } from './grid';
 import { DifficultyEasy } from '../../../common/crossword/difficulty-easy';
 import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
 import { GridFiller } from './grid-filler';
