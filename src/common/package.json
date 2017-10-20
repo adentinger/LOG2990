@@ -15,7 +15,6 @@
     "lint": "tslint \"src/**/*.ts\" \"src/*.ts\" --force -t verbose || exit 0",
     "tsc": "tsc",
     "clean": "rimraf node_modules ./*.d.ts ./*.js ./**/*.js ./**/*.d.ts",
-    "install": "npm run-script tsc",
     "uninstall": "npm run-script clean",
     "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html"
   },
