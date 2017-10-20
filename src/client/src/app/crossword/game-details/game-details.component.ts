@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGame } from '../class/crossword-game';
 import { GameDetailsService } from './game-details.service';
@@ -14,8 +14,6 @@ export class GameDetailsComponent implements OnInit {
     public difficulty: string;
     public gameMode: string;
 
-    private timerId: string;
-
     constructor(private crosswordGameService: CrosswordGameService, private gameDetailsService: GameDetailsService,
         private ngZone: NgZone) { }
 
@@ -25,8 +23,8 @@ export class GameDetailsComponent implements OnInit {
         this.difficulty = this.crosswordGameService.getCurrentGame().difficulty;
         this.gameMode = this.crosswordGameService.getCurrentGame().gameMode;
 
-        setInterval( () => {
-            this.ngZone.run(() => {});
+        setInterval(() => {
+            this.ngZone.run(() => { });
         }, 1000);
     }
 

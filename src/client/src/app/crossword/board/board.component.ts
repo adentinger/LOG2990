@@ -2,9 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { GridWord } from '../../common/crossword/grid-word';
 import { Direction } from '../../common/crossword/crossword-enums';
-import { CrosswordGameService } from '../crossword-game.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import { PacketManagerClient } from '../../packet-manager-client';
 import '../../common/crossword/packets/word-try.parser';
 
 @Component({
