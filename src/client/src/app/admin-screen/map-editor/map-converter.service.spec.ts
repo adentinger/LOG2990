@@ -3,12 +3,12 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map } from './map';
-import { SerializedMap } from '../../common/racing/serialized-map';
-import { Point } from '../../common/math/point';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
+import { Point } from '../../../../../common/src/math/point';
 import { Item } from './item';
-import { SerializedItem } from '../../common/racing/serialized-item';
+import { SerializedItem } from '../../../../../common/src/racing/serialized-item';
 import { MockMaps } from './mock-maps';
-import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
+import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 
 describe('MapConverterService', () => {
 

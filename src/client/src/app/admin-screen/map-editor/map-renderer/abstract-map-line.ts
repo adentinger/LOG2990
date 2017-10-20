@@ -1,6 +1,6 @@
-import { Line } from '../../../common/math/line';
+import { Line } from '../../../../../../common/src/math/line';
 import { Drawable } from './drawable';
-import { Point } from '../../../common/math/point';
+import { Point } from '../../../../../../common/src/math/point';
 import { AbstractMapLineColors } from './abstract-map-line-colors';
 
 export abstract class AbstractMapLine extends Line implements Drawable {

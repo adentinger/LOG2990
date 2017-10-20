@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 import { MapService } from '../racing/services/map.service';
-import { SerializedMap } from '../common/racing/serialized-map';
-import { WordConstraint } from '../common/lexic/word-constraint';
+import { SerializedMap } from '../../../../common/src/racing/serialized-map';
+import { WordConstraint } from '../../../../common/src/lexic/word-constraint';
 import { PacketManagerService } from '../packet-manager.service';
-import { Logger } from '../common/logger';
+import { Logger } from '../../../../common/src/logger';
 
 @Component({
     selector: 'app-admin-screen',

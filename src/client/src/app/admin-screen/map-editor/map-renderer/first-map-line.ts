@@ -1,7 +1,7 @@
 import { AbstractMapLine } from './abstract-map-line';
-import { Point } from '../../../common/math/point';
+import { Point } from '../../../../../../common/src/math/point';
 import { FirstMapLineColors } from './first-map-line-colors';
-import { Vector } from '../../../common/math/vector';
+import { Vector } from '../../../../../../common/src/math/vector';
 
 const WIDTH = 5;
 

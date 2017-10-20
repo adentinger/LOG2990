@@ -1,5 +1,5 @@
 import { AbstractMapLine } from './abstract-map-line';
-import { Point } from '../../../common/math/point';
+import { Point } from '../../../../../../common/src/math/point';
 import { FaultyMapLineColors } from './faulty-map-line-colors';
 
 const WIDTH = 5;

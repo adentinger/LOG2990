@@ -1,8 +1,8 @@
 import * as SocketIOClient from 'socket.io-client';
 import { Injectable } from '@angular/core';
 import { PacketManagerClient } from './packet-manager-client';
-import { PacketHandler, WordConstraint, PacketEvent, registerHandlers, Logger } from './common';
-import './common/lexic/word-packet';
+import { PacketHandler, WordConstraint, PacketEvent, registerHandlers, Logger } from '../../../common/src';
+import '../../../common/src/lexic/word-packet';
 
 export const packetManagerClient: PacketManagerClient = new PacketManagerClient(
     SocketIOClient('http://localhost:3030', {transports: ['websocket', 'polling'] }));

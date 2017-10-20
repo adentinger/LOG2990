@@ -3,8 +3,8 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MockMaps } from './mock-maps';
 import { Map } from './map';
 import { Path } from './path';
-import { Point } from '../../common/math/point';
-import { Line } from '../../common/math/line';
+import { Point } from '../../../../../common/src/math/point';
+import { Line } from '../../../../../common/src/math/line';
 
 describe('Map', () => {
 

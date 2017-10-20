@@ -1,6 +1,6 @@
 import 'socket.io-client';
-import { Constructor, fromArrayBuffer } from './common/utils';
-import { PacketManagerBase } from './common/communication/packet-api/packet-manager-base';
+import { Constructor, fromArrayBuffer } from '../../../common/src/utils';
+import { PacketManagerBase } from '../../../common/src/communication/packet-api/packet-manager-base';
 import { Injectable } from '@angular/core';
 
 @Injectable()

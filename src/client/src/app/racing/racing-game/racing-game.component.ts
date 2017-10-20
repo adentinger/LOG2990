@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../common/math/point';
+import { Point } from '../../../../../common/src/math/point';
 import { SkyboxMode } from './skybox';
 
 const LEFT_MOUSE_BUTTON = 0;

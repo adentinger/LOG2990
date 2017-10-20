@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
-import { Definition } from '../../common/crossword/definition';
+import { Definition } from '../../../../../common/src/crossword/definition';
 import { DefinitionsService } from './definitions.service';
-import { Direction } from '../../common/crossword/crossword-enums';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGridService } from '../board/crossword-grid.service';
 
 @Component({

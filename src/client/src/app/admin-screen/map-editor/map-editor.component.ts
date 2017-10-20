@@ -5,9 +5,9 @@ import { MapRendererService } from './map-renderer/map-renderer.service';
 import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map as RacingMap, MAP_TYPES, MapError } from './map';
-import { Point } from '../../common/math/point';
+import { Point } from '../../../../../common/src/math/point';
 import { PointIndex } from './point-index';
-import { SerializedMap } from '../../common/racing/serialized-map';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { MapService } from '../../racing/services/map.service';
 
 const LEFT_MOUSE_BUTTON = 0;

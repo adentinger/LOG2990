@@ -1,8 +1,8 @@
 import { AbstractMapPoint } from './abstract-map-point';
 import { NormalMapPointColorsActive } from './normal-map-point-colors-active';
 import { NormalMapPointColorsInactive } from './normal-map-point-colors-inactive';
-import { Point } from '../../../common/math/point';
-import { Vector } from '../../../common/math/vector';
+import { Point } from '../../../../../../common/src/math/point';
+import { Vector } from '../../../../../../common/src/math/vector';
 
 const INNER_RADIUS = 5.0;
 const RIM_RADIUS   = 10.0;

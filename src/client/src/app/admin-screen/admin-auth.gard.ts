@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Logger, warn } from '../common';
+import { Logger, warn } from '../../../../common/src';
 import { AdminConfigService } from './admin-config.service';
 
 @Injectable()

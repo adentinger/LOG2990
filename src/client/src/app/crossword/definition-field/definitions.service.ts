@@ -1,14 +1,14 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
-import { Definition } from '../../common/crossword/definition';
+import { Definition } from '../../../../../common/src/crossword/definition';
 // import { DEFINITIONS_MOCK } from '../mocks/definition-mock';
 import { CrosswordGameService } from '../crossword-game.service';
-import { PacketHandler, PacketEvent, registerHandlers } from '../../common/index';
-import { GameDefinitionPacket } from '../../common/crossword/packets/game-definition.packet';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
+import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import { PacketManagerClient } from '../../packet-manager-client';
-import { Direction } from '../../common/crossword/crossword-enums';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
-import '../../common/crossword/packets/game-definition.parser';
+import '../../../../../common/src/crossword/packets/game-definition.parser';
 
 @Injectable()
 export class DefinitionsService {

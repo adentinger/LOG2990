@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../common/math/point';
+import { Point } from '../../../../../common/src/math/point';
 
 describe('RacingGameService', () => {
     beforeEach(() => {

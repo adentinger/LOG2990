@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MapEditorService } from '../map-editor.service';
 import { Drawable } from './drawable';
 import { MapPath } from './map-path';
-import { Point } from '../../../common/math/point';
+import { Point } from '../../../../../../common/src/math/point';
 import { PointIndex } from '../point-index';
 
 @Injectable()

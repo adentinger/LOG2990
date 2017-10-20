@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { CrosswordGame } from './class/crossword-game';
 import { CROSSWORD_GAME } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
-import { GameJoinPacket } from '../common/crossword/packets/game-join.packet';
-import { CrosswordTimerPacket } from '../common/crossword/packets/crossword-timer.packet';
-import { Direction } from '../common/crossword/crossword-enums';
-import '../common/crossword/packets/crossword-timer.parser';
+import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
+import { CrosswordTimerPacket } from '../../../../common/src/crossword/packets/crossword-timer.packet';
+import { Direction } from '../../../../common/src/crossword/crossword-enums';
+import '../../../../common/src/crossword/packets/crossword-timer.parser';
 
 const TIME_MAX = 3600000; // 1 hour
 

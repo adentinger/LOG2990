@@ -3,7 +3,7 @@ import { MapEditorService } from '../../../admin-screen/map-editor/map-editor.se
 import { MapRendererService } from '../../../admin-screen/map-editor/map-renderer/map-renderer.service';
 import { MapConverterService } from '../../../admin-screen/map-editor/map-converter.service';
 import { RacingUnitConversionService } from '../../../admin-screen/map-editor/racing-unit-conversion.service';
-import { SerializedMap } from '../../../common/racing/serialized-map';
+import { SerializedMap } from '../../../../../../common/src/racing/serialized-map';
 
 @Component({
     selector: 'app-map-thumbnail',

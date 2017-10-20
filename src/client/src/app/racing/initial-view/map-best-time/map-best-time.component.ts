@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SerializedMap } from '../../../common/racing/serialized-map';
+import { SerializedMap } from '../../../../../../common/src/racing/serialized-map';
 
 @Component({
     selector: 'app-map-best-time',

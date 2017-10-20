@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 import { CrosswordGameService } from '../crossword-game.service';
-import '../../common/crossword/packets/game-join.parser';
+import '../../../../../common/src/crossword/packets/game-join.parser';
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
 

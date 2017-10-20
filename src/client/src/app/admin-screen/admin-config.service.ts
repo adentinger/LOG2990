@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
-import { Logger, warn } from '../common';
+import { Logger, warn } from '../../../../common/src';
 
 interface RequestOptions {
     observe: 'response';

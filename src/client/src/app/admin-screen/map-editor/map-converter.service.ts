@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Map, MapError } from './map';
-import { SerializedMap } from '../../common/racing/serialized-map';
-import { Point } from '../../common/math/point';
-import { SerializedPothole } from '../../common/racing/serialized-pothole';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
+import { Point } from '../../../../../common/src/math/point';
+import { SerializedPothole } from '../../../../../common/src/racing/serialized-pothole';
 import { Pothole } from './pothole';
-import { SerializedPuddle } from '../../common/racing/serialized-puddle';
+import { SerializedPuddle } from '../../../../../common/src/racing/serialized-puddle';
 import { Puddle } from './puddle';
-import { SerializedSpeedBoost } from '../../common/racing/serialized-speed-boost';
+import { SerializedSpeedBoost } from '../../../../../common/src/racing/serialized-speed-boost';
 import { SpeedBoost } from './speed-boost';
 import { Track } from '../../racing/track';
 

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { GridWord } from '../../common/crossword/grid-word';
-import { Direction } from '../../common/crossword/crossword-enums';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
 import { CrosswordGameService } from '../crossword-game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
-import { registerHandlers, PacketHandler, PacketEvent } from '../../common/index';
-import { WordTryPacket } from '../../common/crossword/packets/word-try.packet';
-import '../../common/crossword/packets/word-try.parser';
+import { registerHandlers, PacketHandler, PacketEvent } from '../../../../../common/src/index';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import { GridWordPacket } from '../../common/crossword/packets/grid-word.packet';
+import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 
-import '../../common/crossword/packets/grid-word.parser';
+import '../../../../../common/src/crossword/packets/grid-word.parser';
 
 @Injectable()
 export class CrosswordGridService {

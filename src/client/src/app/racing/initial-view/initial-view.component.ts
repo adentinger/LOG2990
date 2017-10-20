@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { MapService } from '../services/map.service';
-import { SerializedMap } from '../../common/racing/serialized-map';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 
 @Component({

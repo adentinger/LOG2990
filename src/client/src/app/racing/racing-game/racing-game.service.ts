@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { RacingGameRendering } from './racing-game-rendering';
-import { Point } from '../../common/math/point';
-import { Interval } from '../../common/math/interval';
+import { Point } from '../../../../../common/src/math/point';
+import { Interval } from '../../../../../common/src/math/interval';
 
 @Injectable()
 export class RacingGameService {

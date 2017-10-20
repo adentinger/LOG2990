@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PacketManagerClient } from '../../packet-manager-client';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../common/index';
-import { CrosswordTimerPacket } from '../../common/crossword/packets/crossword-timer.packet';
-import '../../common/crossword/packets/crossword-timer.parser';
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
+import '../../../../../common/src/crossword/packets/crossword-timer.parser';
 
 @Injectable()
 export class GameDetailsService {

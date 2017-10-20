@@ -1,9 +1,9 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
-import { GridWord } from '../../common/crossword/grid-word';
-import { Direction } from '../../common/crossword/crossword-enums';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import '../../common/crossword/packets/word-try.parser';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 
 @Component({
     selector: 'app-board',

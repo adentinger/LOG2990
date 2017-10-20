@@ -3,10 +3,10 @@ import { TestBed, inject } from '@angular/core/testing';
 import { MapEditorService } from './map-editor.service';
 import { Map } from './map';
 import { MockMaps } from './mock-maps';
-import { MockSerializedMaps } from '../../common/racing/mock-serialized-maps';
+import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
-import { Point } from '../../common/math/point';
+import { Point } from '../../../../../common/src/math/point';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
