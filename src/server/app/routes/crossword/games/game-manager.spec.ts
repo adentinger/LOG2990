@@ -2,12 +2,13 @@ import { expect } from 'chai';
 import { GameManager } from './game-manager';
 import { CrosswordGameConfigs } from '../../../common/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
+import { Difficulty } from '../../../common/crossword/crossword-enums';
 
 function createMockGameConfigs(): CrosswordGameConfigs {
     const gameModes = ['classic', 'dynamic'];
     const playerNumbers = ['1', '2'];
     const createJoinChoices = ['create', 'join'];
-    const difficulties = ['easy', 'normal', 'brutal'];
+    const difficulties = [Difficulty.easy, Difficulty.medium, Difficulty.hard];
 
     const randGameMode = gameModes[Math.floor(Math.random() * gameModes.length)];
     const randPlayerNumber = playerNumbers[Math.floor(Math.random() * playerNumbers.length)];
