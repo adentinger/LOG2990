@@ -8,3 +8,9 @@ export enum Owner {
     player1,
     player2,
 }
+
+export enum Difficulty {
+    easy,
+    medium,
+    hard
+}

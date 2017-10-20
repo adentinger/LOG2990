@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Map } from '../../../admin-screen/map-editor/map';
+import { SerializedMap } from '../../../common/racing/serialized-map';
 
 @Component({
     selector: 'app-map-best-time',
@@ -9,7 +9,7 @@ import { Map } from '../../../admin-screen/map-editor/map';
 })
 
 export class MapBestTimeComponent implements OnInit {
-    @Input() public map: Map;
+    @Input() public map: SerializedMap;
     public displayable;
 
     public ngOnInit(): void {
