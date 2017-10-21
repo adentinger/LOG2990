@@ -65,9 +65,4 @@ export abstract class GridBank {
         return GridBank.COLLECTION_BASE_NAME + this.difficulty.toString();
     }
 
-    private makeDocumentFrom(grid: Grid, state: GridState) {
-        const STATEFUL_GRID = {...grid, state: state};
-        return STATEFUL_GRID;
-    }
-
 }
