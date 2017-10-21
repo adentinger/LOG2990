@@ -62,7 +62,7 @@ export function PacketHandlerClass() {
     };
 }
 
-export function registerHandlers<T extends Class>(that: InstanceOf<T>, packetManager: PacketManagerBase<Socket>) {
+export function registerHandlers<T extends InstanceOf<any>>(that: T, packetManager: PacketManagerBase<Socket>) {
     logger.info(`(class %s) Registering handlers`, that.constructor.name || DEFAULT_CLASSNAME);
     const TRY_COUNT_MAX = 100;
     let prototype = that, i = 0;

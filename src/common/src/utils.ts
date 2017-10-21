@@ -17,8 +17,8 @@ export interface Class<T = any> extends Constructor<T> {
     prototype: T;
 }
 
-export interface InstanceOf<C extends Class<T>, T extends InstanceOf<C, T> = any> {
-    readonly constructor: T;
+export interface InstanceOf<C extends Class<InstanceOf<C>>> {
+    readonly constructor: C;
 }
 
 interface PrototypeGetter { getPrototypeOf: <T extends InstanceOf<Class>>(obj: T) => T; }
@@ -41,24 +41,20 @@ export function fromArrayBuffer(data: ArrayBuffer): string {
 const CALL_STACK_REGEX = /\s*at\s(.+)\s\(.+:\d+:\d+\)/;
 
 export function getCallers(): string[] {
+    const error = new Error();
     try {
-        throw new Error();
+        const callers = error.stack.match(new RegExp(CALL_STACK_REGEX, 'g'))
+            .map((value) => value.match(CALL_STACK_REGEX)[1]);
+        callers.shift();
+        return callers;
     } catch (e) {
-        const error = e as Error;
-        try {
-            const callers = error.stack.match(new RegExp(CALL_STACK_REGEX, 'g'))
-                .map((value) => value.match(CALL_STACK_REGEX)[1]);
-            callers.shift();
-            return callers;
-        } catch (e) {
-            return null;
-        }
+        return null;
     }
 }
 
-export function warn(logger: {warn: (message: any) => void}): (error: any) => never;
-export function warn<T>(logger: {warn: (message: any) => void}, returnValue: T): (error: any) => T;
-export function warn<T>(logger: {warn: (message: any) => void}, returnValue?: T) {
+export function warn(logger: { warn: (message: any) => void }): (error: any) => never;
+export function warn<T>(logger: { warn: (message: any) => void }, returnValue: T): (error: any) => T;
+export function warn<T>(logger: { warn: (message: any) => void }, returnValue?: T) {
     return function (error: any): T {
         logger.warn(error);
         if (returnValue !== undefined) {
