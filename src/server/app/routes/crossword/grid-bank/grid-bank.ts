@@ -37,7 +37,10 @@ export abstract class GridBank {
 
     public async fillup(): Promise<void> {
         await ensureCollectionReady(() => this.bank);
-        while (await this.askSize() !== GridBank.NUMBER_OF_GRIDS) {
+        while (await this.askSize() < GridBank.NUMBER_OF_GRIDS) {
+            this.logger.log('Currently ' + await this.askSize() + '/' + GridBank.NUMBER_OF_GRIDS +
+                            ' grids left for MongoDB ' + 'collection ' + this.collectionName +
+                            '. Filling up.');
             await this.requestGridGeneration();
         }
     }
@@ -55,9 +58,11 @@ export abstract class GridBank {
         const GRID_PROMISE =
             DOCUMENT_PROMISE.then((document) => {
                 const GRID = this.makeGridFrom(document);
-                this.logger.info(this.askSize() + ' grids left for MongoDB ' +
-                                 'collection ' + this.collectionName + '.');
-                this.logger.debug('Gotten grid:\n' + GRID.toString());
+                this.askSize().then((size) => {
+                    this.logger.log(size + ' grids left for MongoDB ' +
+                    'collection ' + this.collectionName + '.');
+                    this.logger.debug('Gotten grid:\n' + GRID.toString());
+                });
                 return GRID;
             });
 
