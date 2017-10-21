@@ -12,7 +12,7 @@ export class WordSuggestions {
 
 
     public consumeRandomSuggestion(): string {
-        if (this.length >= 0) {
+        if (this.length > 0) {
             const MIN = 0;
             const MAX = this.suggestions.length;
             let randomIndex = this.suggestions.length;
