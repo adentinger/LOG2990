@@ -20,11 +20,11 @@ const MIDDLEWARES: Map<Constructor, string[]> = new Map();
 const ROUTE_ENTRIES: Map<Class, RouteEntry[]> = new Map();
 
 // Decorator
-export function MiddleWare<T extends Function>(constructor: T, ...handlers: express.RequestHandler[]): void;
+export function MiddleWare<T extends Class>(constructor: T, ...handlers: express.RequestHandler[]): void;
 // Decorator Factory
-export function MiddleWare<T extends Function>(baseRoute: string, ...handlers: express.RequestHandler[]): ClassDecorator;
-export function MiddleWare<T extends Function>(baseRoute: string | T, ...handlers: express.RequestHandler[]): ClassDecorator | void {
-    const MIDDLEWARE_DECORATOR: ClassDecorator = (constructor: Function): void => {
+export function MiddleWare(baseRoute: string, ...handlers: express.RequestHandler[]): ClassDecorator;
+export function MiddleWare<T extends Class>(baseRoute: string | T, ...handlers: express.RequestHandler[]): ClassDecorator | void {
+    const MIDDLEWARE_DECORATOR = (constructor: Class): void => {
         constructor.prototype[REGISTER_FUNCTION] = (router: express.Router): void => {
             if (handlers.length > 0) {
                 router.use(...handlers);
@@ -61,7 +61,7 @@ export function MiddleWare<T extends Function>(baseRoute: string | T, ...handler
         MIDDLEWARES.get(constructor as Constructor).push(typeof baseRoute === 'string' && baseRoute || null);
     };
     if (typeof baseRoute === 'string') {
-        return MIDDLEWARE_DECORATOR;
+        return MIDDLEWARE_DECORATOR as ClassDecorator;
     } else {
         MIDDLEWARE_DECORATOR(baseRoute);
     }

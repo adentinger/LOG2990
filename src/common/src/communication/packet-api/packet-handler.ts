@@ -27,10 +27,11 @@ export function registerParsers(packetManager: PacketManagerBase<any>): void {
 
 const handlers: Map<Class<any>, Map<Class<any>, Set<string>>> = new Map();
 export declare type PacketHandler<T> = (event: PacketEvent<T>) => void;
+declare type PacketHandlerDescriptor<T> = PropertyDescriptor & { value?: PacketHandler<T> };
 
 // Decorator
 export function PacketHandler<T>(dataType: Class<T>): MethodDecorator {
-    return function <U extends Class<any>>(target: U, propertyKey: string, descriptor: PropertyDescriptor & { value?: PacketHandler<T> }) {
+    return function <U extends Class>(target: InstanceOf<U>, propertyKey: string, descriptor: PacketHandlerDescriptor<T>) {
         logger.info(`New handler for %s [%s.%s]`, dataType.name, target.constructor.name || DEFAULT_CLASSNAME, propertyKey);
         if (!handlers.has(target.constructor)) {
             handlers.set(target.constructor, new Map());
@@ -47,7 +48,7 @@ export declare interface PacketManagerContainter<S extends Socket> {
 }
 
 export function PacketHandlerClass() {
-    return function <T extends Constructor<PacketManagerContainter<Socket>>>(target: T) {
+    return function <T extends Class<PacketManagerContainter<Socket>>>(target: T) {
         logger.info('New class of handlers: %s', target.name || DEFAULT_CLASSNAME);
         if (!handlers.has(target)) {
             handlers.set(target, new Map());
@@ -61,7 +62,7 @@ export function PacketHandlerClass() {
     };
 }
 
-export function registerHandlers<T extends InstanceOf<Constructor<T>>>(that: T, packetManager: PacketManagerBase<Socket>) {
+export function registerHandlers<T extends Class>(that: InstanceOf<T>, packetManager: PacketManagerBase<Socket>) {
     logger.info(`(class %s) Registering handlers`, that.constructor.name || DEFAULT_CLASSNAME);
     const TRY_COUNT_MAX = 100;
     let prototype = that, i = 0;

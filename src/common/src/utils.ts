@@ -10,14 +10,19 @@ export function isJson(pseudoJson: string): boolean {
     }
 }
 
-export interface Constructor<T extends Object = Object> extends Function {
+export interface Constructor<T = any> {
     new(...argv: any[]): T;
 }
-export declare type Class<T = any> = Constructor<T> | Function; // For comprehention's sake
-
-export interface InstanceOf<T extends Constructor<InstanceOf<T>>> extends Object {
-    readonly constructor: T | Function;
+export interface Class<T = any> extends Constructor<T> {
+    prototype: T;
 }
+
+export interface InstanceOf<C extends Class<T>, T extends InstanceOf<C, T> = any> {
+    readonly constructor: T;
+}
+
+interface PrototypeGetter { getPrototypeOf: <T extends InstanceOf<Class>>(obj: T) => T; }
+export declare const Object: PrototypeGetter & ObjectConstructor;
 
 export function toArrayBuffer(str: string): ArrayBuffer {
     const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
@@ -61,4 +66,12 @@ export function warn<T>(logger: {warn: (message: any) => void}, returnValue?: T)
         }
         throw error;
     };
+}
+
+export class NotImplementedError extends Error {
+    private static readonly ERROR_MESSAGE = 'Not Implemented';
+    constructor(message?: string) {
+        message = message ? ': ' + message : '';
+        super(NotImplementedError.ERROR_MESSAGE + (message));
+    }
 }
