@@ -47,7 +47,7 @@ export abstract class GridBank {
     }
 
     public askSize(): Promise<number> {
-        return new Promise((resolve, reject) => reject());
+        return this.bank.count({});
     }
 
     public abstract getGridFromGenerator(): Promise<Grid>;
