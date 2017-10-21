@@ -15,18 +15,19 @@ enum GridState {
 export abstract class GridBank {
 
     public static readonly NUMBER_OF_GRIDS = 5;
-    private static readonly COLLECTION_NAME = 'grid-banks';
-    private static bank: Collection = GridBank.initializeBank();
+    private static readonly COLLECTION_BASE_NAME = 'grid-bank-';
 
     private difficulty: Difficulty;
+    private bank: Collection;
 
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
+        this.initializeBank();
     }
 
-    private static initializeBank(): Collection {
+    private initializeBank(): Collection {
         provideDatabase().then((db: Db) => {
-            db.collection(GridBank.COLLECTION_NAME, (error: MongoError, bank: Collection) => {
+            db.collection(this.collectionName, (error: MongoError, bank: Collection) => {
                 this.bank = bank;
             });
         });
@@ -58,6 +59,10 @@ export abstract class GridBank {
 
     private addGridToBank(): void {
         // TODO
+    }
+
+    private get collectionName(): string {
+        return GridBank.COLLECTION_BASE_NAME + this.difficulty.toString();
     }
 
     private makeDocumentFrom(grid: Grid, state: GridState) {
