@@ -29,3 +29,21 @@ export function provideDatabase(): Promise<Db> {
 export function fetchCollection<T = any>(collectionName: string): Promise<Collection<T>> {
     return DATABASE_PROMISE.then((db: Db) => db.collection<T>(collectionName));
 }
+
+export function ensureCollectionReady(collectionGetter: () => Collection): Promise<void> {
+    // Already resolved ?
+    if (collectionGetter()) {
+        return new Promise((resolve) => resolve());
+    }
+
+    // Not yet resolved
+    let intervalId: NodeJS.Timer;
+    return new Promise((resolve, reject) => {
+        intervalId = setInterval(() => {
+            if (collectionGetter()) {
+                clearInterval(intervalId);
+                resolve();
+            }
+        }, 100);
+    });
+}
