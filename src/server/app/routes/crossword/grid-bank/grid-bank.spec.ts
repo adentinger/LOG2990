@@ -19,12 +19,12 @@ class AllGridBanksTester {
         ]);
     }
 
-    public getBankSizes(): [number, number, number] {
-        return [
-            this.easyBank.size,
-            this.normalBank.size,
-            this.hardBank.size
-        ];
+    public async getBankSizes(): Promise<[number, number, number]> {
+        return Promise.all([
+            this.easyBank.askSize(),
+            this.normalBank.askSize(),
+            this.hardBank.askSize()
+        ]);
     }
 
 }
@@ -38,17 +38,17 @@ describe('Grid Bank', () => {
     });
 
     it('should fillup the bank of grid promises', async () => {
-
-        banksTester.getBankSizes().forEach((size) => {
+        const BANK_SIZES1 = await banksTester.getBankSizes();
+        BANK_SIZES1.forEach((size) => {
             expect(size).to.equal(0, 'Bank size is not zero when the server starts');
         });
 
         await banksTester.fillupBanks();
-        banksTester.getBankSizes().forEach((size) => {
+        const BANK_SIZES2 = await banksTester.getBankSizes();
+        BANK_SIZES2.forEach((size) => {
             expect(size).to.equal(GridBank.NUMBER_OF_GRIDS,
                 'Bank is not filled to maximum capacity');
         });
-
     });
 
 });

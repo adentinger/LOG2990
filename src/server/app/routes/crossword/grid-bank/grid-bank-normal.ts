@@ -5,7 +5,7 @@ import { DifficultyNormal } from '../../../../../common/src/crossword/difficulty
 export class GridBankNormal extends GridBank {
 
     public getGridFromGenerator(): Promise<Grid> {
-        return this.getGridFromGeneratorWithUrl(new DifficultyNormal());
+        return this.getGridFromGeneratorWithDifficulty(new DifficultyNormal());
     }
 
 }
