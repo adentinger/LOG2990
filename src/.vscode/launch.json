@@ -6,7 +6,7 @@
         "request": "launch",
         "name": "Debug Server",
         "cwd": "${workspaceFolder}/server",
-        "program": "${workspaceFolder}/server/out/www.js",
+        "program": "${workspaceFolder}/server/out/server/app/www.js",
         "env": {
           "LOG_LEVEL": "ALL"
         }
