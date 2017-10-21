@@ -15,7 +15,7 @@ enum GridState {
 
 export abstract class GridBank {
 
-    public static readonly NUMBER_OF_GRIDS = 5;
+    public static readonly NUMBER_OF_GRIDS = 15;
     private static readonly COLLECTION_BASE_NAME = 'grid-bank-';
 
     private difficulty: Difficulty;
