@@ -10,13 +10,12 @@ export class GridFillerThirdSection extends GridFiller {
         this.acrossWords = [
             new WordPlacement(new WordPosition(7, 6), 3, 4),
             new WordPlacement(new WordPosition(8, 6), 3, 3),
-            new WordPlacement(new WordPosition(9, 5), 4, 5),
-            new WordPlacement(new WordPosition(9, 0), 3, 4),
+            new WordPlacement(new WordPosition(9, 0), 4, 5),
         ];
         this.verticalWords = [
             new WordPlacement(new WordPosition(7, 6), 3, 3),
             new WordPlacement(new WordPosition(7, 7), 3, 3),
-            new WordPlacement(new WordPosition(6, 8), 4, 4)
+            new WordPlacement(new WordPosition(6, 8), 3, 3)
         ];
     }
 

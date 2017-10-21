@@ -6,4 +6,8 @@ export class DifficultyNormal extends Difficulty {
         return true;
     }
 
+    public toString(): string {
+        return 'normal';
+    }
+
 }
