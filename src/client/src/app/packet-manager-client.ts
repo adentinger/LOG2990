@@ -17,7 +17,7 @@ export class PacketManagerClient extends PacketManagerBase<SocketIOClient.Socket
     public sendPacket<T>(type: Constructor<T>, data: T): boolean {
         if (this.parsers.has(type)) {
             const parser = this.parsers.get(type);
-            this.logger.debug(`Sending: {to server} "${type.name}" ${data}`);
+            this.logger.debug(`Sending: {to server} "${type.name}"`, data);
             this.socket.send('packet:' + type.name,
                 fromArrayBuffer(parser.serialize(data)));
             return this.socket.connected;

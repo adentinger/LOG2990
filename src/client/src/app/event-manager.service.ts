@@ -30,7 +30,7 @@ export class EventManager {
     public registerClass<T extends Class = any>(instance: InstanceOf<T>): void {
         const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(Object.getPrototypeOf(instance));
         for (const [eventType, propertyName] of handlersName) {
-            this.EVENT_LISTENERS.get(eventType).add(instance[propertyName].bind(instance));
+            this.addListener(eventType, instance[propertyName].bind(instance));
         }
     }
 
