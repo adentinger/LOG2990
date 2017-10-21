@@ -4,8 +4,12 @@ import { DifficultyHard } from '../../../../../common/src/crossword/difficulty-h
 
 export class GridBankHard extends GridBank {
 
+    constructor() {
+        super(new DifficultyHard());
+    }
+
     public getGridFromGenerator(): Promise<Grid> {
-        return this.getGridFromGeneratorWithUrl(new DifficultyHard());
+        return this.getGridFromGeneratorWithDifficulty(new DifficultyHard());
     }
 
 }
