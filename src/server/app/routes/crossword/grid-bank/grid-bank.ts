@@ -5,7 +5,7 @@ import { GridGenerator } from '../grid-generator/grid-generator';
 import { NormalWordSuggestionsGetter } from '../grid-generator/normal-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { provideDatabase, ensureCollectionReady } from '../../../app-db';
-import { Logger, warn } from '../../../../../common/src';
+import { Logger } from '../../../../../common/src';
 
 enum GridState {
     GENERATING = 0,
@@ -53,7 +53,14 @@ export abstract class GridBank {
 
         DOCUMENT_PROMISE.then(() => this.fillup());
         const GRID_PROMISE =
-            DOCUMENT_PROMISE.then((document) => this.makeGridFrom(document));
+            DOCUMENT_PROMISE.then((document) => {
+                const GRID = this.makeGridFrom(document);
+                this.logger.info(this.askSize() + ' grids left for MongoDB ' +
+                                 'collection ' + this.collectionName + '.');
+                this.logger.debug('Gotten grid:\n' + GRID.toString());
+                return GRID;
+            });
+
         return GRID_PROMISE;
     }
 
@@ -79,7 +86,7 @@ export abstract class GridBank {
     private addGridToBank(grid: Grid): void {
         this.bank.insertOne(this.makeDocumentFrom(grid, GridState.READY))
             .catch((reason) => {
-                warn(this.logger, new Error(reason));
+                this.logger.warn(reason);
             });
     }
 
