@@ -18,6 +18,12 @@ export abstract class GridBank {
     private static readonly COLLECTION_NAME = 'grid-banks';
     private static bank: Collection = GridBank.initializeBank();
 
+    private difficulty: Difficulty;
+
+    constructor(difficulty: Difficulty) {
+        this.difficulty = difficulty;
+    }
+
     private static initializeBank(): Collection {
         provideDatabase().then((db: Db) => {
             db.collection(GridBank.COLLECTION_NAME, (error: MongoError, bank: Collection) => {

@@ -4,6 +4,10 @@ import { DifficultyEasy } from '../../../../../common/src/crossword/difficulty-e
 
 export class GridBankEasy extends GridBank {
 
+    constructor() {
+        super(new DifficultyEasy());
+    }
+
     public getGridFromGenerator(): Promise<Grid> {
         return this.getGridFromGeneratorWithDifficulty(new DifficultyEasy());
     }
