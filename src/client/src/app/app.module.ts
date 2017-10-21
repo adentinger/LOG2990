@@ -22,6 +22,7 @@ import { PacketManagerClient } from './packet-manager-client';
 import { MapService } from './racing/services/map.service';
 import { AdminConfigComponent } from './admin-screen/admin-config/admin-config.component';
 import { AdminConfigService } from './admin-screen/admin-config.service';
+import { EventManager } from './event-manager.service';
 
 @NgModule({
     declarations: [
@@ -44,7 +45,8 @@ import { AdminConfigService } from './admin-screen/admin-config.service';
         PacketManagerService,
         {provide: PacketManagerClient, useValue: packetManagerClient},
         MapService,
-        AdminConfigService
+        AdminConfigService,
+        EventManager
     ],
     bootstrap: [AppComponent]
 })
