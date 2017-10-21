@@ -4,7 +4,7 @@ import { Grid } from '../grid-generator/grid';
 import { GridGenerator } from '../grid-generator/grid-generator';
 import { NormalWordSuggestionsGetter } from '../grid-generator/normal-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
-import { provideDatabase } from '../../../app-db';
+import { provideDatabase, ensureCollectionReady } from '../../../app-db';
 import { Logger, warn } from '../../../../../common/src';
 
 enum GridState {
@@ -27,28 +27,38 @@ export abstract class GridBank {
         this.initializeBank();
     }
 
-    private initializeBank(): Collection {
+    private initializeBank(): void {
         provideDatabase().then((db: Db) => {
             db.collection(this.collectionName, (error: MongoError, bank: Collection) => {
                 this.bank = bank;
             });
         });
-        return null;
     }
 
     public async fillup(): Promise<void> {
+        await ensureCollectionReady(() => this.bank);
         while (await this.askSize() !== GridBank.NUMBER_OF_GRIDS) {
             await this.requestGridGeneration();
         }
     }
 
-    public getGrid(): Promise<Grid> {
-        const grid: Promise<Grid> = null;
-        this.fillup();
-        return grid;
+    public async getGrid(): Promise<Grid> {
+        await ensureCollectionReady(() => this.bank);
+
+        const DOCUMENT_PROMISE =
+            this.bank.findOneAndDelete(
+                {state: GridState.READY},
+                {projection: {_id: 0, state: 0}}
+            ).then((response) => response.value);
+
+        DOCUMENT_PROMISE.then(() => this.fillup());
+        const GRID_PROMISE =
+            DOCUMENT_PROMISE.then((document) => this.makeGridFrom(document));
+        return GRID_PROMISE;
     }
 
-    public askSize(): Promise<number> {
+    public async askSize(): Promise<number> {
+        await ensureCollectionReady(() => this.bank);
         return this.bank.count({});
     }
 
@@ -59,15 +69,11 @@ export abstract class GridBank {
                .gridGeneration(new NormalWordSuggestionsGetter(difficulty));
     }
 
-    public requestGridGeneration(): void {
+    public async requestGridGeneration(): Promise<void> {
         const GRID_PROMISE =
             GridGenerator.getInstance()
             .gridGeneration(new NormalWordSuggestionsGetter(this.difficulty));
-        GRID_PROMISE
-            .then((grid) => this.addGridToBank(grid))
-            .catch((reason) => {
-                warn(this.logger, new Error(reason));
-            });
+        await GRID_PROMISE.then((grid) => this.addGridToBank(grid));
     }
 
     private addGridToBank(grid: Grid): void {
@@ -84,6 +90,13 @@ export abstract class GridBank {
     private makeDocumentFrom(grid: Grid, state: GridState) {
         const STATEFUL_GRID = {...grid, state: state};
         return STATEFUL_GRID;
+    }
+
+    private makeGridFrom(document: any): Grid {
+        const GRID = new Grid();
+        GRID.across = document.across;
+        GRID.vertical = document.vertical;
+        return GRID;
     }
 
 }
