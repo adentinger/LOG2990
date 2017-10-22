@@ -17,15 +17,15 @@ class EventBis<T = any> {
     public data: T) { }
 }
 
-export declare type EventListener = <E extends EventBis>(event: E) => void;
+export declare type Listener = <E extends EventBis>(event: E) => void;
 declare type FieldName = string | symbol;
 
 const EVENT_LISTENERS_PROPERTY_NAMES: Map<InstanceOf<Class<any>>, Map<string, FieldName>> = new Map();
 
 @Injectable()
 export class EventManager {
-    private readonly EVENT_LISTENERS: Map<string, Set<EventListener>> = new Map();
-    private readonly EVENT_LISTENERS_ONCE: Map<string, Set<EventListener>> = new Map();
+    private readonly EVENT_LISTENERS: Map<string, Set<Listener>> = new Map();
+    private readonly EVENT_LISTENERS_ONCE: Map<string, Set<Listener>> = new Map();
 
     public registerClass<T extends Class = any>(instance: InstanceOf<T>): void {
         const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(Object.getPrototypeOf(instance));
@@ -34,24 +34,21 @@ export class EventManager {
         }
     }
 
-    /**
-     * Adds an {@link EventListener} to the given event type.
-     */
-    public addListener(type: string, listener: EventListener): void {
+    public addListener(type: string, listener: Listener): void {
         if (!this.EVENT_LISTENERS.has(type)) {
             this.EVENT_LISTENERS.set(type, new Set());
         }
         this.EVENT_LISTENERS.get(type).add(listener);
     }
 
-    public addListenerOnce(type: string, listener: EventListener): void {
+    public addListenerOnce(type: string, listener: Listener): void {
         if (!this.EVENT_LISTENERS_ONCE.has(type)) {
             this.EVENT_LISTENERS_ONCE.set(type, new Set());
         }
         this.EVENT_LISTENERS_ONCE.get(type).add(listener);
     }
 
-    public removeListener(type: string, listener: EventListener): void {
+    public removeListener(type: string, listener: Listener): void {
         if (this.EVENT_LISTENERS.has(type)) {
             this.EVENT_LISTENERS.get(type).delete(listener);
         }

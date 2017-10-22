@@ -1,6 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { EventManager, EventListener } from './event-manager.service';
 
-import { EventManager } from './event-manager.service';
+class Foo {
+    constructor(private eventManager: EventManager) {
+        eventManager.registerClass(this);
+    }
+
+    @EventListener('myEvent')
+    private myEventListener(event: EventManager.Event<number>) {
+        event.data *= 2;
+    }
+}
 
 describe('EventManager', () => {
     beforeEach(() => {
@@ -84,6 +94,18 @@ describe('EventManager', () => {
             service.fireEvent(event.name, event);
             expect(event.data.value).toEqual(3);
             expect(service['EVENT_LISTENERS_ONCE'].get(EVENT_NAME2).size).toEqual(0);
+        })
+    );
+
+    it('should register from a class its listeners with the EventListener decorator',
+        inject([EventManager], (service: EventManager) => {
+            const EVENT_NAME = 'myEvent',
+            event: EventManager.Event<number> = {name: EVENT_NAME, data: 1},
+            myClassInstance: Foo = new Foo(service);
+
+            expect(service['EVENT_LISTENERS'].get(EVENT_NAME).size).toEqual(1);
+            service.fireEvent(event.name, event);
+            expect(event.data).toEqual(2);
         })
     );
 });
