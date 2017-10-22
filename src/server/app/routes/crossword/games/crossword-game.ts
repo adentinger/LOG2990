@@ -10,6 +10,7 @@ import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../com
 import { Logger } from '../../../../../common/src/logger';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -21,11 +22,9 @@ export class CrosswordGame {
 
     public readonly id: number;
     public countdown = CrosswordGame.COUNTDOWN_INITAL;
-    public gridWordReceived: GridWord;
-    private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
+    // public gridWordReceived: GridWord;
 
-    // public horizontalGrid: GridWord[] = [];
-    // public verticalGrid: GridWord[] = [];
+    private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
     public horizontalGridWords: Map<number, GridWord> = new Map();
     public verticalGridWords: Map<number, GridWord> = new Map();
@@ -111,30 +110,37 @@ export class CrosswordGame {
 
     @PacketHandler(WordTryPacket)
     // tslint:disable-next-line:no-unused-variable
-    private getWordFromClient(event: PacketEvent<WordTryPacket>) {
-        this.gridWordReceived = event.value.wordTry;
-        this.handleUserAnswer();
-        this.sendWordResultToClient();
+    private getWordFromClient(event: PacketEvent<WordTryPacket>): void {
+        let gridWordReceived = event.value.wordTry;
+        let reply: GridWord = this.validateUserAnswer(gridWordReceived);
+        this.sendWordResultToClient(reply);
     }
 
-    private handleUserAnswer() {
-        if (this.userAnswerMatchesTheRightAnswer()) {
-            // do nothing
+    private validateUserAnswer(wordTry: GridWord): GridWord {
+        if (!this.userAnswerMatchesTheRightAnswer(wordTry)) {
+            wordTry.string = '';
         }
-        else {
-            this.gridWordReceived.string = '';
-        }
+        return wordTry;
     }
 
-    // TODO
-    private userAnswerMatchesTheRightAnswer(): boolean {
-        if (true) {
+    private userAnswerMatchesTheRightAnswer(wordTry: GridWord): boolean {
+        const index = wordTry.id;
+        const direction = wordTry.direction;
+
+        if (direction === Direction.horizontal &&
+            this.horizontalGridWords.get(index).string === wordTry.string) {
             this.countdown = COUNTDOWN_DEFAULT_VALUE;
             return true;
         }
+        else if (direction === Direction.vertical &&
+            this.verticalGridWords.get(index).string === wordTry.string) {
+            this.countdown = COUNTDOWN_DEFAULT_VALUE;
+            return true;
+        }
+        else return false;
     }
 
-    private sendWordResultToClient(): void {
-        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(this.gridWordReceived), this.player1Id);
+    private sendWordResultToClient(wordTry: GridWord): void {
+        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(wordTry), this.player1Id);
     }
 }
