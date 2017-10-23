@@ -2,6 +2,10 @@ import * as THREE from 'three';
 
 import { Skybox, SkyboxMode } from './skybox';
 
+import { Puddle } from './obstacles/puddle';
+import { Pothole } from './obstacles/pothole';
+import { SpeedBooster } from './obstacles/speed-booster';
+
 export class RacingGameRendering {
 
     public readonly WIDTH: number = window.innerWidth;
@@ -17,6 +21,9 @@ export class RacingGameRendering {
     public readonly CAMERA: THREE.PerspectiveCamera;
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
+    public readonly PUDDLE: Puddle;
+    public readonly POTHOLE: Pothole;
+    public readonly SPEEDBOOSTER: Puddle;
 
     constructor(canvas: HTMLCanvasElement) {
         this.SCENE = new THREE.Scene();
@@ -27,7 +34,11 @@ export class RacingGameRendering {
             this.NEAR,
             this.FAR);
         this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
+        this.PUDDLE = new Puddle();
+        this.POTHOLE = new Pothole();
+        this.SPEEDBOOSTER = new SpeedBooster;
 
+        this.SCENE.add(this.SPEEDBOOSTER);
         this.SCENE.add(this.SKYBOX);
         this.SCENE.add(this.CAMERA);
     }
