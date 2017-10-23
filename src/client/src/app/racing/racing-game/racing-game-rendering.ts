@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { Skybox, SkyboxMode } from './skybox';
+import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 
 export class RacingGameRendering {
 
@@ -17,6 +18,7 @@ export class RacingGameRendering {
     public readonly CAMERA: THREE.PerspectiveCamera;
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
+    public readonly PLANE: RacingGamePlane;
 
     constructor(canvas: HTMLCanvasElement) {
         this.SCENE = new THREE.Scene();
@@ -27,8 +29,10 @@ export class RacingGameRendering {
             this.NEAR,
             this.FAR);
         this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
+        this.PLANE = new RacingGamePlane();
 
         this.SCENE.add(this.SKYBOX);
+        this.SCENE.add(this.PLANE);
         this.SCENE.add(this.CAMERA);
     }
 
@@ -38,7 +42,7 @@ export class RacingGameRendering {
 
     private setupCamera(): void {
         this.CAMERA.rotation.order = 'YXZ';
-        this.CAMERA.position.set(0, 500, 1000);
+        this.CAMERA.position.set(0, 0, 500);
         this.CAMERA.lookAt(this.SCENE.position);
     }
 

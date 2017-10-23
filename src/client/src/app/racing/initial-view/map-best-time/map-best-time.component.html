@@ -3,6 +3,7 @@
         <ol>
             <h1>{{map.name}}</h1>
             <li *ngFor="let number of map.bestTimes">UserRanking-user: {{number}}</li> 
+            <button routerLink="racing-game/:map">Play Map</button>
         </ol>
     </div>
 </div>

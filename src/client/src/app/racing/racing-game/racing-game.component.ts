@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
 import { SkyboxMode } from './skybox';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 const LEFT_MOUSE_BUTTON = 0;
 
@@ -23,10 +24,11 @@ export class RacingGameComponent implements OnInit {
     private windowHalfX = window.innerWidth * 0.5;
     private windowHalfY = window.innerHeight * 0.5;
 
-    constructor(private racingGameRenderer: RacingGameService) { }
+    constructor(private racingGameRenderer: RacingGameService, private route: ActivatedRoute) { }
 
     public ngOnInit(): void {
         this.racingGameRenderer.initialise(this.racingGameCanvas.nativeElement);
+        // this.route.paramMap.switchMap((params: ParamMap) => params.get('map-name')).subscribe(map => this.map.name = map);
     }
 
     public onResize() {
@@ -36,6 +38,7 @@ export class RacingGameComponent implements OnInit {
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;
         this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
+        this.racingGameRenderer.racingGameRendering.RENDERER.setViewport(0, 0, height, width);
         this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
 
