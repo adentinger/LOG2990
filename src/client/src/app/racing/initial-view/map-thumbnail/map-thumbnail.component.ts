@@ -17,10 +17,11 @@ import { SerializedMap } from '../../../../../../common/src/racing/serialized-ma
     ]
 })
 export class MapThumbnailComponent implements OnInit, AfterViewInit {
+    private static readonly EMPTY_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
     @ViewChild('mapThumbnail') private mapThumbnail: ElementRef;
 
-    public imageData: string;
+    public imageData: string = MapThumbnailComponent.EMPTY_IMAGE;
 
     constructor(private mapEditor: MapEditorService,
                 private mapRenderer: MapRendererService) { }
