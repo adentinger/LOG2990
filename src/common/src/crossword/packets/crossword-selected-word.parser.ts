@@ -1,14 +1,18 @@
-import { Parser, PacketParser } from '../../index';
-import { CrosswordSelectedWordPacket } from './crossword-selected-word.packet';
+import { Parser, PacketParser, SIZE_UINT32 } from '../../index';
+import { SelectedWord } from '../selected-word';
 
-@Parser(CrosswordSelectedWordPacket)
-export class CrosswordSelectedWordParser extends PacketParser<CrosswordSelectedWordPacket> {
+@Parser(SelectedWord)
+export class CrosswordSelectedWordParser extends PacketParser<SelectedWord> {
 
-    public serialize(value: CrosswordSelectedWordPacket): ArrayBuffer {
-        return null;
+    public serialize(value: SelectedWord): ArrayBuffer {
+        const BUFFER = new ArrayBuffer(2 * SIZE_UINT32);
+        const DATA = new DataView(BUFFER);
+        DATA.setInt32(0 * SIZE_UINT32, value.direction);
+        DATA.setInt32(1 * SIZE_UINT32, value.direction);
+        return BUFFER;
     }
 
-    public parse(data: ArrayBuffer): CrosswordSelectedWordPacket {
+    public parse(data: ArrayBuffer): SelectedWord {
         return null;
     }
 
