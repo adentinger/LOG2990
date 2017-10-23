@@ -2,14 +2,10 @@ import * as THREE from 'three';
 
 export class SpeedBooster extends THREE.Mesh {
 
-    private currentPuddle: THREE.Mesh;
-
     constructor () {
         super();
-    }
-
-    private static createPuddle(): THREE.Mesh {
-        return null;
+        this.geometry = new THREE.BoxGeometry( 300, 200, 0 );
+        this.material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
     }
 
     private static putTexture() {

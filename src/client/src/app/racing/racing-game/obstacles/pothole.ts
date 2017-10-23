@@ -2,14 +2,10 @@ import * as THREE from 'three';
 
 export class Pothole extends THREE.Mesh {
 
-    private currentPothole: THREE.Mesh;
-
     constructor () {
         super();
-    }
-
-    private static createPothole(): THREE.Mesh {
-        return null;
+        this.geometry = new THREE.CircleGeometry( 100, 40 );
+        this.material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
     }
 
     private static putTexture() {

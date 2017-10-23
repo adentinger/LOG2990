@@ -2,14 +2,10 @@ import * as THREE from 'three';
 
 export class Puddle extends THREE.Mesh {
 
-    private currentPuddle: THREE.Mesh;
-
     constructor () {
         super();
-    }
-
-    private static createPuddle(): THREE.Mesh {
-        return null;
+        this.geometry = new THREE.CircleGeometry( 100, 40 );
+        this.material = new THREE.MeshBasicMaterial( { color: 0x92acc5 } );
     }
 
     private static putTexture() {
