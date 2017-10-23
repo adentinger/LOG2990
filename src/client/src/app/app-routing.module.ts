@@ -18,7 +18,6 @@ const routes: Routes = [
     { path: '', component: SelectionScreenComponent },
     { path: 'crossword', component: CrosswordComponent },
     { path: 'racing', component: RacingComponent },
-    { path: 'racing/racing-game', component: RacingGameComponent},
     { path: 'racing/racing-game/:map-name', component: RacingGameComponent}
 ];
 

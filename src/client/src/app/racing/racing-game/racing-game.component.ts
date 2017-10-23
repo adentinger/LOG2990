@@ -34,9 +34,10 @@ export class RacingGameComponent implements OnInit {
 
     public ngOnInit(): void {
         this.racingGameRenderer.initialise(this.racingGameCanvas.nativeElement);
-        this.route.paramMap.switchMap((params: ParamMap) => params.get('map-name')).toPromise()
-        .then(map => this.mapService.getByName(map))
-        .then(map => this.map = new RenderableMap(map));
+        this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
+            this.mapService.getByName(mapName)
+            .then(map => this.map = new RenderableMap(map));
+        });
         this.resize();
     }
 
@@ -59,7 +60,7 @@ export class RacingGameComponent implements OnInit {
     public onMouseMove(e: MouseEvent) {
         const MOUSE_POSITION = new Point(
             (e.clientX - this.windowHalfX) / (this.windowHalfX),
-            (e.clientY - this.windowHalfY) / (this.windowHalfY)
+            (e.clientY - RacingGameComponent.HEADER_HEIGHT - this.windowHalfY) / (this.windowHalfY)
         );
         this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
     }
