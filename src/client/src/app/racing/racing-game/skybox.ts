@@ -42,11 +42,12 @@ export class Skybox extends THREE.Mesh {
 
     private static makeShader(texture: THREE.CubeTexture): THREE.ShaderMaterial {
         const SHADER = THREE.ShaderLib['cube'];
-        SHADER.uniforms['tCube'].value = texture;
+        const UNIFORMS = THREE.UniformsUtils.clone(SHADER.uniforms);
+        UNIFORMS['tCube'].value = texture;
         const MATERIAL = new THREE.ShaderMaterial({
             fragmentShader: SHADER.fragmentShader,
             vertexShader: SHADER.vertexShader,
-            uniforms: SHADER.uniforms,
+            uniforms: UNIFORMS,
             depthWrite: false,
             side: THREE.BackSide
         });
