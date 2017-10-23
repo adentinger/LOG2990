@@ -8,7 +8,7 @@ export class RacingGameRendering {
     public readonly WIDTH: number = window.innerWidth;
     public readonly HEIGHT: number = window.innerHeight;
 
-    public readonly VIEW_ANGLE: number = 75;
+    public readonly VIEW_ANGLE: number = 90;
     public readonly ASPECT: number = this.WIDTH / this.HEIGHT;
 
     public readonly NEAR: number = 1;
