@@ -16,7 +16,6 @@ export class RenderableMap extends THREE.Mesh {
     constructor(map: SerializedMap) {
         super();
 
-        console.log('Map: ', map.name);
         this.mapName = map.name;
         this.mapPoints = map.points;
         this.mapPotholes = map.potholes;
