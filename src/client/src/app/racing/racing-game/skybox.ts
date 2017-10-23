@@ -57,6 +57,7 @@ export class Skybox extends THREE.Mesh {
     private static createCube(mode: SkyboxMode): THREE.Mesh {
 
         let texture: THREE.CubeTexture;
+        const angle = new THREE.Euler( Math.PI / 4, 0, 0, 'XYZ' );
 
         const loader = new THREE.CubeTextureLoader();
         loader.setPath('/assets/racing/skybox/');
@@ -73,7 +74,8 @@ export class Skybox extends THREE.Mesh {
         const CUBE =
             new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1),
                            Skybox.makeShader(texture));
-
+            CUBE.setRotationFromEuler(angle);
+            CUBE.updateMatrix();
         return CUBE;
     }
 
