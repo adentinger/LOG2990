@@ -13,14 +13,14 @@ export class RenderableMap extends THREE.Mesh {
     public mapPuddles: SerializedPuddle[];
     public mapSpeedBoosts: SerializedSpeedBoost[];
 
-    constructor (map: SerializedMap) {
+    constructor(map: SerializedMap) {
         super();
 
-        console.log(map.name);
+        console.log('Map: ', map.name);
         this.mapName = map.name;
         this.mapPoints = map.points;
         this.mapPotholes = map.potholes;
         this.mapPuddles = map.puddles;
         this.mapSpeedBoosts = map.speedBoosts;
-     }
+    }
 }
