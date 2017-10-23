@@ -17,6 +17,7 @@ const LEFT_MOUSE_BUTTON = 0;
     providers: [RacingGameService]
 })
 export class RacingGameComponent implements OnInit {
+    private static readonly HEADER_HEIGHT = 50;
 
     @ViewChild('racingGame')
     public racingGame: ElementRef;
@@ -36,15 +37,21 @@ export class RacingGameComponent implements OnInit {
         this.route.paramMap.switchMap((params: ParamMap) => params.get('map-name')).toPromise()
         .then(map => this.mapService.getByName(map))
         .then(map => this.map = new RenderableMap(map));
+        this.resize();
     }
 
     public onResize() {
-        const height = (window).innerHeight;
+        this.resize();
+    }
+
+    private resize() {
+        const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = (window).innerWidth;
         const CAMERA = this.racingGameRenderer.racingGameRendering.CAMERA;
 
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;
+        this.racingGameRenderer.racingGameRendering.RENDERER.setSize(width, height);
         this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
         this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
