@@ -13,6 +13,10 @@ export class CrosswordSelectedWordParser extends PacketParser<SelectedWord> {
     }
 
     public parse(data: ArrayBuffer): SelectedWord {
+        const WORD = new SelectedWord();
+        const VIEW = new DataView(data);
+        WORD.direction = VIEW.getInt32(0 * SIZE_UINT32);
+        WORD.index     = VIEW.getInt32(1 * SIZE_UINT32);
         return null;
     }
 
