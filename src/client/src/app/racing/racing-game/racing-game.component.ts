@@ -69,18 +69,6 @@ export class RacingGameComponent implements OnInit {
         this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
     }
 
-    @HostListener('click', ['$event'])
-    public onClick(e: MouseEvent) {
-        if (e.button === LEFT_MOUSE_BUTTON) {
-            const SKYBOX = this.racingGameRenderer.racingGameRendering.SKYBOX;
-            switch (SKYBOX.mode) {
-                case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
-                case SkyboxMode.NIGHT: SKYBOX.mode = SkyboxMode.DAY; break;
-                default: break;
-            }
-        }
-    }
-
     @HostListener('window:keydown', ['$event'])
     private onKeyUp(event: KeyboardEvent) {
         if (!event.ctrlKey || event.key !== 'I') { // Allows for Ctrl+Shift+I
@@ -100,6 +88,14 @@ export class RacingGameComponent implements OnInit {
         }
         if (event.key.toLowerCase() === 'a') {
             position.add((new Vector3(1, 0, 0)).applyEuler(rotation).setY(0).normalize().multiplyScalar(-0.1));
+        }
+        if (event.key.toLowerCase() === 'n') {
+            const SKYBOX = this.racingGameRenderer.racingGameRendering.SKYBOX;
+            switch (SKYBOX.mode) {
+                case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
+                case SkyboxMode.NIGHT: SKYBOX.mode = SkyboxMode.DAY; break;
+                default: break;
+            }
         }
     }
 
