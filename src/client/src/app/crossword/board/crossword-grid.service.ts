@@ -23,6 +23,8 @@ export class CrosswordGridService {
     constructor(private crosswordGameService: CrosswordGameService, private packetManager: PacketManagerClient,
         private definitionsService: DefinitionsService) {
         registerHandlers(this, packetManager);
+
+        // This mock is meant to stay as an initial view
         this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map(
             (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map(
