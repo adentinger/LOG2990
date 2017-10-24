@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 
 import { Logger } from '../../../../../../common/src/index';
 
 /**
  * Loads an object (.obj) file along with a material (.mtl) file.
+ * Look at three-objects/car.ts for an example usage.
  */
-@Injectable()
 export class ObjMtlLoader {
 
     private objLoader: THREE.OBJLoader = new THREE.OBJLoader();
