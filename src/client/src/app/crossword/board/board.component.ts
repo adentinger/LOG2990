@@ -54,4 +54,26 @@ export class BoardComponent implements OnInit {
     public set crosswordGrid(value: string[][]) {
         this.crosswordGridService.crosswordGrid = value;
     }
+
+    public checkIfHighlighted(j: number, i: number): boolean {
+        if (this.selectionService.isCurrentlySelected === false) {
+            return false
+        }
+
+        const selectedDirection: Direction = this.selectionService.selection.direction;
+        const selectedX: number = this.selectionService.getSelectedWordCoordinates()[1];
+        const selectedY: number = this.selectionService.getSelectedWordCoordinates()[0];
+        const selectedLenght: number = this.selectionService.getSelectedWordLength();
+
+        if (selectedDirection === Direction.horizontal
+            && j === selectedY
+            && i >= selectedX
+            && i <= selectedX + selectedLenght - 1)
+            return true;
+        else if (selectedDirection === Direction.vertical
+            && i === selectedX
+            && j >= selectedY
+            && j <= selectedY + selectedLenght - 1)
+            return true;
+    }
 }

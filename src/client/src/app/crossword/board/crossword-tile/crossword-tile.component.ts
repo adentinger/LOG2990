@@ -4,6 +4,7 @@ import { GridWord } from '../../../../../../common/src/crossword/grid-word';
 import { Direction } from '../../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameService } from '../../crossword-game.service';
 import { DefinitionsService } from '../../definition-field/definitions.service';
+import { SelectionService } from '../../selection.service';
 
 @Component({
     selector: 'app-tile',
@@ -15,6 +16,8 @@ export class CrosswordTileComponent implements OnInit {
     public tileValue: string;
     @Input() public readonly tileRow: number;
     @Input() public readonly tileColumn: number;
+
+    @Input() public highlighted: boolean;
 
     // @ViewChild('crosswordBoard') private gridElement: ElementRef;
     @Input() get tileChar() {
@@ -33,7 +36,8 @@ export class CrosswordTileComponent implements OnInit {
 
     constructor(private crosswordGridService: CrosswordGridService,
         private crosswordGameService: CrosswordGameService,
-        private definitionService: DefinitionsService) { }
+        private definitionService: DefinitionsService,
+        private selectionService: SelectionService) { }
 
     /*
     public checkIfTileIsInWordTiles(word: GridWord): boolean {
@@ -72,14 +76,5 @@ export class CrosswordTileComponent implements OnInit {
         else {
             return false;
         }
-
-        /*
-        if (aDefinitionIsSelected) {
-            return this.checkIfTileIsInWordTiles(word);
-        }
-        else {
-            return false;
-        }
-        */
     }
 }

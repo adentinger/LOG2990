@@ -61,6 +61,7 @@ export class DefinitionFieldComponent implements OnInit {
             index: index,
             direction: direction,
         }
+        this.selectionService.isCurrentlySelected = true;
 
         // TODO migrate to selection service
         if (direction === Direction.horizontal) {
@@ -78,6 +79,7 @@ export class DefinitionFieldComponent implements OnInit {
             index: -1,
             direction: 0, // don't care
         }
+        this.selectionService.isCurrentlySelected = false;
         this.definitionService.onClickOutside();
     }
     public checkIfSelected(index: number, direction: Direction) {
