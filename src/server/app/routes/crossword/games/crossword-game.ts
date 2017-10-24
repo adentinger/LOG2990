@@ -110,22 +110,22 @@ export class CrosswordGame {
         this.countdown = event.value.countdown;
     }
 
-    @PacketHandler(WordTryPacket)
-    // tslint:disable-next-line:no-unused-variable
-    private getWordFromClient(event: PacketEvent<WordTryPacket>): void {
-        let gridWordReceived = event.value.wordTry;
-        let reply: GridWord = this.validateUserAnswer(gridWordReceived);
-        this.sendWordResultToClient(reply);
-    }
+    // @PacketHandler(WordTryPacket)
+    // // tslint:disable-next-line:no-unused-variable
+    // private getWordFromClient(event: PacketEvent<WordTryPacket>): void {
+    //     let gridWordReceived = event.value.wordTry;
+    //     let reply: GridWord = this.validateUserAnswer(gridWordReceived);
+    //     this.sendWordResultToClient(reply);
+    // }
 
-    private validateUserAnswer(wordTry: GridWord): GridWord {
-        if (!this.userAnswerMatchesTheRightAnswer(wordTry)) {
-            wordTry.string = '';
-        }
-        return wordTry;
-    }
+    // public validateUserAnswer(wordTry: GridWord): void {
+    //     if (!this.userAnswerMatchesTheRightAnswer(wordTry)) {
+    //         wordTry.string = '';
+    //     }
+    //     this.sendWordResultToClient(wordTry);
+    // }
 
-    private userAnswerMatchesTheRightAnswer(wordTry: GridWord): boolean {
+    public validateUserAnswer(wordTry: GridWord): boolean {
         const index = wordTry.id;
         const direction = wordTry.direction;
 
@@ -143,6 +143,7 @@ export class CrosswordGame {
     }
 
     private sendWordResultToClient(wordTry: GridWord): void {
+        console.log('the game ' + this.id + ' is sending this gridword to client ' + wordTry);
         this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(wordTry), this.player1Id);
     }
 }

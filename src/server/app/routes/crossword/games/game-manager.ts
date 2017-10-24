@@ -14,6 +14,7 @@ import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 
 const ID_LENGTH = 8;
 
@@ -88,6 +89,41 @@ export class GameManager {
         // send all definitions
         this.sendAllDefinitions(gameToJoin, playerSocketId);
 
+    }
+
+    /**
+     * Returning a gridword with an empty string field indicates a failed attempt
+     * a filled string indicates a succesfull attempt
+     * @param event 
+     */
+    @PacketHandler(WordTryPacket)
+    public wordTryHandler(event: PacketEvent<WordTryPacket>) {
+        const wordTry: GridWord = event.value.wordTry;
+        const socketId: string = event.socketid;
+        console.log(wordTry);
+
+        const game: CrosswordGame = this.getGameFromSocketId(event.socketid);
+
+        let answerToServer: GridWord = wordTry;
+        if (!game.validateUserAnswer(wordTry)) {
+            answerToServer.string = '';
+        }
+        this.sendGridWord(answerToServer, socketId);
+    }
+
+    /**
+     * Returns a game given the socketId of one of its player
+     * @param socketId : Id of a player
+     */
+    private getGameFromSocketId(socketId: string): CrosswordGame {
+        for (let game of this.games) {
+            if (socketId === game[1].player1Id ||
+                socketId === game[1].player2Id) {
+                // console.log('found a game: ' + JSON.stringify(game[1]));
+                return game[1];
+            }
+        }
+        return null;
     }
 
     private sendAllDefinitions(gameId: string, socketId: string): void {

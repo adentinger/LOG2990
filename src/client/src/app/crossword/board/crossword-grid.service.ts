@@ -141,11 +141,11 @@ export class CrosswordGridService {
         }
     }
 
-    // TODO Verify the word entered if it matches the word on the server
     public sendWordToServer(input: string, word: GridWord) {
         const newGridWord = Object.assign(new GridWord, word);
         newGridWord.string = input;
 
+        // console.log('word try is :' + newGridWord);
         this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(newGridWord));
     }
 
@@ -161,7 +161,7 @@ export class CrosswordGridService {
 
     @PacketHandler(GridWordPacket)
     public updateGridWord(event: PacketEvent<GridWordPacket>) {
-        console.dir(event.value.gridword);
+        console.log('new gridword received from server: ' + JSON.stringify(event.value.gridword));
         // send change to grid
     }
 }
