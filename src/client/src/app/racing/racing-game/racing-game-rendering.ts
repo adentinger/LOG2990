@@ -1,6 +1,11 @@
 import * as THREE from 'three';
+import * as OBJLoader from 'three-obj-loader';
+import * as MTLLoader from 'three-mtl-loader';
 
 import { Skybox, SkyboxMode } from './skybox';
+
+OBJLoader(THREE);
+(THREE['MTLLoader' as any]) = MTLLoader;
 
 export class RacingGameRendering {
 
