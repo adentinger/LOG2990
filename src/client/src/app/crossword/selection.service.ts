@@ -1,5 +1,6 @@
+import { Injectable } from "@angular/core";
+import { SelectedWord } from "./class/selected-word";
 
 export class SelectionService {
-    public selection: Selection;
-
+    public selection: SelectedWord = new SelectedWord();
 }

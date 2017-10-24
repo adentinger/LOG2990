@@ -4,13 +4,13 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { SelectionService } from '../selection.service';
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss']
 })
-
 export class BoardComponent implements OnInit {
     public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
@@ -26,6 +26,7 @@ export class BoardComponent implements OnInit {
     }
 
     constructor(private crosswordGridService: CrosswordGridService,
+        private selectionService: SelectionService,
         private definitionsService: DefinitionsService) { }
 
     public ngOnInit(): void {

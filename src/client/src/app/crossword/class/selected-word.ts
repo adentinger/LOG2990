@@ -1,4 +1,4 @@
-import { Direction } from "../../../../../common/src/crossword/crossword-enums";
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 export class SelectedWord {
     public direction: Direction;

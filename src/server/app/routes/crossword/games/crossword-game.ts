@@ -10,7 +10,7 @@ import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../com
 import { Logger } from '../../../../../common/src/logger';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -32,7 +32,7 @@ export class CrosswordGame {
     public verticalDefinitions: Map<number, Definition> = new Map;
     public horizontalDefinitions: Map<number, Definition> = new Map;
 
-    private gameMode: string;
+    private gameMode: GameMode;
 
     public player1Id: string = null;
     public player2Id: string = null;
@@ -70,7 +70,9 @@ export class CrosswordGame {
 
         registerHandlers(this, this.packetManager);
 
-        this.startTimer();
+        if (this.gameMode === GameMode.Dynamic) {
+            this.startTimer();
+        }
     }
 
     public getGameInfo(): Object {

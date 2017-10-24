@@ -1,6 +1,9 @@
+/**
+ * Grid Word
+ */
 export enum Direction {
     horizontal,
-    vertical
+    vertical,
 }
 
 export enum Owner {
@@ -9,8 +12,16 @@ export enum Owner {
     player2,
 }
 
+/**
+ * Game Configs
+ */
 export enum Difficulty {
     easy,
     medium,
-    hard
+    hard,
+}
+
+export enum GameMode {
+    Classic,
+    Dynamic,
 }
