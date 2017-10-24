@@ -1,12 +1,7 @@
 import * as THREE from 'three';
-import * as OBJLoader from 'three-obj-loader';
-import * as MTLLoader from 'three-mtl-loader';
 
 import { Skybox, SkyboxMode } from './skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
-
-OBJLoader(THREE);
-(THREE['MTLLoader' as any]) = MTLLoader;
 
 export class RacingGameRendering {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
