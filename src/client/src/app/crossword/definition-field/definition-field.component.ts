@@ -62,7 +62,7 @@ export class DefinitionFieldComponent implements OnInit {
             direction: direction,
         }
 
-        // TODO remove
+        // TODO migrate to selection service
         if (direction === Direction.horizontal) {
             if (this.crosswordGridService.horizontalGridWords.get(index).string === '') {
                 this.definitionService.onSelect(index, direction, event);
@@ -74,13 +74,13 @@ export class DefinitionFieldComponent implements OnInit {
         }
     }
     public onClickOutside(): void {
+        this.selectionService.selection = {
+            index: -1,
+            direction: 0, // don't care
+        }
         this.definitionService.onClickOutside();
     }
     public checkIfSelected(index: number, direction: Direction) {
-        // return this.selectionService.selection === {
-        //     index: index,
-        //     direction: direction,
-        // }
         return (index === this.selectionService.selection.index
             && direction === this.selectionService.selection.direction);
     }
