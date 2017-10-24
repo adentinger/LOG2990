@@ -14,13 +14,13 @@ export class ItemGenerator {
         if (itemArray.length === 0) {
             let item: ItemGenerated;
             position = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
-            item = new constructor(new Item);
+            item = new constructor(position);
             itemArray.push(item);
         }
         else if (itemArray.length < 5) {
             for (let i = 0; i < 2; i++) {
                 position = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
-                const item = new constructor(new Item);
+                const item = new constructor(position);
                 itemArray.push(item);
             }
         }

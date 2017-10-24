@@ -10,6 +10,7 @@ import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
+import { ItemGenerator } from './item-generator';
 
 @Injectable()
 export class MapEditorService {
@@ -20,7 +21,8 @@ export class MapEditorService {
     private map: Map;
 
     constructor(private converter: RacingUnitConversionService,
-                private mapConverter: MapConverterService) {
+                private mapConverter: MapConverterService,
+                private itemGenerator: ItemGenerator) {
         this.newMap();
     }
 
@@ -166,7 +168,9 @@ export class MapEditorService {
         return this.mapWidth > 0 && this.mapHeight > 0;
     }
 
-    public addPothole(): void {}
+    public addPothole(): void {
+        this.itemGenerator.addItem(Pothole, this.currentMap, this.currentMap.potholes);
+    }
 
     public addPuddles(): void {}
 
