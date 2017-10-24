@@ -71,7 +71,7 @@ export class Skybox extends THREE.Mesh {
         }
 
         const CUBE =
-            new THREE.Mesh(new THREE.CubeGeometry(10000, 10000, 10000, 1, 1, 1),
+            new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300, 1, 1, 1),
                            Skybox.makeShader(texture));
 
         return CUBE;
