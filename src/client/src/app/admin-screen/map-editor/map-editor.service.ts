@@ -8,6 +8,8 @@ import { Point } from '../../../../../common/src/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
+import { Pothole } from './pothole';
+import { Puddle } from './puddle';
 
 @Injectable()
 export class MapEditorService {
@@ -163,5 +165,11 @@ export class MapEditorService {
     private areWidthAndHeightSet(): boolean {
         return this.mapWidth > 0 && this.mapHeight > 0;
     }
+
+    public addPothole(): void {}
+
+    public addPuddles(): void {}
+
+    public addSpeedBoosts(): void {}
 
 }
