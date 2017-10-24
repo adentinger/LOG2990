@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 
 import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
@@ -7,6 +7,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
 import 'rxjs/add/operator/toPromise';
+import { Vector3 } from 'three';
 
 const LEFT_MOUSE_BUTTON = 0;
 
@@ -38,14 +39,16 @@ export class RacingGameComponent implements OnInit {
             this.mapService.getByName(mapName)
             .then(map => this.map = new RenderableMap(map));
         });
-        this.resize();
+        this.resizeCanvas();
+        (<HTMLCanvasElement>this.racingGameCanvas.nativeElement).requestPointerLock();
     }
 
+    @HostListener('window:resize', ['$event'])
     public onResize() {
-        this.resize();
+        this.resizeCanvas();
     }
 
-    private resize() {
+    private resizeCanvas() {
         const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = (window).innerWidth;
         const CAMERA = this.racingGameRenderer.racingGameRendering.CAMERA;
@@ -57,6 +60,7 @@ export class RacingGameComponent implements OnInit {
         this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
     }
 
+    @HostListener('mousemove', ['$event'])
     public onMouseMove(e: MouseEvent) {
         const MOUSE_POSITION = new Point(
             (e.clientX - this.windowHalfX) / (this.windowHalfX),
@@ -65,6 +69,7 @@ export class RacingGameComponent implements OnInit {
         this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
     }
 
+    @HostListener('click', ['$event'])
     public onClick(e: MouseEvent) {
         if (e.button === LEFT_MOUSE_BUTTON) {
             const SKYBOX = this.racingGameRenderer.racingGameRendering.SKYBOX;
@@ -74,6 +79,33 @@ export class RacingGameComponent implements OnInit {
                 default: break;
             }
         }
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    private onKeyUp(event: KeyboardEvent) {
+        if (!event.ctrlKey || event.key !== 'I') { // Allows for Ctrl+Shift+I
+            event.preventDefault();
+        }
+
+        const position = this.racingGameRenderer.racingGameRendering.CAMERA.position;
+        const rotation = this.racingGameRenderer.racingGameRendering.CAMERA.rotation;
+        if (event.key.toLowerCase() === 'w') {
+            position.add((new Vector3(0, 0, -1)).applyEuler(rotation).setY(0).normalize().multiplyScalar(0.1));
+        }
+        if (event.key.toLowerCase() === 's') {
+            position.add((new Vector3(0, 0, -1)).applyEuler(rotation).setY(0).normalize().multiplyScalar(-0.1));
+        }
+        if (event.key.toLowerCase() === 'd') {
+            position.add((new Vector3(1, 0, 0)).applyEuler(rotation).setY(0).normalize().multiplyScalar(0.1));
+        }
+        if (event.key.toLowerCase() === 'a') {
+            position.add((new Vector3(1, 0, 0)).applyEuler(rotation).setY(0).normalize().multiplyScalar(-0.1));
+        }
+    }
+
+    @HostListener('window:contextmenu', ['$event'])
+    private preventEvent(event: Event) {
+        event.preventDefault();
     }
 
 }

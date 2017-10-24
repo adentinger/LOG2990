@@ -12,4 +12,10 @@ export class Point {
         return this.x === that.x && this.y === that.y;
     }
 
+    public add(that: Point): this {
+        this.x += that.x;
+        this.y += that.y;
+        return this;
+    }
+
 }
