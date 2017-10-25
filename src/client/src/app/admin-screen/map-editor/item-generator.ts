@@ -12,14 +12,15 @@ export class ItemGenerator {
 
     public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
         const MAX_AMOUNT_OF_ITEMS = 5;
+        const currentArrayLength = itemArray.length;
 
-        if (itemArray.length === 0) {
-            const item = new constructor(this.allPositions[itemArray.length]);
+        if (currentArrayLength === 0) {
+            const item = new constructor(this.allPositions[currentArrayLength]);
             itemArray.push(item);
         }
-        else if (itemArray.length < MAX_AMOUNT_OF_ITEMS) {
+        else if (currentArrayLength < MAX_AMOUNT_OF_ITEMS) {
             for (let i = 0; i < 2; i++) {
-                const item = new constructor(this.allPositions[itemArray.length + i]);
+                const item = new constructor(this.allPositions[currentArrayLength + i]);
                 itemArray.push(item);
             }
         }

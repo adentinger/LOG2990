@@ -46,10 +46,11 @@ describe('Item generator', () => {
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(1);
         console.log(map2.potholes[0].position);
+        console.log(itemGenerator.positions[0] + 'allo');
 
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(3);
-        console.log(map1.potholes[1].position, map1.potholes[2].position);
+        console.log(map2.potholes[1].position, map2.potholes[2].position);
         console.log(itemGenerator.positions[1], itemGenerator.positions[2]);
 
         itemGenerator.generatePositions(map1);

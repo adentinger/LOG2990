@@ -168,9 +168,7 @@ export class MapEditorService {
         return this.mapWidth > 0 && this.mapHeight > 0;
     }
 
-    public addPothole(): void {
-        this.itemGenerator.addItem(Pothole, this.currentMap, this.currentMap.potholes);
-    }
+    public addPothole(): void {}
 
     public addPuddles(): void {}
 
