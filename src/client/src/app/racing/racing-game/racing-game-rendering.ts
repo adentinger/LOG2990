@@ -2,8 +2,9 @@ import * as THREE from 'three';
 
 import { Skybox, SkyboxMode } from './skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
+import { MovablePerspectiveCamera } from './physic/examples/movable-camera';
 
-export class RacingGameRendering {
+export class RacingGameRenderer {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
         new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0xff0000),
         new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), 1, 0x00ff00),
@@ -20,7 +21,7 @@ export class RacingGameRendering {
     public readonly FAR: number = 500;
 
     public readonly SCENE: THREE.Scene;
-    public readonly CAMERA: THREE.PerspectiveCamera;
+    public readonly CAMERA1: MovablePerspectiveCamera;
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
@@ -30,33 +31,25 @@ export class RacingGameRendering {
     constructor(canvas: HTMLCanvasElement) {
         this.SCENE = new THREE.Scene();
         this.RENDERER = new THREE.WebGLRenderer({canvas: canvas});
-        this.CAMERA = new THREE.PerspectiveCamera(
+        this.CAMERA1 = new MovablePerspectiveCamera(
             this.VIEW_ANGLE,
             this.ASPECT,
             this.NEAR,
             this.FAR);
         this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
-        this.PLANE = new RacingGamePlane();
-        const wireframePlane = new RacingGamePlane();
-        (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).map = null;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color( 0xffffff );
-        wireframePlane.rotation.set(0, 0, 0);
-        this.PLANE.add(wireframePlane);
         this.displayWorldRef = true;
 
-        this.CAMERA.add(this.SKYBOX);
-        this.SCENE.add(this.PLANE);
-        this.SCENE.add(this.CAMERA);
+        this.CAMERA1.add(this.SKYBOX);
+        this.SCENE.add(this.CAMERA1);
     }
 
     public set displayWorldRef(value: boolean) {
         this.displayWorldRefInternal = value;
         if (value) {
-            this.SCENE.add(...RacingGameRendering.ARROW_HELPERS);
+            this.SCENE.add(...RacingGameRenderer.ARROW_HELPERS);
         }
         else {
-            RacingGameRendering.ARROW_HELPERS.forEach(this.SCENE.remove);
+            RacingGameRenderer.ARROW_HELPERS.forEach(this.SCENE.remove);
         }
     }
 
@@ -65,9 +58,9 @@ export class RacingGameRendering {
     }
 
     private setupCamera(): void {
-        this.CAMERA.rotation.order = 'YXZ';
-        this.CAMERA.position.set(0, 1, 0);
-        this.CAMERA.lookAt(this.SCENE.position);
+        this.CAMERA1.rotation.order = 'YXZ';
+        this.CAMERA1.position.set(0, 1, 0);
+        this.CAMERA1.lookAt(this.SCENE.position);
     }
 
 }

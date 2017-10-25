@@ -1,34 +1,49 @@
 import { Injectable } from '@angular/core';
 
-import { RacingGameRendering } from './racing-game-rendering';
+import { RacingGameRenderer } from './racing-game-rendering';
 import { Point } from '../../../../../common/src/math/point';
 import { Interval } from '../../../../../common/src/math/interval';
+import { PhysicEngine } from './physic/engine';
+import { RenderableMap } from './racing-game-map/renderable-map';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 
 @Injectable()
 export class RacingGameService {
 
-    public racingGameRendering: RacingGameRendering;
+    public renderer: RacingGameRenderer;
     private animationRequestId = 0;
     private isRendering = false;
     private cursorPositionInternal = new Point(0, 0);
 
-    constructor() { }
+    private map: RenderableMap;
+
+    constructor(private physicEngine: PhysicEngine) { }
 
     private newRacingGame(canvas: HTMLCanvasElement): boolean {
         let gameCreated = false;
 
-        this.racingGameRendering = new RacingGameRendering(canvas);
-        if (this.racingGameRendering !== null) {
+        this.renderer = new RacingGameRenderer(canvas);
+        if (this.renderer !== null) {
             gameCreated = true;
         }
 
         return gameCreated;
     }
 
-    public initialise(canvas: HTMLCanvasElement): void {
+    public initialise(canvas: HTMLCanvasElement, map: SerializedMap): void {
+        this.map = new RenderableMap(map);
         this.newRacingGame(canvas);
+        this.renderer.SCENE.remove(this.renderer.CAMERA1);
+        this.map.add(this.renderer.CAMERA1);
+        this.renderer.SCENE.add(this.map);
+        this.physicEngine.setRoot(this.map);
+        this.physicEngine.start();
         this.startRendering();
-        this.racingGameRendering.setupScene();
+        this.renderer.setupScene();
+    }
+
+    public finalize() {
+        this.physicEngine.stop();
     }
 
     /**
@@ -48,8 +63,8 @@ export class RacingGameService {
             VALID_INTERVAL.contains(cursorPosition.y);
 
         if (IS_CURSOR_VALID) {
-            this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
-            this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
+            this.renderer.CAMERA1.rotation.x = -Math.PI / 2 * cursorPosition.y;
+            this.renderer.CAMERA1.rotation.y = -Math.PI * cursorPosition.x;
             this.cursorPositionInternal = cursorPosition;
         }
         else {
@@ -61,7 +76,7 @@ export class RacingGameService {
     public renderGame(): void {
         this.animationRequestId =
             requestAnimationFrame(() => this.renderGame());
-        this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
+        this.renderer.RENDERER.render(this.renderer.SCENE, this.renderer.CAMERA1);
     }
 
     public startRendering(): void {

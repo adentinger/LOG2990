@@ -1,8 +1,13 @@
 import * as THREE from 'three';
 import { Track } from '../../track';
-import { Meters } from '../../types';
+import { Meters, Seconds } from '../../types';
+import { IPhysicElement } from '../physic/object';
+import { PhysicEngine } from '../physic/engine';
+import { CollidableMesh } from '../physic/collidable';
 
-export class RacingGamePlane extends THREE.Mesh {
+export class RacingGamePlane extends CollidableMesh {
+    public readonly children: IPhysicElement[];
+    public readonly velocity = new THREE.Vector3();
 
     constructor() {
         super();

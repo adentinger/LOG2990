@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { PhysicMesh } from './physic/object';
 
 export enum SkyboxMode {
     DAY = 0,
@@ -6,13 +7,13 @@ export enum SkyboxMode {
     NUMBER_OF_MODES
 }
 
-export class Skybox extends THREE.Mesh {
+export class Skybox extends PhysicMesh {
 
-    private static cubeNight: THREE.Mesh = Skybox.createCube(SkyboxMode.NIGHT);
-    private static cubeDay: THREE.Mesh = Skybox.createCube(SkyboxMode.DAY);
+    private static cubeNight: PhysicMesh = Skybox.createCube(SkyboxMode.NIGHT);
+    private static cubeDay: PhysicMesh = Skybox.createCube(SkyboxMode.DAY);
 
     private modeInternal: SkyboxMode;
-    private currentCube: THREE.Mesh;
+    private currentCube: PhysicMesh;
 
     constructor(mode: SkyboxMode = SkyboxMode.DAY) {
         super();
@@ -24,7 +25,7 @@ export class Skybox extends THREE.Mesh {
     }
 
     public set mode(mode: SkyboxMode) {
-        let currentCube: THREE.Mesh;
+        let currentCube: PhysicMesh;
         if (mode === SkyboxMode.DAY) {
             currentCube = Skybox.cubeDay;
         }
@@ -54,7 +55,7 @@ export class Skybox extends THREE.Mesh {
         return MATERIAL;
     }
 
-    private static createCube(mode: SkyboxMode): THREE.Mesh {
+    private static createCube(mode: SkyboxMode): PhysicMesh {
 
         let texture: THREE.CubeTexture;
 
@@ -71,7 +72,7 @@ export class Skybox extends THREE.Mesh {
         }
 
         const CUBE =
-            new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300, 1, 1, 1),
+            new (class extends PhysicMesh {})(new THREE.CubeGeometry(300, 300, 300, 1, 1, 1),
                            Skybox.makeShader(texture));
 
         return CUBE;
