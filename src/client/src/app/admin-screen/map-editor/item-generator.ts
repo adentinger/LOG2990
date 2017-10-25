@@ -1,34 +1,59 @@
 import { Map } from './map';
-import { Pothole } from './pothole';
 import { Item } from './item';
 import { Constructor } from '../../../../../common/src/utils';
 
 export class ItemGenerator {
 
-    constructor() { }
+    private allPositions: number[];
 
-    public addItem<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
-        const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
-        let position: number;
+    constructor() {
+        this.allPositions = [];
+    }
+
+    public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
+        const MAX_AMOUNT_OF_ITEMS = 5;
 
         if (itemArray.length === 0) {
-            let item: ItemGenerated;
-            position = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
-            item = new constructor(position);
+            const item = new constructor(this.allPositions[itemArray.length]);
             itemArray.push(item);
         }
-        else if (itemArray.length < 5) {
+        else if (itemArray.length < MAX_AMOUNT_OF_ITEMS) {
             for (let i = 0; i < 2; i++) {
-                position = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
-                const item = new constructor(position);
+                const item = new constructor(this.allPositions[itemArray.length + i]);
                 itemArray.push(item);
             }
         }
         else {
-            for (let i = 0; i < itemArray.length; i++) {
+            for (let i = 0; i < MAX_AMOUNT_OF_ITEMS; i++) {
                 itemArray.pop();
             }
         }
     }
 
+    public generatePositions(map: Map): void {
+        this.allPositions = [];
+
+        const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
+        const MAX_NUMBER_OF_ITEMS = 15;
+        let newPosition: number;
+
+        while (this.allPositions.length < MAX_NUMBER_OF_ITEMS) {
+            let isNotUsed = true;
+            newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
+
+            for (let j = 0; j < this.allPositions.length; j++) {
+                if (newPosition === this.allPositions[j]) {
+                    isNotUsed = false;
+                }
+            }
+
+            if (isNotUsed) {
+                this.allPositions.push(newPosition);
+            }
+        }
+    }
+
+    public get positions(): number[] {
+        return this.allPositions;
+    }
 }

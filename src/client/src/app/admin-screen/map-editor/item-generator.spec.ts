@@ -26,17 +26,35 @@ describe('Item generator', () => {
         expect(itemGenerator).toBeTruthy();
     });
 
+    it('should generate a unique position', () => {
+        const map1 = mockMaps.functionalMap1();
+
+        itemGenerator.generatePositions(map1);
+        for (let i = 0; i < itemGenerator.positions.length; i++) {
+            for (let j = i + 1; j < itemGenerator.positions.length; j++) {
+                expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
+            }
+        }
+    });
+
     it('should add an item', () => {
         const map1 = mockMaps.functionalMap1();
         const map2 = mockMaps.functionalMap2();
 
-        itemGenerator.addItem(Pothole, map2, map1.potholes);
+        itemGenerator.generatePositions(map2);
+
+        itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(1);
+        console.log(map2.potholes[0].position);
 
-        itemGenerator.addItem(Pothole, map1, map1.potholes);
-        expect(map1.potholes.length).toEqual(5);
+        itemGenerator.addObstacle(Pothole, map2, map2.potholes);
+        expect(map2.potholes.length).toEqual(3);
+        console.log(map1.potholes[1].position, map1.potholes[2].position);
+        console.log(itemGenerator.positions[1], itemGenerator.positions[2]);
 
-        itemGenerator.addItem(SpeedBoost, map1, map1.speedBoosts);
+        itemGenerator.generatePositions(map1);
+
+        itemGenerator.addObstacle(SpeedBoost, map1, map1.speedBoosts);
         expect(map1.speedBoosts.length).toEqual(0);
     });
 
