@@ -5,9 +5,11 @@ import { Constructor } from '../../../../../common/src/utils';
 export class ItemGenerator {
 
     private allPositions: number[];
+    private allPositionsMaps: number[];
 
     constructor() {
         this.allPositions = [];
+        this.allPositionsMaps = [];
     }
 
     public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
@@ -34,11 +36,11 @@ export class ItemGenerator {
     public generatePositions(map: Map): void {
         this.allPositions = [];
 
+        const MAX_AMOUNT_OF_ITEMS = 15;
         const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
-        const MAX_NUMBER_OF_ITEMS = 15;
         let newPosition: number;
 
-        while (this.allPositions.length < MAX_NUMBER_OF_ITEMS) {
+        while (this.allPositions.length < MAX_AMOUNT_OF_ITEMS) {
             let isNotUsed = true;
             newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
 
@@ -79,7 +81,7 @@ export class ItemGenerator {
                 }
             }
 
-            if (isNotUsed) {
+            if (this.positionIsOnMap(map, newPosition)) {
                 allPositions.push(new constructor(newPosition));
             }
         }
@@ -87,5 +89,25 @@ export class ItemGenerator {
         for (let k = 0; k < allPositions.length; k++) {
             itemArray.push(allPositions[k]);
         }
+    }
+
+    public positionIsOnMapObjectsList(itemArray: Item[], itemKey: number) {
+        for (let i = 0; i < itemArray.length; i++) {
+            if (itemArray[i].position === itemKey) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public positionIsOnMap(map: Map, itemKey: number) {
+        if (
+            this.positionIsOnMapObjectsList(map.potholes, itemKey) &&
+            this.positionIsOnMapObjectsList(map.puddles, itemKey) &&
+            this.positionIsOnMapObjectsList(map.speedBoosts, itemKey)) {
+
+            return true;
+        }
+        return false;
     }
 }
