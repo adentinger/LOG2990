@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 
+import * as OBJLoader from 'three-obj-loader';
+import * as MTLLoader from 'three-mtl-loader';
+
 import { Logger } from '../../../../../../common/src/index';
+
+OBJLoader(THREE);
+THREE['MTLLoader' as any] = MTLLoader;
 
 /**
  * Loads an object (.obj) file along with a material (.mtl) file.
@@ -19,7 +25,7 @@ export class ObjMtlLoader {
         }
     }
 
-    public load(objFile: string, mtlFile: string): Promise<THREE.Group> {
+    public load(objFile: string, mtlFile?: string): Promise<THREE.Group> {
         return new Promise((resolve, reject) => {
             this.mtlLoader.load(
                 mtlFile,
