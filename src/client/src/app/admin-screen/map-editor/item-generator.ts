@@ -36,18 +36,16 @@ export class ItemGenerator {
     public generatePositions(map: Map): void {
         this.allPositions = [];
 
-        const MAX_AMOUNT_OF_ITEMS = 15;
         const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
+        const MAX_NUMBER_OF_ITEMS = 15;
         let newPosition: number;
 
-        while (this.allPositions.length < MAX_AMOUNT_OF_ITEMS) {
+        while (this.allPositions.length < MAX_NUMBER_OF_ITEMS) {
             let isNotUsed = true;
             newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
 
-            for (let j = 0; j < this.allPositions.length; j++) {
-                if (newPosition === this.allPositions[j]) {
-                    isNotUsed = false;
-                }
+            if (this.positionIsOnMap(map, newPosition)) {
+                isNotUsed = false;
             }
 
             if (isNotUsed) {
