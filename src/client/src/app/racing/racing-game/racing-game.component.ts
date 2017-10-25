@@ -20,6 +20,7 @@ const LEFT_MOUSE_BUTTON = 0;
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     private static readonly HEADER_HEIGHT = 50;
+    private static readonly KEY_TIMER_FREQUENCY = 60;
 
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
@@ -38,7 +39,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 .then(map => {
                     this.racingGame.initialise(this.racingGameCanvas.nativeElement, map);
                     this.resizeCanvas();
-                    this.keyTimer = setInterval(this.updateCameraVelocity.bind(this), 1000 / 60);
+                    this.keyTimer = setInterval(this.updateCameraVelocity.bind(this),
+                        1000 / RacingGameComponent.KEY_TIMER_FREQUENCY);
                 });
         });
         this.checkPointerLock();
@@ -73,6 +75,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private updateCameraVelocity() {
+        const ACCELERATION = 10; // m/s^2
+        const DESIRED_SPEED = 5.0;
         if (this.racingGame.renderer.CAMERA1) {
             const CAMERA = this.racingGame.renderer.CAMERA1;
             const rotation = this.racingGame.renderer.CAMERA1.rotation;
@@ -89,7 +93,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             if (this.pressedKeys.has('a')) {
                 direction.add(new Vector3(-1, 0, 0));
             }
-            CAMERA.velocity = (direction).applyEuler(rotation).setY(0).normalize().multiplyScalar(5);
+
+            const accelerationDirection = (direction).applyEuler(rotation).setY(0).normalize();
+            const acceleration = accelerationDirection.multiplyScalar(ACCELERATION)
+            .multiplyScalar(DESIRED_SPEED - CAMERA.velocity.length());
+            CAMERA.velocity.addScaledVector(acceleration, 1 / RacingGameComponent.KEY_TIMER_FREQUENCY);
         }
     }
 

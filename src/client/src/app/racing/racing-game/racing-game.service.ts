@@ -37,10 +37,10 @@ export class RacingGameService {
         this.renderer.SCENE.remove(this.renderer.CAMERA1);
         this.map.add(this.renderer.CAMERA1);
         const BALL = new Ball(0.5);
-        BALL.position.set(0, 0.501, -3);
+        BALL.position.set(0, 0.001, -3);
         this.map.add(BALL);
         const BALL2 = new Ball(0.5);
-        BALL2.position.set(1.5, 0.501, -3);
+        BALL2.position.set(1.5, 0.001, -3);
         BALL2.velocity.set(-0.5, 0, 0);
         this.map.add(BALL2);
         this.renderer.SCENE.add(this.map);
