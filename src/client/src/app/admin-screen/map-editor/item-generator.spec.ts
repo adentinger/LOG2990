@@ -46,7 +46,7 @@ describe('Item generator', () => {
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(1);
         console.log(map2.potholes[0].position);
-        console.log(itemGenerator.positions[0] + 'allo');
+        console.log(itemGenerator.positions[0]);
 
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(3);
@@ -54,9 +54,23 @@ describe('Item generator', () => {
         console.log(itemGenerator.positions[1], itemGenerator.positions[2]);
 
         itemGenerator.generatePositions(map1);
-
         itemGenerator.addObstacle(SpeedBoost, map1, map1.speedBoosts);
         expect(map1.speedBoosts.length).toEqual(0);
+    });
+
+    it('should randomly modify the positions of objects in an array of some type', () => {
+        const map = mockMaps.functionalMap1();
+        const previousArray = map.potholes;
+        for (let i = 0; i < previousArray.length; i++) {
+            console.log(previousArray[i]);
+        }
+
+        itemGenerator.randomlyModifyObjectsTypePositions(Pothole, map, map.potholes);
+        console.log(map.potholes.length);
+        for (let i = 0; i < map.potholes.length; i++) {
+            console.log(map.potholes[i]);
+        }
+        expect(previousArray.length).toEqual(map.potholes.length);
     });
 
 });

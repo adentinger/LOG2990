@@ -57,4 +57,35 @@ export class ItemGenerator {
     public get positions(): number[] {
         return this.allPositions;
     }
+
+    public randomlyModifyObjectsTypePositions<ItemGenerated extends Item>
+    (constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
+        const allPositions = [];
+        const itemArrayCurrentLength = itemArray.length;
+        let newPosition: number;
+        const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
+
+        for (let i = 0; i < itemArrayCurrentLength; i++) {
+            itemArray.pop();
+        }
+
+        while (allPositions.length < itemArrayCurrentLength) {
+            let isNotUsed = true;
+            newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
+
+            for (let j = 0; j < allPositions.length; j++) {
+                if (newPosition === allPositions[j]) {
+                    isNotUsed = false;
+                }
+            }
+
+            if (isNotUsed) {
+                allPositions.push(new constructor(newPosition));
+            }
+        }
+
+        for (let k = 0; k < allPositions.length; k++) {
+            itemArray.push(allPositions[k]);
+        }
+    }
 }
