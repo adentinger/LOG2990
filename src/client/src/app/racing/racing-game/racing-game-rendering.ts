@@ -14,7 +14,7 @@ export class RacingGameRenderer {
     public readonly WIDTH: number = window.innerWidth;
     public readonly HEIGHT: number = window.innerHeight;
 
-    public readonly VIEW_ANGLE: number = 90;
+    public readonly VIEW_ANGLE: number = 75;
     public readonly ASPECT: number = this.WIDTH / this.HEIGHT;
 
     public readonly NEAR: number = 0.05;
@@ -41,6 +41,7 @@ export class RacingGameRenderer {
 
         this.CAMERA1.add(this.SKYBOX);
         this.SCENE.add(this.CAMERA1);
+        this.SCENE.add(this.SKYBOX.AMBIANT);
     }
 
     public set displayWorldRef(value: boolean) {
@@ -60,7 +61,7 @@ export class RacingGameRenderer {
     private setupCamera(): void {
         this.CAMERA1.rotation.order = 'YXZ';
         this.CAMERA1.position.set(0, 1, 0);
-        this.CAMERA1.lookAt(this.SCENE.position);
+        this.CAMERA1.rotation.set(0, 0, 0);
     }
 
 }

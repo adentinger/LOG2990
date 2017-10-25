@@ -38,10 +38,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 .then(map => {
                     this.racingGame.initialise(this.racingGameCanvas.nativeElement, map);
                     this.resizeCanvas();
+                    this.keyTimer = setInterval(this.updateCameraVelocity.bind(this), 1000 / 60);
                 });
         });
         this.checkPointerLock();
-        this.keyTimer = setInterval(this.updateCameraVelocity.bind(this), 1000 / 60);
     }
 
     public ngOnDestroy() {
@@ -95,11 +95,15 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @HostListener('mousemove', ['$event'])
     public onMouseMove(e: MouseEvent) {
-        const MOUSE_POSITION = new Point(
-            (e.clientX - this.windowHalfX) / (this.windowHalfX),
-            (e.clientY - RacingGameComponent.HEADER_HEIGHT - this.windowHalfY) / (this.windowHalfY)
-        );
-        this.racingGame.cursorPosition = MOUSE_POSITION;
+        if (this.racingGame.renderer && this.racingGame.renderer.CAMERA1) {
+            const ROTATION = new Point(
+                e.movementX / this.windowHalfX,
+                e.movementY / this.windowHalfY
+            );
+            if (document.pointerLockElement === this.racingGameCanvas.nativeElement) {
+                this.racingGame.cameraRotation = ROTATION;
+            }
+        }
     }
 
     @HostListener('click', ['$event'])

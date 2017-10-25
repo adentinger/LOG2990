@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { NotImplementedError } from '../../../../../../common/src/utils';
 import { IPhysicElement } from './object';
-import { Collidable, isCollidable } from './collidable';
+import { Collidable, isCollidable, CollidableMesh } from './collidable';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
 
 @Injectable()
 export class PhysicEngine {
-    public static readonly UPDATE_FREQUENCY = 60; // Hz
+    public static readonly UPDATE_FREQUENCY = 100; // Hz
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
 
     private root: IPhysicElement;
@@ -39,15 +39,15 @@ export class PhysicEngine {
     }
 
     public isColliding(object1: Collidable, object2: Collidable): boolean {
-        object1.geometry.computeBoundingBox();
-        object2.geometry.computeBoundingBox();
-        return object1.geometry.boundingBox.intersectsBox(object2.geometry.boundingBox);
+        const boundingBox1 = new THREE.Box3().setFromObject(object1);
+        const boundingBox2 = new THREE.Box3().setFromObject(object2);
+        return boundingBox1.intersectsBox(boundingBox2);
     }
 
     public getObjectsCollidingWith(collidable: Collidable): Collidable[] {
         const objects = this.getAllPhysicObjects();
         return objects.filter((object: IPhysicElement) =>
-            isCollidable(object) && this.isColliding(collidable, object)
+            object !== collidable && object instanceof CollidableMesh && this.isColliding(collidable, object)
         ) as Collidable[];
     }
 

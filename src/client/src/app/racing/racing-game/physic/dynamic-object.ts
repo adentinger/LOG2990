@@ -14,10 +14,11 @@ export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhy
 
     public update(engine: PhysicEngine, deltaTime: Seconds): void {
         super.update(engine, deltaTime);
-        this.velocity.addScaledVector(PhysicEngine.G, deltaTime);
+        // this.velocity.addScaledVector(PhysicEngine.G, deltaTime);
         if (this.velocity.length() < DynamicPhysicMesh.MIN_SPEED) {
             this.velocity.set(0, 0, 0);
         }
+        this.velocity.setY(0);
         this.position.addScaledVector(this.velocity, deltaTime);
     }
 }

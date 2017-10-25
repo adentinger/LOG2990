@@ -1,5 +1,7 @@
 import * as THREE from 'three';
-import { PhysicMesh } from './physic/object';
+import { PhysicMesh, IPhysicElement } from './physic/object';
+import { PhysicEngine } from './physic/engine';
+import { Seconds } from '../types';
 
 export enum SkyboxMode {
     DAY = 0,
@@ -12,11 +14,17 @@ export class Skybox extends PhysicMesh {
     private static cubeNight: PhysicMesh = Skybox.createCube(SkyboxMode.NIGHT);
     private static cubeDay: PhysicMesh = Skybox.createCube(SkyboxMode.DAY);
 
+    private static intensityDay = 1;
+    private static intensityNight = 0.25;
+
     private modeInternal: SkyboxMode;
     private currentCube: PhysicMesh;
+    public readonly AMBIANT: THREE.AmbientLight;
 
     constructor(mode: SkyboxMode = SkyboxMode.DAY) {
         super();
+        this.AMBIANT = new THREE.AmbientLight(0xfafafa, 0.25);
+
         this.mode = mode;
     }
 
@@ -39,6 +47,7 @@ export class Skybox extends PhysicMesh {
         this.add(currentCube);
         this.currentCube = currentCube;
         this.modeInternal = mode;
+        this.AMBIANT.intensity = mode === SkyboxMode.DAY ? Skybox.intensityDay : Skybox.intensityNight;
     }
 
     private static makeShader(texture: THREE.CubeTexture): THREE.ShaderMaterial {

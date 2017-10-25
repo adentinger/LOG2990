@@ -10,7 +10,7 @@ export interface DynamicCollidable extends DynamicPhysicElement, Collidable {
 }
 
 export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements DynamicCollidable {
-    public static readonly SPEED_FORCE_PROPORTIONALITY = 0.25; // in N/(m/s)
+    public static readonly SPEED_FORCE_PROPORTIONALITY = 1.0; // in N/(m/s)
 
     public geometry: THREE.Geometry;
     public velocity: THREE.Vector3 = new THREE.Vector3(0);
@@ -21,11 +21,15 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
             const force = this.velocity.dot(direction) * DynamicCollidableMesh.SPEED_FORCE_PROPORTIONALITY;
             this.velocity.addScaledVector(direction, force * deltaTime);
         });
+
         super.update(engine, deltaTime);
     }
 
     protected getForceFromCollisions(engine: PhysicEngine, deltaTime: Seconds) {
         const collidingObjects: Collidable[] = engine.getObjectsCollidingWith(this);
+        if (collidingObjects.length > 0) {
+            console.log('Collision', this.position, collidingObjects);
+        }
         return collidingObjects.map((object: Collidable) => object.position.clone().sub(this.position).normalize());
     }
 }

@@ -6,6 +6,7 @@ import { Interval } from '../../../../../common/src/math/interval';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
+import { Ball } from './physic/examples/ball';
 
 @Injectable()
 export class RacingGameService {
@@ -35,6 +36,13 @@ export class RacingGameService {
         this.newRacingGame(canvas);
         this.renderer.SCENE.remove(this.renderer.CAMERA1);
         this.map.add(this.renderer.CAMERA1);
+        const BALL = new Ball(0.5);
+        BALL.position.set(0, 0.501, -3);
+        this.map.add(BALL);
+        const BALL2 = new Ball(0.5);
+        BALL2.position.set(1.5, 0.501, -3);
+        BALL2.velocity.set(-0.5, 0, 0);
+        this.map.add(BALL2);
         this.renderer.SCENE.add(this.map);
         this.physicEngine.setRoot(this.map);
         this.physicEngine.start();
@@ -56,21 +64,14 @@ export class RacingGameService {
         return this.cursorPositionInternal;
     }
 
-    public set cursorPosition(cursorPosition: Point) {
-        const VALID_INTERVAL = new Interval(-1, 1);
-        const IS_CURSOR_VALID =
-            VALID_INTERVAL.contains(cursorPosition.x) &&
-            VALID_INTERVAL.contains(cursorPosition.y);
-
-        if (IS_CURSOR_VALID) {
-            this.renderer.CAMERA1.rotation.x = -Math.PI / 2 * cursorPosition.y;
-            this.renderer.CAMERA1.rotation.y = -Math.PI * cursorPosition.x;
-            this.cursorPositionInternal = cursorPosition;
+    public set cameraRotation(rotation: Point) {
+        const ROTATION = this.renderer.CAMERA1.rotation;
+        ROTATION.x += -Math.PI / 2 * rotation.y;
+        if (Math.abs(ROTATION.x) > Math.PI / 2) {
+            ROTATION.x = Math.sign(ROTATION.x) * Math.PI / 2;
         }
-        else {
-            throw new Error('Cursor position invalid: (' +
-                cursorPosition.x + ', ' + cursorPosition.y + ')');
-        }
+        ROTATION.y += -Math.PI * rotation.x;
+        ROTATION.y %= 2 * Math.PI;
     }
 
     public renderGame(): void {

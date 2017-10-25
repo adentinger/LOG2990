@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { IPhysicElement, PhysicMesh } from '../object';
 import { PhysicEngine } from '../engine';
 import { NotImplementedError } from '../../../../../../../common/src/utils';
-import './OBJLoader';
 import { DynamicCollidableMesh } from '../dynamic-collidable';
 
 export class Ball extends DynamicCollidableMesh {

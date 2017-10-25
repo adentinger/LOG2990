@@ -16,7 +16,6 @@ export class MovablePerspectiveCamera extends THREE.PerspectiveCamera implements
     public velocity = new THREE.Vector3();
     public children: IPhysicElement[];
     public update(engine: PhysicEngine, deltaTime: Seconds): void {
-        this.velocity.addScaledVector(PhysicEngine.G.clone().negate(), deltaTime);
         DynamicPhysicMesh.prototype.update.call(this, engine, deltaTime);
     }
 }
