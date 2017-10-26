@@ -21,10 +21,11 @@ export class Car extends THREE.Group {
             'air_intake',
             'bottom',
             'brake_light',
+            'brakes',
             'exhaust_and_mirror',
             'lights',
-            'mag',
             'plastic',
+            'tires',
             'windows'
         ];
         for (let i = 0; i < PART_NAMES.length; ++i) {
@@ -32,7 +33,7 @@ export class Car extends THREE.Group {
             this.children.push(await this.loadCarPart(PART_NAME));
         }
 
-        this.children.push(await this.loadBody(color));
+        this.children.push(... await this.loadColoredCarParts(color));
     }
 
     private loadCarPart(name: string): Promise<THREE.Mesh> {
@@ -41,6 +42,7 @@ export class Car extends THREE.Group {
                 Car.BASE_PATH + name + Car.FILE_EXTENSION,
                 (geometry, materials) => {
                     const CAR_PART = new THREE.Mesh(geometry, materials[0]);
+                    console.log(CAR_PART);
                     resolve(CAR_PART);
                 },
                 () => {},
@@ -49,18 +51,27 @@ export class Car extends THREE.Group {
         });
     }
 
-    private loadBody(color: CarColor): Promise<THREE.Mesh> {
-        return new Promise((resolve, reject) => {
-            this.loadCarPart('body')
-                .then((bodyMesh) => {
-                    const BODY_MATERIAL = (bodyMesh.material as THREE.MeshPhongMaterial);
-                    const RGB_COLOR = color.getRgb();
-                    [BODY_MATERIAL.color.r, BODY_MATERIAL.color.g, BODY_MATERIAL.color.b]
-                        = [RGB_COLOR.r, RGB_COLOR.g, RGB_COLOR.b];
-                    resolve(bodyMesh);
-                })
-                .catch(() => reject());
-        });
+    private loadColoredCarParts(color: CarColor): Promise<THREE.Mesh[]> {
+        const COLORED_CAR_PARTS: Promise<THREE.Mesh>[] = [];
+        const COLORED_PART_NAMES = [
+            'body'
+        ];
+        COLORED_PART_NAMES.forEach((partName) => {
+            COLORED_CAR_PARTS.push(
+                new Promise((resolve, reject) => {
+                    this.loadCarPart(partName)
+                        .then((bodyMesh) => {
+                            const BODY_MATERIAL = (bodyMesh.material as THREE.MeshPhongMaterial);
+                            const RGB_COLOR = color.getRgb();
+                            [BODY_MATERIAL.color.r, BODY_MATERIAL.color.g, BODY_MATERIAL.color.b]
+                                = [RGB_COLOR.r, RGB_COLOR.g, RGB_COLOR.b];
+                            resolve(bodyMesh);
+                        })
+                        .catch(() => reject());
+                    })
+                );
+            });
+        return Promise.all(COLORED_CAR_PARTS);
     }
 
 }

@@ -2,6 +2,10 @@ import * as THREE from 'three';
 
 import { Skybox, SkyboxMode } from './skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
+import { Car } from './three-objects/car/car';
+import { CarColorYellow } from './three-objects/car/car-color-yellow';
+import { CarColorBlue } from './three-objects/car/car-color-blue';
+import { CarColorGreen } from './three-objects/car/car-color-green';
 
 export class RacingGameRendering {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
@@ -48,6 +52,22 @@ export class RacingGameRendering {
         this.CAMERA.add(this.SKYBOX);
         this.SCENE.add(this.PLANE);
         this.SCENE.add(this.CAMERA);
+
+        const LIGHTS = [
+            new THREE.PointLight(0xffffff),
+            new THREE.PointLight(0xffffff),
+            new THREE.PointLight(0xffffff)
+        ];
+        let i = 0;
+        [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
+            = [10, 50, 100];
+        [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
+            = [-10, 50, -100];
+        [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
+            = [-100, 50, 10];
+        this.SCENE.add(...LIGHTS);
+        const CAR = new Car(new CarColorGreen());
+        this.SCENE.add(CAR);
     }
 
     public set displayWorldRef(value: boolean) {
