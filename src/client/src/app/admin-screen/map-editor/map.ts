@@ -160,10 +160,10 @@ export class Map {
 
                 const INTERSECTION = LINES[i].intersectsWith(LINES[j]);
 
-                const IS_INTERSECTING = (INTERSECTION !== IntersectionType.INTERSECT_NONE);
+                const IS_INTERSECTING = (INTERSECTION.length !== 0);
                 const PATH_CLOSED = this.isClosed();
                 const NOT_NEIGHBORS = (j !== i + 1 && logicImplies(PATH_CLOSED, logicImplies(i === 0, j !== LINES.length - 1)));
-                const INTERSECTION_IS_POINT = (INTERSECTION === IntersectionType.INTERSECT_POINT);
+                const INTERSECTION_IS_POINT = (INTERSECTION.length === 1);
 
                 if (IS_INTERSECTING && logicImplies(INTERSECTION_IS_POINT, NOT_NEIGHBORS)) {
                     LINES_THAT_CROSS.push([LINES[i], LINES[j]]);
