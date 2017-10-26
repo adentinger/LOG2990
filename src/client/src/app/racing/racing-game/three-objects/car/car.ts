@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
-import { ObjMtlLoader } from '../three-utils/obj-mtl-loader';
-import { Logger } from '../../../../../../common/src/index';
+import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
 export class Car extends THREE.Group {
 
