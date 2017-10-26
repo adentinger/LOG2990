@@ -4,19 +4,25 @@ import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
 import { MockMaps } from '../../admin-screen/map-editor/mock-maps';
 import { MapConverterService } from '../../admin-screen/map-editor/map-converter.service';
+import { PhysicEngine } from './physic/engine';
+import { RacingUnitConversionService } from '../../admin-screen/map-editor/racing-unit-conversion.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                RacingGameService
+                RacingGameService,
+                PhysicEngine,
+                MockMaps,
+                MapConverterService,
+                RacingUnitConversionService
             ]
         });
     });
 
     let service: RacingGameService;
 
-    beforeEach(inject([RacingGameService, MockMaps], (injectedService: RacingGameService,
+    beforeEach(inject([RacingGameService, MockMaps, MapConverterService], (injectedService: RacingGameService,
         mockMapsProvider: MockMaps,
         mapConverterService: MapConverterService) => {
         service = injectedService;

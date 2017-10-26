@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { Track } from '../../track';
-import { Meters, Seconds } from '../../types';
 import { IPhysicElement } from '../physic/object';
-import { PhysicEngine } from '../physic/engine';
 import { CollidableMesh } from '../physic/collidable';
 
 export class RacingGamePlane extends CollidableMesh {

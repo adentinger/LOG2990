@@ -1,4 +1,3 @@
-import { IPhysicElement, PhysicMesh } from './object';
 import * as THREE from 'three';
 import { PhysicEngine } from './engine';
 import { Seconds, Kilograms } from '../../types';

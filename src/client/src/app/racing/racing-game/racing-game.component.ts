@@ -5,13 +5,10 @@ import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
 import { SkyboxMode } from './skybox';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
 import { Vector3 } from 'three';
 import { PhysicEngine } from './physic/engine';
 import { Seconds } from '../types';
-
-const LEFT_MOUSE_BUTTON = 0;
 
 @Component({
     selector: 'app-racing-game',
@@ -67,6 +64,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('window:resize', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
     private onResize() {
         const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = (window).innerWidth;
@@ -110,7 +108,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('mousemove', ['$event'])
-    public onMouseMove(e: MouseEvent) {
+    // tslint:disable-next-line:no-unused-variable
+    private onMouseMove(e: MouseEvent) {
         if (this.racingGame.renderer && this.racingGame.renderer.CAMERA1) {
             const ROTATION = new Point(
                 e.movementX / this.windowHalfX,
@@ -123,11 +122,13 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('click', ['$event'])
-    public onFocus(e: MouseEvent) {
+    // tslint:disable-next-line:no-unused-variable
+    private onClick(e: MouseEvent) {
         this.checkPointerLock();
     }
 
     @HostListener('window:keydown', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
     private onKeyDown(event: KeyboardEvent) {
         this.pressedKeys.add(event.key.toLowerCase());
 
@@ -149,11 +150,13 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('window:keyup', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
     private onKeyUp(event: KeyboardEvent) {
         this.pressedKeys.delete(event.key.toLowerCase());
     }
 
     @HostListener('window:contextmenu', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
     private preventEvent(event: Event) {
         event.preventDefault();
     }

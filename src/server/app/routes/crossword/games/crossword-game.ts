@@ -111,8 +111,8 @@ export class CrosswordGame {
     @PacketHandler(WordTryPacket)
     // tslint:disable-next-line:no-unused-variable
     private getWordFromClient(event: PacketEvent<WordTryPacket>): void {
-        let gridWordReceived = event.value.wordTry;
-        let reply: GridWord = this.validateUserAnswer(gridWordReceived);
+        const gridWordReceived = event.value.wordTry;
+        const reply: GridWord = this.validateUserAnswer(gridWordReceived);
         this.sendWordResultToClient(reply);
     }
 
@@ -137,7 +137,7 @@ export class CrosswordGame {
             this.countdown = COUNTDOWN_DEFAULT_VALUE;
             return true;
         }
-        else return false;
+        return false;
     }
 
     private sendWordResultToClient(wordTry: GridWord): void {

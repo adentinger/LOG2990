@@ -1,7 +1,5 @@
 import * as THREE from 'three';
-import { PhysicMesh, IPhysicElement } from './physic/object';
-import { PhysicEngine } from './physic/engine';
-import { Seconds } from '../types';
+import { PhysicMesh } from './physic/object';
 
 export enum SkyboxMode {
     DAY = 0,

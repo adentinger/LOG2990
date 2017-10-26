@@ -4,7 +4,7 @@ import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
 import { Point } from '../../../../../common/src/math/point';
 import { Vector } from '../../../../../common/src/math/vector';
-import { Line, IntersectionType } from '../../../../../common/src/math/line';
+import { Line } from '../../../../../common/src/math/line';
 import { ShoelaceAlgorithm } from '../../../../../common/src/math/shoelace-algorithm';
 
 export const MIN_ANGLE = Math.PI / 4;

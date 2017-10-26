@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NotImplementedError } from '../../../../../../common/src/utils';
 import { IPhysicElement, isPhysicElement } from './object';
-import { Collidable, isCollidable, CollidableMesh } from './collidable';
+import { Collidable, CollidableMesh } from './collidable';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
 

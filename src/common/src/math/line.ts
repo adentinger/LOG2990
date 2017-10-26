@@ -2,12 +2,6 @@ import { Point } from './point';
 import { Vector } from './vector';
 import { Interval } from './interval';
 
-export enum IntersectionType {
-    INTERSECT_NONE = 0,
-    INTERSECT_POINT,
-    INTERSECT_LINE
-}
-
 export class Line {
 
     public origin: Point;

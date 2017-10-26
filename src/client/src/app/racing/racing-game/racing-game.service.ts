@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { RacingGameRenderer } from './racing-game-rendering';
 import { Point } from '../../../../../common/src/math/point';
-import { Interval } from '../../../../../common/src/math/interval';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { Ball } from './physic/examples/ball';
-import { MovablePerspectiveCamera, MovableOrthographicCamera } from './physic/examples/movable-camera';
 import * as THREE from 'three';
 
 @Injectable()
