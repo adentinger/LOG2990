@@ -29,6 +29,7 @@ export class RacingGameService {
     private isRendering = false;
     public readonly CAMERA1: MovablePerspectiveCamera;
     public readonly CAMERA2: MovableOrthographicCamera;
+    public readonly cameraHelper: THREE.CameraHelper;
 
     private map: RenderableMap;
 
@@ -48,6 +49,7 @@ export class RacingGameService {
             this.NEAR,
             this.FAR
         );
+        this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
     }
 
     private newRacingGame(canvas: HTMLCanvasElement): boolean {
@@ -130,16 +132,27 @@ export class RacingGameService {
         const screenSize = this.renderer.RENDERER.getSize();
         this.renderer.RENDERER.setScissorTest(true);
 
-        this.renderer.RENDERER.setViewport(0, 0,
-            screenSize.width, screenSize.height);
-        this.renderer.RENDERER.setScissor(0, 0,
-            screenSize.width, screenSize.height);
+        if (this.currentCamera === 1) {
+            this.renderer.SCENE.add(this.cameraHelper);
+        }
+        this.renderer.RENDERER.setViewport(0, 0, screenSize.width, screenSize.height);
+        this.renderer.RENDERER.setScissor(0, 0, screenSize.width, screenSize.height);
         this.renderer.RENDERER.render(this.renderer.SCENE, this.currentCamera === 0 ? this.CAMERA1 : this.CAMERA2);
+        if (this.currentCamera === 1) {
+            this.renderer.SCENE.remove(this.cameraHelper);
+        }
+
+        if (this.currentCamera === 0) {
+            this.renderer.SCENE.add(this.cameraHelper);
+        }
         this.renderer.RENDERER.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
             screenSize.width * 0.20, screenSize.height * 0.20);
         this.renderer.RENDERER.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
             screenSize.width * 0.20, screenSize.height * 0.20);
         this.renderer.RENDERER.render(this.renderer.SCENE, this.currentCamera === 0 ? this.CAMERA2 : this.CAMERA1);
+        if (this.currentCamera === 0) {
+            this.renderer.SCENE.remove(this.cameraHelper);
+        }
     }
 
     public startRendering(): void {
