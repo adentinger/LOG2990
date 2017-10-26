@@ -42,7 +42,6 @@ export class Car extends THREE.Group {
                 Car.BASE_PATH + name + Car.FILE_EXTENSION,
                 (geometry, materials) => {
                     const CAR_PART = new THREE.Mesh(geometry, materials[0]);
-                    console.log(CAR_PART);
                     resolve(CAR_PART);
                 },
                 () => {},
