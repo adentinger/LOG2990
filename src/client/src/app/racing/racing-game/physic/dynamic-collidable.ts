@@ -22,6 +22,7 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
             this.velocity.addScaledVector(direction, force * deltaTime);
         });
 
+        this.velocity.addScaledVector(PhysicEngine.G, deltaTime);
         super.update(engine, deltaTime);
     }
 

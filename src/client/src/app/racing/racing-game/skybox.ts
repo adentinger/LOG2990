@@ -17,13 +17,22 @@ export class Skybox extends PhysicMesh {
     private static intensityDay = 1;
     private static intensityNight = 0.25;
 
+    private static directionDay = new THREE.Vector3(1, -1, 0).normalize();
+    private static directionNight = new THREE.Vector3(1, -1, -1).normalize();
+
     private modeInternal: SkyboxMode;
     private currentCube: PhysicMesh;
+
     public readonly AMBIANT: THREE.AmbientLight;
+    public readonly DIRECTIONAL: THREE.HemisphereLight;
 
     constructor(mode: SkyboxMode = SkyboxMode.DAY) {
         super();
-        this.AMBIANT = new THREE.AmbientLight(0xfafafa, 0.25);
+        this.AMBIANT = new THREE.AmbientLight(0xfafafa, Skybox.intensityDay);
+        this.AMBIANT.castShadow = true;
+        this.DIRECTIONAL = new THREE.HemisphereLight(0xfafacc, 0x80ff00, Skybox.intensityDay);
+        this.DIRECTIONAL.lookAt(Skybox.directionDay);
+        this.DIRECTIONAL.castShadow = true;
 
         this.mode = mode;
     }
@@ -47,7 +56,9 @@ export class Skybox extends PhysicMesh {
         this.add(currentCube);
         this.currentCube = currentCube;
         this.modeInternal = mode;
-        this.AMBIANT.intensity = mode === SkyboxMode.DAY ? Skybox.intensityDay : Skybox.intensityNight;
+        this.DIRECTIONAL.intensity = mode === SkyboxMode.DAY ? Skybox.intensityDay : Skybox.intensityNight;
+        this.AMBIANT.intensity = Skybox.intensityNight;
+        this.DIRECTIONAL.lookAt(mode === SkyboxMode.DAY ? Skybox.directionDay : Skybox.directionNight);
     }
 
     private static makeShader(texture: THREE.CubeTexture): THREE.ShaderMaterial {

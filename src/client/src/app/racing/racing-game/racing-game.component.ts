@@ -19,14 +19,14 @@ const LEFT_MOUSE_BUTTON = 0;
     providers: [RacingGameService, PhysicEngine]
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
-    private static readonly HEADER_HEIGHT = 50;
+    public static readonly HEADER_HEIGHT = 50;
     private static readonly KEY_TIMER_FREQUENCY = 60;
 
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
 
     private windowHalfX = window.innerWidth * 0.5;
-    private windowHalfY = window.innerHeight * 0.5;
+    private windowHalfY = window.innerHeight * 0.5 - RacingGameComponent.HEADER_HEIGHT * 0.5;
 
     private pressedKeys: Set<string> = new Set();
     private keyTimer: any = null;
@@ -38,7 +38,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.mapService.getByName(mapName)
                 .then(map => {
                     this.racingGame.initialise(this.racingGameCanvas.nativeElement, map);
-                    this.resizeCanvas();
+                    this.racingGame.resizeCanvas(this.windowHalfX * 2, this.windowHalfY * 2);
                     this.keyTimer = setInterval(this.updateCameraVelocity.bind(this),
                         1000 / RacingGameComponent.KEY_TIMER_FREQUENCY);
                 });
@@ -53,19 +53,12 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @HostListener('window:resize', ['$event'])
     public onResize() {
-        this.resizeCanvas();
-    }
-
-    private resizeCanvas() {
         const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = (window).innerWidth;
-        const CAMERA = this.racingGame.renderer.CAMERA1;
-
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;
-        this.racingGame.renderer.RENDERER.setSize(width, height);
-        this.racingGame.renderer.CAMERA1.aspect = width / height;
-        this.racingGame.renderer.CAMERA1.updateProjectionMatrix();
+
+        this.racingGame.resizeCanvas(width, height);
     }
 
     private checkPointerLock() {
@@ -77,9 +70,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private updateCameraVelocity() {
         const ACCELERATION = 10; // m/s^2
         const DESIRED_SPEED = 5.0;
-        if (this.racingGame.renderer.CAMERA1) {
-            const CAMERA = this.racingGame.renderer.CAMERA1;
-            const rotation = this.racingGame.renderer.CAMERA1.rotation;
+        if (this.racingGame.CAMERA1) {
+            const rotation = this.racingGame.CAMERA1.rotation;
             const direction = new Vector3();
             if (this.pressedKeys.has('w')) {
                 direction.add(new Vector3(0, 0, -1));
@@ -96,14 +88,15 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
             const accelerationDirection = (direction).applyEuler(rotation).setY(0).normalize();
             const acceleration = accelerationDirection.multiplyScalar(ACCELERATION)
-            .multiplyScalar(DESIRED_SPEED - CAMERA.velocity.length());
-            CAMERA.velocity.addScaledVector(acceleration, 1 / RacingGameComponent.KEY_TIMER_FREQUENCY);
+                .multiplyScalar(DESIRED_SPEED - this.racingGame.cameraVelocity.length());
+            this.racingGame.cameraVelocity = this.racingGame.cameraVelocity
+                .addScaledVector(acceleration, 1 / RacingGameComponent.KEY_TIMER_FREQUENCY).clone();
         }
     }
 
     @HostListener('mousemove', ['$event'])
     public onMouseMove(e: MouseEvent) {
-        if (this.racingGame.renderer && this.racingGame.renderer.CAMERA1) {
+        if (this.racingGame.renderer && this.racingGame.CAMERA1) {
             const ROTATION = new Point(
                 e.movementX / this.windowHalfX,
                 e.movementY / this.windowHalfY
@@ -115,8 +108,18 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('click', ['$event'])
-    public onClick(e: MouseEvent) {
-        if (e.button === LEFT_MOUSE_BUTTON) {
+    public onFocus(e: MouseEvent) {
+        this.checkPointerLock();
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    private onKeyDown(event: KeyboardEvent) {
+        this.pressedKeys.add(event.key.toLowerCase());
+
+        if (this.pressedKeys.has('c')) {
+            this.racingGame.currentCamera = (1 - this.racingGame.currentCamera) as 0 | 1;
+        }
+        if (this.pressedKeys.has('n')) {
             const SKYBOX = this.racingGame.renderer.SKYBOX;
             switch (SKYBOX.mode) {
                 case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
@@ -124,16 +127,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 default: break;
             }
         }
-        this.checkPointerLock();
-    }
 
-    @HostListener('window:keydown', ['$event'])
-    private onKeyDown(event: KeyboardEvent) {
         if (!event.ctrlKey || event.key !== 'I') { // Allows for Ctrl+Shift+I
-            event.preventDefault();
+            return false; // Prevent Default behaviors
         }
-
-        this.pressedKeys.add(event.key.toLowerCase());
     }
 
     @HostListener('window:keyup', ['$event'])

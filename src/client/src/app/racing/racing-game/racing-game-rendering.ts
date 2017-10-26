@@ -11,17 +11,7 @@ export class RacingGameRenderer {
         new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 1, 0x0000ff)
     ];
 
-    public readonly WIDTH: number = window.innerWidth;
-    public readonly HEIGHT: number = window.innerHeight;
-
-    public readonly VIEW_ANGLE: number = 75;
-    public readonly ASPECT: number = this.WIDTH / this.HEIGHT;
-
-    public readonly NEAR: number = 0.05;
-    public readonly FAR: number = 500;
-
     public readonly SCENE: THREE.Scene;
-    public readonly CAMERA1: MovablePerspectiveCamera;
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
@@ -30,18 +20,12 @@ export class RacingGameRenderer {
 
     constructor(canvas: HTMLCanvasElement) {
         this.SCENE = new THREE.Scene();
-        this.RENDERER = new THREE.WebGLRenderer({canvas: canvas});
-        this.CAMERA1 = new MovablePerspectiveCamera(
-            this.VIEW_ANGLE,
-            this.ASPECT,
-            this.NEAR,
-            this.FAR);
+        this.RENDERER = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
         this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
         this.displayWorldRef = true;
 
-        this.CAMERA1.add(this.SKYBOX);
-        this.SCENE.add(this.CAMERA1);
-        this.SCENE.add(this.SKYBOX.AMBIANT);
+        // this.SCENE.add(this.SKYBOX.AMBIANT);
+        this.SCENE.add(this.SKYBOX.DIRECTIONAL);
     }
 
     public set displayWorldRef(value: boolean) {
@@ -52,16 +36,6 @@ export class RacingGameRenderer {
         else {
             RacingGameRenderer.ARROW_HELPERS.forEach(this.SCENE.remove);
         }
-    }
-
-    public setupScene(): void {
-        this.setupCamera();
-    }
-
-    private setupCamera(): void {
-        this.CAMERA1.rotation.order = 'YXZ';
-        this.CAMERA1.position.set(0, 1, 0);
-        this.CAMERA1.rotation.set(0, 0, 0);
     }
 
 }

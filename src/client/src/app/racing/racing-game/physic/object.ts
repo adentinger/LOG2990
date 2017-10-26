@@ -12,6 +12,8 @@ export interface IPhysicElement extends THREE.Object3D {
 }
 
 export abstract class PhysicMesh extends THREE.Mesh implements IPhysicElement {
+    public castShadow = true;
+    public receiveShadow = true;
     public update(engine: PhysicEngine, deltaTime: Seconds) { }
 }
 
