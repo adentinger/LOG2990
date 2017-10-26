@@ -3,8 +3,9 @@ import { CrosswordGridService } from './crossword-grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import '../../../../../common/src/crossword/packets/word-try.parser';
 import { SelectionService } from '../selection.service';
+
+import '../../../../../common/src/crossword/packets/word-try.parser';
 
 @Component({
     selector: 'app-board',
@@ -45,6 +46,7 @@ export class BoardComponent implements OnInit {
             const word = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
             this.crosswordGridService.onInputChange(input, word);
         }
+        console.log(this.crosswordGridService.getViewableGrid());
     }
 
     public get crosswordGrid() {

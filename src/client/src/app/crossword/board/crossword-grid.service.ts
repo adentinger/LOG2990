@@ -12,13 +12,18 @@ import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid
 
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 
+
 @Injectable()
 export class CrosswordGridService {
+    private readonly BLACK_SQUARE = '0';
+    private readonly GRID_DIMENSION = 10;
+
     public crosswordGrid: string[][];
     public wordIsFound = false;
     public horizontalGridWords: Map<number, GridWord>;
     public verticalGridWords: Map<number, GridWord>;
-    private viewableGrid: string[][];
+
+    private viewableGrid: string[][] = [];
 
     constructor(private crosswordGameService: CrosswordGameService, private packetManager: PacketManagerClient,
         private definitionsService: DefinitionsService) {
@@ -29,35 +34,59 @@ export class CrosswordGridService {
             (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map(
             (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-        this.fillAll();
+        // this.fillAll();
     }
 
     public getViewableGrid(): string[][] {
-        const CROSSWORD = this.viewableGrid;
-        return CROSSWORD;
+        // const CROSSWORD = this.viewableGrid;
+        // return CROSSWORD;
+        // this.viewableGrid = this.generateGridTemplate();
+        this.fill();
+        this.fillViewableGrid();
+        return this.viewableGrid;
     }
 
-    public fillAll() {
-        this.fill();
-
+    public fillViewableGrid() {
         for (let i = 0; i < this.horizontalGridWords.size; i++) {
             this.fillHorizontal(this.horizontalGridWords.get(i));
         }
-
         for (let i = 0; i < this.verticalGridWords.size; i++) {
             this.fillVertical(this.verticalGridWords.get(i));
         }
     }
 
     public fillHorizontal(gridWord: GridWord): void {
+        console.log('current gridword length' + gridWord.length + 'string length =' + gridWord.string.length);
+        const wordIsEmpty: boolean = (gridWord.string === '');
         for (let i = 0; i < gridWord.length; i++) {
-            this.viewableGrid[gridWord.y][i + gridWord.x] = '';
+            // if (gridWord.string === '') {
+            //     this.viewableGrid[gridWord.y][i + gridWord.x] = '';
+            // } else if (gridWord.string.length === gridWord.length) { // sanity check
+            //     this.viewableGrid[gridWord.y][i + gridWord.x] = gridWord.string[i];
+            // } else {
+            //     console.log('=== ERROR - gridWord length mismatch ===');
+            // }
+            if (wordIsEmpty) {
+                this.viewableGrid[gridWord.y][i + gridWord.x] = '';
+            } else if (gridWord.length !== gridWord.string.length) { // sanity check
+                console.log('=== ERROR - gridWord length mismatch ===');
+            } else {
+                this.viewableGrid[gridWord.y][gridWord.x + i] = gridWord.string[i];
+            }
         }
     }
 
     public fillVertical(gridWord: GridWord): void {
+        const wordIsEmpty: boolean = (gridWord.string === '');
         for (let i = 0; i < gridWord.length; i++) {
-            this.viewableGrid[i + gridWord.y][gridWord.x] = '';
+            // this.viewableGrid[i + gridWord.y][gridWord.x] = '';
+            if (wordIsEmpty) {
+                this.viewableGrid[gridWord.y + i][gridWord.x] = '';
+            } else if (gridWord.length !== gridWord.string.length) { // sanity check
+                console.log('=== ERROR - gridWord length mismatch ===');
+            } else {
+                this.viewableGrid[gridWord.y + i][gridWord.x] = gridWord.string[i];
+            }
         }
     }
 
@@ -87,6 +116,17 @@ export class CrosswordGridService {
             ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
             ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
         ];
+    }
+
+    private generateGridTemplate(): string[][] {
+        let emptyGridView: string[][] = [];
+        for (let i = 0; i < this.GRID_DIMENSION; i++) {
+            emptyGridView[i] = [];
+            for (let j = 0; i < this.GRID_DIMENSION; j++) {
+                emptyGridView[i][j] = '0';
+            }
+        }
+        return emptyGridView;
     }
 
     public stripSymbols(input) {
