@@ -2,17 +2,48 @@ import * as THREE from 'three';
 
 import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
-export class Car extends THREE.Group {
+
+export interface CarLights {
+    headlightLeft: THREE.Light;
+    headlightRight: THREE.Light;
+}
+
+interface CarLightOptions {
+    color: number;
+    intensity: number;
+    distance: number;
+    angle: number;
+    exponent: number;
+    decay: number;
+    headlightPositions: THREE.Vector3[];
+}
+
+export class Car extends THREE.Mesh {
 
     private static readonly JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
     private static readonly BASE_PATH = 'assets/racing/car_model/';
     private static readonly FILE_EXTENSION = '.json';
 
+    private static readonly HEADLIGHT_OPTIONS: CarLightOptions = {
+        color: 0xfbf2b5,
+        intensity: 1,
+        distance: 10,
+        angle: Math.PI / 4,
+        exponent: 0.6,
+        decay: 1.3,
+        headlightPositions: [
+            new THREE.Vector3(-0.56077, 0.63412, -2.75),
+            new THREE.Vector3( 0.56077, 0.63412, -2.75)
+        ]
+    };
+
     private logger = Logger.getLogger('Car');
+    private lights: CarLights;
 
     constructor(carColor: CarColor) {
         super();
         const loader = new THREE.JSONLoader();
+        this.addLights();
         this.addCarParts(carColor);
     }
 
@@ -30,10 +61,10 @@ export class Car extends THREE.Group {
         ];
         for (let i = 0; i < PART_NAMES.length; ++i) {
             const PART_NAME = PART_NAMES[i];
-            this.children.push(await this.loadCarPart(PART_NAME));
+            this.add(await this.loadCarPart(PART_NAME));
         }
 
-        this.children.push(... await this.loadColoredCarParts(color));
+        this.add(... await this.loadColoredCarParts(color));
     }
 
     private loadCarPart(name: string): Promise<THREE.Mesh> {
@@ -71,6 +102,33 @@ export class Car extends THREE.Group {
                 );
             });
         return Promise.all(COLORED_CAR_PARTS);
+    }
+
+    private addLights(): void {
+        const HEADLIGHTS = [];
+        const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, -1);
+        Car.HEADLIGHT_OPTIONS.headlightPositions.forEach((headlightPosition) => {
+            const HEADLIGHT = new THREE.SpotLight(
+                Car.HEADLIGHT_OPTIONS.color,
+                Car.HEADLIGHT_OPTIONS.intensity,
+                Car.HEADLIGHT_OPTIONS.distance,
+                Car.HEADLIGHT_OPTIONS.angle,
+                Car.HEADLIGHT_OPTIONS.exponent,
+                Car.HEADLIGHT_OPTIONS.decay
+            );
+            HEADLIGHT.position.copy(headlightPosition);
+            HEADLIGHT.target.position.copy(
+                headlightPosition.clone().add(HEADLIGHT_FRONT_DIRECTION)
+            );
+            this.add(HEADLIGHT.target);
+            HEADLIGHTS.push(HEADLIGHT);
+        });
+
+        this.lights = {
+            headlightLeft: HEADLIGHTS[0],
+            headlightRight: HEADLIGHTS[1]
+        };
+        this.add(this.lights.headlightLeft, this.lights.headlightRight);
     }
 
 }

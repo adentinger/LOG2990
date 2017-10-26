@@ -54,9 +54,9 @@ export class RacingGameRendering {
         this.SCENE.add(this.CAMERA);
 
         const LIGHTS = [
-            new THREE.PointLight(0xffffff),
-            new THREE.PointLight(0xffffff),
-            new THREE.PointLight(0xffffff)
+            new THREE.PointLight(0xffffff, 0.3),
+            new THREE.PointLight(0xffffff, 0.3),
+            new THREE.PointLight(0xffffff, 0.3)
         ];
         let i = 0;
         [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
@@ -67,7 +67,16 @@ export class RacingGameRendering {
             = [-100, 50, 10];
         this.SCENE.add(...LIGHTS);
         const CAR = new Car(new CarColorGreen());
+        setInterval(() => CAR.position.setZ(CAR.position.z + 0.01), 1000 / 60);
         this.SCENE.add(CAR);
+
+        const SPHERE = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5),
+            new THREE.MeshPhongMaterial({color: 0x880000})
+        );
+        SPHERE.position.z = -5;
+        SPHERE.position.y = .5;
+        this.SCENE.add(SPHERE);
     }
 
     public set displayWorldRef(value: boolean) {
