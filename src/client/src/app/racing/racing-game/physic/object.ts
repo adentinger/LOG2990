@@ -6,8 +6,6 @@ export interface IPhysicElement extends THREE.Object3D {
     position: THREE.Vector3;
     rotation: THREE.Euler;
 
-    readonly children: IPhysicElement[];
-
     update(engine: PhysicEngine, deltaTime: Seconds): void;
 }
 
@@ -18,7 +16,6 @@ export abstract class PhysicMesh extends THREE.Mesh implements IPhysicElement {
 }
 
 export declare interface PhysicMesh extends THREE.Mesh, IPhysicElement {
-    readonly children: IPhysicElement[];
     add(...object: IPhysicElement[]): void;
     remove(object: IPhysicElement): void;
 
@@ -28,4 +25,9 @@ export declare interface PhysicMesh extends THREE.Mesh, IPhysicElement {
 
     getChildByName(name: string): IPhysicElement;
     translate(distance: number, axis: THREE.Vector3): IPhysicElement;
+}
+
+export function isPhysicElement(object: THREE.Object3D): object is IPhysicElement {
+    return 'update' in object && typeof object['update'] === 'function' &&
+        object['update'].length === 2;
 }

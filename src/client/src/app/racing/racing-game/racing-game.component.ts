@@ -9,6 +9,7 @@ import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
 import { Vector3 } from 'three';
 import { PhysicEngine } from './physic/engine';
+import { Seconds } from '../types';
 
 const LEFT_MOUSE_BUTTON = 0;
 
@@ -39,20 +40,33 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 .then(map => {
                     this.racingGame.initialise(this.racingGameCanvas.nativeElement, map);
                     this.racingGame.resizeCanvas(this.windowHalfX * 2, this.windowHalfY * 2);
-                    this.keyTimer = setInterval(this.updateCameraVelocity.bind(this),
-                        1000 / RacingGameComponent.KEY_TIMER_FREQUENCY);
+                    this.startKeyTimer();
                 });
         });
         this.checkPointerLock();
     }
 
     public ngOnDestroy() {
+        this.stopKeyTimer();
+    }
+
+    private startKeyTimer() {
+        let now = Date.now(), last = now; // ms
+        this.keyTimer = setInterval(() => {
+            now = Date.now();
+            const deltaTimeMS = now - last;
+            this.updateCameraVelocity(deltaTimeMS / 1000);
+            last = now;
+        }, 1000 / RacingGameComponent.KEY_TIMER_FREQUENCY);
+    }
+
+    private stopKeyTimer() {
         clearInterval(this.keyTimer);
         this.keyTimer = null;
     }
 
     @HostListener('window:resize', ['$event'])
-    public onResize() {
+    private onResize() {
         const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = (window).innerWidth;
         this.windowHalfX = width * 0.5;
@@ -67,8 +81,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateCameraVelocity() {
-        const ACCELERATION = 10; // m/s^2
+    private updateCameraVelocity(deltaTime: Seconds) {
+        const ACCELERATION = 7; // m/s^2
         const DESIRED_SPEED = 5.0;
         if (this.racingGame.CAMERA1) {
             const rotation = this.racingGame.CAMERA1.rotation;
@@ -90,7 +104,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             const acceleration = accelerationDirection.multiplyScalar(ACCELERATION)
                 .multiplyScalar(DESIRED_SPEED - this.racingGame.cameraVelocity.length());
             this.racingGame.cameraVelocity = this.racingGame.cameraVelocity
-                .addScaledVector(acceleration, 1 / RacingGameComponent.KEY_TIMER_FREQUENCY).clone();
+                .addScaledVector(acceleration, deltaTime);
         }
     }
 

@@ -11,6 +11,8 @@ export class MovableOrthographicCamera extends THREE.OrthographicCamera implemen
         DynamicPhysicMesh.prototype.update.call(this, engine, deltaTime);
     }
 }
+MovableOrthographicCamera.prototype['updatePosition'] = DynamicPhysicMesh.prototype['updatePosition'];
+MovableOrthographicCamera.prototype['updateVelocity'] = DynamicPhysicMesh.prototype['updateVelocity'];
 
 export class MovablePerspectiveCamera extends THREE.PerspectiveCamera implements DynamicPhysicElement {
     private static readonly FRICTION = -10; // N
@@ -23,3 +25,5 @@ export class MovablePerspectiveCamera extends THREE.PerspectiveCamera implements
         DynamicPhysicMesh.prototype.update.call(this, engine, deltaTime);
     }
 }
+MovablePerspectiveCamera.prototype['updatePosition'] = DynamicPhysicMesh.prototype['updatePosition'];
+MovablePerspectiveCamera.prototype['updateVelocity'] = DynamicPhysicMesh.prototype['updateVelocity'];

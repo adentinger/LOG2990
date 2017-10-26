@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NotImplementedError } from '../../../../../../common/src/utils';
-import { IPhysicElement } from './object';
+import { IPhysicElement, isPhysicElement } from './object';
 import { Collidable, isCollidable, CollidableMesh } from './collidable';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
@@ -10,12 +10,12 @@ export class PhysicEngine {
     public static readonly UPDATE_FREQUENCY = 100; // Hz
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
 
-    private root: IPhysicElement;
+    private root: THREE.Object3D;
     private timer: any = null;
 
     constructor() { }
 
-    public setRoot(root: IPhysicElement) {
+    public setRoot(root: THREE.Object3D) {
         this.root = root;
     }
 
@@ -52,13 +52,13 @@ export class PhysicEngine {
     }
 
     public getAllPhysicObjects(): IPhysicElement[] {
-        const objects: IPhysicElement[] = [this.root];
+        const objects: THREE.Object3D[] = [this.root];
         objects.push(...this.getChildren(this.root));
-        return objects;
+        return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
     }
 
-    private getChildren(object: IPhysicElement): IPhysicElement[] {
-        const children: IPhysicElement[] = [];
+    private getChildren(object: THREE.Object3D): THREE.Object3D[] {
+        const children: THREE.Object3D[] = [];
         if (object) {
             children.push(...object.children);
             for (const child of object.children) {
