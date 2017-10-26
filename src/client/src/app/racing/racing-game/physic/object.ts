@@ -15,19 +15,9 @@ export abstract class PhysicMesh extends THREE.Mesh implements IPhysicElement {
     public update(engine: PhysicEngine, deltaTime: Seconds) { }
 }
 
-export declare interface PhysicMesh extends THREE.Mesh, IPhysicElement {
-    add(...object: IPhysicElement[]): void;
-    remove(object: IPhysicElement): void;
-
-    traverse(callback: (object: IPhysicElement) => any): void;
-    traverseVisible(callback: (object: IPhysicElement) => any): void;
-    traverseAncestors(callback: (object: IPhysicElement) => any): void;
-
-    getChildByName(name: string): IPhysicElement;
-    translate(distance: number, axis: THREE.Vector3): IPhysicElement;
-}
-
 export function isPhysicElement(object: THREE.Object3D): object is IPhysicElement {
-    return 'update' in object && typeof object['update'] === 'function' &&
-        object['update'].length === 2;
+    return object != null &&
+        'update' in object && typeof object['update'] === 'function' && object['update'].length === 2 &&
+        'position' in object && object['position'] instanceof THREE.Vector3 &&
+        'rotation' in object && object['rotation'] instanceof THREE.Euler;
 }

@@ -1,7 +1,7 @@
 import { IPhysicElement, PhysicMesh } from './object';
 import * as THREE from 'three';
 import { PhysicEngine } from './engine';
-import { Seconds } from '../../types';
+import { Seconds, Kilograms } from '../../types';
 import { DynamicPhysicMesh, DynamicPhysicElement } from './dynamic-object';
 import { Collidable } from './collidable';
 
@@ -13,6 +13,7 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
     public static readonly SPEED_FORCE_PROPORTIONALITY = 1.0; // in N/(m/s)
 
     public geometry: THREE.Geometry;
+    public mass: Kilograms = 1;
     public velocity: THREE.Vector3 = new THREE.Vector3(0);
 
     public update(engine: PhysicEngine, deltaTime: Seconds): void {

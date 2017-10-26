@@ -48,6 +48,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this.stopKeyTimer();
+        this.racingGame.finalize();
     }
 
     private startKeyTimer() {
@@ -84,8 +85,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private updateCameraVelocity(deltaTime: Seconds) {
         const ACCELERATION = 7; // m/s^2
         const DESIRED_SPEED = 5.0;
-        if (this.racingGame.CAMERA1) {
-            const rotation = this.racingGame.CAMERA1.rotation;
+        if (this.racingGame.renderer.CAMERA1) {
+            const rotation = this.racingGame.renderer.CAMERA1.rotation;
             const direction = new Vector3();
             if (this.pressedKeys.has('w')) {
                 direction.add(new Vector3(0, 0, -1));
@@ -110,7 +111,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @HostListener('mousemove', ['$event'])
     public onMouseMove(e: MouseEvent) {
-        if (this.racingGame.renderer && this.racingGame.CAMERA1) {
+        if (this.racingGame.renderer && this.racingGame.renderer.CAMERA1) {
             const ROTATION = new Point(
                 e.movementX / this.windowHalfX,
                 e.movementY / this.windowHalfY
@@ -131,7 +132,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         this.pressedKeys.add(event.key.toLowerCase());
 
         if (this.pressedKeys.has('c')) {
-            this.racingGame.currentCamera = (1 - this.racingGame.currentCamera) as 0 | 1;
+            this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
         }
         if (this.pressedKeys.has('n')) {
             const SKYBOX = this.racingGame.renderer.SKYBOX;
