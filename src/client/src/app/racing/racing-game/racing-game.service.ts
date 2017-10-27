@@ -91,12 +91,12 @@ export class RacingGameService {
     }
 
     public get cameraVelocity(): THREE.Vector3 {
-        return this.renderer.CAMERA1.velocity;
+        return /*this.renderer.CAMERA1.velocity*/;
     }
 
     public set cameraVelocity(value: THREE.Vector3) {
-        this.renderer.CAMERA1.velocity = value;
-        this.renderer.CAMERA2.velocity = value;
+        /* this.renderer.CAMERA1.velocity = value;
+        this.renderer.CAMERA2.orthographicView.velocity = value;*/
     }
 
     public renderGame(): void {

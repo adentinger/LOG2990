@@ -87,16 +87,19 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             const rotation = this.racingGame.renderer.CAMERA1.rotation;
             const direction = new Vector3();
             if (this.pressedKeys.has('w')) {
-                direction.add(new Vector3(0, 0, -1));
+                // direction.add(new Vector3(0, 0, -1));
+                this.racingGame.renderer.moveBall();
             }
             if (this.pressedKeys.has('s')) {
-                direction.add(new Vector3(0, 0, 1));
+                // direction.add(new Vector3(0, 0, 1));
             }
             if (this.pressedKeys.has('d')) {
-                direction.add(new Vector3(1, 0, 0));
+                // direction.add(new Vector3(1, 0, 0));
+                this.racingGame.renderer.rotateBallRight();
             }
             if (this.pressedKeys.has('a')) {
-                direction.add(new Vector3(-1, 0, 0));
+                // direction.add(new Vector3(-1, 0, 0));
+                this.racingGame.renderer.rotateBallLeft();
             }
 
             const accelerationDirection = (direction).applyEuler(rotation).setY(0).normalize();
