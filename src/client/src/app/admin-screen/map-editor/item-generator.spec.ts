@@ -32,6 +32,15 @@ describe('Item generator', () => {
         itemGenerator.generatePositions(map1);
         for (let i = 0; i < itemGenerator.positions.length; i++) {
             for (let j = i + 1; j < itemGenerator.positions.length; j++) {
+                expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
+            }
+        }
+
+        const map2 = mockMaps.functionalMap1();
+
+        itemGenerator.generatePositions(map2, true);
+        for (let i = 0; i < itemGenerator.positions.length; i++) {
+            for (let j = i + 1; j < itemGenerator.positions.length; j++) {
                 console.log(itemGenerator.positions[i] + '->' + itemGenerator.positions[j]);
                 expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
             }
@@ -46,13 +55,13 @@ describe('Item generator', () => {
 
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(1);
-        console.log(map2.potholes[0].position);
-        console.log(itemGenerator.positions[0]);
+        // console.log(map2.potholes[0].position);
+        // console.log(itemGenerator.positions[0]);
 
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(3);
-        console.log(map2.potholes[1].position, map2.potholes[2].position);
-        console.log(itemGenerator.positions[1], itemGenerator.positions[2]);
+        // console.log(map2.potholes[1].position, map2.potholes[2].position);
+        // console.log(itemGenerator.positions[1], itemGenerator.positions[2]);
 
         itemGenerator.generatePositions(map1);
         itemGenerator.addObstacle(SpeedBoost, map1, map1.speedBoosts);
@@ -77,10 +86,6 @@ describe('Item generator', () => {
 
         expect(previousArray.length).toEqual(map.potholes.length);
 
-        for (let i = 0; i < map.potholes.length; i++) {
-            expect(map.potholes[i].position).not.toEqual(previousArray[i].position);
-        }
-
         const duplicates = [];
         let duplicate = false;
         for (let i = 0 ; i < map.potholes.length; i++) {
@@ -98,9 +103,9 @@ describe('Item generator', () => {
     it('position on map', () => {
         const map = mockMaps.functionalMap1();
 
-        for (let i = 0; i < map.potholes.length; i++) {
-            console.log(map.potholes[i].position);
-        }
+        // for (let i = 0; i < map.potholes.length; i++) {
+        //     console.log(map.potholes[i].position);
+        // }
 
         const positionDoNotExist = 2;
         const positiontExistOnPotHoles = 11;

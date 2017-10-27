@@ -1,10 +1,12 @@
 import { Map } from './map';
 import { Item } from './item';
 import { Constructor } from '../../../../../common/src/utils';
+import { Interval } from '../../../../../common/src/math/interval';
 
 export class ItemGenerator {
 
     private allPositions: number[];
+    private halfSegments: Interval[];
 
     constructor() {
         this.allPositions = [];
@@ -13,7 +15,13 @@ export class ItemGenerator {
     public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
         const MAX_AMOUNT_OF_ITEMS = 5;
         const currentArrayLength = itemArray.length;
-        this.generatePositions(map);
+
+        if (constructor.toString() === 'SpeedBoost') {
+            this.generatePositions(map, true);
+        }
+        else {
+            this.generatePositions(map);
+        }
 
         if (currentArrayLength === 0) {
             const item = new constructor(this.allPositions[currentArrayLength]);
@@ -32,8 +40,9 @@ export class ItemGenerator {
         }
     }
 
-    public generatePositions(map: Map): void {
+    public generatePositions(map: Map, speedBoost?: boolean): void {
         this.allPositions = [];
+        this.halfSegments = map.calucateHalfSegment();
 
         const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
         const MAX_NUMBER_OF_ITEMS = 5;
@@ -41,7 +50,13 @@ export class ItemGenerator {
 
         while (this.allPositions.length < MAX_NUMBER_OF_ITEMS) {
             let isNotUsed = true;
-            newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
+            if (speedBoost) {
+                const index = Math.round(Math.random() * (this.halfSegments.length - 2) + 1);
+                newPosition = Math.round(Math.random() * (this.halfSegments[index].getLength()) + this.halfSegments[index].lower);
+            }
+            else {
+                newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
+            }
 
             for (let j = 0; j < this.allPositions.length; j++) {
                 if (newPosition === this.allPositions[j] || this.positionIsOnMap(map, newPosition)) {
@@ -61,26 +76,22 @@ export class ItemGenerator {
 
     public randomlyModifyObjectsTypePositions<ItemGenerated extends Item>
     (constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
-        const allPositions = [];
-        let newPosition: number;
-        const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
-        const itemArrayCopy = itemArray.slice();
 
-        for (let i = 0; i < itemArrayCopy.length; i++) {
+        const itemArrayLength = itemArray.length;
+
+        for (let i = 0; i < itemArrayLength; i++) {
             itemArray.pop();
         }
 
-        for (let i = 0; i < itemArrayCopy.length; i++) {
-            let isNotUsed = true;
-            newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
+        if (constructor.toString() === 'SpeedBoost') {
+            this.generatePositions(map, true);
+        }
+        else {
+            this.generatePositions(map);
+        }
 
-            if (newPosition === itemArrayCopy[i].position && allPositions.includes(newPosition)) {
-                isNotUsed = false;
-            }
-
-            if (isNotUsed) {
-                itemArray.push(new constructor(newPosition));
-            }
+        for (let i = 0; i < itemArrayLength; i++) {
+            itemArray.push(new constructor(this.allPositions[i]));
         }
     }
 
@@ -94,13 +105,10 @@ export class ItemGenerator {
     }
 
     public positionIsOnMap(map: Map, position: number) {
-        if (
+        return (
             this.positionIsOnMapObjectsList(map.potholes, position) ||
             this.positionIsOnMapObjectsList(map.puddles, position) ||
-            this.positionIsOnMapObjectsList(map.speedBoosts, position)) {
-
-            return true;
-        }
-        return false;
+            this.positionIsOnMapObjectsList(map.speedBoosts, position));
     }
+
 }

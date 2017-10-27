@@ -43,4 +43,13 @@ describe('Interval', () => {
         expect(INTERVAL_1.intersect(INTERVAL_2)).to.deep.equal(FIRST_INTERVAL);
         expect(INTERVAL_1.intersect(INTERVAL_3).isEmpty()).to.be.true;
     });
+
+    it('return the length of an interval', () => {
+        const LOWER_BOUND_1 = 10;
+        const UPPER_BOUND_1 = 100;
+
+        const INTERVAL_1 = new Interval(UPPER_BOUND_1, LOWER_BOUND_1);
+
+        expect(INTERVAL_1.getLength).equal(90);
+    });
 });
