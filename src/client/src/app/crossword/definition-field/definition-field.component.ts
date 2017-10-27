@@ -21,8 +21,6 @@ export class DefinitionFieldComponent implements OnInit {
 
     @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
 
-    // public definitions: Definition[] = [];
-
     public answers: string[] = [];
 
     constructor(private definitionService: DefinitionsService,
@@ -40,7 +38,6 @@ export class DefinitionFieldComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        // this.definitions = this.definitionService.getDefinitions();
         this.answers = this.definitionService.getAnswers();
     }
 

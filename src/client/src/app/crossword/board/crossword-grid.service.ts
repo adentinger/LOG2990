@@ -34,13 +34,9 @@ export class CrosswordGridService {
             (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
         this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map(
             (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-        // this.fillAll();
     }
 
     public getViewableGrid(): string[][] {
-        // const CROSSWORD = this.viewableGrid;
-        // return CROSSWORD;
-        // this.viewableGrid = this.generateGridTemplate();
         this.fill();
         this.fillViewableGrid();
         return this.viewableGrid;
@@ -59,13 +55,6 @@ export class CrosswordGridService {
         console.log('current gridword length' + gridWord.length + 'string length =' + gridWord.string.length);
         const wordIsEmpty: boolean = (gridWord.string === '');
         for (let i = 0; i < gridWord.length; i++) {
-            // if (gridWord.string === '') {
-            //     this.viewableGrid[gridWord.y][i + gridWord.x] = '';
-            // } else if (gridWord.string.length === gridWord.length) { // sanity check
-            //     this.viewableGrid[gridWord.y][i + gridWord.x] = gridWord.string[i];
-            // } else {
-            //     console.log('=== ERROR - gridWord length mismatch ===');
-            // }
             if (wordIsEmpty) {
                 this.viewableGrid[gridWord.y][i + gridWord.x] = '';
             } else if (gridWord.length !== gridWord.string.length) { // sanity check
@@ -79,7 +68,6 @@ export class CrosswordGridService {
     public fillVertical(gridWord: GridWord): void {
         const wordIsEmpty: boolean = (gridWord.string === '');
         for (let i = 0; i < gridWord.length; i++) {
-            // this.viewableGrid[i + gridWord.y][gridWord.x] = '';
             if (wordIsEmpty) {
                 this.viewableGrid[gridWord.y + i][gridWord.x] = '';
             } else if (gridWord.length !== gridWord.string.length) { // sanity check
@@ -143,8 +131,6 @@ export class CrosswordGridService {
                 this.sendWordToServer(input, word);
                 this.definitionsService.selectedDefinitionId = -1;
 
-
-                // this.definitionsService.internalSelectedDefinitionId = -1;
                 this.crosswordGameService.aDefinitionIsSelected = false;
             }
         }
@@ -185,7 +171,6 @@ export class CrosswordGridService {
         const newGridWord = Object.assign(new GridWord, word);
         newGridWord.string = input;
 
-        // console.log('word try is :' + newGridWord);
         this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(newGridWord));
     }
 

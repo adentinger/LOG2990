@@ -19,7 +19,6 @@ export class CrosswordTileComponent implements OnInit {
 
     @Input() public highlighted: boolean;
 
-    // @ViewChild('crosswordBoard') private gridElement: ElementRef;
     @Input() get tileChar() {
         return this.tileValue;
     }
@@ -39,19 +38,6 @@ export class CrosswordTileComponent implements OnInit {
         private definitionService: DefinitionsService,
         private selectionService: SelectionService) { }
 
-    /*
-    public checkIfTileIsInWordTiles(word: GridWord): boolean {
-        if (word.direction === Direction.horizontal) {
-            return (this.tileRow === word.y && this.tileColumn >= word.x && this.tileColumn <= word.length + word.x - 1);
-        }
-        else if (word.direction === Direction.vertical) {
-            return (this.tileColumn === word.x && this.tileRow >= word.y && this.tileRow <= word.length + word.y - 1);
-        }
-        else {
-            return false;
-        }
-    }
-    */
 
     private checkIfInHorizontalTile(word: GridWord): boolean {
         return (this.tileRow === word.y && this.tileColumn >= word.x && this.tileColumn <= word.length + word.x - 1);
