@@ -18,7 +18,7 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
     public update(engine: PhysicEngine, deltaTime: Seconds): void {
         const forceDirections = this.getForceFromCollisions(engine, deltaTime);
         forceDirections.forEach((direction: THREE.Vector3) => {
-            const force = this.velocity.dot(direction) * DynamicCollidableMesh.SPEED_FORCE_PROPORTIONALITY;
+            const force = -DynamicCollidableMesh.SPEED_FORCE_PROPORTIONALITY;
             this.velocity.addScaledVector(direction, force * deltaTime);
         });
 
@@ -29,7 +29,7 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
     protected getForceFromCollisions(engine: PhysicEngine, deltaTime: Seconds) {
         const collidingObjects: Collidable[] = engine.getObjectsCollidingWith(this);
         if (collidingObjects.length > 0) {
-            console.log('Collision', this.position, collidingObjects);
+            // console.log('Collision', this.position, collidingObjects);
         }
         return collidingObjects.map((object: Collidable) => object.position.clone().sub(this.position).normalize());
     }

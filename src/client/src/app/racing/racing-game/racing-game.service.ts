@@ -7,6 +7,17 @@ import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { Ball } from './physic/examples/ball';
 import * as THREE from 'three';
+import { CollidableMesh } from './physic/collidable';
+import { Meters } from '../types';
+
+class Wall extends CollidableMesh {
+    constructor (width: Meters, heigth: Meters) {
+        super(
+            new THREE.PlaneGeometry(width, heigth),
+            new THREE.MeshBasicMaterial({wireframe: true})
+        );
+    }
+}
 
 @Injectable()
 export class RacingGameService {
@@ -14,6 +25,7 @@ export class RacingGameService {
     public renderer: RacingGameRenderer;
     private animationRequestId = 0;
     private isRendering = false;
+    private velocityTimer: any = null;
 
     private map: RenderableMap;
 
@@ -32,24 +44,37 @@ export class RacingGameService {
 
     public initialise(canvas: HTMLCanvasElement, map: SerializedMap): void {
         this.newRacingGame(canvas);
+        this.physicEngine.setRoot(this.renderer.SCENE);
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
-        this.physicEngine.setRoot(this.renderer.SCENE);
 
-        const BALL = new Ball(0.5);
-        BALL.position.set(0, 0.001, -3);
-        this.map.add(BALL);
+        const BALL1 = new Ball(0.5);
+        BALL1.position.set(0, 0.001, -3);
+        this.map.add(BALL1);
         const BALL2 = new Ball(0.5);
-        BALL2.position.set(1.5, 0.001, -3);
-        BALL2.velocity.set(-0.5, 0, 0);
+        BALL2.position.set(1.5, 0.001, -2);
+        BALL2.velocity.set(-0.5, 0, -0.5);
         this.map.add(BALL2);
+
+        const wall1 = new Wall(10, 10);
+        wall1.position.set(0, 0, -5);
+        const wall2 = new Wall(10, 10);
+        wall2.position.set(5, 0, 0);
+        wall2.rotation.y = Math.PI / 2;
+        const wall3 = new Wall(10, 10);
+        wall3.position.set(-5, 0, 0);
+        wall3.rotation.y = - Math.PI / 2;
+        const wall4 = new Wall(10, 10);
+        wall4.position.set(0, 0, 5);
+        this.map.add(wall1, wall2, wall3, wall4);
 
         this.physicEngine.start();
         this.startRendering();
     }
 
     public finalize() {
+        clearInterval(this.velocityTimer);
         this.physicEngine.stop();
         this.stopRendering();
     }

@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 import { Track } from '../../track';
-import { IPhysicElement } from '../physic/object';
-import { CollidableMesh } from '../physic/collidable';
+import { IPhysicElement, PhysicMesh } from '../physic/object';
 
-export class RacingGamePlane extends CollidableMesh {
+export class RacingGamePlane extends PhysicMesh {
     public static textureLoader = new THREE.TextureLoader();
 
     public readonly children: IPhysicElement[];

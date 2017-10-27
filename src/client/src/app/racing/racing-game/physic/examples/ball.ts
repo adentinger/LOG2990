@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import { DynamicCollidableMesh } from '../dynamic-collidable';
+import { Kilograms } from '../../../types';
 
 export class Ball extends DynamicCollidableMesh {
 
     public readonly boundingBox;
 
-    constructor(public readonly radius: number) {
+    constructor(public readonly radius: number, public mass: Kilograms = 1) {
         super();
         this.geometry = new THREE.SphereGeometry(radius, 20, 10);
         this.geometry.vertices.forEach((vertex, i, array) => {

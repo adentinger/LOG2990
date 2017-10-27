@@ -5,11 +5,7 @@ import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 import { MovablePerspectiveCamera, MovableOrthographicCamera } from './physic/examples/movable-camera';
 
 export class RacingGameRenderer {
-    private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
-        new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0xff0000),
-        new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), 1, 0x00ff00),
-        new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 1, 0x0000ff)
-    ];
+    private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
     public readonly WIDTH: number = window.innerWidth;
     public readonly HEIGHT: number = window.innerHeight;
@@ -37,10 +33,10 @@ export class RacingGameRenderer {
     public set displayWorldRef(value: boolean) {
         this.displayWorldRefInternal = value;
         if (value) {
-            this.SCENE.add(...RacingGameRenderer.ARROW_HELPERS);
+            this.SCENE.add(RacingGameRenderer.AXIS_HELPER);
         }
         else {
-            RacingGameRenderer.ARROW_HELPERS.forEach(this.SCENE.remove);
+            this.SCENE.remove(RacingGameRenderer.AXIS_HELPER);
         }
     }
 

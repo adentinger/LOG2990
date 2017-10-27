@@ -144,7 +144,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (!event.ctrlKey || event.key !== 'I') { // Allows for Ctrl+Shift+I
+        if (!(this.pressedKeys.has('i') && this.pressedKeys.has('control') && this.pressedKeys.has('shift')) &&
+            !(this.pressedKeys.has('f5'))) { // Allows for Ctrl+Shift+I and F5
             return false; // Prevent Default behaviors
         }
     }

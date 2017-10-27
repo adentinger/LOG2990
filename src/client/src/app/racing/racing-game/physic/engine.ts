@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { IPhysicElement, isPhysicElement } from './object';
-import { Collidable, CollidableMesh } from './collidable';
+import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
+import { Point, Line } from '../../../../../../common/src/math';
 
 @Injectable()
 export class PhysicEngine {
@@ -11,6 +12,8 @@ export class PhysicEngine {
 
     private root: THREE.Object3D;
     private timer: any = null;
+
+    public currentBox: THREE.Box3 = new THREE.Box3();
 
     constructor() { }
 
@@ -37,7 +40,7 @@ export class PhysicEngine {
         }
     }
 
-    public isColliding(object1: Collidable, object2: Collidable): boolean {
+    public checkColliding(object1: Collidable, object2: Collidable): boolean {
         const boundingBox1 = new THREE.Box3().setFromObject(object1);
         const boundingBox2 = new THREE.Box3().setFromObject(object2);
         return boundingBox1.intersectsBox(boundingBox2);
@@ -46,14 +49,70 @@ export class PhysicEngine {
     public getObjectsCollidingWith(collidable: Collidable): Collidable[] {
         const objects = this.getAllPhysicObjects();
         return objects.filter((object: IPhysicElement) =>
-            object !== collidable && object instanceof CollidableMesh && this.isColliding(collidable, object)
+            object !== collidable && isCollidable(object) && this.checkColliding(collidable, object)
         ) as Collidable[];
+    }
+
+    public getCollisionsOf(target: Collidable): CollisionInfo[] {
+        const collisions: CollisionInfo[] = [];
+        const collidables: Collidable[] = this.getAllPhysicObjects()
+            .filter((object) => isCollidable(object)) as Collidable[];
+        let collision: CollisionInfo;
+        for (const collidable of collidables) {
+            collision = {
+                target,
+                source: collidable,
+                positions: this.getCollision(target, collidable)
+            };
+            if (collision.positions.length > 0) {
+                collisions.push(collision);
+            }
+        }
+
+        return collisions;
     }
 
     public getAllPhysicObjects(): IPhysicElement[] {
         const objects: THREE.Object3D[] = [this.root];
         objects.push(...this.getChildren(this.root));
         return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
+    }
+
+    private getCollision(target: Collidable, source: Collidable): Point[] {
+        const positions: Point[] = [];
+
+        const targetLines: Line[] = this.getBoundingLines(target);
+        const sourceLines: Line[] = this.getBoundingLines(source);
+
+
+
+        return positions;
+    }
+
+    private getBoundingLines(collidable: Collidable): Line[] {
+        const targetLines: Line[] = [];
+
+        collidable.geometry.computeBoundingBox();
+        const box1 = collidable.geometry.boundingBox;
+        this.currentBox.set(box1.min, box1.max);
+
+        const p: Point[] = [
+            new Point(box1.min.x, box1.min.y),
+            new Point(box1.max.x, box1.min.y),
+            new Point(box1.max.x, box1.max.y),
+            new Point(box1.min.x, box1.max.y)
+        ];
+        for (let i = 0; i < p.length; ++i) {
+            targetLines.push(new Line(p[i], p[(i + 1) % p.length]));
+        }
+
+        return targetLines;
+    }
+
+    private turnBoundingLines(lines: Line[], collidable: Collidable): void {
+        for (const line of lines) {
+            line.origin
+        }
     }
 
     private getChildren(object: THREE.Object3D): THREE.Object3D[] {
