@@ -60,17 +60,38 @@ describe('Item generator', () => {
 
     it('should randomly modify the positions of objects in an array of some type', () => {
         const map = mockMaps.functionalMap1();
-        const previousArray = map.potholes;
-        for (let i = 0; i < previousArray.length; i++) {
-            console.log(previousArray[i]);
-        }
+        const previousArray = map.potholes.slice();
+
 
         itemGenerator.randomlyModifyObjectsTypePositions(Pothole, map, map.potholes);
-        console.log(map.potholes.length);
-        for (let i = 0; i < map.potholes.length; i++) {
-            console.log(map.potholes[i]);
+        for (let i = 0; i < previousArray.length; i++) {
+            console.log(previousArray[i].position);
         }
+
+        console.log('lenght:' + map.potholes.length);
+
+        for (let i = 0; i < map.potholes.length; i++) {
+            console.log(map.potholes[i].position);
+        }
+
         expect(previousArray.length).toEqual(map.potholes.length);
+
+        for (let i = 0; i < map.potholes.length; i++) {
+            expect(map.potholes[i].position).not.toEqual(previousArray[i].position);
+        }
+
+        const duplicates = [];
+        let duplicate = false;
+        for (let i = 0 ; i < map.potholes.length; i++) {
+            if (!duplicates.includes(map.potholes[i].position)) {
+                duplicates.push(map.potholes[i].position);
+            }
+            else {
+                duplicate = true;
+            }
+        }
+        expect(duplicate).toBeFalsy();
+
     });
 
 });

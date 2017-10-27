@@ -5,11 +5,9 @@ import { Constructor } from '../../../../../common/src/utils';
 export class ItemGenerator {
 
     private allPositions: number[];
-    private allPositionsMaps: number[];
 
     constructor() {
         this.allPositions = [];
-        this.allPositionsMaps = [];
     }
 
     public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
@@ -44,8 +42,10 @@ export class ItemGenerator {
             let isNotUsed = true;
             newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
 
-            if (this.positionIsOnMap(map, newPosition)) {
-                isNotUsed = false;
+            for (let j = 0; j < this.allPositions.length; j++) {
+                if (newPosition === this.allPositions[j]) {
+                    isNotUsed = false;
+                }
             }
 
             if (isNotUsed) {
@@ -61,51 +61,25 @@ export class ItemGenerator {
     public randomlyModifyObjectsTypePositions<ItemGenerated extends Item>
     (constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
         const allPositions = [];
-        const itemArrayCurrentLength = itemArray.length;
         let newPosition: number;
         const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
+        const itemArrayCopy = itemArray.slice();
 
-        for (let i = 0; i < itemArrayCurrentLength; i++) {
+        for (let i = 0; i < itemArrayCopy.length; i++) {
             itemArray.pop();
         }
 
-        while (allPositions.length < itemArrayCurrentLength) {
+        for (let i = 0; i < itemArrayCopy.length; i++) {
             let isNotUsed = true;
             newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
 
-            for (let j = 0; j < allPositions.length; j++) {
-                if (newPosition === allPositions[j]) {
-                    isNotUsed = false;
-                }
+            if (newPosition === itemArrayCopy[i].position && allPositions.includes(newPosition)) {
+                isNotUsed = false;
             }
 
-            if (this.positionIsOnMap(map, newPosition)) {
-                allPositions.push(new constructor(newPosition));
+            if (isNotUsed) {
+                itemArray.push(new constructor(newPosition));
             }
         }
-
-        for (let k = 0; k < allPositions.length; k++) {
-            itemArray.push(allPositions[k]);
-        }
-    }
-
-    public positionIsOnMapObjectsList(itemArray: Item[], itemKey: number) {
-        for (let i = 0; i < itemArray.length; i++) {
-            if (itemArray[i].position === itemKey) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public positionIsOnMap(map: Map, itemKey: number) {
-        if (
-            this.positionIsOnMapObjectsList(map.potholes, itemKey) &&
-            this.positionIsOnMapObjectsList(map.puddles, itemKey) &&
-            this.positionIsOnMapObjectsList(map.speedBoosts, itemKey)) {
-
-            return true;
-        }
-        return false;
     }
 }
