@@ -48,14 +48,14 @@ export class RacingGameService {
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
-
+/*
         const BALL1 = new Ball(0.5);
         BALL1.position.set(0, 0.001, -3);
         this.map.add(BALL1);
         const BALL2 = new Ball(0.5);
         BALL2.position.set(1.5, 0.001, -2);
         BALL2.velocity.set(-0.5, 0, -0.5);
-        this.map.add(BALL2);
+        this.map.add(BALL2);*/
 
         const wall1 = new Wall(10, 10);
         wall1.position.set(0, 0, -5);
@@ -67,7 +67,7 @@ export class RacingGameService {
         wall3.rotation.y = - Math.PI / 2;
         const wall4 = new Wall(10, 10);
         wall4.position.set(0, 0, 5);
-        this.map.add(wall1, wall2, wall3, wall4);
+        // this.map.add(wall1, wall2, wall3, wall4);
 
         this.physicEngine.start();
         this.startRendering();
@@ -79,24 +79,22 @@ export class RacingGameService {
         this.stopRendering();
     }
 
-    public set cameraRotation(rotation: Point) {
-        const ROTATION = this.renderer.CAMERA1.rotation;
+    public set carRotation(rotation: Point) {
+        const ROTATION = this.renderer.newBall.rotation;
         ROTATION.x += -Math.PI / 2 * rotation.y;
         if (Math.abs(ROTATION.x) > Math.PI / 2) {
             ROTATION.x = Math.sign(ROTATION.x) * Math.PI / 2;
         }
         ROTATION.y += -Math.PI * rotation.x;
         ROTATION.y %= 2 * Math.PI;
-        this.renderer.CAMERA2.rotation.y = ROTATION.y;
     }
 
-    public get cameraVelocity(): THREE.Vector3 {
-        return /*this.renderer.CAMERA1.velocity*/;
+    public get carVelocity(): THREE.Vector3 {
+        return this.renderer.newBall.velocity;
     }
 
-    public set cameraVelocity(value: THREE.Vector3) {
-        /* this.renderer.CAMERA1.velocity = value;
-        this.renderer.CAMERA2.orthographicView.velocity = value;*/
+    public set carVelocity(value: THREE.Vector3) {
+        this.renderer.newBall.velocity = value;
     }
 
     public renderGame(): void {

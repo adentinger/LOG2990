@@ -1,22 +1,27 @@
 import * as THREE from 'three';
+import { RacingGameRenderer } from './racing-game-rendering';
+import { IPhysicElement } from './physic/object';
+import { Seconds } from '../types';
+import { PhysicEngine } from './physic/engine';
 
 export class OrthographicCamera extends THREE.OrthographicCamera {
+    private static DISTANCE_TO_TARGET = 10;
 
-    public static readonly WIDTH: number = window.innerWidth;
-    public static readonly HEIGHT: number = window.innerHeight;
-    public static readonly ORTHO_HEIGTH = 10;
-    public static readonly ASPECT: number = OrthographicCamera.WIDTH / OrthographicCamera.HEIGHT;
-    public static readonly NEAR: number = 0.05;
-    public static readonly FAR: number = 500;
+    private static readonly WIDTH: number = window.innerWidth;
+    private static readonly HEIGHT: number = window.innerHeight;
+    private static readonly ORTHO_HEIGHT = 10;
+    private static readonly ASPECT: number = OrthographicCamera.WIDTH / OrthographicCamera.HEIGHT;
+    private static readonly NEAR: number = -OrthographicCamera.DISTANCE_TO_TARGET;
+    private static readonly FAR: number = 500;
 
     private target: THREE.Object3D;
 
     public constructor() {
         super(
-            -OrthographicCamera.ORTHO_HEIGTH / 2 * OrthographicCamera.ASPECT,
-            OrthographicCamera.ORTHO_HEIGTH / 2 * OrthographicCamera.ASPECT,
-            OrthographicCamera.ORTHO_HEIGTH / 2,
-            -OrthographicCamera.ORTHO_HEIGTH / 2,
+            -OrthographicCamera.ORTHO_HEIGHT / 2 * OrthographicCamera.ASPECT,
+            OrthographicCamera.ORTHO_HEIGHT / 2 * OrthographicCamera.ASPECT,
+            OrthographicCamera.ORTHO_HEIGHT / 2,
+            -OrthographicCamera.ORTHO_HEIGHT / 2,
             OrthographicCamera.NEAR,
             OrthographicCamera.FAR
         );
@@ -24,13 +29,16 @@ export class OrthographicCamera extends THREE.OrthographicCamera {
     }
 
     public setTarget(object: THREE.Object3D) {
-        object.add(this);
+        this.target = object;
     }
 
-    public setupOrthographicView(): void {
+    public updatePosition() {
+        this.position.copy(this.target.position).add(new THREE.Vector3(0, OrthographicCamera.DISTANCE_TO_TARGET, 0));
+    }
+
+    private setupOrthographicView(): void {
         this.rotation.order = 'YXZ';
-        this.position.set(0, 10, 0);
-        this.lookAt(new THREE.Vector3);
+        this.rotateX(-Math.PI / 2);
     }
 
 }

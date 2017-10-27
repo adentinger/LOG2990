@@ -2,12 +2,12 @@ import * as THREE from 'three';
 
 export class PerspectiveCamera extends THREE.PerspectiveCamera {
 
-    public static readonly WIDTH: number = window.innerWidth;
-    public static readonly HEIGHT: number = window.innerHeight;
-    public static readonly ASPECT: number = PerspectiveCamera.WIDTH / PerspectiveCamera.HEIGHT;
-    public static readonly NEAR: number = 0.05;
-    public static readonly FAR: number = 500;
-    public static readonly VIEW_ANGLE: number = 45;
+    private static readonly WIDTH: number = window.innerWidth;
+    private static readonly HEIGHT: number = window.innerHeight;
+    private static readonly ASPECT: number = PerspectiveCamera.WIDTH / PerspectiveCamera.HEIGHT;
+    private static readonly NEAR: number = 0.05;
+    private static readonly FAR: number = 300;
+    private static readonly VIEW_ANGLE: number = 45;
 
     private target: THREE.Object3D;
 

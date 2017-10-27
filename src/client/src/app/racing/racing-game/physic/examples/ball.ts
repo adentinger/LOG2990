@@ -10,7 +10,7 @@ export class Ball extends DynamicCollidableMesh {
         super();
         this.geometry = new THREE.SphereGeometry(radius, 20, 10);
         this.geometry.vertices.forEach((vertex, i, array) => {
-            vertex.add(new THREE.Vector3(0, radius, 0));
+            vertex.add(new THREE.Vector3(0, radius + 0.001, 0));
         });
         this.geometry.computeBoundingBox();
         this.boundingBox = this.geometry.boundingBox;

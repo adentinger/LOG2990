@@ -6,6 +6,7 @@ import { MovablePerspectiveCamera, MovableOrthographicCamera } from './physic/ex
 import { Ball } from './physic/examples/ball';
 import { OrthographicCamera } from './orthographic-camera';
 import { PerspectiveCamera } from './perspective-camera';
+import { Seconds } from '../types';
 
 export class RacingGameRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
@@ -16,8 +17,8 @@ export class RacingGameRenderer {
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
-    public readonly CAMERA1 = new PerspectiveCamera();
-    public readonly CAMERA2 = new OrthographicCamera();
+    public readonly CAMERA1 = new PerspectiveCamera;
+    public readonly CAMERA2 = new OrthographicCamera;
     public readonly cameraHelper: THREE.CameraHelper;
 
     public currentCamera: 0 | 1 = 0;
@@ -39,34 +40,31 @@ export class RacingGameRenderer {
         this.RENDERER = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
 
         this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
-        this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
+        this.SKYBOX = new Skybox(SkyboxMode.DAY);
         this.displayWorldRef = true;
 
         this.CAMERA1.add(this.SKYBOX);
-        this.SCENE.add(this.newBall);
-        this.SCENE.add(this.CAMERA1);
-        this.SCENE.add(this.CAMERA2);
         this.CAMERA1.setTarget(this.newBall);
         this.CAMERA2.setTarget(this.newBall);
+        // this.SCENE.add(this.CAMERA2);
+        this.SCENE.add(this.newBall);
         this.SCENE.add(this.SKYBOX.DIRECTIONAL);
-        // this.SCENE.add(this.SKYBOX.AMBIANT);
     }
 
-    public rotateBallRight(): void {
-        this.newBall.rotateOnAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 60);
+    public rotateBallRight(deltaTime: Seconds): void {
+        const ANGULAR_VELOCITY = -Math.PI;
+        this.newBall.rotateOnAxis(new THREE.Vector3(0, 1, 0), ANGULAR_VELOCITY * deltaTime);
     }
 
-    public rotateBallLeft(): void {
-        this.newBall.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI / 60);
-    }
-
-    public moveBall(): void {
-        this.newBall.translateZ(-100 / 60);
+    public rotateBallLeft(deltaTime: Seconds): void {
+        const ANGULAR_VELOCITY = Math.PI;
+        this.newBall.rotateOnAxis(new THREE.Vector3(0, 1, 0), ANGULAR_VELOCITY * deltaTime);
     }
 
     public render(): void {
         const screenSize = this.RENDERER.getSize();
         this.RENDERER.setScissorTest(true);
+        this.CAMERA2.updatePosition();
 
         if (this.currentCamera === 1) {
             this.SCENE.add(this.cameraHelper);

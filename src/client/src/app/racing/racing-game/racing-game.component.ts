@@ -53,7 +53,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         this.keyTimer = setInterval(() => {
             now = Date.now();
             const deltaTimeMS = now - last;
-            this.updateCameraVelocity(deltaTimeMS / 1000);
+            this.updateCarVelocity(deltaTimeMS / 1000);
             last = now;
         }, 1000 / RacingGameComponent.KEY_TIMER_FREQUENCY);
     }
@@ -75,37 +75,34 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private checkPointerLock() {
-        if (document.pointerLockElement !== this.racingGameCanvas.nativeElement) {
-            (<HTMLCanvasElement>this.racingGameCanvas.nativeElement).requestPointerLock();
-        }
+        // if (document.pointerLockElement !== this.racingGameCanvas.nativeElement) {
+        //     (<HTMLCanvasElement>this.racingGameCanvas.nativeElement).requestPointerLock();
+        // }
     }
 
-    private updateCameraVelocity(deltaTime: Seconds) {
-        const ACCELERATION = 7; // m/s^2
-        const DESIRED_SPEED = 5.0;
-        if (this.racingGame.renderer.CAMERA1) {
-            const rotation = this.racingGame.renderer.CAMERA1.rotation;
+    private updateCarVelocity(deltaTime: Seconds) {
+        const ACCELERATION = 10; // m/s^2
+        const DESIRED_SPEED = 3.0;
+        if (this.racingGame.renderer.newBall) {
+            const rotation = this.racingGame.renderer.newBall.rotation;
             const direction = new Vector3();
             if (this.pressedKeys.has('w')) {
-                // direction.add(new Vector3(0, 0, -1));
-                this.racingGame.renderer.moveBall();
+                direction.add(new Vector3(0, 0, -1));
             }
             if (this.pressedKeys.has('s')) {
-                // direction.add(new Vector3(0, 0, 1));
+                direction.add(new Vector3(0, 0, 1));
             }
             if (this.pressedKeys.has('d')) {
-                // direction.add(new Vector3(1, 0, 0));
-                this.racingGame.renderer.rotateBallRight();
+                this.racingGame.renderer.rotateBallRight(deltaTime);
             }
             if (this.pressedKeys.has('a')) {
-                // direction.add(new Vector3(-1, 0, 0));
-                this.racingGame.renderer.rotateBallLeft();
+                this.racingGame.renderer.rotateBallLeft(deltaTime);
             }
 
             const accelerationDirection = (direction).applyEuler(rotation).setY(0).normalize();
             const acceleration = accelerationDirection.multiplyScalar(ACCELERATION)
-                .multiplyScalar(DESIRED_SPEED - this.racingGame.cameraVelocity.length());
-            this.racingGame.cameraVelocity = this.racingGame.cameraVelocity
+                .multiplyScalar((DESIRED_SPEED - this.racingGame.carVelocity.length()) / DESIRED_SPEED);
+            this.racingGame.carVelocity
                 .addScaledVector(acceleration, deltaTime);
         }
     }
@@ -119,7 +116,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 e.movementY / this.windowHalfY
             );
             if (document.pointerLockElement === this.racingGameCanvas.nativeElement) {
-                this.racingGame.cameraRotation = ROTATION;
+                this.racingGame.carRotation = ROTATION;
             }
         }
     }

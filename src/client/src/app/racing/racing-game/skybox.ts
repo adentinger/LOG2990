@@ -90,7 +90,7 @@ export class Skybox extends PhysicMesh {
         }
 
         const CUBE =
-            new (class extends PhysicMesh {})(new THREE.CubeGeometry(300, 300, 300, 1, 1, 1),
+            new (class extends PhysicMesh {})(new THREE.CubeGeometry(500, 500, 500, 1, 1, 1),
                            Skybox.makeShader(texture));
 
         return CUBE;
