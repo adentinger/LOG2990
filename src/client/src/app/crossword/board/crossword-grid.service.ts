@@ -37,7 +37,7 @@ export class CrosswordGridService {
     }
 
     public getViewableGrid(): string[][] {
-        this.fill();
+        this.generateViewableGridTemplate();
         this.fillViewableGrid();
         return this.viewableGrid;
     }
@@ -91,19 +91,17 @@ export class CrosswordGridService {
         }
     }
 
-    public fill() {
-        this.viewableGrid = [
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
-        ];
+    /**
+     * Generate a viewable grid filled with zeroes (black squares)
+     */
+    private generateViewableGridTemplate() {
+        this.viewableGrid = [];
+        for (let i = 0; i < this.GRID_DIMENSION; i++) {
+            this.viewableGrid[i] = [];
+            for (let j = 0; j < this.GRID_DIMENSION; j++) {
+                this.viewableGrid[i][j] = this.BLACK_SQUARE;
+            }
+        }
     }
 
     private generateGridTemplate(): string[][] {
