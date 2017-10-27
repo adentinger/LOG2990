@@ -13,6 +13,7 @@ export class ItemGenerator {
     public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
         const MAX_AMOUNT_OF_ITEMS = 5;
         const currentArrayLength = itemArray.length;
+        this.generatePositions(map);
 
         if (currentArrayLength === 0) {
             const item = new constructor(this.allPositions[currentArrayLength]);
@@ -35,7 +36,7 @@ export class ItemGenerator {
         this.allPositions = [];
 
         const MAP_LENGTH = map.computeLength() - map.firstStretchLength();
-        const MAX_NUMBER_OF_ITEMS = 15;
+        const MAX_NUMBER_OF_ITEMS = 5;
         let newPosition: number;
 
         while (this.allPositions.length < MAX_NUMBER_OF_ITEMS) {
