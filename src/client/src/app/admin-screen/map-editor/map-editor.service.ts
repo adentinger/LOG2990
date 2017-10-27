@@ -11,6 +11,7 @@ import { Track } from '../../racing/track';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { ItemGenerator } from './item-generator';
+import { SpeedBoost } from './speed-boost';
 
 @Injectable()
 export class MapEditorService {
@@ -168,10 +169,27 @@ export class MapEditorService {
         return this.mapWidth > 0 && this.mapHeight > 0;
     }
 
-    public addPothole(): void {}
+    public addPothole(): void {
+        this.itemGenerator.addObstacle(Pothole, this.currentMap, this.currentMap.potholes);
+    }
 
-    public addPuddles(): void {}
+    public addPuddles(): void {
+        this.itemGenerator.addObstacle(Puddle, this.currentMap, this.currentMap.puddles);
+    }
 
-    public addSpeedBoosts(): void {}
+    public addSpeedBoosts(): void {
+        this.itemGenerator.addObstacle(SpeedBoost, this.currentMap, this.currentMap.speedBoosts);
+    }
 
+    public randomisePothole(): void {
+        this.itemGenerator.randomlyModifyObjectsTypePositions(Pothole, this.currentMap, this.currentMap.potholes);
+    }
+
+    public randomisePuddles(): void {
+        this.itemGenerator.randomlyModifyObjectsTypePositions(Puddle, this.currentMap, this.currentMap.puddles);
+    }
+
+    public randomiseSpeedBoosts(): void {
+        this.itemGenerator.randomlyModifyObjectsTypePositions(SpeedBoost, this.currentMap, this.currentMap.speedBoosts);
+    }
 }

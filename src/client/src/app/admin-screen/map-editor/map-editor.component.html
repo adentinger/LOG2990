@@ -43,6 +43,11 @@
               <button (click)="puddles()" [disabled]="!isMapValid">Puddle</button>
               <button (click)="speedBoosts()" [disabled]="!isMapValid">Speed Boost</button>
             </td>
+            <td>
+              <button (click)="randomisePotholes()" [disabled]="!isMapValid">Randomise Potholes</button>
+              <button (click)="randomisePuddles()" [disabled]="!isMapValid">Randomise Puddle</button>
+              <button (click)="randomiseSpeedBoosts()" [disabled]="!isMapValid">Randomise Speed Boost</button>
+            </td>
           </tr>
         </tbody>
       </table>

@@ -3,6 +3,7 @@ import { ItemGenerator } from './item-generator';
 import { MockMaps } from './mock-maps';
 import { Pothole } from './pothole';
 import { SpeedBoost } from './speed-boost';
+import { Point } from '../../../../../common/src/math/point';
 
 describe('Item generator', () => {
 
@@ -100,7 +101,7 @@ describe('Item generator', () => {
 
     });
 
-    it('position on map', () => {
+    it('should verfy is object position is on map', () => {
         const map = mockMaps.functionalMap1();
 
         // for (let i = 0; i < map.potholes.length; i++) {
@@ -116,6 +117,14 @@ describe('Item generator', () => {
         expect(itemGenerator.positionIsOnMap(map, positiontExistOnPotHoles)).toBeTruthy();
         expect(itemGenerator.positionIsOnMap(map, positiontExistOnPuddle)).toBeTruthy();
         expect(itemGenerator.positionIsOnMap(map, positiontExistOnSpeedBooster)).toBeTruthy();
+    });
+
+    it('should calculate item coordinates', () => {
+        const map = mockMaps.functionalMap1();
+        const point = new Point(5.75736, 4.24264);
+        expect(itemGenerator.itemCoordinates(map, map.speedBoosts[0])).toEqual(new Point(1, 0));
+        expect(itemGenerator.itemCoordinates(map, map.speedBoosts[2]).x).toBeCloseTo(point.x);
+        expect(itemGenerator.itemCoordinates(map, map.speedBoosts[2]).y).toBeCloseTo(point.y);
     });
 
 });

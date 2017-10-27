@@ -2,6 +2,8 @@ import { Map } from './map';
 import { Item } from './item';
 import { Constructor } from '../../../../../common/src/utils';
 import { Interval } from '../../../../../common/src/math/interval';
+import { Point } from '../../../../../common/src/math/point';
+import { Vector } from '../../../../../common/src/math/vector';
 
 export class ItemGenerator {
 
@@ -111,4 +113,32 @@ export class ItemGenerator {
             this.positionIsOnMapObjectsList(map.speedBoosts, position));
     }
 
+    public itemCoordinates(map: Map, item: Item): Point {
+        let point: Point;
+        let lastMapCoordinates: Point;
+        let nextMapCoordinates: Point;
+        let vector: Vector;
+        const POINTS = map.path.points.slice();
+        let length = 0;
+
+        for (let i = 0; i < POINTS.length; i++) {
+            vector = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
+            if ((length + vector.norm()) > item.position) {
+                lastMapCoordinates = POINTS[i];
+                nextMapCoordinates = POINTS[i + 1];
+                break;
+            }
+            else {
+                length += vector.norm();
+            }
+        }
+
+        const itemPositionMinusLastPointPosition = item.position - length;
+        point = new Point(vector.normalized().times(itemPositionMinusLastPointPosition).x,
+                        vector.normalized().times(itemPositionMinusLastPointPosition).y);
+
+        point.x += lastMapCoordinates.x;
+        point.y += lastMapCoordinates.y;
+        return point;
+    }
 }
