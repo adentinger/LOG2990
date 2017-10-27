@@ -16,19 +16,28 @@ export class BoardComponent implements OnInit {
     public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
+
+    public get crosswordGrid() {
+        return this.crosswordGridService.crosswordGrid;
+        // return this.crosswordGridService.viewableGrid;
+    }
+
+    public set crosswordGrid(value: string[][]) {
+        this.crosswordGridService.crosswordGrid = value;
+    }
+
+    constructor(private crosswordGridService: CrosswordGridService,
+        private selectionService: SelectionService,
+        private definitionsService: DefinitionsService) { }
+
     public onSelect(indexDefinition: number): void {
         this.indexOfDefinition = indexDefinition;
         if (this.indexOfDefinition !== null) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
         }
-
         this.crosswordGridService.clearGridOfUselessLetters();
     }
-
-    constructor(private crosswordGridService: CrosswordGridService,
-        private selectionService: SelectionService,
-        private definitionsService: DefinitionsService) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
@@ -46,16 +55,8 @@ export class BoardComponent implements OnInit {
             const word = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
             this.crosswordGridService.onInputChange(input, word);
         }
-        console.log(this.crosswordGridService.getViewableGrid());
     }
 
-    public get crosswordGrid() {
-        return this.crosswordGridService.crosswordGrid;
-    }
-
-    public set crosswordGrid(value: string[][]) {
-        this.crosswordGridService.crosswordGrid = value;
-    }
 
     public checkIfHighlighted(j: number, i: number): boolean {
         if (this.selectionService.isCurrentlySelected === false) {
