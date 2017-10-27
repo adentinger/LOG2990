@@ -43,7 +43,7 @@ export class ItemGenerator {
             newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
 
             for (let j = 0; j < this.allPositions.length; j++) {
-                if (newPosition === this.allPositions[j]) {
+                if (newPosition === this.allPositions[j] || this.positionIsOnMap(map, newPosition)) {
                     isNotUsed = false;
                 }
             }
@@ -81,5 +81,25 @@ export class ItemGenerator {
                 itemArray.push(new constructor(newPosition));
             }
         }
+    }
+
+    public positionIsOnMapObjectsList(itemArray: Item[], position: number) {
+        for (let i = 0; i < itemArray.length; i++) {
+            if (itemArray[i].position === position) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public positionIsOnMap(map: Map, position: number) {
+        if (
+            this.positionIsOnMapObjectsList(map.potholes, position) ||
+            this.positionIsOnMapObjectsList(map.puddles, position) ||
+            this.positionIsOnMapObjectsList(map.speedBoosts, position)) {
+
+            return true;
+        }
+        return false;
     }
 }

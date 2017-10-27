@@ -32,6 +32,7 @@ describe('Item generator', () => {
         itemGenerator.generatePositions(map1);
         for (let i = 0; i < itemGenerator.positions.length; i++) {
             for (let j = i + 1; j < itemGenerator.positions.length; j++) {
+                console.log(itemGenerator.positions[i] + '->' + itemGenerator.positions[j]);
                 expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
             }
         }
@@ -92,6 +93,24 @@ describe('Item generator', () => {
         }
         expect(duplicate).toBeFalsy();
 
+    });
+
+    it('position on map', () => {
+        const map = mockMaps.functionalMap1();
+
+        for (let i = 0; i < map.potholes.length; i++) {
+            console.log(map.potholes[i].position);
+        }
+
+        const positionDoNotExist = 2;
+        const positiontExistOnPotHoles = 11;
+        const positiontExistOnPuddle = 15;
+        const positiontExistOnSpeedBooster = 1;
+
+        expect(itemGenerator.positionIsOnMap(map, positionDoNotExist)).toBeFalsy();
+        expect(itemGenerator.positionIsOnMap(map, positiontExistOnPotHoles)).toBeTruthy();
+        expect(itemGenerator.positionIsOnMap(map, positiontExistOnPuddle)).toBeTruthy();
+        expect(itemGenerator.positionIsOnMap(map, positiontExistOnSpeedBooster)).toBeTruthy();
     });
 
 });
