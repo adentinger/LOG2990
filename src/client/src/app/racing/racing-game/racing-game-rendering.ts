@@ -7,8 +7,8 @@ import { MovablePerspectiveCamera, MovableOrthographicCamera } from './physic/ex
 export class RacingGameRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
-    public readonly WIDTH: number = window.innerWidth;
-    public readonly HEIGHT: number = window.innerHeight;
+    public readonly WIDTH: number = 300; // px
+    public readonly HEIGHT: number = 400; // px
 
     public readonly ORTHO_HEIGTH = 10;
 
@@ -107,7 +107,7 @@ export class RacingGameRenderer {
 
         this.CAMERA2.rotation.order = 'YXZ';
         this.CAMERA2.position.set(0, 10, 0);
-        this.CAMERA2.lookAt(new THREE.Vector3());
+        this.CAMERA2.rotation.set(-Math.PI / 2, 0, 0);
     }
 
 }
