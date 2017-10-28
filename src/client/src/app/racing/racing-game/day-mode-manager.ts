@@ -5,11 +5,7 @@ export enum DayMode {
 
 export class DayModeManager {
 
-    private mode: DayMode;
-
-    public setMode(mode: DayMode): void {
-
-    }
+    public mode: DayMode = DayMode.DAY;
 
     public updateScene(scene: THREE.Scene): void {
 
