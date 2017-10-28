@@ -1,14 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
-import { SkyboxMode } from './skybox';
-import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MapService } from '../services/map.service';
-import { Vector3 } from 'three';
+import { UIInputs, KEYDOWN_EVENT } from './ui-input.service';
 import { PhysicEngine } from './physic/engine';
+
 import { Seconds } from '../types';
+import { Vector3 } from 'three';
+import { Point } from '../../../../../common/src/math/point';
+
+import { SkyboxMode } from './skybox';
+import { EventManager, EventListener } from '../../event-manager.service';
 
 @Component({
     selector: 'app-racing-game',
@@ -18,56 +22,42 @@ import { Seconds } from '../types';
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
-    private static readonly KEY_TIMER_FREQUENCY = 60;
 
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
+    @ViewChild('userInputs')
+    private uiInputs: UIInputs;
 
     private windowHalfX = window.innerWidth * 0.5;
     private windowHalfY = window.innerHeight * 0.5 - RacingGameComponent.HEADER_HEIGHT * 0.5;
 
-    private pressedKeys: Set<string> = new Set();
-    private keyTimer: any = null;
-
-    constructor(private racingGame: RacingGameService, private route: ActivatedRoute, private mapService: MapService) { }
+    constructor(private racingGame: RacingGameService,
+        private route: ActivatedRoute,
+        private mapService: MapService,
+        private eventManager: EventManager) {
+        this.eventManager.registerClass(this);
+    }
 
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
             this.mapService.getByName(mapName)
                 .then(map => {
-                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map);
+                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs);
                     this.racingGame.resizeCanvas(this.windowHalfX * 2, this.windowHalfY * 2);
-                    this.startKeyTimer();
                 });
         });
         this.checkPointerLock();
     }
 
     public ngOnDestroy() {
-        this.stopKeyTimer();
         this.racingGame.finalize();
-    }
-
-    private startKeyTimer() {
-        let now = Date.now(), last = now; // ms
-        this.keyTimer = setInterval(() => {
-            now = Date.now();
-            const deltaTimeMS = now - last;
-            this.updateCameraVelocity(deltaTimeMS / 1000);
-            last = now;
-        }, 1000 / RacingGameComponent.KEY_TIMER_FREQUENCY);
-    }
-
-    private stopKeyTimer() {
-        clearInterval(this.keyTimer);
-        this.keyTimer = null;
     }
 
     @HostListener('window:resize', ['$event'])
     // tslint:disable-next-line:no-unused-variable
     private onResize() {
-        const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
-        const width = (window).innerWidth;
+        const height = window.innerHeight - RacingGameComponent.HEADER_HEIGHT;
+        const width = window.innerWidth;
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;
 
@@ -80,43 +70,17 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateCameraVelocity(deltaTime: Seconds) {
-        const ACCELERATION = 7; // m/s^2
-        const DESIRED_SPEED = 5.0;
-        if (this.racingGame.renderer.CAMERA1) {
-            const rotation = this.racingGame.renderer.CAMERA1.rotation;
-            const direction = new Vector3();
-            if (this.pressedKeys.has('w')) {
-                direction.add(new Vector3(0, 0, -1));
-            }
-            if (this.pressedKeys.has('s')) {
-                direction.add(new Vector3(0, 0, 1));
-            }
-            if (this.pressedKeys.has('d')) {
-                direction.add(new Vector3(1, 0, 0));
-            }
-            if (this.pressedKeys.has('a')) {
-                direction.add(new Vector3(-1, 0, 0));
-            }
-
-            const accelerationDirection = (direction).applyEuler(rotation).setY(0).normalize();
-            const acceleration = accelerationDirection.multiplyScalar(ACCELERATION)
-                .multiplyScalar(DESIRED_SPEED - this.racingGame.cameraVelocity.length());
-            this.racingGame.cameraVelocity = this.racingGame.cameraVelocity
-                .addScaledVector(acceleration, deltaTime);
-        }
-    }
 
     @HostListener('mousemove', ['$event'])
     // tslint:disable-next-line:no-unused-variable
     private onMouseMove(e: MouseEvent) {
-        if (this.racingGame.renderer && this.racingGame.renderer.CAMERA1) {
-            const ROTATION = new Point(
-                e.movementX / this.windowHalfX,
-                e.movementY / this.windowHalfY
-            );
-            if (document.pointerLockElement === this.racingGameCanvas.nativeElement) {
-                this.racingGame.cameraRotation = ROTATION;
+        if (document.pointerLockElement === this.racingGameCanvas.nativeElement) {
+            if (this.racingGame.renderer && this.racingGame.renderer.CAMERA1) {
+                const rotation = new Point(
+                    e.movementX / this.windowHalfX,
+                    e.movementY / this.windowHalfY
+                );
+                this.racingGame.cameraRotation = rotation;
             }
         }
     }
@@ -127,15 +91,13 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         this.checkPointerLock();
     }
 
-    @HostListener('window:keydown', ['$event'])
+    @EventListener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
-    private onKeyDown(event: KeyboardEvent) {
-        this.pressedKeys.add(event.key.toLowerCase());
-
-        if (this.pressedKeys.has('c')) {
+    private onKeyDown() {
+        if (this.uiInputs.isKeyPressed('c')) {
             this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
         }
-        if (this.pressedKeys.has('n')) {
+        if (this.uiInputs.isKeyPressed('n')) {
             const SKYBOX = this.racingGame.renderer.SKYBOX;
             switch (SKYBOX.mode) {
                 case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
@@ -144,22 +106,19 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (!(this.pressedKeys.has('i') && this.pressedKeys.has('control') && this.pressedKeys.has('shift')) &&
-            !(this.pressedKeys.has('f5'))) { // Allows for Ctrl+Shift+I and F5
+        const isAllowedKeyCombination =
+            this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
+            this.uiInputs.isKeyPressed('f5');
+
+        if (!isAllowedKeyCombination) {
             return false; // Prevent Default behaviors
         }
-    }
-
-    @HostListener('window:keyup', ['$event'])
-    // tslint:disable-next-line:no-unused-variable
-    private onKeyUp(event: KeyboardEvent) {
-        this.pressedKeys.delete(event.key.toLowerCase());
     }
 
     @HostListener('window:contextmenu', ['$event'])
     // tslint:disable-next-line:no-unused-variable
     private preventEvent(event: Event) {
-        event.preventDefault();
+        return false; // Prevent Default behaviors
     }
 
 }

@@ -4,6 +4,7 @@ import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
 import { Point, Line } from '../../../../../../common/src/math';
+import { EventManager } from '../../../event-manager.service';
 
 @Injectable()
 export class PhysicEngine {
@@ -15,7 +16,7 @@ export class PhysicEngine {
 
     public currentBox: THREE.Box3 = new THREE.Box3();
 
-    constructor() { }
+    constructor(private eventManager: EventManager) { }
 
     public setRoot(root: THREE.Object3D) {
         this.root = root;
@@ -111,8 +112,11 @@ export class PhysicEngine {
 
     private turnBoundingLines(lines: Line[], collidable: Collidable): void {
         for (const line of lines) {
-            line.origin
         }
+    }
+
+    private getRotationMatrixAroundPoint(angle: number, point: THREE.Vector2): THREE.Matrix3 {
+        return null;
     }
 
     private getChildren(object: THREE.Object3D): THREE.Object3D[] {
@@ -127,7 +131,10 @@ export class PhysicEngine {
     }
 
     private updateWorld(deltaTime: Seconds) {
+        const BEFORE_PHYSIC_UPDATE = 'beforephysicupdate', AFTER_PHYSIC_UPDATE = 'afterphysicupdate';
+        this.eventManager.fireEvent(BEFORE_PHYSIC_UPDATE, {name: BEFORE_PHYSIC_UPDATE, data: {}});
         const objects = this.getAllPhysicObjects();
         objects.forEach((object) => object.update(this, deltaTime));
+        this.eventManager.fireEvent(AFTER_PHYSIC_UPDATE, {name: AFTER_PHYSIC_UPDATE, data: {}});
     }
 }

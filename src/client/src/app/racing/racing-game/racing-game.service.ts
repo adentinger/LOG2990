@@ -9,6 +9,7 @@ import { Ball } from './physic/examples/ball';
 import * as THREE from 'three';
 import { CollidableMesh } from './physic/collidable';
 import { Meters } from '../types';
+import { UIInputs } from './ui-input.service';
 
 class Wall extends CollidableMesh {
     constructor (width: Meters, heigth: Meters) {
@@ -25,7 +26,6 @@ export class RacingGameService {
     public renderer: RacingGameRenderer;
     private animationRequestId = 0;
     private isRendering = false;
-    private velocityTimer: any = null;
 
     private map: RenderableMap;
 
@@ -42,9 +42,12 @@ export class RacingGameService {
         return gameCreated;
     }
 
-    public initialise(canvas: HTMLCanvasElement, map: SerializedMap): void {
+    public initialise(canvas: HTMLCanvasElement, map: SerializedMap, userInputs: UIInputs): void {
         this.newRacingGame(canvas);
         this.physicEngine.setRoot(this.renderer.SCENE);
+
+        this.renderer.CAMERA1.setUIInput(userInputs);
+        this.renderer.CAMERA2.setUIInput(userInputs);
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
@@ -74,7 +77,6 @@ export class RacingGameService {
     }
 
     public finalize() {
-        clearInterval(this.velocityTimer);
         this.physicEngine.stop();
         this.stopRendering();
     }
