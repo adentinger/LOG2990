@@ -6,6 +6,7 @@ import { Car } from './three-objects/car/car';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { DayModeManager } from './day-mode/day-mode-manager';
 import { DayMode } from './day-mode/day-mode';
+import { Lighting } from './three-objects/lighting/lighting';
 
 export class RacingGameRendering {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
@@ -26,6 +27,7 @@ export class RacingGameRendering {
     public readonly SCENE: THREE.Scene;
     public readonly CAMERA: THREE.PerspectiveCamera;
     public readonly RENDERER: THREE.WebGLRenderer;
+    public readonly LIGHTING = new Lighting();
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
 
@@ -54,20 +56,8 @@ export class RacingGameRendering {
         this.CAMERA.add(this.SKYBOX);
         this.SCENE.add(this.PLANE);
         this.SCENE.add(this.CAMERA);
+        this.SCENE.add(this.LIGHTING);
 
-        const LIGHTS = [
-            new THREE.PointLight(0xffffff, 0.3),
-            new THREE.PointLight(0xffffff, 0.3),
-            new THREE.PointLight(0xffffff, 0.3)
-        ];
-        let i = 0;
-        [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
-            = [10, 50, 100];
-        [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
-            = [-10, 50, -100];
-        [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i++].position.z]
-            = [-100, 50, 10];
-        this.SCENE.add(...LIGHTS);
         const CAR = new Car(new CarColorGreen());
         setInterval(() => CAR.position.setZ(CAR.position.z + 0.01), 1000 / 60);
         this.SCENE.add(CAR);
