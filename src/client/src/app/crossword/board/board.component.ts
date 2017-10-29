@@ -17,8 +17,9 @@ import { Subscription } from 'rxjs/Subscription';
 export class BoardComponent implements OnInit, OnDestroy {
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
-    public highlightGrid = new HighlightGrid();
-    public selectionSubscription: Subscription;
+
+    private highlightGrid = new HighlightGrid();
+    private selectionSubscription: Subscription;
 
     constructor(private crosswordGridService: CrosswordGridService,
                 private selectionService: SelectionService) {
@@ -43,6 +44,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     private onSelect(selected: GridWord): void {
         this.highlightGrid = new HighlightGrid(selected);
+        console.log(this.highlightGrid);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
@@ -65,6 +67,10 @@ export class BoardComponent implements OnInit, OnDestroy {
             );
             this.crosswordGridService.userInput(INPUT, WORD);
         }
+    }
+
+    public isHighlighted(row: number, column: number): boolean {
+        return this.highlightGrid.isSelected(row, column);
     }
 
 }
