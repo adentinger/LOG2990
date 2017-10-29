@@ -1,18 +1,18 @@
 import * as THREE from 'three';
-import { PhysicEngine } from './engine';
+import { PhysicUtils } from './physic-utils';
 import { Seconds } from '../../types';
 
 export interface IPhysicElement extends THREE.Object3D {
     position: THREE.Vector3;
     rotation: THREE.Euler;
 
-    update(engine: PhysicEngine, deltaTime: Seconds): void;
+    update(engine: PhysicUtils, deltaTime: Seconds): void;
 }
 
 export abstract class PhysicMesh extends THREE.Mesh implements IPhysicElement {
     public castShadow = true;
     public receiveShadow = true;
-    public update(engine: PhysicEngine, deltaTime: Seconds) { }
+    public update(engine: PhysicUtils, deltaTime: Seconds) { }
 }
 
 export function isPhysicElement(object: THREE.Object3D): object is IPhysicElement {

@@ -1,6 +1,6 @@
 import { IPhysicElement, PhysicMesh } from './object';
 import * as THREE from 'three';
-import { PhysicEngine } from './engine';
+import { PhysicUtils } from './engine';
 import { Seconds } from '../../types';
 
 export interface DynamicPhysicElement extends IPhysicElement {
@@ -19,7 +19,7 @@ export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhy
     public velocity: THREE.Vector3 = new THREE.Vector3();
     public angularVelocity: THREE.Vector3 = new THREE.Vector3();
 
-    public update(engine: PhysicEngine, deltaTime: Seconds): void {
+    public update(engine: PhysicUtils, deltaTime: Seconds): void {
         super.update(engine, deltaTime);
         this.updateVelocity(deltaTime);
         this.updateAngularVelocity(deltaTime);

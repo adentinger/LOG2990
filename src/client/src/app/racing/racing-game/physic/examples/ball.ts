@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { DynamicCollidableMesh } from '../dynamic-collidable';
 import { Kilograms, Seconds } from '../../../types';
 import { UIInputs } from '../../ui-input.service';
-import { PhysicEngine } from '../engine';
+import { PhysicUtils } from '../engine';
 
 const FRICTION = 10; // m/s^2
 const ACCELERATION = 20; // m/s^2
@@ -33,7 +33,7 @@ export class Ball extends DynamicCollidableMesh {
         this.material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
     }
 
-    public update(engine: PhysicEngine, deltaTime: Seconds) {
+    public update(engine: PhysicUtils, deltaTime: Seconds) {
         this.applyUserInputs(deltaTime);
         super.update(engine, deltaTime);
     }

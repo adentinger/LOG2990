@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { DynamicPhysicElement, DynamicPhysicMesh } from '../dynamic-object';
 import { IPhysicElement } from '../object';
-import { PhysicEngine } from '../engine';
+import { PhysicUtils } from '../engine';
 import { Seconds } from '../../../types';
 import { UIInputs } from '../../ui-input.service';
 
@@ -25,7 +25,7 @@ export class MovableOrthographicCamera extends THREE.OrthographicCamera implemen
     public velocity = new THREE.Vector3();
     public angularVelocity = new THREE.Vector3();
 
-    public update(engine: PhysicEngine, deltaTime: Seconds): void {
+    public update(engine: PhysicUtils, deltaTime: Seconds): void {
         this.applyUserInputs(deltaTime);
         DynamicPhysicMesh.prototype.update.call(this, engine, deltaTime);
     }
@@ -107,7 +107,7 @@ export class MovablePerspectiveCamera extends THREE.PerspectiveCamera implements
     public velocity = new THREE.Vector3();
     public angularVelocity = new THREE.Vector3();
 
-    public update(engine: PhysicEngine, deltaTime: Seconds): void {
+    public update(engine: PhysicUtils, deltaTime: Seconds): void {
         this.applyUserInputs(deltaTime);
         DynamicPhysicMesh.prototype.update.call(this, engine, deltaTime);
     }
