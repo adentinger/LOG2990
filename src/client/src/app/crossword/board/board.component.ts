@@ -16,6 +16,13 @@ export class BoardComponent implements OnInit {
     public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
+    constructor(private crosswordGridService: CrosswordGridService,
+        private selectionService: SelectionService,
+        private definitionsService: DefinitionsService) { }
+
+    public ngOnInit(): void {
+        this.crosswordGrid = this.crosswordGridService.getViewableGrid();
+    }
 
     public get crosswordGrid() {
         return this.crosswordGridService.crosswordGrid;
@@ -25,10 +32,6 @@ export class BoardComponent implements OnInit {
         this.crosswordGridService.crosswordGrid = value;
     }
 
-    constructor(private crosswordGridService: CrosswordGridService,
-        private selectionService: SelectionService,
-        private definitionsService: DefinitionsService) { }
-
     public onSelect(indexDefinition: number): void {
         this.indexOfDefinition = indexDefinition;
         if (this.indexOfDefinition !== null) {
@@ -36,10 +39,6 @@ export class BoardComponent implements OnInit {
             this.inputBuffer.nativeElement.value = '';
         }
         this.crosswordGridService.clearGridOfUselessLetters();
-    }
-
-    public ngOnInit(): void {
-        this.crosswordGrid = this.crosswordGridService.getViewableGrid();
     }
 
     public onChange(inputValue) {
