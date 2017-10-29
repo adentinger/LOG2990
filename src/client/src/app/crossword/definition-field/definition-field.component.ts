@@ -37,20 +37,15 @@ export class DefinitionFieldComponent {
         return this.definitionService.answers;
     }
 
-    public get selectedDefinitionIndex(): number {
-        const SELECTION = this.selectionService.selectionValue;
-        return SELECTION !== SelectionService.NO_SELECTION ? SELECTION.id : -1;
-    }
-
-    public onDefinitionClicked(definition: Definition): void {
+    public onDefinitionClicked(index: number, direction: Direction): void {
         let selectedGridWord;
-        if (definition.direction === Direction.horizontal) {
+        if (direction === Direction.horizontal) {
             selectedGridWord =
-                this.crosswordGridService.horizontalGridWords.get(definition.index);
+                this.crosswordGridService.horizontalGridWords.get(index);
         }
         else {
             selectedGridWord =
-                this.crosswordGridService.verticalGridWords.get(definition.index);
+                this.crosswordGridService.verticalGridWords.get(index);
         }
         this.selectionService.selection.next(selectedGridWord);
     }
@@ -59,8 +54,10 @@ export class DefinitionFieldComponent {
         this.selectionService.selection.next(SelectionService.NO_SELECTION);
     }
 
-    public checkIfSelected(definition: Definition): boolean {
-        return this.selectionService.isDefinitionSelected(definition);
+    public checkIfSelected(index: number, direction: Direction): boolean {
+        return this.selectionService.isDefinitionSelected(
+            new Definition(index, direction, '')
+        );
     }
 
 }
