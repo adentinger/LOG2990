@@ -15,6 +15,7 @@ import '../../../../../common/src/crossword/packets/grid-word.parser';
 
 @Injectable()
 export class CrosswordGridService {
+
     private readonly BLACK_SQUARE = '0';
     private readonly GRID_DIMENSION = 10;
 
@@ -167,4 +168,5 @@ export class CrosswordGridService {
         console.log('new gridword received from server: ' + JSON.stringify(event.value.gridword));
         // send change to grid
     }
+
 }
