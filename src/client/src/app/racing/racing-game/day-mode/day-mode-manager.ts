@@ -11,17 +11,17 @@ export class DayModeManager {
 
     public updateScene(scene: THREE.Scene): void {
 
-        const UPDATE_OBJECT = (obj: THREE.Object3D) => {
-            obj.children.forEach((child) => {
-                if (isDayModeNotifiable(child)) {
-                    const DAY_MODE_NOTIFIABLE_OBJECT: DayModeNotifiable = child;
-                    DAY_MODE_NOTIFIABLE_OBJECT.dayModeChanged(this.mode);
-                }
-                UPDATE_OBJECT(child);
-            });
-        };
+        this.updateRecursively(scene);
 
-        UPDATE_OBJECT(scene);
+    }
+
+    private updateRecursively(obj: THREE.Object3D) {
+
+        if (isDayModeNotifiable(obj)) {
+            obj.dayModeChanged(this.mode);
+        }
+
+        obj.children.forEach(this.updateRecursively, this);
 
     }
 
