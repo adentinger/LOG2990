@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DefinitionsService } from './definitions.service';
+import { DefinitionsService, Definitions, Answers } from './definitions.service';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGridService } from '../board/crossword-grid.service';
 import { SelectionService } from '../selection.service';
@@ -29,20 +29,17 @@ export class DefinitionFieldComponent {
                 private crosswordGridService: CrosswordGridService) {
     }
 
-    public get horizontalDefinitions(): Definition[] {
-        return <Definition[]>Array.from(this.definitionService.horizontalDefinitions.values());
+    public get definitions(): Definitions {
+        return this.definitionService.definitions;
     }
 
-    public get verticalDefinitions(): Definition[] {
-        return <Definition[]>Array.from(this.definitionService.verticalDefinitions.values());
-    }
-
-    public get answers(): string[] {
+    public get answers(): Answers {
         return this.definitionService.answers;
     }
 
     public get selectedDefinitionIndex(): number {
-        return this.selectionService.selectionValue.id;
+        const SELECTION = this.selectionService.selectionValue;
+        return SELECTION !== SelectionService.NO_SELECTION ? SELECTION.id : -1;
     }
 
     public onDefinitionClicked(definition: Definition): void {

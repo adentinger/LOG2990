@@ -10,24 +10,46 @@ import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 
+export interface Answers {
+    horizontal: string[];
+    vertical: string[];
+}
+
+export interface Definitions {
+    horizontal: Definition[];
+    vertical: Definition[];
+}
+
 /**
  * Contains the crossword's definitions, and the answers if cheat mode.
  */
 @Injectable()
 export class DefinitionsService {
 
-    public horizontalDefinitions: Map<number, Definition> = new Map();
-    public verticalDefinitions: Map<number, Definition> = new Map();
-    private answersInternal: string[];
+    private horizontalDefinitions: Map<number, Definition> = new Map();
+    private verticalDefinitions: Map<number, Definition> = new Map();
+    private horizontalAnswers: string[] = [];
+    private verticalAnswers: string[] = [];
 
     constructor(private packetManager: PacketManagerClient) {
 
         registerHandlers(this, this.packetManager);
-        this.answersInternal = ['a', 'b', 'b', 'c', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'b', 'b', 'c', 'a', 'b'];
+        this.horizontalAnswers = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+        this.verticalAnswers = ['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'];
     }
 
-    public get answers(): string[] {
-        return this.answersInternal;
+    public get answers(): Answers {
+        return {
+            horizontal: this.horizontalAnswers.slice(),
+            vertical: this.verticalAnswers.slice()
+        };
+    }
+
+    public get definitions(): Definitions {
+        return {
+            horizontal: <Definition[]>Array.from(this.horizontalDefinitions.values()),
+            vertical: <Definition[]>Array.from(this.verticalDefinitions.values())
+        };
     }
 
     @PacketHandler(GameDefinitionPacket)
