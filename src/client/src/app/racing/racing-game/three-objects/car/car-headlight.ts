@@ -11,13 +11,13 @@ interface GeneralOptions {
     decay: number;
 }
 
-interface DayModeOption {
+export interface CarHeadlightDayModeOptions {
     intensity: number;
 }
 
 interface DayModeOptions {
-    day:   DayModeOption;
-    night: DayModeOption;
+    day:   CarHeadlightDayModeOptions;
+    night: CarHeadlightDayModeOptions;
 }
 
 export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
