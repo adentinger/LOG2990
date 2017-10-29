@@ -2,20 +2,11 @@ import * as THREE from 'three';
 
 import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
+import { CarHeadlight } from './car-headlight';
 
 export interface CarLights {
     headlightLeft: THREE.Light;
     headlightRight: THREE.Light;
-}
-
-interface CarLightOptions {
-    color: number;
-    intensity: number;
-    distance: number;
-    angle: number;
-    exponent: number;
-    decay: number;
-    headlightPositions: THREE.Vector3[];
 }
 
 export class Car extends THREE.Mesh {
@@ -24,18 +15,10 @@ export class Car extends THREE.Mesh {
     private static readonly BASE_PATH = 'assets/racing/car_model/';
     private static readonly FILE_EXTENSION = '.json';
 
-    private static readonly HEADLIGHT_OPTIONS: CarLightOptions = {
-        color: 0xfbf2b5,
-        intensity: 1,
-        distance: 10,
-        angle: Math.PI / 4,
-        exponent: 0.6,
-        decay: 1.3,
-        headlightPositions: [
-            new THREE.Vector3(-0.56077, 0.63412, -2.75),
-            new THREE.Vector3( 0.56077, 0.63412, -2.75)
-        ]
-    };
+    private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
+        new THREE.Vector3(-0.56077, 0.63412, -2.75),
+        new THREE.Vector3( 0.56077, 0.63412, -2.75)
+    ];
 
     private logger = Logger.getLogger('Car');
     private lights: CarLights;
@@ -107,15 +90,8 @@ export class Car extends THREE.Mesh {
     private addLights(): void {
         const HEADLIGHTS = [];
         const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, -1);
-        Car.HEADLIGHT_OPTIONS.headlightPositions.forEach((headlightPosition) => {
-            const HEADLIGHT = new THREE.SpotLight(
-                Car.HEADLIGHT_OPTIONS.color,
-                Car.HEADLIGHT_OPTIONS.intensity,
-                Car.HEADLIGHT_OPTIONS.distance,
-                Car.HEADLIGHT_OPTIONS.angle,
-                Car.HEADLIGHT_OPTIONS.exponent,
-                Car.HEADLIGHT_OPTIONS.decay
-            );
+        Car.HEADLIGHT_POSITIONS.forEach((headlightPosition) => {
+            const HEADLIGHT = new CarHeadlight();
             HEADLIGHT.position.copy(headlightPosition);
             HEADLIGHT.target.position.copy(
                 headlightPosition.clone().add(HEADLIGHT_FRONT_DIRECTION)
