@@ -29,16 +29,16 @@ export class DefinitionFieldComponent implements OnInit {
         this.selectedDefinition = definitionService.internalSelectedDefinition;
     }
 
+    public ngOnInit(): void {
+        this.answers = this.definitionService.getAnswers();
+    }
+
     public get horizontalDefinitions(): Definition[] {
         return <Definition[]>Array.from(this.definitionService.horizontalDefinitions.values());
     }
 
     public get verticalDefinitions(): Definition[] {
         return <Definition[]>Array.from(this.definitionService.verticalDefinitions.values());
-    }
-
-    public ngOnInit(): void {
-        this.answers = this.definitionService.getAnswers();
     }
 
     public get selectedDefinitionId() {
