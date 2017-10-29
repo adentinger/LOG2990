@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+
 import { SelectedWord } from '../../../../common/src/crossword/selected-word';
 import { CrosswordGridService } from '../crossword/board/crossword-grid.service';
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
@@ -6,12 +8,22 @@ import { Direction } from '../../../../common/src/crossword/crossword-enums';
 @Injectable()
 export class SelectionService {
 
-    public isCurrentlySelected;
-    public selection: SelectedWord;
+    private currentSelectionInternal: SelectedWord;
 
     constructor(private crosswordGridService: CrosswordGridService) {
         this.selection = new SelectedWord();
-        this.isCurrentlySelected = false;
+    }
+
+    public get selection(): SelectedWord {
+        return this.currentSelectionInternal;
+    }
+
+    public set selection(selection: SelectedWord) {
+        this.currentSelectionInternal = selection;
+    }
+
+    public get isCurrentlySelected(): boolean {
+        return this.selection.index >= 0;
     }
 
     /**
@@ -23,13 +35,8 @@ export class SelectionService {
             return null;
         }
         let x, y;
-        if (this.selection.direction === Direction.horizontal) {
-            x = this.crosswordGridService.horizontalGridWords.get(this.selection.index).x;
-            y = this.crosswordGridService.horizontalGridWords.get(this.selection.index).y;
-        } else if (this.selection.direction === Direction.vertical) {
-            x = this.crosswordGridService.verticalGridWords.get(this.selection.index).x;
-            y = this.crosswordGridService.verticalGridWords.get(this.selection.index).y;
-        }
+        x = this.crosswordGridService.horizontalGridWords.get(this.selection.index).x;
+        y = this.crosswordGridService.horizontalGridWords.get(this.selection.index).y;
         return [y, x];
     }
 
@@ -37,11 +44,7 @@ export class SelectionService {
         if (!this.isCurrentlySelected) {
             return null;
         }
-        if (this.selection.direction === Direction.horizontal) {
-            return this.crosswordGridService.horizontalGridWords.get(this.selection.index).length;
-        } else if (this.selection.direction === Direction.vertical) {
-            return this.crosswordGridService.verticalGridWords.get(this.selection.index).length;
-        }
+        return this.crosswordGridService.horizontalGridWords.get(this.selection.index).length;
     }
 
 }
