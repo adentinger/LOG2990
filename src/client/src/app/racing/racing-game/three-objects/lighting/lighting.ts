@@ -3,6 +3,18 @@ import * as THREE from 'three';
 import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
 import { DayMode } from '../../day-mode/day-mode';
 
+export interface LightOptions {
+    color: number;
+    position: THREE.Vector3;
+    intensity: number;
+}
+
+export interface LightingOptions {
+    keyLight: LightOptions;
+    fillLight: LightOptions;
+    backlight: LightOptions;
+}
+
 /**
  * Class which manages the scene's lighting.
  * The scene's lighting is a three-point lighting:
