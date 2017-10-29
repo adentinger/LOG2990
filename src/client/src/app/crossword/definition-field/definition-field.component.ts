@@ -70,6 +70,7 @@ export class DefinitionFieldComponent implements OnInit {
             }
         }
     }
+
     public onClickOutside(): void {
         this.selectionService.selection = {
             index: -1,
@@ -77,8 +78,10 @@ export class DefinitionFieldComponent implements OnInit {
         };
         this.definitionService.onClickOutside();
     }
+
     public checkIfSelected(index: number, direction: Direction) {
         return (index === this.selectionService.selection.index
             && direction === this.selectionService.selection.direction);
     }
+
 }
