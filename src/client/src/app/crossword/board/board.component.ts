@@ -52,7 +52,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.crosswordGridService.clearGridOfUselessLetters();
     }
 
-    public onChange(inputValue: string) {
+    public onInputChange(inputValue: string) {
         const INPUT = this.crosswordGridService.stripSymbols(inputValue);
         this.inputBuffer.nativeElement.value = INPUT;
         if (this.selectionService.selectionValue.direction === Direction.horizontal) {
