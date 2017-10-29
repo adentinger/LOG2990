@@ -44,7 +44,6 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     private onSelect(selected: GridWord): void {
         this.highlightGrid = new HighlightGrid(selected);
-        console.log(this.highlightGrid);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
