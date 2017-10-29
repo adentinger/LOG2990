@@ -6,7 +6,7 @@ import { Car } from './three-objects/car/car';
 import { CarColorYellow } from './three-objects/car/car-color-yellow';
 import { CarColorBlue } from './three-objects/car/car-color-blue';
 import { CarColorGreen } from './three-objects/car/car-color-green';
-import { DayMode } from './day-mode/day-mode-manager';
+import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
 
 export class RacingGameRendering {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
@@ -29,6 +29,8 @@ export class RacingGameRendering {
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
+
+    private readonly DAY_MODE_MANAGER = new DayModeManager();
 
     private displayWorldRefInternal: boolean;
 
@@ -98,6 +100,11 @@ export class RacingGameRendering {
         this.CAMERA.rotation.order = 'YXZ';
         this.CAMERA.position.set(0, 1, 0);
         this.CAMERA.lookAt(this.SCENE.position);
+    }
+
+    public updateDayMode(newMode: DayMode): void {
+        this.DAY_MODE_MANAGER.mode = newMode;
+        this.DAY_MODE_MANAGER.updateScene(this.SCENE);
     }
 
 }

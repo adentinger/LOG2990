@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { RacingGameRendering } from './racing-game-rendering';
 import { Point } from '../../../../../common/src/math/point';
 import { Interval } from '../../../../../common/src/math/interval';
+import { DayMode } from './day-mode/day-mode-manager';
 
 @Injectable()
 export class RacingGameService {
@@ -29,6 +30,7 @@ export class RacingGameService {
         this.newRacingGame(canvas);
         this.startRendering();
         this.racingGameRendering.setupScene();
+        this.updateDayMode(DayMode.DAY);
     }
 
     /**
@@ -76,6 +78,10 @@ export class RacingGameService {
             cancelAnimationFrame(this.animationRequestId);
         }
         this.isRendering = false;
+    }
+
+    private updateDayMode(newMode: DayMode): void {
+        this.racingGameRendering.updateDayMode(newMode);
     }
 
 }
