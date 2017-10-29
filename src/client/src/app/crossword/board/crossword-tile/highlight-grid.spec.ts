@@ -39,7 +39,7 @@ describe('HighlightGrid', () => {
             (row: number, col: number) => row === ROW && col >= COL_MIN && col <= COL_MAX;
 
         highlightGridForEach(HIGHLIGHT_GRID, (isHighlighted, row, col) => {
-            expect(isHighlighted).toEqual(SHOULD_BE_HIGHLIGHTED(row, col));
+            expect(isHighlighted).toEqual(SHOULD_BE_HIGHLIGHTED(row, col), 'Problem at ' + row + ',' + col);
         });
     });
 
@@ -54,7 +54,7 @@ describe('HighlightGrid', () => {
             (row: number, col: number) => col === COLUMN && row >= ROW_MIN && row <= ROW_MAX;
 
         highlightGridForEach(HIGHLIGHT_GRID, (isHighlighted, row, col) => {
-            expect(isHighlighted).toEqual(SHOULD_BE_HIGHLIGHTED(row, col));
+            expect(isHighlighted).toEqual(SHOULD_BE_HIGHLIGHTED(row, col), 'Problem at ' + row + ',' + col);
         });
     });
 

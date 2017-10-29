@@ -9,7 +9,7 @@ export class HighlightGrid {
 
     private data: boolean[][] = [];
 
-    constructor(gridWord: GridWord) {
+    constructor(gridWord: GridWord = null) {
         const DATA = [];
         for (let row = 0; row < Grid.DIMENSIONS; ++row) {
             const ROW_DATA = [];
@@ -26,22 +26,22 @@ export class HighlightGrid {
     }
 
     private shouldBeSelected(row: number, column: number, word: GridWord): boolean {
-        if (word == null) {
+        if (word == null || word.id < 0) {
             return false;
         }
 
         let shouldBeSelected: boolean;
         if (word.direction === Direction.horizontal) {
             shouldBeSelected =
-                column === word.x &&
-                row >= word.y &&
-                row - word.y < word.length;
-        }
-        else {
-            shouldBeSelected =
                 row === word.y &&
                 column >= word.x &&
                 column - word.x < word.length;
+        }
+        else {
+            shouldBeSelected =
+                column === word.x &&
+                row >= word.y &&
+                row - word.y < word.length;
         }
         return shouldBeSelected;
     }
