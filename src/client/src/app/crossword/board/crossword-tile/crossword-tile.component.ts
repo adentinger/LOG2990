@@ -45,20 +45,4 @@ export class CrosswordTileComponent implements OnInit {
         return (this.tileColumn === word.x && this.tileRow >= word.y && this.tileRow <= word.length + word.y - 1);
     }
 
-    public checkIfHighlighted(): boolean {
-
-        const aDefinitionIsSelected = this.crosswordGameService.aDefinitionIsSelected;
-
-        if (this.definitionService.selectedDirection === Direction.horizontal && aDefinitionIsSelected) {
-            const word = this.crosswordGridService.horizontalGridWords.get(this.crosswordGameService.selectedWordIndex);
-            return this.checkIfInHorizontalTile(word);
-        }
-        else if (this.definitionService.selectedDirection === Direction.vertical && aDefinitionIsSelected) {
-            const word = this.crosswordGridService.verticalGridWords.get(this.crosswordGameService.selectedWordIndex);
-            return this.checkIfInVerticalTile(word);
-        }
-        else {
-            return false;
-        }
-    }
 }
