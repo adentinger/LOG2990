@@ -8,7 +8,6 @@ import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packet
 import '../../../../../common/src/crossword/packets/crossword-timer.parser';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
-import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import { Direction, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
@@ -110,21 +109,6 @@ export class CrosswordGame {
         this.countdown = event.value.countdown;
     }
 
-    // @PacketHandler(WordTryPacket)
-    // // tslint:disable-next-line:no-unused-variable
-    // private getWordFromClient(event: PacketEvent<WordTryPacket>): void {
-    //     let gridWordReceived = event.value.wordTry;
-    //     let reply: GridWord = this.validateUserAnswer(gridWordReceived);
-    //     this.sendWordResultToClient(reply);
-    // }
-
-    // public validateUserAnswer(wordTry: GridWord): void {
-    //     if (!this.userAnswerMatchesTheRightAnswer(wordTry)) {
-    //         wordTry.string = '';
-    //     }
-    //     this.sendWordResultToClient(wordTry);
-    // }
-
     public validateUserAnswer(wordTry: GridWord): boolean {
         const index = wordTry.id;
         const direction = wordTry.direction;
@@ -139,11 +123,9 @@ export class CrosswordGame {
             this.countdown = COUNTDOWN_DEFAULT_VALUE;
             return true;
         }
-        else return false;
+        else {
+            return false;
+        }
     }
 
-    private sendWordResultToClient(wordTry: GridWord): void {
-        console.log('the game ' + this.id + ' is sending this gridword to client ' + wordTry);
-        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(wordTry), this.player1Id);
-    }
 }

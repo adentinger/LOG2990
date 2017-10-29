@@ -57,7 +57,7 @@ export class DefinitionFieldComponent implements OnInit {
         this.selectionService.selection = {
             index: index,
             direction: direction,
-        }
+        };
         this.selectionService.isCurrentlySelected = true;
 
         // TODO migrate to selection service
@@ -75,7 +75,7 @@ export class DefinitionFieldComponent implements OnInit {
         this.selectionService.selection = {
             index: -1,
             direction: 0, // don't care
-        }
+        };
         this.selectionService.isCurrentlySelected = false;
         this.definitionService.onClickOutside();
     }

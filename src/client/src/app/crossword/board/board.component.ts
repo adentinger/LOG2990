@@ -60,7 +60,7 @@ export class BoardComponent implements OnInit {
 
     public checkIfHighlighted(j: number, i: number): boolean {
         if (this.selectionService.isCurrentlySelected === false) {
-            return false
+            return false;
         }
 
         const selectedDirection: Direction = this.selectionService.selection.direction;
@@ -71,12 +71,14 @@ export class BoardComponent implements OnInit {
         if (selectedDirection === Direction.horizontal
             && j === selectedY
             && i >= selectedX
-            && i <= selectedX + selectedLenght - 1)
+            && i <= selectedX + selectedLenght - 1) {
             return true;
+        }
         else if (selectedDirection === Direction.vertical
             && i === selectedX
             && j >= selectedY
-            && j <= selectedY + selectedLenght - 1)
+            && j <= selectedY + selectedLenght - 1) {
             return true;
+        }
     }
 }

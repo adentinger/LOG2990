@@ -1,4 +1,4 @@
-import { GameMode } from "../../../../../common/src/crossword/crossword-enums";
+import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 export interface CrosswordGame {
     player1: string;

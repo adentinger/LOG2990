@@ -94,7 +94,7 @@ export class GameManager {
     /**
      * Returning a gridword with an empty string field indicates a failed attempt
      * a filled string indicates a succesfull attempt
-     * @param event 
+     * @param event
      */
     @PacketHandler(WordTryPacket)
     public wordTryHandler(event: PacketEvent<WordTryPacket>) {
@@ -104,11 +104,11 @@ export class GameManager {
 
         const game: CrosswordGame = this.getGameFromSocketId(event.socketid);
 
-        let answerToServer: GridWord = wordTry;
+        const ANSWER: GridWord = wordTry;
         if (!game.validateUserAnswer(wordTry)) {
-            answerToServer.string = '';
+            ANSWER.string = '';
         }
-        this.sendGridWord(answerToServer, socketId);
+        this.sendGridWord(ANSWER, socketId);
     }
 
     /**
@@ -116,11 +116,11 @@ export class GameManager {
      * @param socketId : Id of a player
      */
     private getGameFromSocketId(socketId: string): CrosswordGame {
-        for (let game of this.games) {
-            if (socketId === game[1].player1Id ||
-                socketId === game[1].player2Id) {
+        for (const GAME of this.games) {
+            if (socketId === GAME[1].player1Id ||
+                socketId === GAME[1].player2Id) {
                 // console.log('found a game: ' + JSON.stringify(game[1]));
-                return game[1];
+                return GAME[1];
             }
         }
         return null;
