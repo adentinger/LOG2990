@@ -8,6 +8,7 @@ import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
 import 'rxjs/add/operator/toPromise';
 import { Vector3 } from 'three';
+import { DayModeManager, DayMode } from './day-mode/day-mode-manager';
 
 const LEFT_MOUSE_BUTTON = 0;
 
@@ -30,6 +31,7 @@ export class RacingGameComponent implements OnInit {
     private windowHalfY = window.innerHeight * 0.5;
 
     private map: RenderableMap;
+    private dayModeManager: DayModeManager = new DayModeManager();
 
     constructor(private racingGameRenderer: RacingGameService, private route: ActivatedRoute, private mapService: MapService) { }
 
@@ -90,12 +92,14 @@ export class RacingGameComponent implements OnInit {
             position.add((new Vector3(1, 0, 0)).applyEuler(rotation).setY(0).normalize().multiplyScalar(-0.1));
         }
         if (event.key.toLowerCase() === 'n') {
-            const SKYBOX = this.racingGameRenderer.racingGameRendering.SKYBOX;
-            switch (SKYBOX.mode) {
-                case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
-                case SkyboxMode.NIGHT: SKYBOX.mode = SkyboxMode.DAY; break;
+            let newDayMode: DayMode;
+            switch (this.dayModeManager.mode) {
+                case DayMode.DAY: newDayMode = DayMode.NIGHT; break;
+                case DayMode.NIGHT: newDayMode = DayMode.DAY; break;
                 default: break;
             }
+            this.dayModeManager.mode = newDayMode;
+            this.dayModeManager.updateScene(this.racingGameRenderer.racingGameRendering.SCENE);
         }
     }
 
