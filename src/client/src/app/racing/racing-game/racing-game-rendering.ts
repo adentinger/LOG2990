@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { Skybox, SkyboxMode } from './skybox';
+import { Skybox, SkyboxMode } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 import { Car } from './three-objects/car/car';
 import { CarColorYellow } from './three-objects/car/car-color-yellow';

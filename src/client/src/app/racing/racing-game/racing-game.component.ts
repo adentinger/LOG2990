@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Vector3 } from 'three';
+import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
-import { SkyboxMode } from './skybox';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { SkyboxMode } from './three-objects/skybox/skybox';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
-import 'rxjs/add/operator/toPromise';
-import { Vector3 } from 'three';
 import { DayModeManager, DayMode } from './day-mode/day-mode-manager';
 
 const LEFT_MOUSE_BUTTON = 0;
