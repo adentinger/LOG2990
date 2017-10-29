@@ -8,4 +8,6 @@ export abstract class DayMode {
 
     public abstract get carHeadlightOptions(): CarHeadlightDayModeOptions;
 
+    public abstract nextMode(): DayMode;
+
 }
