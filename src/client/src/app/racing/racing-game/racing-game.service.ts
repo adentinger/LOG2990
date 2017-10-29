@@ -54,6 +54,7 @@ export class RacingGameService {
 
         const BALL1 = new Ball(0.5);
         BALL1.position.set(0, 0.001, -3);
+        // BALL1.setUIInput(userInputs);
         this.map.add(BALL1);
         const BALL2 = new Ball(0.5);
         BALL2.position.set(1.5, 0.001, -2);
@@ -82,14 +83,14 @@ export class RacingGameService {
     }
 
     public set cameraRotation(rotation: Point) {
-        const ROTATION = this.renderer.CAMERA1.rotation;
-        ROTATION.x += -Math.PI / 2 * rotation.y;
-        if (Math.abs(ROTATION.x) > Math.PI / 2) {
-            ROTATION.x = Math.sign(ROTATION.x) * Math.PI / 2;
-        }
-        ROTATION.y += -Math.PI * rotation.x;
-        ROTATION.y %= 2 * Math.PI;
-        this.renderer.CAMERA2.rotation.y = ROTATION.y;
+        // const ROTATION = this.renderer.CAMERA1.rotation;
+        // ROTATION.x += -Math.PI / 2 * rotation.y;
+        // if (Math.abs(ROTATION.x) > Math.PI / 2) {
+        //     ROTATION.x = Math.sign(ROTATION.x) * Math.PI / 2;
+        // }
+        // ROTATION.y += -Math.PI * rotation.x;
+        // ROTATION.y %= 2 * Math.PI;
+        // this.renderer.CAMERA2.rotation.y = ROTATION.y;
     }
 
     public get cameraVelocity(): THREE.Vector3 {
