@@ -7,7 +7,6 @@ import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
-import { DayModeManager } from './day-mode/day-mode-manager';
 
 const LEFT_MOUSE_BUTTON = 0;
 
@@ -51,7 +50,6 @@ export class RacingGameComponent implements OnInit {
     private resizeCanvas() {
         const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = (window).innerWidth;
-        const CAMERA = this.racingGameRenderer.racingGameRendering.CAMERA;
 
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;

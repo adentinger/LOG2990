@@ -1,4 +1,4 @@
-import { isDayModeNotifiable, DayModeNotifiable } from './day-mode-notifiable';
+import { isDayModeNotifiable } from './day-mode-notifiable';
 import { DayMode } from './day-mode';
 
 export class DayModeManager {

@@ -25,7 +25,6 @@ export class Car extends THREE.Mesh {
 
     constructor(carColor: CarColor) {
         super();
-        const loader = new THREE.JSONLoader();
         this.addLights();
         this.addCarParts(carColor);
     }

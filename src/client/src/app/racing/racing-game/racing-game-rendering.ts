@@ -3,8 +3,6 @@ import * as THREE from 'three';
 import { Skybox } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 import { Car } from './three-objects/car/car';
-import { CarColorYellow } from './three-objects/car/car-color-yellow';
-import { CarColorBlue } from './three-objects/car/car-color-blue';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { DayModeManager } from './day-mode/day-mode-manager';
 import { DayMode } from './day-mode/day-mode';

@@ -15,11 +15,6 @@ export interface CarHeadlightDayModeOptions {
     intensity: number;
 }
 
-interface DayModeOptions {
-    day:   CarHeadlightDayModeOptions;
-    night: CarHeadlightDayModeOptions;
-}
-
 export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
 
     private static generalOptions: GeneralOptions = {
@@ -28,11 +23,6 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
         angle: Math.PI / 4,
         exponent: 0.6,
         decay: 1.3,
-    };
-
-    private dayModeOptions: DayModeOptions = {
-        day:   {intensity: 0},
-        night: {intensity: 1}
     };
 
     public constructor() {
