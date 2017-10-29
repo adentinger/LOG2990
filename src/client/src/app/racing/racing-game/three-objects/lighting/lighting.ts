@@ -5,7 +5,7 @@ import { DayMode } from '../../day-mode/day-mode';
 
 export interface LightOptions {
     color: number;
-    position: THREE.Vector3;
+    rotation: THREE.Euler;
     intensity: number;
 }
 
