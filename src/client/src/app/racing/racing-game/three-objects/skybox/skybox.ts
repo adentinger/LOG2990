@@ -1,34 +1,26 @@
 import * as THREE from 'three';
 
-export enum SkyboxMode {
-    DAY = 0,
-    NIGHT,
-    NUMBER_OF_MODES
-}
+import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
+import { DayMode } from '../../day-mode/day-mode-manager';
 
 export class Skybox extends THREE.Mesh {
 
-    private static cubeNight: THREE.Mesh = Skybox.createCube(SkyboxMode.NIGHT);
-    private static cubeDay: THREE.Mesh = Skybox.createCube(SkyboxMode.DAY);
+    private static cubeNight: THREE.Mesh = Skybox.createCube(DayMode.NIGHT);
+    private static cubeDay: THREE.Mesh = Skybox.createCube(DayMode.DAY);
 
-    private modeInternal: SkyboxMode;
     private currentCube: THREE.Mesh;
 
-    constructor(mode: SkyboxMode = SkyboxMode.DAY) {
+    constructor(mode: DayMode = DayMode.DAY) {
         super();
         this.mode = mode;
     }
 
-    public get mode(): SkyboxMode {
-        return this.modeInternal;
-    }
-
-    public set mode(mode: SkyboxMode) {
+    public set mode(mode: DayMode) {
         let currentCube: THREE.Mesh;
-        if (mode === SkyboxMode.DAY) {
+        if (mode === DayMode.DAY) {
             currentCube = Skybox.cubeDay;
         }
-        else if (mode === SkyboxMode.NIGHT) {
+        else if (mode === DayMode.NIGHT) {
             currentCube = Skybox.cubeNight;
         }
         else {
@@ -37,7 +29,6 @@ export class Skybox extends THREE.Mesh {
         this.remove(this.currentCube);
         this.add(currentCube);
         this.currentCube = currentCube;
-        this.modeInternal = mode;
     }
 
     private static makeShader(texture: THREE.CubeTexture): THREE.ShaderMaterial {
@@ -54,7 +45,7 @@ export class Skybox extends THREE.Mesh {
         return MATERIAL;
     }
 
-    private static createCube(mode: SkyboxMode): THREE.Mesh {
+    private static createCube(mode: DayMode): THREE.Mesh {
 
         let texture: THREE.CubeTexture;
 
@@ -62,8 +53,8 @@ export class Skybox extends THREE.Mesh {
         loader.setPath('/assets/racing/skybox/');
 
         switch (mode) {
-            case SkyboxMode.DAY: // fallthrough
-            case SkyboxMode.NIGHT: {
+            case DayMode.DAY: // fallthrough
+            case DayMode.NIGHT: {
                 texture = loader.load(Skybox.findTextures(mode));
                 break;
             }
@@ -77,18 +68,18 @@ export class Skybox extends THREE.Mesh {
         return CUBE;
     }
 
-    private static findTextures(mode: SkyboxMode): string[] {
+    private static findTextures(mode: DayMode): string[] {
 
         let images: string[];
 
         switch (mode) {
-            case SkyboxMode.DAY: {
+            case DayMode.DAY: {
                 images = ['Day-Right.jpg', 'Day-Left.jpg',
                           'Day-Ceilling.jpg', 'Day-Bottom.jpg',
                           'Day-Front.jpg', 'Day-Back.jpg'];
                 break;
             }
-            case SkyboxMode.NIGHT: {
+            case DayMode.NIGHT: {
                 images = ['Night-Right.jpg', 'Night-Left.jpg',
                           'Night-Ceilling.jpg', 'Night-Bottom.jpg',
                           'Night-Front.jpg', 'Night-Back.jpg'];

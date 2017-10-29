@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 
-import { Skybox, SkyboxMode } from './three-objects/skybox/skybox';
+import { Skybox } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 import { Car } from './three-objects/car/car';
 import { CarColorYellow } from './three-objects/car/car-color-yellow';
 import { CarColorBlue } from './three-objects/car/car-color-blue';
 import { CarColorGreen } from './three-objects/car/car-color-green';
+import { DayMode } from './day-mode/day-mode-manager';
 
 export class RacingGameRendering {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
@@ -39,7 +40,7 @@ export class RacingGameRendering {
             this.ASPECT,
             this.NEAR,
             this.FAR);
-        this.SKYBOX = new Skybox(SkyboxMode.NIGHT);
+        this.SKYBOX = new Skybox(DayMode.NIGHT);
         this.PLANE = new RacingGamePlane();
         const wireframePlane = new RacingGamePlane();
         (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
