@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { CrosswordGridService } from '../crossword/board/crossword-grid.service';
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
 import { GridWord } from '../../../../common/src/crossword/grid-word';
+import { Definition } from './definition-field/definition';
 
 @Injectable()
 export class SelectionService {
@@ -15,18 +16,27 @@ export class SelectionService {
 
     constructor() {
         this.selectionValueInternal = null;
+        this.selectionSubject.subscribe((word) => {
+            this.selectionValueInternal = word;
+        });
     }
 
     public get selection(): Subject<GridWord> {
         return this.selectionSubject;
     }
 
-    public get isCurrentlySelected(): boolean {
-        return this.selectionValueInternal !== null;
+    public get hasSelectedWord(): boolean {
+        return this.selectionValueInternal !== SelectionService.NO_SELECTION;
     }
 
     public get selectionValue(): GridWord {
         return this.selectionValueInternal;
+    }
+
+    public isDefinitionSelected(definition: Definition): boolean {
+        return this.selectionValue != null &&
+               definition.index === this.selectionValue.id &&
+               definition.direction === this.selectionValue.direction;
     }
 
 }

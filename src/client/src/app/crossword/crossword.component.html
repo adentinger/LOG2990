@@ -12,7 +12,7 @@
         <button *ngIf='getCheatModeState()' (click)='setTimerOnOff()'>{{getTimerStateText()}}</button>
         <input #timerInput *ngIf='getTimerState() && getCheatModeState()' type='text' (keyup.enter)='changeTimerValue(timerInput.value)' size='5px'/>
       </div>
-      <app-definition-field [cheatMode]='getShowWordsState()' (selectedDefinition)="onSelectedDefinitionChange($event)"></app-definition-field>
+      <app-definition-field [cheatMode]='getShowWordsState()'></app-definition-field>
     </div>
   </div>
 </div>

@@ -11,6 +11,7 @@ import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 
 import '../../../../../common/src/crossword/packets/grid-word.parser';
+import { SelectionService } from '../selection.service';
 
 
 @Injectable()
@@ -27,10 +28,9 @@ export class CrosswordGridService {
     public viewableGrid: string[][] = [];
 
     constructor(private crosswordGameService: CrosswordGameService,
-        private packetManager: PacketManagerClient,
-        private definitionsService: DefinitionsService) {
+                private selectionService: SelectionService,
+                private packetManager: PacketManagerClient) {
         registerHandlers(this, packetManager);
-
 
         // This mock is meant to stay as an initial view
         this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map(
@@ -110,17 +110,15 @@ export class CrosswordGridService {
         return input.replace(/[^a-zA-Z]/g, '');
     }
 
-    public onInputChange(input: string, word: GridWord) {
-        if (this.crosswordGameService.aDefinitionIsSelected) {
+    public userInput(input: string, word: GridWord) {
+        if (this.selectionService.hasSelectedWord) {
             if (input.length < word.length) {
                 this.inputLettersOnGrid(word, input);
             }
             else if (input.length === word.length) {
                 this.inputLettersOnGrid(word, input);
                 this.sendWordToServer(input, word);
-                this.definitionsService.selectedDefinitionId = -1;
-
-                this.crosswordGameService.aDefinitionIsSelected = false;
+                this.selectionService.selection.next(word);
             }
         }
     }

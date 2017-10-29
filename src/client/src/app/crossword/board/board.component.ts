@@ -21,8 +21,7 @@ export class BoardComponent implements OnInit {
     public highlightGrid = new HighlightGrid();
 
     constructor(private crosswordGridService: CrosswordGridService,
-        private selectionService: SelectionService,
-        private definitionsService: DefinitionsService) { }
+                private selectionService: SelectionService) { }
 
     public ngOnInit(): void {
         this.crosswordGrid = this.crosswordGridService.getViewableGrid();
@@ -36,7 +35,7 @@ export class BoardComponent implements OnInit {
         this.crosswordGridService.crosswordGrid = value;
     }
 
-    public onSelect(indexDefinition: number): void {
+    private onSelect(indexDefinition: number): void {
         this.indexOfDefinition = indexDefinition;
         if (this.indexOfDefinition !== null) {
             this.inputBuffer.nativeElement.focus();
@@ -45,17 +44,16 @@ export class BoardComponent implements OnInit {
         this.crosswordGridService.clearGridOfUselessLetters();
     }
 
-    public onChange(inputValue) {
-
-        const input = this.crosswordGridService.stripSymbols(inputValue);
-        this.inputBuffer.nativeElement.value = input;
-        if (this.definitionsService.selectedDirection === Direction.horizontal) {
-            const word = this.crosswordGridService.horizontalGridWords.get(this.indexOfDefinition);
-            this.crosswordGridService.onInputChange(input, word);
+    public onChange(inputValue: string) {
+        const INPUT = this.crosswordGridService.stripSymbols(inputValue);
+        this.inputBuffer.nativeElement.value = INPUT;
+        if (this.selectionService.selectionValue.direction === Direction.horizontal) {
+            const WORD = this.crosswordGridService.horizontalGridWords.get(this.indexOfDefinition);
+            this.crosswordGridService.userInput(INPUT, WORD);
         }
-        else if (this.definitionsService.selectedDirection === Direction.vertical) {
-            const word = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
-            this.crosswordGridService.onInputChange(input, word);
+        else {
+            const WORD = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
+            this.crosswordGridService.userInput(INPUT, WORD);
         }
     }
 
