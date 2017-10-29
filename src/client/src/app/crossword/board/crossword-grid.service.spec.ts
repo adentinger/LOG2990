@@ -27,11 +27,6 @@ describe('CrosswordGridService', () => {
         expect(crosswordGridService).toBeTruthy();
     });
 
-    it('the first square should not contain a character', () => {
-        const firstLetter = crosswordGridService.getViewableGrid()[0][0];
-        expect(firstLetter).toMatch(/^$/i);
-    });
-
     it('should return an array', () => {
         const grid: any = crosswordGridService.getViewableGrid();
         expect(grid).toEqual(jasmine.any(Array));
