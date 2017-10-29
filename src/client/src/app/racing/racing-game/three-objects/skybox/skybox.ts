@@ -3,32 +3,15 @@ import * as THREE from 'three';
 import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
 import { DayMode } from '../../day-mode/day-mode-manager';
 
-export class Skybox extends THREE.Mesh {
+export class Skybox extends THREE.Mesh implements DayModeNotifiable {
 
     private static cubeNight: THREE.Mesh = Skybox.createCube(DayMode.NIGHT);
     private static cubeDay: THREE.Mesh = Skybox.createCube(DayMode.DAY);
 
     private currentCube: THREE.Mesh;
 
-    constructor(mode: DayMode = DayMode.DAY) {
+    constructor() {
         super();
-        this.mode = mode;
-    }
-
-    public set mode(mode: DayMode) {
-        let currentCube: THREE.Mesh;
-        if (mode === DayMode.DAY) {
-            currentCube = Skybox.cubeDay;
-        }
-        else if (mode === DayMode.NIGHT) {
-            currentCube = Skybox.cubeNight;
-        }
-        else {
-            throw new Error('Invalid skybox mode: "' + mode + '"');
-        }
-        this.remove(this.currentCube);
-        this.add(currentCube);
-        this.currentCube = currentCube;
     }
 
     private static makeShader(texture: THREE.CubeTexture): THREE.ShaderMaterial {
@@ -88,6 +71,22 @@ export class Skybox extends THREE.Mesh {
         }
 
         return images;
+    }
+
+    public dayModeChanged(newMode: DayMode) {
+        let currentCube: THREE.Mesh;
+        if (newMode === DayMode.DAY) {
+            currentCube = Skybox.cubeDay;
+        }
+        else if (newMode === DayMode.NIGHT) {
+            currentCube = Skybox.cubeNight;
+        }
+        else {
+            throw new Error('Invalid skybox mode: "' + newMode + '"');
+        }
+        this.remove(this.currentCube);
+        this.add(currentCube);
+        this.currentCube = currentCube;
     }
 
 }

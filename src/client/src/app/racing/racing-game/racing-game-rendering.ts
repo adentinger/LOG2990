@@ -40,7 +40,7 @@ export class RacingGameRendering {
             this.ASPECT,
             this.NEAR,
             this.FAR);
-        this.SKYBOX = new Skybox(DayMode.NIGHT);
+        this.SKYBOX = new Skybox();
         this.PLANE = new RacingGamePlane();
         const wireframePlane = new RacingGamePlane();
         (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
