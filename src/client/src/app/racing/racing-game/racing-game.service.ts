@@ -12,6 +12,7 @@ export class RacingGameService {
     private animationRequestId = 0;
     private isRendering = false;
     private cursorPositionInternal = new Point(0, 0);
+    private dayMode: DayMode = DayMode.DAY;
 
     constructor() { }
 
@@ -30,7 +31,7 @@ export class RacingGameService {
         this.newRacingGame(canvas);
         this.startRendering();
         this.racingGameRendering.setupScene();
-        this.updateDayMode(DayMode.DAY);
+        this.racingGameRendering.updateDayMode(this.dayMode);
     }
 
     /**
@@ -80,8 +81,15 @@ export class RacingGameService {
         this.isRendering = false;
     }
 
-    private updateDayMode(newMode: DayMode): void {
-        this.racingGameRendering.updateDayMode(newMode);
+    public changeDayMode(): void {
+        let newMode: DayMode;
+        switch (this.dayMode) {
+            case DayMode.DAY: newMode = DayMode.NIGHT; break;
+            case DayMode.NIGHT: newMode = DayMode.DAY; break;
+            default: break;
+        }
+        this.dayMode = newMode;
+        this.racingGameRendering.updateDayMode(this.dayMode);
     }
 
 }
