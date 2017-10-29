@@ -1,50 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
-import { SelectedWord } from '../../../../common/src/crossword/selected-word';
 import { CrosswordGridService } from '../crossword/board/crossword-grid.service';
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
+import { GridWord } from '../../../../common/src/crossword/grid-word';
 
 @Injectable()
 export class SelectionService {
 
-    private currentSelectionInternal: SelectedWord;
+    public static readonly NO_SELECTION: GridWord = null;
 
-    constructor(private crosswordGridService: CrosswordGridService) {
-        this.selection = new SelectedWord();
+    private selectionValueInternal: GridWord;
+    private selectionSubject = new Subject<GridWord>();
+
+    constructor() {
+        this.selectionValueInternal = null;
     }
 
-    public get selection(): SelectedWord {
-        return this.currentSelectionInternal;
-    }
-
-    public set selection(selection: SelectedWord) {
-        this.currentSelectionInternal = selection;
+    public get selection(): Subject<GridWord> {
+        return this.selectionSubject;
     }
 
     public get isCurrentlySelected(): boolean {
-        return this.selection.index >= 0;
+        return this.selectionValueInternal !== null;
     }
 
-    /**
-     * Returns the coordinate of the selected word in MATRIX NOTATION (y,x)
-     * or NULL if none is selected
-     */
-    public getSelectedWordCoordinates(): [number, number] {
-        if (!this.isCurrentlySelected) {
-            return null;
-        }
-        let x, y;
-        x = this.crosswordGridService.horizontalGridWords.get(this.selection.index).x;
-        y = this.crosswordGridService.horizontalGridWords.get(this.selection.index).y;
-        return [y, x];
-    }
-
-    public getSelectedWordLength(): number {
-        if (!this.isCurrentlySelected) {
-            return null;
-        }
-        return this.crosswordGridService.horizontalGridWords.get(this.selection.index).length;
+    public get selectionValue(): GridWord {
+        return this.selectionValueInternal;
     }
 
 }
