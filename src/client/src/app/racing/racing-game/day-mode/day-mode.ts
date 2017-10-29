@@ -43,13 +43,13 @@ class DayModeDay extends DayMode {
             },
             fillLight: {
                 color: COLOR,
-                intensity: 0.2,
-                rotation: new THREE.Euler(Math.PI / 10, 3 * Math.PI / 4, 0, 'YXZ')
+                intensity: 0.5,
+                rotation: new THREE.Euler(Math.PI / 10, 0, 0, 'YXZ')
             },
             backlight: {
                 color: COLOR,
-                intensity: 0.1,
-                rotation: new THREE.Euler(Math.PI / 8, -Math.PI / 2, 0, 'YXZ')
+                intensity: 0.33,
+                rotation: new THREE.Euler(Math.PI / 8, -3 * Math.PI / 4, 0, 'YXZ')
             }
         };
     }
@@ -82,12 +82,12 @@ class DayModeNight extends DayMode {
             },
             fillLight: {
                 color: COLOR,
-                intensity: 0.067,
+                intensity: 0.167,
                 rotation: new THREE.Euler(Math.PI / 10, Math.PI / 3, 0, 'YXZ')
             },
             backlight: {
                 color: COLOR,
-                intensity: 0.033,
+                intensity: 0.11,
                 rotation: new THREE.Euler(Math.PI / 8, -Math.PI / 2, 0, 'YXZ')
             }
         };
