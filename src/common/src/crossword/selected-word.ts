@@ -5,9 +5,9 @@ export class SelectedWord {
     public direction: Direction;
     public index: number;
 
-    constructor() {
-        this.direction = 0;
-        this.index = -1;
+    constructor(direction: Direction = 0, index: number = -1) {
+        this.direction = direction;
+        this.index = index;
     }
 
 }
