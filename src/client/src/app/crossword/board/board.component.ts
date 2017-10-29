@@ -6,6 +6,7 @@ import { DefinitionsService } from '../definition-field/definitions.service';
 import { SelectionService } from '../selection.service';
 
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { HighlightGrid } from './crossword-tile/highlight-grid';
 
 @Component({
     selector: 'app-board',
@@ -16,6 +17,8 @@ export class BoardComponent implements OnInit {
 
     public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
+
+    public highlightGrid = new HighlightGrid();
 
     constructor(private crosswordGridService: CrosswordGridService,
         private selectionService: SelectionService,
@@ -54,35 +57,6 @@ export class BoardComponent implements OnInit {
             const word = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
             this.crosswordGridService.onInputChange(input, word);
         }
-    }
-
-    public checkIfHighlighted(line: number, column: number): boolean {
-        if (this.selectionService.isCurrentlySelected === false) {
-            return false;
-        }
-
-        const selectedDirection: Direction = this.selectionService.selection.direction;
-        const selectedX: number = this.selectionService.getSelectedWordCoordinates()[1];
-        const selectedY: number = this.selectionService.getSelectedWordCoordinates()[0];
-        const selectedLenght: number = this.selectionService.getSelectedWordLength();
-
-        let isCurrentlySelected;
-        if (selectedDirection === Direction.horizontal) {
-            isCurrentlySelected =
-                line === selectedY &&
-                column >= selectedX &&
-                column <= selectedX + selectedLenght - 1;
-        }
-        else if (selectedDirection === Direction.vertical) {
-            isCurrentlySelected =
-                column === selectedX &&
-                line >= selectedY &&
-                line <= selectedY + selectedLenght - 1;
-        }
-        else {
-            throw new Error('Unknown direction: "' + selectedDirection + '"');
-        }
-        return isCurrentlySelected;
     }
 
 }
