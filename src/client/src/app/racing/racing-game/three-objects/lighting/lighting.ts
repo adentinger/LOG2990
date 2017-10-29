@@ -35,7 +35,18 @@ export class Lighting extends THREE.Object3D implements DayModeNotifiable {
     }
 
     public dayModeChanged(newMode: DayMode): void {
+        const OPTIONS = newMode.LIGHTING_OPTIONS;
+        this.changeLightOptionsFor(this.KEY_LIGHT, OPTIONS.keyLight);
+        this.changeLightOptionsFor(this.FILL_LIGHT, OPTIONS.fillLight);
+        this.changeLightOptionsFor(this.BACK_LIGHT, OPTIONS.backlight);
+    }
 
+    private changeLightOptionsFor(light: THREE.DirectionalLight,
+                                  options: LightOptions): void {
+        const BASE_VECTOR = new THREE.Vector3(0, 0, -1);
+        light.color.setHex(options.color);
+        light.intensity = options.intensity;
+        light.position.copy(BASE_VECTOR.applyEuler(options.rotation));
     }
 
 }
