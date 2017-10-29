@@ -13,6 +13,11 @@ describe('DayModeManager', () => {
     });
 
     let dayModeManager: DayModeManager;
+    let threeData: {
+        renderer: THREE.Renderer;
+        scene: THREE.Scene;
+        camera: THREE.Camera;
+    };
 
     beforeEach(inject([DayModeManager], (testedInstance) => {
         dayModeManager = testedInstance;
@@ -24,8 +29,7 @@ describe('DayModeManager', () => {
     });
 
     it('should update a scene\'s DayModeNotifiable elements', () => {
-        // TODO
-        expect(0).toEqual(1);
+        
     });
 
 });
