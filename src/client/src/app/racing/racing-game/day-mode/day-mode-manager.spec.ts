@@ -33,16 +33,17 @@ class ThreeDataFactory {
     }
 
     public addObjects(data: ThreeData, callback: (newMode: DayMode) => void): void {
-        const OBJECTS: THREE.Object3D[] = [
-            new THREE.Object3D(),
-            new THREE.Object3D(),
-            new DayModeNotifiableImplementer(callback),
-            new THREE.Object3D(),
-            new DayModeNotifiableImplementer(callback),
-            new DayModeNotifiableImplementer(callback),
-            new THREE.Object3D(),
-            new DayModeNotifiableImplementer(callback)
-        ];
+        const newObj3d = () => new THREE.Object3D();
+        const newNotifiable = () => new DayModeNotifiableImplementer(callback);
+        const [OBJECT1, OBJECT2] = [newObj3d(), newObj3d()];
+        const [OBJECT3, OBJECT4] = [newNotifiable(), newNotifiable()];
+
+        OBJECT1.add(newNotifiable(), newObj3d());
+        OBJECT2.add(newObj3d());
+        OBJECT3.add(newObj3d());
+        OBJECT4.add(newNotifiable());
+
+        const OBJECTS: THREE.Object3D[] = [OBJECT1, OBJECT2, OBJECT3, OBJECT4];
         data.scene.add(...OBJECTS);
     }
 
