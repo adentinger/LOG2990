@@ -19,7 +19,6 @@ export class BoardComponent implements OnInit {
 
     public get crosswordGrid() {
         return this.crosswordGridService.crosswordGrid;
-        // return this.crosswordGridService.viewableGrid;
     }
 
     public set crosswordGrid(value: string[][]) {
@@ -57,8 +56,7 @@ export class BoardComponent implements OnInit {
         }
     }
 
-
-    public checkIfHighlighted(j: number, i: number): boolean {
+    public checkIfHighlighted(line: number, column: number): boolean {
         if (this.selectionService.isCurrentlySelected === false) {
             return false;
         }
@@ -68,17 +66,22 @@ export class BoardComponent implements OnInit {
         const selectedY: number = this.selectionService.getSelectedWordCoordinates()[0];
         const selectedLenght: number = this.selectionService.getSelectedWordLength();
 
-        if (selectedDirection === Direction.horizontal
-            && j === selectedY
-            && i >= selectedX
-            && i <= selectedX + selectedLenght - 1) {
-            return true;
+        let isCurrentlySelected;
+        if (selectedDirection === Direction.horizontal) {
+            isCurrentlySelected =
+                line === selectedY &&
+                column >= selectedX &&
+                column <= selectedX + selectedLenght - 1;
         }
-        else if (selectedDirection === Direction.vertical
-            && i === selectedX
-            && j >= selectedY
-            && j <= selectedY + selectedLenght - 1) {
-            return true;
+        else if (selectedDirection === Direction.vertical) {
+            isCurrentlySelected =
+                column === selectedX &&
+                line >= selectedY &&
+                line <= selectedY + selectedLenght - 1;
         }
+        else {
+            throw new Error('Unknown direction: "' + selectedDirection + '"');
+        }
+        return isCurrentlySelected;
     }
 }
