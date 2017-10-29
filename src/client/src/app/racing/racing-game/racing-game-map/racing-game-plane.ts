@@ -11,7 +11,7 @@ export class RacingGamePlane extends THREE.Mesh {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.offset.set(0, 0);
         texture.repeat.set(500, 500);
-        this.material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+        this.material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide });
         this.rotateX(Math.PI / 2);
     }
 }
