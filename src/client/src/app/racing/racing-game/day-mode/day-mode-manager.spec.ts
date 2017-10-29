@@ -2,6 +2,19 @@ import * as THREE from 'three';
 import { inject, TestBed } from '@angular/core/testing';
 
 import { DayModeManager, DayMode } from './day-mode-manager';
+import { DayModeNotifiable } from './day-mode-notifiable';
+
+class DayModeNotifiableImplementer extends THREE.Object3D implements DayModeNotifiable {
+
+    constructor(public callback: (newMode: DayMode) => void) {
+        super();
+    }
+
+    public dayModeChanged(newMode: DayMode): void {
+        this.callback(newMode);
+    }
+
+}
 
 interface ThreeData {
     renderer: THREE.Renderer;
@@ -10,6 +23,7 @@ interface ThreeData {
 }
 
 class ThreeDataFactory {
+
     public make(): ThreeData {
         return {
             renderer: new THREE.WebGLRenderer(),
@@ -17,6 +31,21 @@ class ThreeDataFactory {
             camera: new THREE.PerspectiveCamera()
         };
     }
+
+    public addObjects(data: ThreeData, callback: (newMode: DayMode) => void): void {
+        const OBJECTS: THREE.Object3D[] = [
+            new THREE.Object3D(),
+            new THREE.Object3D(),
+            new DayModeNotifiableImplementer(callback),
+            new THREE.Object3D(),
+            new DayModeNotifiableImplementer(callback),
+            new DayModeNotifiableImplementer(callback),
+            new THREE.Object3D(),
+            new DayModeNotifiableImplementer(callback)
+        ];
+        data.scene.add(...OBJECTS);
+    }
+
 }
 
 const THREE_DATA_FACTORY = new ThreeDataFactory();
@@ -45,6 +74,20 @@ describe('DayModeManager', () => {
     });
 
     it('should update a scene\'s DayModeNotifiable elements', () => {
+
+        let numberOfUpdates = 0;
+
+        THREE_DATA_FACTORY.addObjects(
+            threeData,
+            (newMode) => {
+                ++numberOfUpdates;
+            }
+        );
+
+        dayModeManager.updateScene(threeData.scene);
+
+        const EXPECTED_NUMBER_OF_UPDATES = 4;
+        expect(numberOfUpdates).toEqual(EXPECTED_NUMBER_OF_UPDATES);
 
     });
 
