@@ -5,6 +5,7 @@ import { Direction } from '../../../../common/src/crossword/crossword-enums';
 
 @Injectable()
 export class SelectionService {
+
     public isCurrentlySelected;
     public selection: SelectedWord;
 
@@ -31,6 +32,7 @@ export class SelectionService {
         }
         return [y, x];
     }
+
     public getSelectedWordLength(): number {
         if (!this.isCurrentlySelected) {
             return null;
@@ -41,4 +43,5 @@ export class SelectionService {
             return this.crosswordGridService.verticalGridWords.get(this.selection.index).length;
         }
     }
+
 }
