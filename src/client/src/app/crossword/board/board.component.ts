@@ -13,6 +13,7 @@ import '../../../../../common/src/crossword/packets/word-try.parser';
     styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
+
     public indexOfDefinition: number;
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
@@ -83,4 +84,5 @@ export class BoardComponent implements OnInit {
         }
         return isCurrentlySelected;
     }
+
 }
