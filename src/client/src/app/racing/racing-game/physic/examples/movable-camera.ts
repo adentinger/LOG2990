@@ -96,7 +96,7 @@ export class MovableOrthographicCamera extends THREE.OrthographicCamera implemen
             direction.y++;
         }
 
-        return direction;
+        return direction.normalize();
     }
 }
 
@@ -178,6 +178,6 @@ export class MovablePerspectiveCamera extends THREE.PerspectiveCamera implements
             direction.y++;
         }
 
-        return direction;
+        return direction.normalize();
     }
 }
