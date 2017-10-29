@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { inject, TestBed } from '@angular/core/testing';
 
 import { DayModeNotifiable, isDayModeNotifiable } from './day-mode-notifiable';
-import { DayMode } from './day-mode-manager';
+import { DayMode } from './day-mode';
 
 class DayModeNotifiableImplementer extends THREE.Object3D implements DayModeNotifiable {
 

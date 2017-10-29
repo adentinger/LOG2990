@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { CarHeadlight } from './car-headlight';
-import { DayMode } from '../../day-mode/day-mode-manager';
+import { DayMode } from '../../day-mode/day-mode';
 
 describe('CarHeadlight', () => {
 
