@@ -6,7 +6,8 @@ import { Car } from './three-objects/car/car';
 import { CarColorYellow } from './three-objects/car/car-color-yellow';
 import { CarColorBlue } from './three-objects/car/car-color-blue';
 import { CarColorGreen } from './three-objects/car/car-color-green';
-import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
+import { DayModeManager } from './day-mode/day-mode-manager';
+import { DayMode } from './day-mode/day-mode';
 
 export class RacingGameRendering {
     private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [

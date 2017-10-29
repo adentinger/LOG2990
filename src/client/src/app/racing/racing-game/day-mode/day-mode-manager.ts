@@ -1,9 +1,5 @@
 import { isDayModeNotifiable, DayModeNotifiable } from './day-mode-notifiable';
-
-export enum DayMode {
-    DAY = 0,
-    NIGHT
-}
+import { DayMode } from './day-mode';
 
 export class DayModeManager {
 

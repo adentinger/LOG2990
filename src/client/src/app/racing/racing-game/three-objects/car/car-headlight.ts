@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
-import { DayMode } from '../../day-mode/day-mode-manager';
+import { DayMode } from '../../day-mode/day-mode';
 
 interface GeneralOptions {
     color: number;
@@ -47,7 +47,8 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
     }
 
     public dayModeChanged(newMode: DayMode): void {
-
+        const OPTIONS = newMode.CAR_HEADLIGHT_OPTIONS;
+        this.intensity = OPTIONS.intensity;
     }
 
 }

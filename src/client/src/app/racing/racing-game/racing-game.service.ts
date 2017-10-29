@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { RacingGameRendering } from './racing-game-rendering';
 import { Point } from '../../../../../common/src/math/point';
 import { Interval } from '../../../../../common/src/math/interval';
-import { DayMode } from './day-mode/day-mode-manager';
+import { DayMode } from './day-mode/day-mode';
 
 @Injectable()
 export class RacingGameService {

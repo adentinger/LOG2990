@@ -7,7 +7,7 @@ import { RacingGameService } from './racing-game.service';
 import { Point } from '../../../../../common/src/math/point';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { MapService } from '../services/map.service';
-import { DayModeManager, DayMode } from './day-mode/day-mode-manager';
+import { DayModeManager } from './day-mode/day-mode-manager';
 
 const LEFT_MOUSE_BUTTON = 0;
 
