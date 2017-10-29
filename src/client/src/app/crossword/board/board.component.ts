@@ -21,18 +21,17 @@ export class BoardComponent implements OnInit {
     public highlightGrid = new HighlightGrid();
 
     constructor(private crosswordGridService: CrosswordGridService,
-                private selectionService: SelectionService) { }
+                private selectionService: SelectionService) {
+
+    }
 
     public ngOnInit(): void {
-        this.crosswordGrid = this.crosswordGridService.getViewableGrid();
+        this.crosswordGridService.crosswordGrid =
+            this.crosswordGridService.getViewableGrid();
     }
 
     public get crosswordGrid() {
         return this.crosswordGridService.crosswordGrid;
-    }
-
-    public set crosswordGrid(value: string[][]) {
-        this.crosswordGridService.crosswordGrid = value;
     }
 
     private onSelect(indexDefinition: number): void {
