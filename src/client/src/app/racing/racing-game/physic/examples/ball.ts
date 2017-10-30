@@ -31,6 +31,7 @@ export class Ball extends DynamicCollidableMesh {
         this.geometry.computeBoundingBox();
         this.boundingBox = this.geometry.boundingBox;
         this.material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        // this.add(this.arrow);
     }
 
     public update(engine: PhysicUtils, deltaTime: Seconds) {

@@ -13,6 +13,10 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
     public geometry: THREE.Geometry;
     public mass: Kilograms = 1;
     public velocity: THREE.Vector3 = new THREE.Vector3(0);
+    protected arrow: THREE.ArrowHelper = new THREE.ArrowHelper(new THREE.Vector3(), this.position);
+    protected point1: THREE.Mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0x0000ff}));
+    protected point2: THREE.Mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0xff7f00}));
+    protected point3: THREE.Mesh = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0xff00ff}));
 
     public update(utils: PhysicUtils, deltaTime: Seconds): void {
         const forceDirections = this.getCollisions(utils, deltaTime);

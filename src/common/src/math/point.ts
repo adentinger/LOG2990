@@ -18,4 +18,8 @@ export class Point {
         return this;
     }
 
+    public clone(): Point {
+        return new Point(this.x, this.y);
+    }
+
 }

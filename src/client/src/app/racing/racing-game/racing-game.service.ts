@@ -60,12 +60,15 @@ export class RacingGameService {
         const BALL2 = new Ball(0.5);
         BALL2.position.set(1.5, 0, -1.75);
         BALL2.velocity.set(-1, 0, -1);
-        BALL2.angularVelocity.set(0, Math.PI / 12, 0);
+        BALL2.angularVelocity.set(0, Math.PI / 24, 0);
+        this.map.add(BALL2['arrow']);
+        this.map.add(BALL2['point1']);
+        this.map.add(BALL2['point2']);
+        this.map.add(BALL2['point3']);
         this.map.add(BALL2);
 
         const wall1 = new Wall(10, 10);
         wall1.position.set(0, 0, -5);
-        wall1.rotation.y = Math.PI;
         const wall2 = new Wall(10, 10);
         wall2.position.set(5, 0, 0);
         wall2.rotation.y = 3 * Math.PI / 2;
@@ -74,6 +77,7 @@ export class RacingGameService {
         wall3.rotation.y = Math.PI / 2;
         const wall4 = new Wall(10, 10);
         wall4.position.set(0, 0, 5);
+        wall4.rotation.y = Math.PI;
         this.map.add(wall1, wall2, wall3, wall4);
 
         this.physicEngine.start();

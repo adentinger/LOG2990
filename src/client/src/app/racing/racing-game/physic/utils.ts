@@ -7,7 +7,7 @@ import { Ball } from './examples/ball';
 
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
-    private static readonly LENGTH_TO_FORCE_CONSTANT = 7; // N/m
+    private static readonly LENGTH_TO_FORCE_CONSTANT = 2; // N/m
 
     private shoelace: ShoelaceAlgorithm = new ShoelaceAlgorithm();
     private root: THREE.Object3D;
@@ -63,6 +63,12 @@ export class PhysicUtils {
         const targetLines: Line[] = this.getBoundingLines(target);
         const sourceLines: Line[] = this.getBoundingLines(source);
 
+        if (target instanceof Ball) {
+            target['point1'].position.set(targetLines[0].origin.x, 1.001, targetLines[0].origin.y);
+            target['point2'].position.set(targetLines[1].origin.x, 1.001, targetLines[1].origin.y);
+            target['point3'].position.set(targetLines[2].origin.x, 1.001, targetLines[2].origin.y);
+        }
+
         const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
 
         if (intersectionPoints.length < 2) {
@@ -77,18 +83,25 @@ export class PhysicUtils {
         const intersection2 = intersectionPoints[1][2];
         const intersectionLine: Line = new Line(intersection1, intersection2);
 
-        const order = Math.sign(this.shoelace.algebraicAreaOf([this.getVector2FromVector3(target.position), intersection1, intersection2]));
-        if (order < 0) {
-            intersectionLine.origin = intersection2;
-            intersectionLine.destination = intersection1;
-        }
-
         const lineVector = this.getVector3FromPoint(intersectionLine.translation);
         const applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
             .sub(this.getVector2FromVector3(target.position));
 
+        const order = lineVector.clone().cross(UP).dot(this.getVector3FromVector2(applicationPoint));
+        if (order > 0) {
+            lineVector.multiplyScalar(-1);
+        }
+
         const scalarForce = PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
             (applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length());
+        if (target instanceof Ball) {
+            target['point1'].position.set(targetLine1.origin.x, 1.001, targetLine1.origin.y);
+            target['point2'].position.set(targetLine2.origin.x, 1.001, targetLine2.origin.y);
+            target['point3'].position.set(targetLine2.destination.x, 1.001, targetLine2.destination.y);
+            target['arrow'].position.set(applicationPoint.x + target.position.x, 1.001, applicationPoint.y + target.position.z);
+            target['arrow'].setDirection(lineVector.clone().normalize().cross(UP));
+        }
+
         const force: THREE.Vector2 = this.getVector2FromVector3(
             lineVector.normalize().cross(UP).multiplyScalar(scalarForce)
         );
@@ -107,10 +120,12 @@ export class PhysicUtils {
         const intersections: [Line, Line, Point][] = [];
         for (const targetLine of targetLines) {
             for (const sourceLine of sourceLines) {
-                const intersectionPoint = targetLine.intersectsWith(sourceLine);
+                const intersectionPoints = targetLine.intersectsWith(sourceLine);
 
-                if (intersectionPoint.length === 1) {
-                    intersections.push([targetLine, sourceLine, intersectionPoint[0]]);
+                if (intersectionPoints.length > 0) {
+                    intersections.push(...intersectionPoints.map(point =>
+                        [targetLine, sourceLine, point] as [Line, Line, Point]));
+                    // intersections.push([targetLine, sourceLine, intersectionPoints[0]]);
                 }
             }
 
@@ -135,12 +150,18 @@ export class PhysicUtils {
             new Point(box1.max.x, box1.max.z),
             new Point(box1.min.x, box1.max.z)
         ];
-        for (let i = 0; i < corners.length; ++i) {
-            targetLines.push(new Line(corners[i], corners[(i + 1) % corners.length]));
+
+        // Make positions relative to the world
+        for (const corner of corners) {
+            const vector = new THREE.Vector3(corner.x, 0, corner.y);
+            vector.applyEuler(collidable.rotation);
+            corner.x = vector.x + collidable.position.x;
+            corner.y = vector.z + collidable.position.z;
         }
 
-        this.turnBoundingLines(targetLines, collidable);
-        this.translateBoundingLines(targetLines, collidable);
+        for (let i = 0; i < corners.length; ++i) {
+            targetLines.push(new Line(corners[i].clone(), corners[(i + 1) % corners.length].clone()));
+        }
 
         return targetLines;
     }
@@ -155,10 +176,14 @@ export class PhysicUtils {
 
     private applyMatrixToLines(lines: Line[], matrix: THREE.Matrix3): void {
         for (const line of lines) {
-            const corner = new THREE.Vector3(line.origin.x, line.origin.y, 1);
-            corner.applyMatrix3(matrix);
-            line.origin.x = corner.x;
-            line.origin.y = corner.y;
+            const origin = new THREE.Vector3(line.origin.x, line.origin.y, 1);
+            const destination = new THREE.Vector3(line.destination.x, line.destination.y, 1);
+            origin.applyMatrix3(matrix);
+            destination.applyMatrix3(matrix);
+            line.origin.x = origin.x;
+            line.origin.y = origin.y;
+            line.destination.x = destination.x;
+            line.destination.y = destination.y;
         }
     }
 
@@ -170,6 +195,10 @@ export class PhysicUtils {
         return new THREE.Vector2(point.x, point.y);
     }
 
+    private getVector3FromVector2(vector: THREE.Vector2): THREE.Vector3 {
+        return new THREE.Vector3(vector.x, 0, vector.y);
+    }
+
     private getVector3FromPoint(point: Point): THREE.Vector3 {
         return new THREE.Vector3(point.x, 0, point.y);
     }
@@ -177,8 +206,8 @@ export class PhysicUtils {
     private getTranslationMatrix(position: THREE.Vector2): THREE.Matrix3 {
         const translationMatrix = new THREE.Matrix3()
             .set(1, 0, position.x,
-            0, 1, position.y,
-            0, 0, 0);
+                 0, 1, position.y,
+                 0, 0, 0);
 
         return translationMatrix;
     }
@@ -186,8 +215,8 @@ export class PhysicUtils {
     private getRotationMatrix(angle: number): THREE.Matrix3 {
         const rotationMatrix = new THREE.Matrix3()
             .set(Math.cos(angle), -Math.sin(angle), 0,
-            Math.sin(angle), Math.cos(angle), 0,
-            0, 0, 1);
+                 Math.sin(angle),  Math.cos(angle), 0,
+                 0, 0, 1);
 
         return rotationMatrix;
     }
