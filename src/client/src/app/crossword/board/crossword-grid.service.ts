@@ -87,9 +87,6 @@ export class CrosswordGridService {
         }
     }
 
-    /**
-     * Generate a viewable grid filled with zeroes (black squares)
-     */
     private generateViewableGridTemplate() {
         this.viewableGrid = [];
         for (let i = 0; i < CrosswordGridService.GRID_DIMENSION; i++) {
