@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
@@ -9,10 +10,8 @@ import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
-
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { SelectionService } from '../selection.service';
-
 
 @Injectable()
 export class CrosswordGridService {
@@ -20,12 +19,11 @@ export class CrosswordGridService {
     private static readonly BLACK_SQUARE = '0';
     private static readonly GRID_DIMENSION = 10;
 
-    public crosswordGrid: string[][];
     public horizontalGridWords: Map<number, GridWord>;
     public verticalGridWords: Map<number, GridWord>;
 
-    private wordIsFound = false;
     private viewableGrid: string[][] = [];
+    private gridWithoutUserInput: string[][] = [];
 
     constructor(private crosswordGameService: CrosswordGameService,
                 private selectionService: SelectionService,
@@ -102,15 +100,16 @@ export class CrosswordGridService {
         }
     }
 
-    public userInput(input: string, word: GridWord) {
+    public setUserInput(input: string): void {
         if (this.selectionService.hasSelectedWord) {
-            if (input.length < word.length) {
-                this.inputLettersOnGrid(word, input);
+            const SELECTED_WORD = this.selectionService.selectionValue;
+            if (input.length < SELECTED_WORD.length) {
+                this.inputLettersOnGrid(SELECTED_WORD, input);
             }
-            else if (input.length === word.length) {
-                this.inputLettersOnGrid(word, input);
-                this.sendWordToServer(input, word);
-                this.selectionService.selection.next(word);
+            else if (input.length === SELECTED_WORD.length) {
+                this.inputLettersOnGrid(SELECTED_WORD, input);
+                this.sendWordToServer(input, SELECTED_WORD);
+                this.selectionService.selection.next(SELECTED_WORD);
             }
         }
     }
@@ -119,18 +118,18 @@ export class CrosswordGridService {
         for (let i = 0; i < word.length; i++) {
             if (word.direction === Direction.horizontal) {
                 if (i < input.length) {
-                    this.crosswordGrid[word.y][word.x + i] = input[i];
+                    this.viewableGrid[word.y][word.x + i] = input[i];
                 }
                 else {
-                    this.crosswordGrid[word.y][word.x + i] = '';
+                    this.viewableGrid[word.y][word.x + i] = '';
                 }
             }
             else if (word.direction === Direction.vertical) {
                 if (i < input.length) {
-                    this.crosswordGrid[word.y + i][word.x] = input[i];
+                    this.viewableGrid[word.y + i][word.x] = input[i];
                 }
                 else {
-                    this.crosswordGrid[word.y + i][word.x] = '';
+                    this.viewableGrid[word.y + i][word.x] = '';
                 }
             }
         }

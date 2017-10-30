@@ -26,8 +26,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.crosswordGridService.crosswordGrid =
-            this.crosswordGridService.getViewableGrid();
         this.selectionSubscription =
             this.selectionService.selection.subscribe(
                 (selected) => this.onSelect(selected)
@@ -39,7 +37,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public get crosswordGrid() {
-        return this.crosswordGridService.crosswordGrid;
+        return this.crosswordGridService['gridWithoutUserInput'];
     }
 
     private onSelect(selected: GridWord): void {
@@ -54,18 +52,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     public onInputChange(inputValue: string) {
         const INPUT = this.stripSymbols(inputValue);
         this.inputBuffer.nativeElement.value = INPUT;
-        if (this.selectionService.selectionValue.direction === Direction.horizontal) {
-            const WORD = this.crosswordGridService.horizontalGridWords.get(
-                this.selectionService.selectionValue.id
-            );
-            this.crosswordGridService.userInput(INPUT, WORD);
-        }
-        else {
-            const WORD = this.crosswordGridService.verticalGridWords.get(
-                this.selectionService.selectionValue.id
-            );
-            this.crosswordGridService.userInput(INPUT, WORD);
-        }
+        this.crosswordGridService.setUserInput(INPUT);
     }
 
     public isHighlighted(row: number, column: number): boolean {
