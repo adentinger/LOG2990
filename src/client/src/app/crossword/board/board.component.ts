@@ -46,7 +46,6 @@ export class BoardComponent implements OnInit, OnDestroy {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
         }
-        this.crosswordGridService.clearGridOfUselessLetters();
     }
 
     public onInputChange(inputValue: string) {
