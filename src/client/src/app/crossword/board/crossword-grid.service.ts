@@ -22,7 +22,6 @@ export class CrosswordGridService {
     private horizontalGridWords: Map<number, GridWord>;
     private verticalGridWords:   Map<number, GridWord>;
 
-    private viewableGrid: string[][] = [];
     private gridWithoutUserInput: string[][] = [];
 
     constructor(private crosswordGameService: CrosswordGameService,
@@ -38,9 +37,10 @@ export class CrosswordGridService {
     }
 
     public getViewableGrid(): string[][] {
-        this.generateViewableGridTemplate();
-        this.fillViewableGrid();
-        return this.viewableGrid;
+        const VIEWABLE_GRID: string[][] = [];
+        this.generateViewableGridTemplate(VIEWABLE_GRID);
+        this.fillViewableGrid(VIEWABLE_GRID);
+        return VIEWABLE_GRID;
     }
 
     public getWord(index: number, direction: Direction): GridWord {
@@ -67,103 +67,102 @@ export class CrosswordGridService {
         }
     }
 
-    private fillViewableGrid() {
-        this.fillViewableGridWithSpaces();
+    private fillViewableGrid(viewableGrid: string[][]) {
+        this.fillViewableGridWithSpaces(viewableGrid);
         for (let i = 0; i < this.horizontalGridWords.size; i++) {
             const gridWordToInsert: GridWord = this.horizontalGridWords.get(i);
             if (gridWordToInsert.string.length !== 0) {
-                this.fillHorizontal(gridWordToInsert);
+                this.fillHorizontal(viewableGrid, gridWordToInsert);
             }
         }
         for (let i = 0; i < this.verticalGridWords.size; i++) {
             const gridWordToInsert: GridWord = this.verticalGridWords.get(i);
             if (gridWordToInsert.string.length !== 0) {
-                this.fillVertical(gridWordToInsert);
+                this.fillVertical(viewableGrid, gridWordToInsert);
             }
         }
     }
 
-    private fillViewableGridWithSpaces(): void {
+    private fillViewableGridWithSpaces(viewableGrid: string[][]): void {
         // Create empty spaces for the words
         for (let j = 0; j < this.horizontalGridWords.size; j++) {
             const gridWord: GridWord = this.horizontalGridWords.get(j);
             for (let i = 0; i < gridWord.length; i++) {
-                this.viewableGrid[gridWord.y][i + gridWord.x] = '';
+                viewableGrid[gridWord.y][i + gridWord.x] = '';
             }
         }
         for (let j = 0; j < this.verticalGridWords.size; j++) {
             const gridWord: GridWord = this.verticalGridWords.get(j);
             for (let i = 0; i < gridWord.length; i++) {
-                this.viewableGrid[i + gridWord.y][gridWord.x] = '';
+                viewableGrid[i + gridWord.y][gridWord.x] = '';
             }
         }
     }
 
-    private fillHorizontal(gridWord: GridWord): void {
+    private fillHorizontal(viewableGrid: string[][], gridWord: GridWord): void {
         for (let i = 0; i < gridWord.string.length; i++) {
-            this.viewableGrid[gridWord.y][gridWord.x + i] = gridWord.string[i];
+            viewableGrid[gridWord.y][gridWord.x + i] = gridWord.string[i];
         }
     }
 
-    private fillVertical(gridWord: GridWord): void {
+    private fillVertical(viewableGrid: string[][], gridWord: GridWord): void {
         for (let i = 0; i < gridWord.length; i++) {
-            this.viewableGrid[gridWord.y + i][gridWord.x] = gridWord.string[i];
+            viewableGrid[gridWord.y + i][gridWord.x] = gridWord.string[i];
         }
     }
 
-    private generateViewableGridTemplate() {
-        this.viewableGrid = [];
+    private generateViewableGridTemplate(viwableGrid: string[][]): void {
         for (let i = 0; i < CrosswordGridService.GRID_DIMENSION; i++) {
-            this.viewableGrid[i] = [];
+            viwableGrid[i] = [];
             for (let j = 0; j < CrosswordGridService.GRID_DIMENSION; j++) {
-                this.viewableGrid[i][j] = CrosswordGridService.BLACK_SQUARE;
+                viwableGrid[i][j] = CrosswordGridService.BLACK_SQUARE;
             }
         }
     }
 
     public setUserInput(input: string): void {
-        if (this.selectionService.hasSelectedWord) {
-            const SELECTED_WORD = this.selectionService.selectionValue;
-            if (input.length < SELECTED_WORD.length) {
-                this.inputLettersOnGrid(SELECTED_WORD, input);
-            }
-            else if (input.length === SELECTED_WORD.length) {
-                this.inputLettersOnGrid(SELECTED_WORD, input);
-                this.sendWordToServer(input, SELECTED_WORD);
-                this.selectionService.selection.next(SELECTED_WORD);
-            }
-        }
+        // if (this.selectionService.hasSelectedWord) {
+        //     const SELECTED_WORD = this.selectionService.selectionValue;
+        //     if (input.length < SELECTED_WORD.length) {
+        //         this.inputLettersOnGrid(SELECTED_WORD, input);
+        //     }
+        //     else if (input.length === SELECTED_WORD.length) {
+        //         this.inputLettersOnGrid(SELECTED_WORD, input);
+        //         this.sendWordToServer(input, SELECTED_WORD);
+        //         this.selectionService.selection.next(SELECTED_WORD);
+        //     }
+        // }
     }
 
     private inputLettersOnGrid(word: GridWord, input: string): void {
-        for (let i = 0; i < word.length; i++) {
-            if (word.direction === Direction.horizontal) {
-                if (i < input.length) {
-                    this.viewableGrid[word.y][word.x + i] = input[i];
-                }
-                else {
-                    this.viewableGrid[word.y][word.x + i] = '';
-                }
-            }
-            else if (word.direction === Direction.vertical) {
-                if (i < input.length) {
-                    this.viewableGrid[word.y + i][word.x] = input[i];
-                }
-                else {
-                    this.viewableGrid[word.y + i][word.x] = '';
-                }
-            }
-        }
+        // for (let i = 0; i < word.length; i++) {
+        //     if (word.direction === Direction.horizontal) {
+        //         if (i < input.length) {
+        //             this.viewableGrid[word.y][word.x + i] = input[i];
+        //         }
+        //         else {
+        //             this.viewableGrid[word.y][word.x + i] = '';
+        //         }
+        //     }
+        //     else if (word.direction === Direction.vertical) {
+        //         if (i < input.length) {
+        //             this.viewableGrid[word.y + i][word.x] = input[i];
+        //         }
+        //         else {
+        //             this.viewableGrid[word.y + i][word.x] = '';
+        //         }
+        //     }
+        // }
     }
 
     public clearGridOfUselessLetters(): void {
-        const words = [...this.horizontalGridWords.values(), ...this.verticalGridWords.values()];
+        // const words = [...this.horizontalGridWords.values(), ...this.verticalGridWords.values()];
 
-        for (let i = 0; i < words.length; i++) {
-            if (words[i].string === '') {
-                this.inputLettersOnGrid(words[i], '');
-            }
-        }
+        // for (let i = 0; i < words.length; i++) {
+        //     if (words[i].string === '') {
+        //         this.inputLettersOnGrid(words[i], '');
+        //     }
+        // }
     }
 
     public sendWordToServer(input: string, word: GridWord) {
