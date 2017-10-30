@@ -19,8 +19,8 @@ export class CrosswordGridService {
     private static readonly BLACK_SQUARE = '0';
     private static readonly GRID_DIMENSION = 10;
 
-    public horizontalGridWords: Map<number, GridWord>;
-    public verticalGridWords: Map<number, GridWord>;
+    private horizontalGridWords: Map<number, GridWord>;
+    private verticalGridWords:   Map<number, GridWord>;
 
     private viewableGrid: string[][] = [];
     private gridWithoutUserInput: string[][] = [];
@@ -41,6 +41,18 @@ export class CrosswordGridService {
         this.generateViewableGridTemplate();
         this.fillViewableGrid();
         return this.viewableGrid;
+    }
+
+    public getWord(index: number, direction: Direction): GridWord {
+        if (direction === Direction.horizontal) {
+            return this.horizontalGridWords.get(index);
+        }
+        else if (direction === Direction.vertical) {
+            return this.verticalGridWords.get(index);
+        }
+        else {
+            throw new Error('Unknown direction: "' + direction + '"');
+        }
     }
 
     private fillViewableGrid() {

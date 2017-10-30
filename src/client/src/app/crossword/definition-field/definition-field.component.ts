@@ -38,16 +38,9 @@ export class DefinitionFieldComponent {
     }
 
     public onDefinitionClicked(index: number, direction: Direction): void {
-        let selectedGridWord;
-        if (direction === Direction.horizontal) {
-            selectedGridWord =
-                this.crosswordGridService.horizontalGridWords.get(index);
-        }
-        else {
-            selectedGridWord =
-                this.crosswordGridService.verticalGridWords.get(index);
-        }
-        this.selectionService.selection.next(selectedGridWord);
+        const SELECTED_WORD: GridWord =
+            this.crosswordGridService.getWord(index, direction);
+        this.selectionService.selection.next(SELECTED_WORD);
     }
 
     public onClickOutside(): void {
