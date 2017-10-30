@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PhysicUtils } from './physic-utils';
+import { PhysicUtils } from './engine';
 import { Seconds } from '../../types';
 
 export interface IPhysicElement extends THREE.Object3D {

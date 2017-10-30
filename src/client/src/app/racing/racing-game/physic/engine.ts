@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PhysicUtils } from './physic-utils';
+import { PhysicUtils } from './utils';
 import { IPhysicElement, isPhysicElement } from './object';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
 import { EventManager } from '../../../event-manager.service';
 
-export { PhysicUtils } from './physic-utils';
+export { PhysicUtils } from './utils';
 
 export const BEFORE_PHYSIC_UPDATE_EVENT = 'beforephysicupdate';
 export const AFTER_PHYSIC_UPDATE_EVENT = 'afterphysicupdate';

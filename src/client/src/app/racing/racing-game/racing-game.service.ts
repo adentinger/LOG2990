@@ -12,6 +12,7 @@ import { Meters } from '../types';
 import { UIInputs } from './ui-input.service';
 
 class Wall extends CollidableMesh {
+    public readonly mass = Infinity;
     constructor (width: Meters, heigth: Meters) {
         super(
             new THREE.PlaneGeometry(width, heigth),
@@ -53,22 +54,24 @@ export class RacingGameService {
         this.renderer.SCENE.add(this.map);
 
         const BALL1 = new Ball(0.5);
-        BALL1.position.set(0, 0.001, -3);
+        BALL1.position.set(0, 0, -3);
         // BALL1.setUIInput(userInputs);
+        console.log(this.physicEngine['physicUtils']['getBoundingLines'](BALL1));
         this.map.add(BALL1);
         const BALL2 = new Ball(0.5);
-        BALL2.position.set(1.5, 0.001, -2);
-        BALL2.velocity.set(-0.5, 0, -0.5);
+        BALL2.position.set(1.5, 0, -1.75);
+        BALL2.velocity.set(-1, 0, -1);
         this.map.add(BALL2);
 
         const wall1 = new Wall(10, 10);
         wall1.position.set(0, 0, -5);
+        wall1.rotation.y = Math.PI;
         const wall2 = new Wall(10, 10);
         wall2.position.set(5, 0, 0);
-        wall2.rotation.y = Math.PI / 2;
+        wall2.rotation.y = 3 * Math.PI / 2;
         const wall3 = new Wall(10, 10);
         wall3.position.set(-5, 0, 0);
-        wall3.rotation.y = - Math.PI / 2;
+        wall3.rotation.y = Math.PI / 2;
         const wall4 = new Wall(10, 10);
         wall4.position.set(0, 0, 5);
         this.map.add(wall1, wall2, wall3, wall4);

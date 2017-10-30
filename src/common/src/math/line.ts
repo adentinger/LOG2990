@@ -33,6 +33,16 @@ export class Line {
                 this.destination.equals(that.origin));
     }
 
+    /**
+     * Get the interpolated point between the origin and the destination.
+     * @param proportion The proportion of the line. Must be between 0 and 1.
+     */
+    public interpollate(proportion: number): Point {
+        const x = this.origin.x + (this.destination.x - this.origin.x) * (proportion);
+        const y = this.origin.y + (this.destination.y - this.origin.y) * (proportion);
+        return new Point(x, y);
+    }
+
     public intersectsWith(that: Line): Point[] {
 
         const point1 = this.origin;
@@ -106,7 +116,7 @@ export class Line {
         const Y = parametricConstant * that.translation.y + that.origin.y;
         const X = parametricConstant * that.translation.x + that.origin.x;
         if ((THIS_DOMAIN_Y.contains(Y) && THAT_DOMAIN_Y.contains(Y)) &&
-        (THIS_DOMAIN_X.contains(X) && THAT_DOMAIN_X.contains(X))) {
+            (THIS_DOMAIN_X.contains(X) && THAT_DOMAIN_X.contains(X))) {
             return [new Point(X, Y)];
         }
         return [];

@@ -29,8 +29,12 @@ export interface CollisionInfo {
     source: Collidable;
 
     /**
-     * The collision point relative to the target. The array will contain 1 point if the collision
-     * area is a point, 2 points if the collision area is a line.
+     * The collision point relative to the target.
      */
-    positions: Point[];
+    applicationPoint: THREE.Vector2;
+
+    /**
+     * The normal force applied at the collision point.
+     */
+    force: THREE.Vector2;
 }

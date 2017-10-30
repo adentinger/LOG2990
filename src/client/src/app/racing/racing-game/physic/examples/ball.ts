@@ -24,7 +24,7 @@ export class Ball extends DynamicCollidableMesh {
 
     constructor(public readonly radius: number, public mass: Kilograms = 1) {
         super();
-        this.geometry = new THREE.SphereGeometry(radius, 20, 10);
+        this.geometry = new THREE.CubeGeometry(radius * 2, radius * 2, radius * 2);
         this.geometry.vertices.forEach((vertex, i, array) => {
             vertex.add(new THREE.Vector3(0, radius, 0));
         });
