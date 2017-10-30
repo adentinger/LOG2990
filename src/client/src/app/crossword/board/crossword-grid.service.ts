@@ -111,7 +111,7 @@ export class CrosswordGridService {
         }
     }
 
-    public inputLettersOnGrid(word: GridWord, input: string): void {
+    private inputLettersOnGrid(word: GridWord, input: string): void {
         for (let i = 0; i < word.length; i++) {
             if (word.direction === Direction.horizontal) {
                 if (i < input.length) {
