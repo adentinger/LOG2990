@@ -5,9 +5,11 @@ import { Point, Line, ShoelaceAlgorithm } from '../../../../../../common/src/mat
 import { EventManager } from '../../../event-manager.service';
 import { Ball } from './examples/ball';
 
+const UP = new THREE.Vector3(0, 1, 0);
+
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
-    private static readonly LENGTH_TO_FORCE_CONSTANT = 2; // N/m
+    private static readonly LENGTH_TO_FORCE_CONSTANT = 0.75; // N/m^2
 
     private shoelace: ShoelaceAlgorithm = new ShoelaceAlgorithm();
     private root: THREE.Object3D;
@@ -18,17 +20,15 @@ export class PhysicUtils {
         this.root = root;
     }
 
-    public checkColliding(object1: Collidable, object2: Collidable): boolean {
-        const boundingBox1 = new THREE.Box3().setFromObject(object1);
-        const boundingBox2 = new THREE.Box3().setFromObject(object2);
-        return boundingBox1.intersectsBox(boundingBox2);
-    }
-
-    public getObjectsCollidingWith(collidable: Collidable): Collidable[] {
-        const objects = this.getAllPhysicObjects();
-        return objects.filter((object: IPhysicElement) =>
-            object !== collidable && isCollidable(object) && this.checkColliding(collidable, object)
-        ) as Collidable[];
+    public applyCollisionsTo(target: Collidable): boolean {
+        let hasCollided = false;
+        const collidables: Collidable[] = this.getAllPhysicObjects()
+            .filter((object) => object !== target && isCollidable(object)) as Collidable[];
+        for (const collidable of collidables) {
+            const collisionOccured = this.applyCollision(target, collidable);
+            hasCollided = hasCollided || collisionOccured;
+        }
+        return hasCollided;
     }
 
     public getCollisionsOf(target: Collidable): CollisionInfo[] {
@@ -52,8 +52,31 @@ export class PhysicUtils {
         return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
     }
 
+    private applyCollision(target: Collidable, source: Collidable): boolean {
+        let collisionOccured = false;
+
+        const targetLines: Line[] = this.getBoundingLines(target);
+        const sourceLines: Line[] = this.getBoundingLines(source);
+
+        const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
+        let applicationPoint: THREE.Vector2;
+
+        if (intersectionPoints.length >= 2) {
+            collisionOccured = true;
+            const intersection1 = intersectionPoints[0][2];
+            const intersection2 = intersectionPoints[1][2];
+            const intersectionLine: Line = new Line(intersection1, intersection2);
+
+            applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
+                .sub(this.getVector2FromVector3(target.position));
+
+            const lineVector = this.getVector3FromPoint(intersectionLine.translation);
+        }
+
+        return collisionOccured;
+    }
+
     private getCollision(target: Collidable, source: Collidable): CollisionInfo {
-        const UP = new THREE.Vector3(0, 1, 0);
         let collision: CollisionInfo = null;
 
         if (target === source) {
@@ -63,22 +86,12 @@ export class PhysicUtils {
         const targetLines: Line[] = this.getBoundingLines(target);
         const sourceLines: Line[] = this.getBoundingLines(source);
 
-        if (target instanceof Ball) {
-            target['point1'].position.set(targetLines[0].origin.x, 1.001, targetLines[0].origin.y);
-            target['point2'].position.set(targetLines[1].origin.x, 1.001, targetLines[1].origin.y);
-            target['point3'].position.set(targetLines[2].origin.x, 1.001, targetLines[2].origin.y);
-        }
-
         const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
 
         if (intersectionPoints.length < 2) {
             return null;
         }
 
-        const targetLine1 = intersectionPoints[0][0];
-        const targetLine2 = intersectionPoints[1][0];
-        const sourceLine1 = intersectionPoints[0][1];
-        const sourceLine2 = intersectionPoints[1][1];
         const intersection1 = intersectionPoints[0][2];
         const intersection2 = intersectionPoints[1][2];
         const intersectionLine: Line = new Line(intersection1, intersection2);
@@ -89,18 +102,11 @@ export class PhysicUtils {
 
         const order = lineVector.clone().cross(UP).dot(this.getVector3FromVector2(applicationPoint));
         if (order > 0) {
-            lineVector.multiplyScalar(-1);
+            lineVector.negate();
         }
 
         const scalarForce = PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
-            (applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length());
-        if (target instanceof Ball) {
-            target['point1'].position.set(targetLine1.origin.x, 1.001, targetLine1.origin.y);
-            target['point2'].position.set(targetLine2.origin.x, 1.001, targetLine2.origin.y);
-            target['point3'].position.set(targetLine2.destination.x, 1.001, targetLine2.destination.y);
-            target['arrow'].position.set(applicationPoint.x + target.position.x, 1.001, applicationPoint.y + target.position.z);
-            target['arrow'].setDirection(lineVector.clone().normalize().cross(UP));
-        }
+            ((applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length()) ** 2);
 
         const force: THREE.Vector2 = this.getVector2FromVector3(
             lineVector.normalize().cross(UP).multiplyScalar(scalarForce)
@@ -170,10 +176,6 @@ export class PhysicUtils {
         this.applyMatrixToLines(lines, this.getTranslationMatrix(this.getVector2FromVector3(collidable.position)));
     }
 
-    private turnBoundingLines(lines: Line[], collidable: Collidable): void {
-        this.applyMatrixToLines(lines, this.getRotationMatrix(collidable.rotation.y));
-    }
-
     private applyMatrixToLines(lines: Line[], matrix: THREE.Matrix3): void {
         for (const line of lines) {
             const origin = new THREE.Vector3(line.origin.x, line.origin.y, 1);
@@ -206,8 +208,8 @@ export class PhysicUtils {
     private getTranslationMatrix(position: THREE.Vector2): THREE.Matrix3 {
         const translationMatrix = new THREE.Matrix3()
             .set(1, 0, position.x,
-                 0, 1, position.y,
-                 0, 0, 0);
+            0, 1, position.y,
+            0, 0, 0);
 
         return translationMatrix;
     }
@@ -215,8 +217,8 @@ export class PhysicUtils {
     private getRotationMatrix(angle: number): THREE.Matrix3 {
         const rotationMatrix = new THREE.Matrix3()
             .set(Math.cos(angle), -Math.sin(angle), 0,
-                 Math.sin(angle),  Math.cos(angle), 0,
-                 0, 0, 1);
+            Math.sin(angle), Math.cos(angle), 0,
+            0, 0, 1);
 
         return rotationMatrix;
     }
