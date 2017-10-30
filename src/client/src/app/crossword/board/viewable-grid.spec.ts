@@ -106,7 +106,7 @@ function expectedHorizontalAndVertical(): string[][] {
     ];
 }
 
-describe('CrosswordGridService', () => {
+describe('ViewableGrid', () => {
 
     it('should be created', () => {
         expect(new ViewableGrid()).toBeTruthy();
