@@ -11,6 +11,9 @@ function viewableGridCompare(viewableGrid: ViewableGrid,
         for (let column = 0; column < Grid.DIMENSIONS; ++column) {
             expect(viewableGrid.getCharAt(row, column))
                 .toEqual(expected[row][column]);
+            if (viewableGrid.getCharAt(row, column) !== expected[row][column]) {
+                console.log('NO', row, column);
+            }
         }
     }
 }
@@ -24,14 +27,14 @@ function horizontalWords(): GridWord[] {
         new GridWord(0, 4, 1, 3,  DIRECTION, OWNER, ''),
         new GridWord(0, 4, 6, 1,  DIRECTION, OWNER, 'r'),
         new GridWord(0, 6, 0, 10, DIRECTION, OWNER, ''),
-        new GridWord(0, 6, 2, 5,  DIRECTION, OWNER, 'abcde'),
+        new GridWord(0, 8, 2, 5,  DIRECTION, OWNER, 'abcde'),
         new GridWord(0, 9, 4, 3,  DIRECTION, OWNER, 'fgh'),
         new GridWord(0, 9, 8, 2,  DIRECTION, OWNER, ''),
     ];
 }
 
 function verticalWords(): GridWord[] {
-    const DIRECTION = Direction.horizontal;
+    const DIRECTION = Direction.vertical;
     const OWNER = Owner.none;
     return [
         new GridWord(0, 0, 0, 3,  DIRECTION, OWNER, 'abc'),
@@ -63,12 +66,12 @@ function expectedHorizontal(): string[][] {
         [ B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ],
         [ B ,  B ,  B , 'f', 'g', 'h', 'i', 'j', 'k', 'l'],
         [ B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ],
-        [ E ,  E ,  E ,  B ,  B ,  B , 'r',  B ,  B ,  B ],
+        [ B ,  E ,  E ,  E ,  B ,  B , 'r',  B ,  B ,  B ],
         [ B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ],
         [ E ,  E ,  E ,  E ,  E ,  E ,  E ,  E ,  E ,  E ],
         [ B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ,  B ],
         [ B ,  B , 'a', 'b', 'c', 'd', 'e',  B ,  B ,  B ],
-        [ B ,  B ,  B ,  B , 'f', 'g', 'h',  B , 'i', 'j']
+        [ B ,  B ,  B ,  B , 'f', 'g', 'h',  B ,  E ,  E ]
     ];
 }
 
@@ -83,9 +86,9 @@ function expectedVertical(): string[][] {
         [ B ,  B ,  E ,  B ,  B ,  B , 'r',  B ,  B , 'e'],
         [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 'f'],
         [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 'z'],
-        [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 's'],
-        [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 't'],
-        [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 'j']
+        [ B ,  B ,  E ,  B ,  B ,  E ,  B ,  B ,  B , 's'],
+        [ B ,  B ,  E ,  B ,  B ,  E ,  B ,  B ,  B , 't'],
+        [ B ,  B ,  E ,  B ,  B ,  E ,  B ,  B ,  B , 'j']
     ];
 }
 
@@ -100,9 +103,9 @@ function expectedHorizontalAndVertical(): string[][] {
         [ B ,  E ,  E ,  E ,  B ,  B , 'r',  B ,  B , 'e'],
         [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 'f'],
         [ E ,  E ,  E ,  E ,  E ,  E ,  E ,  E ,  E , 'z'],
-        [ B ,  B ,  E ,  B ,  B ,  B ,  B ,  B ,  B , 's'],
+        [ B ,  B ,  E ,  B ,  B ,  E ,  B ,  B ,  B , 's'],
         [ B ,  B , 'a', 'b', 'c', 'd', 'e',  B ,  B , 't'],
-        [ B ,  B ,  E ,  B , 'f', 'g', 'h',  B , 'i', 'j']
+        [ B ,  B ,  E ,  B , 'f', 'g', 'h',  B ,  E , 'j']
     ];
 }
 
