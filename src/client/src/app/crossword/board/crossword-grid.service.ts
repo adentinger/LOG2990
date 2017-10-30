@@ -17,8 +17,8 @@ import { SelectionService } from '../selection.service';
 @Injectable()
 export class CrosswordGridService {
 
-    private readonly BLACK_SQUARE = '0';
-    private readonly GRID_DIMENSION = 10;
+    private static readonly BLACK_SQUARE = '0';
+    private static readonly GRID_DIMENSION = 10;
 
     public crosswordGrid: string[][];
     public wordIsFound = false;
@@ -56,7 +56,6 @@ export class CrosswordGridService {
         for (let i = 0; i < this.verticalGridWords.size; i++) {
             const gridWordToInsert: GridWord = this.verticalGridWords.get(i);
             if (gridWordToInsert.string.length !== 0) {
-                // console.log("about to call fill vertical");
                 this.fillVertical(gridWordToInsert);
             }
         }
@@ -95,10 +94,10 @@ export class CrosswordGridService {
      */
     private generateViewableGridTemplate() {
         this.viewableGrid = [];
-        for (let i = 0; i < this.GRID_DIMENSION; i++) {
+        for (let i = 0; i < CrosswordGridService.GRID_DIMENSION; i++) {
             this.viewableGrid[i] = [];
-            for (let j = 0; j < this.GRID_DIMENSION; j++) {
-                this.viewableGrid[i][j] = this.BLACK_SQUARE;
+            for (let j = 0; j < CrosswordGridService.GRID_DIMENSION; j++) {
+                this.viewableGrid[i][j] = CrosswordGridService.BLACK_SQUARE;
             }
         }
     }
