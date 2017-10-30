@@ -7,7 +7,7 @@ import { Ball } from './examples/ball';
 
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
-    private static readonly LENGTH_TO_FORCE_CONSTANT = 15; // N/m
+    private static readonly LENGTH_TO_FORCE_CONSTANT = 7; // N/m
 
     private shoelace: ShoelaceAlgorithm = new ShoelaceAlgorithm();
     private root: THREE.Object3D;
@@ -88,7 +88,7 @@ export class PhysicUtils {
             .sub(this.getVector2FromVector3(target.position));
 
         const scalarForce = PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
-            (applicationPoint.length());
+            (applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length());
         const force: THREE.Vector2 = this.getVector2FromVector3(
             lineVector.normalize().cross(UP).multiplyScalar(scalarForce)
         );
