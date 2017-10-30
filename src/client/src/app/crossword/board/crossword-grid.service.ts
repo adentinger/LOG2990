@@ -55,6 +55,18 @@ export class CrosswordGridService {
         }
     }
 
+    public setWord(word: GridWord, index: number, direction: Direction): void {
+        if (direction === Direction.horizontal) {
+            this.horizontalGridWords.set(index, word);
+        }
+        else if (direction === Direction.vertical) {
+            this.verticalGridWords.set(index, word);
+        }
+        else {
+            throw new Error('Unknown direction: "' + direction + '"');
+        }
+    }
+
     private fillViewableGrid() {
         this.fillViewableGridWithSpaces();
         for (let i = 0; i < this.horizontalGridWords.size; i++) {
