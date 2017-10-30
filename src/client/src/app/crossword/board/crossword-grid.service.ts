@@ -21,11 +21,11 @@ export class CrosswordGridService {
     private static readonly GRID_DIMENSION = 10;
 
     public crosswordGrid: string[][];
-    public wordIsFound = false;
     public horizontalGridWords: Map<number, GridWord>;
     public verticalGridWords: Map<number, GridWord>;
 
-    public viewableGrid: string[][] = [];
+    private wordIsFound = false;
+    private viewableGrid: string[][] = [];
 
     constructor(private crosswordGameService: CrosswordGameService,
                 private selectionService: SelectionService,
@@ -83,7 +83,7 @@ export class CrosswordGridService {
         }
     }
 
-    public fillVertical(gridWord: GridWord): void {
+    private fillVertical(gridWord: GridWord): void {
         for (let i = 0; i < gridWord.length; i++) {
             this.viewableGrid[gridWord.y + i][gridWord.x] = gridWord.string[i];
         }
@@ -100,10 +100,6 @@ export class CrosswordGridService {
                 this.viewableGrid[i][j] = CrosswordGridService.BLACK_SQUARE;
             }
         }
-    }
-
-    public stripSymbols(input) {
-        return input.replace(/[^a-zA-Z]/g, '');
     }
 
     public userInput(input: string, word: GridWord) {

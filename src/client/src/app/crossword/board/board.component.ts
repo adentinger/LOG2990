@@ -52,7 +52,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public onInputChange(inputValue: string) {
-        const INPUT = this.crosswordGridService.stripSymbols(inputValue);
+        const INPUT = this.stripSymbols(inputValue);
         this.inputBuffer.nativeElement.value = INPUT;
         if (this.selectionService.selectionValue.direction === Direction.horizontal) {
             const WORD = this.crosswordGridService.horizontalGridWords.get(
@@ -70,6 +70,10 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     public isHighlighted(row: number, column: number): boolean {
         return this.highlightGrid.isSelected(row, column);
+    }
+
+    private stripSymbols(input: string): string {
+        return input.replace(/[^a-zA-Z]/g, '');
     }
 
 }
