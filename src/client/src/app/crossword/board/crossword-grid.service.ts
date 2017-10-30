@@ -42,9 +42,6 @@ export class CrosswordGridService {
     public getViewableGrid(): string[][] {
         this.generateViewableGridTemplate();
         this.fillViewableGrid();
-        console.log(this.horizontalGridWords);
-        console.log(this.verticalGridWords);
-
         return this.viewableGrid;
     }
 
