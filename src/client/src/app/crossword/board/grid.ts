@@ -55,7 +55,7 @@ export class Grid {
     public set userInput(input: GridWord) {
         this.userInputInternal = input;
         this.data = this.cloneDataWithoutInput();
-        this.fillWord(this.data, input, true);
+        this.fillWord(this.data, input);
     }
 
     private regenerateEverything(): void {
@@ -76,18 +76,17 @@ export class Grid {
 
     private populateData(): void {
         this.words.forEach((word) => {
-            this.fillWord(this.dataWithoutUserInput, word, false);
+            this.fillWord(this.dataWithoutUserInput, word);
         });
     }
 
     private fillWord(grid: string[][],
-                     word: GridWord,
-                     shouldOverwrite: boolean): void {
+                     word: GridWord): void {
         if (word.direction === Direction.horizontal) {
-            this.fillHorizontalWord(grid, word, shouldOverwrite);
+            this.fillHorizontalWord(grid, word);
         }
         else if (word.direction === Direction.vertical) {
-            this.fillVerticalWord(grid, word, shouldOverwrite);
+            this.fillVerticalWord(grid, word);
         }
         else {
             throw new Error('Invalid direction: "' + word.direction + '"');
@@ -95,31 +94,29 @@ export class Grid {
     }
 
     private fillHorizontalWord(grid: string[][],
-                               word: GridWord,
-                               shouldOverwrite: boolean): void {
+                               word: GridWord): void {
         const ROW = word.y;
         for (let i = 0; i < word.length; ++i) {
             const COLUMN = word.x + i;
-            const HAVE_EMPTY_CHAR =
-                grid[ROW][COLUMN] === Grid.BLACK_TILE ||
-                grid[ROW][COLUMN] === Grid.EMPTY_TILE;
-            if (HAVE_EMPTY_CHAR || shouldOverwrite) {
-                grid[ROW][COLUMN] = this.wordCharAt(word, i);
+            const CHAR = this.wordCharAt(word, i);
+            const SHOULD_WRITE_CHAR =
+                CHAR !== Grid.EMPTY_TILE || grid[ROW][COLUMN] === Grid.BLACK_TILE;
+            if (SHOULD_WRITE_CHAR) {
+                grid[ROW][COLUMN] = CHAR;
             }
         }
     }
 
     private fillVerticalWord(grid: string[][],
-                             word: GridWord,
-                             shouldOverwrite: boolean): void {
+                             word: GridWord): void {
         const COLUMN = word.x;
         for (let i = 0; i < word.length; ++i) {
             const ROW = word.y + i;
-            const HAVE_EMPTY_CHAR =
-                grid[ROW][COLUMN] === Grid.BLACK_TILE ||
-                grid[ROW][COLUMN] === Grid.EMPTY_TILE;
-            if (HAVE_EMPTY_CHAR || shouldOverwrite) {
-                grid[ROW][COLUMN] = this.wordCharAt(word, i);
+            const CHAR = this.wordCharAt(word, i);
+            const SHOULD_WRITE_CHAR =
+                CHAR !== Grid.EMPTY_TILE || grid[ROW][COLUMN] === Grid.BLACK_TILE;
+            if (SHOULD_WRITE_CHAR) {
+                grid[ROW][COLUMN] = CHAR;
             }
         }
     }
