@@ -3,10 +3,11 @@ import { Parser } from '../../communication/packet-api/packet-handler';
 import { GameJoinPacket } from './game-join.packet';
 
 const SIZE_UINT8 = 1,
-    SIZE_UINT32 = 4;
-// Example of an implementation of a Packet for the class WorkConstraint
+      SIZE_UINT32 = 4;
+
 @Parser(GameJoinPacket)
 export class GameJoinParser extends PacketParser<GameJoinPacket> {
+
     public serialize(value: GameJoinPacket): ArrayBuffer {
         const BUFFER: ArrayBuffer = new ArrayBuffer(SIZE_UINT32 + value.gameId.length * SIZE_UINT8);
         const DATA = new DataView(BUFFER);
@@ -26,4 +27,5 @@ export class GameJoinParser extends PacketParser<GameJoinPacket> {
         }
         return new GameJoinPacket(buffer);
     }
+
 }

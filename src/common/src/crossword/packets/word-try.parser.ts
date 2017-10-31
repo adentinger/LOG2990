@@ -3,9 +3,9 @@ import { Parser, SIZE_UINT16, SIZE_UINT32 } from '../../communication/packet-api
 import { WordTryPacket } from './word-try.packet';
 import { GridWord } from '../grid-word';
 
-
 @Parser(WordTryPacket)
-export class GameJoinParser extends PacketParser<WordTryPacket> {
+export class WordTryParser extends PacketParser<WordTryPacket> {
+
     public serialize(value: WordTryPacket): ArrayBuffer {
         const WORD_ANSWER_LENGTH = value.wordTry.string.length;
         const BUFFER: ArrayBuffer = new ArrayBuffer(7 * SIZE_UINT32 + WORD_ANSWER_LENGTH * SIZE_UINT16);
@@ -50,4 +50,5 @@ export class GameJoinParser extends PacketParser<WordTryPacket> {
 
         return new WordTryPacket(newGridWord);
     }
+
 }

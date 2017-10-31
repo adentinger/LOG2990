@@ -5,6 +5,7 @@ import { GridWord } from '../grid-word';
 
 @Parser(GridWordPacket)
 export class GridWordParser extends PacketParser<GridWordPacket> {
+
     public serialize(value: GridWordPacket): ArrayBuffer {
         const STRING_LENGTH = value.gridword.string.length;
         const BUFFER: ArrayBuffer = new ArrayBuffer(7 * SIZE_UINT32 + STRING_LENGTH * SIZE_UINT16);
@@ -45,4 +46,5 @@ export class GridWordParser extends PacketParser<GridWordPacket> {
         const newGridWord = new GridWord(id, y, x, length, direction, owner, buffer);
         return new GridWordPacket(newGridWord);
     }
+
 }
