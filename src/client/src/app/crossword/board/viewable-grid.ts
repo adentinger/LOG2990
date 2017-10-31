@@ -13,7 +13,7 @@ export class ViewableGrid {
     }
 
     public getCharAt(row: number, column: number): string {
-        return null;
+        return this.dataWithoutUserInput[row][column];
     }
 
     private resetData(): void {
@@ -28,24 +28,58 @@ export class ViewableGrid {
 
     private populateData(words: GridWord[]): void {
         words.forEach((word) => {
-            if (word.direction === Direction.horizontal) {
-                this.fillHorizontalWord(word);
-            }
-            else if (word.direction === Direction.vertical) {
-                this.fillVerticalWord(word);
-            }
-            else {
-                throw new Error('Invalid direction: "' + word.direction + '"');
-            }
+            this.fillWord(word, false);
         });
     }
 
-    private fillHorizontalWord(word: GridWord): void {
-
+    private fillWord(word: GridWord, shouldOverwrite: boolean): void {
+        if (word.direction === Direction.horizontal) {
+            this.fillHorizontalWord(word, shouldOverwrite);
+        }
+        else if (word.direction === Direction.vertical) {
+            this.fillVerticalWord(word, shouldOverwrite);
+        }
+        else {
+            throw new Error('Invalid direction: "' + word.direction + '"');
+        }
     }
 
-    private fillVerticalWord(word: GridWord): void {
+    private fillHorizontalWord(word: GridWord, shouldOverwrite: boolean): void {
+        const ROW = word.y;
+        for (let i = 0; i < word.length; ++i) {
+            const COLUMN = word.x + i;
+            const HAVE_EMPTY_CHAR =
+                this.dataWithoutUserInput[ROW][COLUMN] === Grid.BLACK_TILE ||
+                this.dataWithoutUserInput[ROW][COLUMN] === Grid.EMPTY_TILE;
+            if (HAVE_EMPTY_CHAR || shouldOverwrite) {
+                this.dataWithoutUserInput[ROW][COLUMN] =
+                    this.wordCharAt(word, i);
+            }
+        }
+    }
 
+    private fillVerticalWord(word: GridWord, shouldOverwrite: boolean): void {
+        const COLUMN = word.x;
+        for (let i = 0; i < word.length; ++i) {
+            const ROW = word.y + i;
+            const HAVE_EMPTY_CHAR =
+                this.dataWithoutUserInput[ROW][COLUMN] === Grid.BLACK_TILE ||
+                this.dataWithoutUserInput[ROW][COLUMN] === Grid.EMPTY_TILE;
+            if (HAVE_EMPTY_CHAR || shouldOverwrite) {
+                this.dataWithoutUserInput[ROW][COLUMN] =
+                    this.wordCharAt(word, i);
+            }
+        }
+    }
+
+    private wordCharAt(word: GridWord, index: number): string {
+        const IS_WORD_FOUND = word.string.length > 0;
+        if (IS_WORD_FOUND) {
+            return word.string.charAt(index);
+        }
+        else {
+            return Grid.EMPTY_TILE;
+        }
     }
 
 }
