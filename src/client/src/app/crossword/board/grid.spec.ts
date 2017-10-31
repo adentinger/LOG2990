@@ -115,34 +115,34 @@ describe('Grid', () => {
     });
 
     it('should be full of black tiles when constructed with no words', () => {
-        const VIEWABLE_GRID = new Grid([]);
+        const GRID = new Grid([]);
         gridCompare(
-            VIEWABLE_GRID,
+            GRID,
             expectedBlack()
         );
     });
 
     it('should place horizontal words', () => {
-        const VIEWABLE_GRID = new Grid(horizontalWords());
+        const GRID = new Grid(horizontalWords());
         gridCompare(
-            VIEWABLE_GRID,
+            GRID,
             expectedHorizontal()
         );
     });
 
     it('should place vertical words', () => {
-        const VIEWABLE_GRID = new Grid(verticalWords());
+        const GRID = new Grid(verticalWords());
         gridCompare(
-            VIEWABLE_GRID,
+            GRID,
             expectedVertical()
         );
     });
 
     it('should place a mixture of horizontal and vertical words', () => {
-        const VIEWABLE_GRID = new Grid(horizontalWords()
+        const GRID = new Grid(horizontalWords()
                                   .concat(verticalWords()));
         gridCompare(
-            VIEWABLE_GRID,
+            GRID,
             expectedHorizontalAndVertical()
         );
     });
@@ -153,12 +153,22 @@ describe('Grid', () => {
         EXPECTED_TILES[7][5] = 'x';
         EXPECTED_TILES[8][5] = 'y';
         EXPECTED_TILES[9][5] = 'z';
-        const VIEWABLE_GRID = new Grid(WORDS);
-        VIEWABLE_GRID.userInput =
+        const GRID = new Grid(WORDS);
+        GRID.userInput =
             new GridWord(0, 7, 5, 3, Direction.vertical, Owner.none, 'xyz');
         gridCompare(
-            VIEWABLE_GRID,
+            GRID,
             EXPECTED_TILES
+        );
+    });
+
+    it('should empty itself', () => {
+        const GRID = new Grid(horizontalWords()
+            .concat(verticalWords()));
+        GRID.empty();
+        gridCompare(
+            GRID,
+            expectedBlack()
         );
     });
 
