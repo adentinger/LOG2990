@@ -18,6 +18,7 @@ import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.co
 import { CrosswordGridService } from './board/crossword-grid.service';
 import { GameDetailsService } from './game-details/game-details.service';
 import { SelectionService } from './selection.service';
+import { CheatModeComponent } from './cheat-mode/cheat-mode.component';
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { SelectionService } from './selection.service';
         ConfigMenuComponent,
         GameDetailsComponent,
         CrosswordTileComponent,
+        CheatModeComponent,
     ],
     providers: [
         HttpClient,
