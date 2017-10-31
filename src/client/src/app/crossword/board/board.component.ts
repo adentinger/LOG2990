@@ -7,6 +7,7 @@ import '../../../../../common/src/crossword/packets/word-try.parser';
 import { HighlightGrid } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
+import { Owner } from '../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-board',
@@ -50,17 +51,32 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public onInputChange(inputValue: string) {
-        const INPUT = this.stripSymbols(inputValue);
-        this.inputBuffer.nativeElement.value = INPUT;
-        this.crosswordGridService.setUserInput(INPUT);
+        const USER_WORD = this.makeWordFromInput(inputValue);
+        this.inputBuffer.nativeElement.value = USER_WORD.string;
+        this.crosswordGridService.setUserInput(USER_WORD);
     }
 
     public isHighlighted(row: number, column: number): boolean {
         return this.highlightGrid.isSelected(row, column);
     }
 
-    private stripSymbols(input: string): string {
-        return input.replace(/[^a-zA-Z]/g, '');
+    private makeWordFromInput(input: string): GridWord {
+        input = input.replace(/[^a-zA-Z]/g, '');
+        input = input.toLowerCase();
+
+        const SELECTED_WORD = this.selectionService.selectionValue;
+        if (input.length > SELECTED_WORD.length) {
+            input = input.substr(0, SELECTED_WORD.length);
+        }
+        return new GridWord(
+            -1,
+            SELECTED_WORD.y,
+            SELECTED_WORD.x,
+            SELECTED_WORD.length,
+            SELECTED_WORD.direction,
+            Owner.none,
+            input
+        );
     }
 
 }

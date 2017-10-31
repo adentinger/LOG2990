@@ -36,7 +36,7 @@ export class CrosswordGridService {
         return this.GRID.getWord(index, direction);
     }
 
-    public setUserInput(input: string): void {
+    public setUserInput(input: GridWord): void {
         this.GRID.userInput = input;
     }
 
