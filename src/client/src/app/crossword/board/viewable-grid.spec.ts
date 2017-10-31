@@ -148,4 +148,19 @@ describe('ViewableGrid', () => {
         );
     });
 
+    it('should accept user input, overriding any letters that are already present', () => {
+        const WORDS = horizontalWords().concat(verticalWords());
+        const EXPECTED_TILES = expectedHorizontalAndVertical();
+        EXPECTED_TILES[7][5] = 'x';
+        EXPECTED_TILES[8][5] = 'y';
+        EXPECTED_TILES[9][5] = 'z';
+        const VIEWABLE_GRID = new ViewableGrid(WORDS);
+        VIEWABLE_GRID.userInput =
+            new GridWord(0, 7, 5, 3, Direction.vertical, Owner.none, 'xyz');
+        viewableGridCompare(
+            VIEWABLE_GRID,
+            EXPECTED_TILES
+        );
+    });
+
 });
