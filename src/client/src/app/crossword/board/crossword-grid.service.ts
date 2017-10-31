@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
-import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
+import { mockHorizontalGridWords, mockVerticalGridWords } from '../mocks/grid-mock';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { registerHandlers, PacketHandler, PacketEvent } from '../../../../../common/src/index';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
@@ -20,10 +20,10 @@ export class CrosswordGridService {
         registerHandlers(this, packetManager);
 
         // This mock is meant to stay as an initial view
-        ARRAY_GRIDWORD_H.forEach((word) => {
+        mockHorizontalGridWords().forEach((word) => {
             this.GRID.addWord(word);
         });
-        ARRAY_GRIDWORD_V.forEach((word) => {
+        mockVerticalGridWords().forEach((word) => {
             this.GRID.addWord(word);
         });
     }
