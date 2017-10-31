@@ -36,30 +36,4 @@ describe('RacingGameService', () => {
         expect(service).toBeTruthy();
     });
 
-    xdescribe('cursorPosition', () => {
-
-        it('should move the internal mouse cursor', () => {
-            const CAMERA_ROTATION = new Point(0.5, -0.78);
-            // Should not throw
-            service.cameraRotation = CAMERA_ROTATION;
-        });
-
-        it('should throw an error when the cursor is invalid', () => {
-            const INITIAL_POSITION = service.cameraRotation;
-            const INVALID_CURSORS: Point[] = [
-                new Point(-1.001, 0), new Point(1.001, 0),
-                new Point(0, -1.001), new Point(0, 1.001),
-                new Point(-1.001, -1.001), new Point(1.001, 1.001),
-                new Point(-1.001, 1.001), new Point(1.001, -1.001)
-            ];
-
-            INVALID_CURSORS.forEach((point) => {
-                expect(() => service.cameraRotation = point).toThrow();
-                expect(service.cameraRotation).toBe(INITIAL_POSITION);
-            });
-        });
-
-    });
-
-
 });

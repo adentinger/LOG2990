@@ -1,8 +1,4 @@
 import * as THREE from 'three';
-import { RacingGameRenderer } from './racing-game-rendering';
-import { IPhysicElement } from './physic/object';
-import { Seconds } from '../types';
-import { PhysicEngine } from './physic/engine';
 
 export class OrthographicCamera extends THREE.OrthographicCamera {
     private static DISTANCE_TO_TARGET = 10;

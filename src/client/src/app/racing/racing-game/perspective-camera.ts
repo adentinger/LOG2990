@@ -22,12 +22,16 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
     }
 
     public setTarget(object: THREE.Object3D) {
+        if (this.target != null) {
+            this.target.remove(this);
+        }
         object.add(this);
+        this.target = object;
     }
 
     public setupPerspectiveView(): void {
         this.rotation.order = 'YXZ';
-        this.position.set(0, 10, 30);
+        this.position.set(0, 2, 5);
         this.rotation.set(0, 0, 0);
         this.lookAt(new THREE.Vector3(0, 0, 0));
     }

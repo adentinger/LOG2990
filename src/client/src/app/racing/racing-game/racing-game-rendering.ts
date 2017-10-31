@@ -1,17 +1,15 @@
 import * as THREE from 'three';
 
-import { Skybox, SkyboxMode } from './skybox';
+import { Skybox } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
-import { MovablePerspectiveCamera, MovableOrthographicCamera } from './physic/examples/movable-camera';
-import { Ball } from './physic/examples/ball';
 import { OrthographicCamera } from './orthographic-camera';
 import { PerspectiveCamera } from './perspective-camera';
-import { Seconds } from '../types';
+import { Car } from './three-objects/car/car';
+import { CarColorGreen } from './three-objects/car/car-color-green';
+import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
 
 export class RacingGameRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
-
-    public newBall = new Ball(3);
 
     public readonly SCENE: THREE.Scene;
     public readonly RENDERER: THREE.WebGLRenderer;
@@ -19,11 +17,45 @@ export class RacingGameRenderer {
     public readonly PLANE: RacingGamePlane;
     public readonly CAMERA1 = new PerspectiveCamera;
     public readonly CAMERA2 = new OrthographicCamera;
+    public readonly CAR: Car;
     public readonly cameraHelper: THREE.CameraHelper;
 
     public currentCamera: 0 | 1 = 0;
 
     private displayWorldRefInternal: boolean;
+    private readonly DAY_MODE_MANAGER = new DayModeManager();
+
+    constructor(canvas: HTMLCanvasElement) {
+        this.SCENE = new THREE.Scene();
+        this.RENDERER = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+
+        this.SKYBOX = new Skybox();
+
+        this.PLANE = new RacingGamePlane();
+        this.SCENE.add(this.PLANE);
+
+        this.displayWorldRef = true;
+
+        const LIGHTS = this.getLights();
+        this.SCENE.add(...LIGHTS);
+
+        this.CAR = new Car(new CarColorGreen());
+        this.SCENE.add(this.CAR);
+
+        const SPHERE = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5),
+            new THREE.MeshPhongMaterial({ color: 0x880000 })
+        );
+        SPHERE.position.z = -5;
+        SPHERE.position.y = .5;
+        this.SCENE.add(SPHERE);
+
+        this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
+
+        this.CAMERA1.add(this.SKYBOX);
+        this.CAMERA1.setTarget(this.CAR);
+        this.CAMERA2.setTarget(this.CAR);
+    }
 
     public set displayWorldRef(value: boolean) {
         this.displayWorldRefInternal = value;
@@ -33,32 +65,6 @@ export class RacingGameRenderer {
         else {
             this.SCENE.remove(RacingGameRenderer.AXIS_HELPER);
         }
-    }
-
-    constructor(canvas: HTMLCanvasElement) {
-        this.SCENE = new THREE.Scene();
-        this.RENDERER = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-
-        this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
-        this.SKYBOX = new Skybox(SkyboxMode.DAY);
-        this.displayWorldRef = true;
-
-        this.CAMERA1.add(this.SKYBOX);
-        this.CAMERA1.setTarget(this.newBall);
-        this.CAMERA2.setTarget(this.newBall);
-        // this.SCENE.add(this.CAMERA2);
-        this.SCENE.add(this.newBall);
-        this.SCENE.add(this.SKYBOX.DIRECTIONAL);
-    }
-
-    public rotateBallRight(deltaTime: Seconds): void {
-        const ANGULAR_VELOCITY = -Math.PI;
-        this.newBall.rotateOnAxis(new THREE.Vector3(0, 1, 0), ANGULAR_VELOCITY * deltaTime);
-    }
-
-    public rotateBallLeft(deltaTime: Seconds): void {
-        const ANGULAR_VELOCITY = Math.PI;
-        this.newBall.rotateOnAxis(new THREE.Vector3(0, 1, 0), ANGULAR_VELOCITY * deltaTime);
     }
 
     public render(): void {
@@ -87,6 +93,29 @@ export class RacingGameRenderer {
         if (this.currentCamera === 0) {
             this.SCENE.remove(this.cameraHelper);
         }
+    }
+
+    public updateDayMode(newMode: DayMode): void {
+        this.DAY_MODE_MANAGER.mode = newMode;
+        this.DAY_MODE_MANAGER.updateScene(this.SCENE);
+    }
+
+    private getLights(): any {
+        const LIGHTS = [
+            new THREE.PointLight(0xffffff, 0.3),
+            new THREE.PointLight(0xffffff, 0.3),
+            new THREE.PointLight(0xffffff, 0.3)
+        ];
+        const positions = [
+            [10, 50, 100],
+            [-10, 50, -100],
+            [-100, 50, 10]
+        ];
+        for (let i = 0; i < LIGHTS.length; ++i) {
+            [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i].position.z] = positions[i];
+        }
+
+        return LIGHTS;
     }
 
 }
