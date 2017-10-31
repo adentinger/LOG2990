@@ -7,24 +7,31 @@ export class Grid {
     public static readonly DIMENSIONS = SerializedGrid.DIMENSIONS;
     public static readonly BLACK_TILE = SerializedGrid.BLACK_TILE;
     public static readonly EMPTY_TILE = SerializedGrid.EMPTY_TILE;
+    private static readonly NO_USER_INPUT =
+        new GridWord(0, 0, 0, 0, Direction.horizontal, Owner.none, '');
 
     private dataWithoutUserInput: string[][];
     private data: string[][];
+    private userInputInternal: GridWord;
 
     private words: GridWord[] = [];
 
     constructor(words: GridWord[] = []) {
-        this.resetData();
-        this.populateData(words);
-        this.userInput =
-            new GridWord(0, 0, 0, 0, Direction.horizontal, Owner.none, '');
+        this.words = words.slice();
+        this.userInputInternal = Grid.NO_USER_INPUT;
+        this.regenerateEverything();
         console.log(this.data);
     }
 
     public addWord(word: GridWord): void {
+        this.words.push(word);
+        this.regenerateEverything();
     }
 
     public empty(): void {
+        this.words = [];
+        this.userInputInternal = Grid.NO_USER_INPUT;
+        this.regenerateEverything();
     }
 
     public getCharAt(row: number, column: number): string {
@@ -32,8 +39,15 @@ export class Grid {
     }
 
     public set userInput(input: GridWord) {
-        this.cloneDataWithoutInput();
+        this.userInputInternal = input;
+        this.data = this.cloneDataWithoutInput();
         this.fillWord(this.data, input, true);
+    }
+
+    private regenerateEverything(): void {
+        this.resetData();
+        this.populateData();
+        this.userInput = this.userInputInternal;
     }
 
     private resetData(): void {
@@ -46,8 +60,8 @@ export class Grid {
         }
     }
 
-    private populateData(words: GridWord[]): void {
-        words.forEach((word) => {
+    private populateData(): void {
+        this.words.forEach((word) => {
             this.fillWord(this.dataWithoutUserInput, word, false);
         });
     }
@@ -106,11 +120,12 @@ export class Grid {
         }
     }
 
-    private cloneDataWithoutInput(): void {
-        this.data = [];
+    private cloneDataWithoutInput(): string[][] {
+        const DATA = [];
         this.dataWithoutUserInput.forEach((data) => {
-            this.data.push(data.slice());
+            DATA.push(data.slice());
         });
+        return DATA;
     }
 
 }
