@@ -20,11 +20,11 @@ export class CrosswordComponent implements OnInit {
     public ngOnInit(): void {
     }
 
-    public setCheatModeOnOff(): void {
+    public onCheatModeToggle(): void {
         this.crosswordGameService.setCheatModeOnOff();
     }
 
-    public getCheatModeState(): boolean {
+    public isCheatModeOn(): boolean {
         return this.crosswordGameService.getCheatModeState();
     }
 
@@ -32,11 +32,11 @@ export class CrosswordComponent implements OnInit {
         return this.crosswordGameService.getCheatModeStateText();
     }
 
-    public setShowWordsOnOff(): void {
+    public onShowWordsToggle(): void {
         this.crosswordGameService.setShowWordsOnOff();
     }
 
-    public getShowWordsState(): boolean {
+    public isShowWordsOn(): boolean {
         return this.crosswordGameService.getShowWordsState();
     }
 
@@ -44,11 +44,11 @@ export class CrosswordComponent implements OnInit {
         return this.crosswordGameService.getShowWordsStateText();
     }
 
-    public setTimerOnOff(): void {
+    public onTimerRunningToggle(): void {
         this.crosswordGameService.setTimerOnOff();
     }
 
-    public getTimerState(): boolean {
+    public isTimerRunning(): boolean {
         return this.crosswordGameService.getTimerState();
     }
 
