@@ -7,7 +7,10 @@ import { packetManagerClient } from '../packet-manager.service';
 describe('CrosswordGridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [CrosswordGameService, {provide: PacketManagerClient, useValue: packetManagerClient}]
+            providers: [
+                CrosswordGameService,
+                {provide: PacketManagerClient, useValue: packetManagerClient}
+            ]
         });
     });
 
