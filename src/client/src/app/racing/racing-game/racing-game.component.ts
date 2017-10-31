@@ -9,7 +9,7 @@ import { PhysicEngine } from './physic/engine';
 
 import { Point } from '../../../../../common/src/math/point';
 
-import { EventManager, EventListener } from '../../event-manager.service';
+import { EventManager } from '../../event-manager.service';
 
 @Component({
     selector: 'app-racing-game',
@@ -39,7 +39,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
             this.mapService.getByName(mapName)
                 .then(map => {
-                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs);
+                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs, this.eventManager);
                     this.racingGame.resizeCanvas(this.windowHalfX * 2, this.windowHalfY * 2);
                 });
         });
@@ -60,7 +60,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         this.racingGame.resizeCanvas(width, height);
     }
 
-    @EventListener(KEYDOWN_EVENT)
+    @EventManager.Listener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private onKeyDown() {
         if (this.uiInputs.isKeyPressed('c')) {

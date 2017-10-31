@@ -12,6 +12,7 @@ import { UIInputs } from './ui-input.service';
 import { Cube } from './physic/examples/ball';
 import { Car } from './three-objects/car/car';
 import { CarColorGreen } from './three-objects/car/car-color-green';
+import { EventManager } from '../../event-manager.service';
 
 class Wall extends CollidableMesh {
     public readonly mass = Infinity;
@@ -36,10 +37,10 @@ export class RacingGameService {
 
     constructor(private physicEngine: PhysicEngine) { }
 
-    private newRacingGame(canvas: HTMLCanvasElement): boolean {
+    private newRacingGame(canvas: HTMLCanvasElement, eventManager: EventManager): boolean {
         let gameCreated = false;
 
-        this.renderer = new RacingGameRenderer(canvas);
+        this.renderer = new RacingGameRenderer(canvas, eventManager);
         if (this.renderer !== null) {
             gameCreated = true;
         }
@@ -47,8 +48,12 @@ export class RacingGameService {
         return gameCreated;
     }
 
-    public initialise(canvas: HTMLCanvasElement, map: SerializedMap, userInputs: UIInputs): void {
-        this.newRacingGame(canvas);
+    public initialise(canvas: HTMLCanvasElement,
+        map: SerializedMap,
+        userInputs: UIInputs,
+        eventManager: EventManager): void {
+
+        this.newRacingGame(canvas, eventManager);
         this.physicEngine.setRoot(this.renderer.SCENE);
 
         this.map = new RenderableMap(map);

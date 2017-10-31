@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { EventManager } from '../../event-manager.service';
+import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 
 export class PerspectiveCamera extends THREE.PerspectiveCamera {
 
@@ -11,7 +13,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
 
     private target: THREE.Object3D;
 
-    public constructor() {
+    public constructor(private eventManager: EventManager) {
         super(
             PerspectiveCamera.VIEW_ANGLE,
             PerspectiveCamera.ASPECT,
@@ -19,6 +21,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
             PerspectiveCamera.FAR
         );
         this.setupPerspectiveView();
+        eventManager.registerClass(this);
     }
 
     public setTarget(object: THREE.Object3D) {
@@ -34,6 +37,16 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
         this.position.set(0, 2, 5);
         this.rotation.set(0, 0, 0);
         this.lookAt(new THREE.Vector3(0, 0, 0));
+    }
+
+    @EventManager.Listener(BEFORE_PHYSIC_UPDATE_EVENT)
+    private onBeforeUpdate(event: EventManager.Event<void>) {
+        this.target.remove(this);
+    }
+
+    @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
+    private onAfterUpdate(event: EventManager.Event<void>) {
+        this.target.add(this);
     }
 
 }

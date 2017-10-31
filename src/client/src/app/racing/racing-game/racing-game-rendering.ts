@@ -6,6 +6,7 @@ import { OrthographicCamera } from './orthographic-camera';
 import { PerspectiveCamera } from './perspective-camera';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
+import { EventManager } from '../../event-manager.service';
 
 export class RacingGameRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
@@ -14,7 +15,7 @@ export class RacingGameRenderer {
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
-    public readonly CAMERA1 = new PerspectiveCamera;
+    public readonly CAMERA1: PerspectiveCamera;
     public readonly CAMERA2 = new OrthographicCamera;
     public readonly cameraHelper: THREE.CameraHelper;
 
@@ -23,7 +24,7 @@ export class RacingGameRenderer {
     private displayWorldRefInternal: boolean;
     private readonly DAY_MODE_MANAGER = new DayModeManager();
 
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement, eventManager: EventManager) {
         this.SCENE = new THREE.Scene();
         this.RENDERER = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
 
@@ -45,6 +46,7 @@ export class RacingGameRenderer {
         SPHERE.position.y = .5;
         this.SCENE.add(SPHERE);
 
+        this.CAMERA1 = new PerspectiveCamera(eventManager);
         this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
 
         this.CAMERA1.add(this.SKYBOX);

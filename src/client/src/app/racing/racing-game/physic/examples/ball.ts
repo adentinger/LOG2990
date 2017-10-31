@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { DynamicCollidableMesh } from '../dynamic-collidable';
+import { UserControllableCollidableMesh } from '../user-controllable-collidable';
 import { Kilograms, Seconds } from '../../../types';
 import { UIInputs } from '../../ui-input.service';
 import { PhysicUtils } from '../engine';
 
-export class Cube extends DynamicCollidableMesh {
+export class Cube extends UserControllableCollidableMesh {
     constructor(public readonly radius: number, public mass: Kilograms = 1) {
         super();
         this.geometry = new THREE.CubeGeometry(radius * 2, radius * 2, radius * 2);

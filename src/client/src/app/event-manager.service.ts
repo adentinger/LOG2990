@@ -27,6 +27,15 @@ export class EventManager {
     private readonly EVENT_LISTENERS: Map<string, Set<Listener>> = new Map();
     private readonly EVENT_LISTENERS_ONCE: Map<string, Set<Listener>> = new Map();
 
+    public static Listener(eventType: string): MethodDecorator {
+        return <T extends Class>(prototype: InstanceOf<T>, propertyName: FieldName, descriptor: PropertyDescriptor): void => {
+            if (!EVENT_LISTENERS_PROPERTY_NAMES.has(prototype)) {
+                EVENT_LISTENERS_PROPERTY_NAMES.set(prototype, new Map());
+            }
+            EVENT_LISTENERS_PROPERTY_NAMES.get(prototype).set(eventType, propertyName);
+        };
+    }
+
     public registerClass<T extends Class = any>(instance: InstanceOf<T>): void {
         const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(Object.getPrototypeOf(instance)) || new Map<string, FieldName>();
         for (const [eventType, propertyName] of handlersName) {
@@ -83,11 +92,3 @@ export namespace EventManager {
 }
 
 // Decorator
-export function EventListener(eventType: string): MethodDecorator {
-    return <T extends Class>(prototype: InstanceOf<T>, propertyName: FieldName, descriptor: PropertyDescriptor): void => {
-        if (!EVENT_LISTENERS_PROPERTY_NAMES.has(prototype)) {
-            EVENT_LISTENERS_PROPERTY_NAMES.set(prototype, new Map());
-        }
-        EVENT_LISTENERS_PROPERTY_NAMES.get(prototype).set(eventType, propertyName);
-    };
-}
