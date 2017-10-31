@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { CrosswordGame } from './class/crossword-game';
-import { CROSSWORD_GAME } from './mocks/crossword-game-mock';
+import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import { CrosswordTimerPacket } from '../../../../common/src/crossword/packets/crossword-timer.packet';
@@ -25,7 +25,7 @@ export class CrosswordGameService {
 
     private gameId: string = null;
 
-    public crosswordGame: CrosswordGame = CROSSWORD_GAME;
+    private crosswordGame: CrosswordGame = mockCrosswordGame();
 
     public constructor(private packetManager: PacketManagerClient) { }
 
