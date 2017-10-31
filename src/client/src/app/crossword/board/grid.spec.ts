@@ -172,4 +172,15 @@ describe('Grid', () => {
         );
     });
 
+    it('should be able to have words added to it', () => {
+        const WORDS = horizontalWords().concat(verticalWords());
+        const TO_ADD = WORDS.pop();
+        const GRID = new Grid(WORDS);
+        GRID.addWord(TO_ADD);
+        gridCompare(
+            GRID,
+            expectedHorizontalAndVertical()
+        );
+    });
+
 });
