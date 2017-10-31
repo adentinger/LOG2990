@@ -7,7 +7,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
     private static readonly ASPECT: number = PerspectiveCamera.WIDTH / PerspectiveCamera.HEIGHT;
     private static readonly NEAR: number = 0.05;
     private static readonly FAR: number = 300;
-    private static readonly VIEW_ANGLE: number = 45;
+    private static readonly VIEW_ANGLE: number = 75;
 
     private target: THREE.Object3D;
 

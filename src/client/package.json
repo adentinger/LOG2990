@@ -33,7 +33,7 @@
     "socket.io": "1.7.2",
     "socket.io-client": "1.7.2",
     "stats.js": "^0.17.0",
-    "three": "~0.84.0",
+    "three": "~0.87.0",
     "three-obj-loader": ">= 1.1.0",
     "three-mtl-loader": ">= 1.0.0",
     "zone.js": "^0.8.14"

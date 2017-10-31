@@ -4,7 +4,6 @@ import { Skybox } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 import { OrthographicCamera } from './orthographic-camera';
 import { PerspectiveCamera } from './perspective-camera';
-import { Car } from './three-objects/car/car';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
 
@@ -17,7 +16,6 @@ export class RacingGameRenderer {
     public readonly PLANE: RacingGamePlane;
     public readonly CAMERA1 = new PerspectiveCamera;
     public readonly CAMERA2 = new OrthographicCamera;
-    public readonly CAR: Car;
     public readonly cameraHelper: THREE.CameraHelper;
 
     public currentCamera: 0 | 1 = 0;
@@ -39,9 +37,6 @@ export class RacingGameRenderer {
         const LIGHTS = this.getLights();
         this.SCENE.add(...LIGHTS);
 
-        this.CAR = new Car(new CarColorGreen());
-        this.SCENE.add(this.CAR);
-
         const SPHERE = new THREE.Mesh(
             new THREE.SphereGeometry(0.5),
             new THREE.MeshPhongMaterial({ color: 0x880000 })
@@ -53,8 +48,6 @@ export class RacingGameRenderer {
         this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
 
         this.CAMERA1.add(this.SKYBOX);
-        this.CAMERA1.setTarget(this.CAR);
-        this.CAMERA2.setTarget(this.CAR);
     }
 
     public set displayWorldRef(value: boolean) {

@@ -8,12 +8,17 @@ import * as THREE from 'three';
 import { CollidableMesh } from './physic/collidable';
 import { Meters } from '../types';
 import { DayMode } from './day-mode/day-mode-manager';
+import { UIInputs } from './ui-input.service';
+import { Cube } from './physic/examples/ball';
+import { Car } from './three-objects/car/car';
+import { CarColorGreen } from './three-objects/car/car-color-green';
 
 class Wall extends CollidableMesh {
-    constructor (width: Meters, heigth: Meters) {
+    public readonly mass = Infinity;
+    constructor(width: Meters, heigth: Meters) {
         super(
             new THREE.PlaneGeometry(width, heigth),
-            new THREE.MeshBasicMaterial({wireframe: true})
+            new THREE.MeshBasicMaterial({ wireframe: true })
         );
     }
 }
@@ -25,6 +30,7 @@ export class RacingGameService {
     private animationRequestId = 0;
     private isRendering = false;
     private dayMode: DayMode = DayMode.DAY;
+    public readonly CAR: Car = new Car(new CarColorGreen());
 
     private map: RenderableMap;
 
@@ -41,23 +47,44 @@ export class RacingGameService {
         return gameCreated;
     }
 
-    public initialise(canvas: HTMLCanvasElement, map: SerializedMap): void {
+    public initialise(canvas: HTMLCanvasElement, map: SerializedMap, userInputs: UIInputs): void {
         this.newRacingGame(canvas);
         this.physicEngine.setRoot(this.renderer.SCENE);
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
 
+        this.CAR.setUIInput(userInputs);
+        this.CAR.translateZ(15);
+        this.renderer.SCENE.add(this.CAR);
+        this.renderer.SCENE.add(this.CAR.corner1);
+        this.renderer.SCENE.add(this.CAR.corner2);
+        this.renderer.SCENE.add(this.CAR.corner3);
+        this.renderer.SCENE.add(this.CAR.corner4);
+
+        this.renderer.CAMERA1.setTarget(this.CAR);
+        this.renderer.CAMERA2.setTarget(this.CAR);
+
+        const BALL1 = new Cube(0.5);
+        BALL1.position.set(0, 0, -13);
+        this.map.add(BALL1);
+        const BALL2 = new Cube(0.5);
+        BALL2.position.set(1.5, 0, -1.75);
+        BALL2.velocity.set(-1, 0, -1);
+        this.map.add(BALL2);
+
         const wall1 = new Wall(10, 10);
         wall1.position.set(0, 0, -5);
         const wall2 = new Wall(10, 10);
         wall2.position.set(5, 0, 0);
-        wall2.rotation.y = Math.PI / 2;
+        wall2.rotation.y = 3 * Math.PI / 2;
         const wall3 = new Wall(10, 10);
         wall3.position.set(-5, 0, 0);
-        wall3.rotation.y = - Math.PI / 2;
+        wall3.rotation.y = Math.PI / 2;
         const wall4 = new Wall(10, 10);
         wall4.position.set(0, 0, 5);
+        wall4.rotation.y = Math.PI;
+        this.map.add(wall1, wall2, wall3, wall4);
 
         this.physicEngine.start();
         this.startRendering();

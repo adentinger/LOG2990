@@ -6,6 +6,8 @@ import { APP_BASE_HREF } from '@angular/common';
 import { RacingGameService } from './racing-game.service';
 import { MapService } from '../services/map.service';
 import { HttpModule } from '@angular/http';
+import { UIInputs } from './ui-input.service';
+import { EventManager } from '../../event-manager.service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -17,11 +19,12 @@ describe('RacingGameComponent', () => {
                 RouterModule.forRoot([{ path: 'racing/racing-game/:map-name', component: RacingGameComponent}]),
                 HttpModule
             ],
-            declarations: [RacingGameComponent],
+            declarations: [RacingGameComponent, UIInputs],
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
                 RacingGameService,
-                MapService
+                MapService,
+                EventManager
             ]
         })
             .compileComponents();

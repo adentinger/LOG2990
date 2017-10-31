@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
+import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 
 export interface CarLights {
     headlightLeft: THREE.Light;
@@ -18,7 +19,7 @@ interface CarLightOptions {
     headlightPositions: THREE.Vector3[];
 }
 
-export class Car extends THREE.Mesh {
+export class Car extends UserControllableCollidableMesh {
 
     private static readonly JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
     private static readonly BASE_PATH = 'assets/racing/car_model/';
@@ -33,17 +34,27 @@ export class Car extends THREE.Mesh {
         decay: 1.3,
         headlightPositions: [
             new THREE.Vector3(-0.56077, 0.63412, -2.75),
-            new THREE.Vector3( 0.56077, 0.63412, -2.75)
+            new THREE.Vector3(0.56077, 0.63412, -2.75)
         ]
     };
 
     private logger = Logger.getLogger('Car');
     private lights: CarLights;
+    private boundingBox: THREE.Box3;
+    public readonly corner1 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+    public readonly corner2 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+    public readonly corner3 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
+    public readonly corner4 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff7f00 }));
+
+    protected maxSpeed = 15; // m/s
 
     constructor(carColor: CarColor) {
         super();
         this.addLights();
-        this.addCarParts(carColor);
+        this.addCarParts(carColor).then(() => {
+            this.boundingBox = new THREE.Box3().setFromObject(this);
+        });
+        this.boundingBox = new THREE.Box3().setFromObject(this);
     }
 
     private async addCarParts(color: CarColor): Promise<void> {
@@ -76,7 +87,7 @@ export class Car extends THREE.Mesh {
                     geometry['computeMorphNormals']();
                     resolve(CAR_PART);
                 },
-                () => {},
+                () => { },
                 (reason) => this.logger.warn(reason)
             );
         });
@@ -99,9 +110,9 @@ export class Car extends THREE.Mesh {
                             resolve(bodyMesh);
                         })
                         .catch(() => reject());
-                    })
-                );
-            });
+                })
+            );
+        });
         return Promise.all(COLORED_CAR_PARTS);
     }
 

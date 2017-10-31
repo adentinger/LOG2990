@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { IPhysicElement, PhysicMesh } from './object';
 import { Kilograms } from '../../types';
-import { Point } from '../../../../../../common/src/math/point';
 
 export interface Collidable extends IPhysicElement {
     geometry: THREE.Geometry;
@@ -11,6 +10,7 @@ export interface Collidable extends IPhysicElement {
 export abstract class CollidableMesh extends PhysicMesh implements Collidable {
     public geometry: THREE.Geometry;
     public mass: Kilograms = Infinity; // Immovable by default
+    protected arrow: THREE.ArrowHelper = new THREE.ArrowHelper(new THREE.Vector3(), this.position);
 }
 
 export function isCollidable(object: IPhysicElement): object is Collidable {
@@ -29,8 +29,12 @@ export interface CollisionInfo {
     source: Collidable;
 
     /**
-     * The collision point relative to the target. The array will contain 1 point if the collision
-     * area is a point, 2 points if the collision area is a line.
+     * The collision point relative to the target.
      */
-    positions: Point[];
+    applicationPoint: THREE.Vector2;
+
+    /**
+     * The normal force applied at the collision point.
+     */
+    force: THREE.Vector2;
 }

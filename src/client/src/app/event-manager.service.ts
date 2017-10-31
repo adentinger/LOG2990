@@ -28,7 +28,7 @@ export class EventManager {
     private readonly EVENT_LISTENERS_ONCE: Map<string, Set<Listener>> = new Map();
 
     public registerClass<T extends Class = any>(instance: InstanceOf<T>): void {
-        const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(Object.getPrototypeOf(instance));
+        const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(Object.getPrototypeOf(instance)) || new Map<string, FieldName>();
         for (const [eventType, propertyName] of handlersName) {
             this.addListener(eventType, instance[propertyName].bind(instance));
         }
