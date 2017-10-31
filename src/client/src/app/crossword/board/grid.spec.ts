@@ -1,17 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ViewableGrid } from './viewable-grid';
 import { Grid } from './grid';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 
-function viewableGridCompare(viewableGrid: ViewableGrid,
+function gridCompare(grid: Grid,
                              expected: string[][]) {
     for (let row = 0; row < Grid.DIMENSIONS; ++row) {
         for (let column = 0; column < Grid.DIMENSIONS; ++column) {
-            expect(viewableGrid.getCharAt(row, column))
+            expect(grid.getCharAt(row, column))
                 .toEqual(expected[row][column]);
-            if (viewableGrid.getCharAt(row, column) !== expected[row][column]) {
+            if (grid.getCharAt(row, column) !== expected[row][column]) {
                 console.log('NO', row, column);
             }
         }
@@ -109,40 +108,40 @@ function expectedHorizontalAndVertical(): string[][] {
     ];
 }
 
-describe('ViewableGrid', () => {
+describe('Grid', () => {
 
     it('should be created', () => {
-        expect(new ViewableGrid()).toBeTruthy();
+        expect(new Grid()).toBeTruthy();
     });
 
     it('should be full of black tiles when constructed with no words', () => {
-        const VIEWABLE_GRID = new ViewableGrid([]);
-        viewableGridCompare(
+        const VIEWABLE_GRID = new Grid([]);
+        gridCompare(
             VIEWABLE_GRID,
             expectedBlack()
         );
     });
 
     it('should place horizontal words', () => {
-        const VIEWABLE_GRID = new ViewableGrid(horizontalWords());
-        viewableGridCompare(
+        const VIEWABLE_GRID = new Grid(horizontalWords());
+        gridCompare(
             VIEWABLE_GRID,
             expectedHorizontal()
         );
     });
 
     it('should place vertical words', () => {
-        const VIEWABLE_GRID = new ViewableGrid(verticalWords());
-        viewableGridCompare(
+        const VIEWABLE_GRID = new Grid(verticalWords());
+        gridCompare(
             VIEWABLE_GRID,
             expectedVertical()
         );
     });
 
     it('should place a mixture of horizontal and vertical words', () => {
-        const VIEWABLE_GRID = new ViewableGrid(horizontalWords()
+        const VIEWABLE_GRID = new Grid(horizontalWords()
                                   .concat(verticalWords()));
-        viewableGridCompare(
+        gridCompare(
             VIEWABLE_GRID,
             expectedHorizontalAndVertical()
         );
@@ -154,10 +153,10 @@ describe('ViewableGrid', () => {
         EXPECTED_TILES[7][5] = 'x';
         EXPECTED_TILES[8][5] = 'y';
         EXPECTED_TILES[9][5] = 'z';
-        const VIEWABLE_GRID = new ViewableGrid(WORDS);
+        const VIEWABLE_GRID = new Grid(WORDS);
         VIEWABLE_GRID.userInput =
             new GridWord(0, 7, 5, 3, Direction.vertical, Owner.none, 'xyz');
-        viewableGridCompare(
+        gridCompare(
             VIEWABLE_GRID,
             EXPECTED_TILES
         );
