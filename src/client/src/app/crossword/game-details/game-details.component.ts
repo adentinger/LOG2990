@@ -18,18 +18,13 @@ export class GameDetailsComponent implements OnInit {
     public gameMode: GameMode;
 
     constructor(private crosswordGameService: CrosswordGameService,
-                private timerService: TimerService,
-                private ngZone: NgZone) { }
+                private timerService: TimerService) { }
 
     public ngOnInit(): void {
         this.crosswordGame = this.crosswordGameService.getCurrentGame();
         this.player1 = this.crosswordGameService.getCurrentGame().player1;
         this.difficulty = this.crosswordGameService.getCurrentGame().difficulty;
         this.gameMode = this.crosswordGameService.getCurrentGame().gameMode;
-
-        setInterval(() => {
-            this.ngZone.run(() => { });
-        }, 1000);
     }
 
     public get timerValue() {
