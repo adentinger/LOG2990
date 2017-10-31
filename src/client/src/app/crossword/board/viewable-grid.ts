@@ -1,19 +1,27 @@
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Grid } from './grid';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 
 export class ViewableGrid {
 
     private dataWithoutUserInput: string[][];
+    private data: string[][];
 
     constructor(words: GridWord[] = []) {
         this.resetData();
         this.populateData(words);
-        console.log(this.dataWithoutUserInput);
+        this.userInput =
+            new GridWord(0, 0, 0, 0, Direction.horizontal, Owner.none, '');
+        console.log(this.data);
     }
 
     public getCharAt(row: number, column: number): string {
-        return this.dataWithoutUserInput[row][column];
+        return this.data[row][column];
+    }
+
+    public set userInput(input: GridWord) {
+        this.cloneDataWithoutInput();
+        this.fillWord(input, true);
     }
 
     private resetData(): void {
@@ -73,13 +81,20 @@ export class ViewableGrid {
     }
 
     private wordCharAt(word: GridWord, index: number): string {
-        const IS_WORD_FOUND = word.string.length > 0;
+        const IS_WORD_FOUND = word.string != null && word.string.length > 0;
         if (IS_WORD_FOUND) {
             return word.string.charAt(index);
         }
         else {
             return Grid.EMPTY_TILE;
         }
+    }
+
+    private cloneDataWithoutInput(): void {
+        this.data = [];
+        this.dataWithoutUserInput.forEach((data) => {
+            this.data.push(data.slice());
+        });
     }
 
 }
