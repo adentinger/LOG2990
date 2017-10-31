@@ -34,6 +34,20 @@ export class Grid {
         this.regenerateEverything();
     }
 
+    public getWord(index: number, direction: Direction): GridWord {
+        const WORD = this.words.find((word) => {
+            return word.direction === direction &&
+                   word.id === index;
+        });
+        if (WORD != null) {
+            return WORD;
+        }
+        else {
+            throw new Error(`Word with index ${index} and direction
+                             ${direction} not found`);
+        }
+    }
+
     public getCharAt(row: number, column: number): string {
         return this.data[row][column];
     }
