@@ -29,7 +29,12 @@ export class CrosswordComponent implements OnInit {
     }
 
     public getCheatModeStateText(): string {
-        return this.crosswordGameService.getCheatModeStateText();
+        if (this.isCheatModeOn()) {
+            return 'Disable';
+        }
+        else {
+            return 'Enable';
+        }
     }
 
     public onShowWordsToggle(): void {
@@ -41,19 +46,29 @@ export class CrosswordComponent implements OnInit {
     }
 
     public getShowWordsStateText(): string {
-        return this.crosswordGameService.getShowWordsStateText();
+        if (this.isShowWordsOn()) {
+            return 'Hide words';
+        }
+        else {
+            return 'Show words';
+        }
     }
 
     public onTimerRunningToggle(): void {
         this.crosswordGameService.setTimerOnOff();
     }
 
-    public isTimerRunning(): boolean {
+    public isTimerBeingSet(): boolean {
         return this.crosswordGameService.getTimerState();
     }
 
     public getTimerStateText(): string {
-        return this.crosswordGameService.getTimerStateText();
+        if (this.isTimerBeingSet()) {
+            return 'Disable';
+        }
+        else {
+            return 'Set time';
+        }
     }
 
     public changeTimerValue(seconds: string): void {

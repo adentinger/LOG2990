@@ -54,15 +54,6 @@ export class CrosswordGameService {
         return this.cheatModeOn;
     }
 
-    public getCheatModeStateText(): string {
-        if (this.cheatModeOn) {
-            return 'Disable';
-        }
-        else {
-            return 'Enable';
-        }
-    }
-
     public setShowWordsOnOff(): void {
         this.showWordsOn = !this.showWordsOn;
     }
@@ -71,30 +62,12 @@ export class CrosswordGameService {
         return this.showWordsOn;
     }
 
-    public getShowWordsStateText(): string {
-        if (this.showWordsOn) {
-            return 'Hide words';
-        }
-        else {
-            return 'Show words';
-        }
-    }
-
     public setTimerOnOff(): void {
         this.changeTimerValueOn = !this.changeTimerValueOn;
     }
 
     public getTimerState(): boolean {
         return this.changeTimerValueOn;
-    }
-
-    public getTimerStateText(): string {
-        if (this.changeTimerValueOn) {
-            return 'Disable';
-        }
-        else {
-            return 'Set time';
-        }
     }
 
     public changeTimerValue(seconds: string) {

@@ -12,7 +12,7 @@
         <button *ngIf='isCheatModeOn()' (click)='onTimerRunningToggle()'>{{getTimerStateText()}}</button>
         <input
           #timerInput
-          *ngIf='isTimerRunning() && isCheatModeOn()'
+          *ngIf='isTimerBeingSet() && isCheatModeOn()'
           type='text'
           (keyup.enter)='changeTimerValue(timerInput.value)'
           size='5px'
