@@ -27,33 +27,4 @@ describe('CrosswordGridService', () => {
         expect(crosswordGridService).toBeTruthy();
     });
 
-    it('should return an array', () => {
-        const grid: any = crosswordGridService.getViewableGrid();
-        expect(grid).toEqual(jasmine.any(Array));
-    });
-
-    it('should be 10 square high', () => {
-        const grid: any = crosswordGridService.getViewableGrid();
-        expect(grid.length).toEqual(10);
-    });
-
-    it('should be 10 square wide', () => {
-        const grid: any = crosswordGridService.getViewableGrid()[0];
-        expect(grid.length).toEqual(10);
-    });
-
-    it('should be filled with at least 35% letters', () => {
-        const grid: any = crosswordGridService.getViewableGrid();
-        const regex = new RegExp('^0$');
-        let counter = 0;
-        for (const row of grid) {
-            for (const square of row) {
-                if (regex.test(square)) {
-                    counter++;
-                }
-            }
-        }
-        expect(100 - counter).toBeGreaterThan(35);
-    });
-
 });
