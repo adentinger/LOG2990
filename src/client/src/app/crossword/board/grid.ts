@@ -1,11 +1,12 @@
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { Grid as SerializedGrid } from '../../../../../common/src/grid';
 
 export class Grid {
 
-    public static readonly DIMENSIONS = 10;
-    public static readonly BLACK_TILE = '0';
-    public static readonly EMPTY_TILE = ' ';
+    public static readonly DIMENSIONS = SerializedGrid.DIMENSIONS;
+    public static readonly BLACK_TILE = SerializedGrid.BLACK_TILE;
+    public static readonly EMPTY_TILE = SerializedGrid.EMPTY_TILE;
 
     private dataWithoutUserInput: string[][];
     private data: string[][];
