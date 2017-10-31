@@ -100,7 +100,6 @@ export class GameManager {
     public wordTryHandler(event: PacketEvent<WordTryPacket>) {
         const wordTry: GridWord = event.value.wordTry;
         const socketId: string = event.socketid;
-        console.log(wordTry);
 
         const game: CrosswordGame = this.getGameFromSocketId(event.socketid);
 
