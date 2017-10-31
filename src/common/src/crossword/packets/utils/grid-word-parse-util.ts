@@ -7,6 +7,10 @@ import { SIZE_UINT32, SIZE_UINT16 } from '../../../index';
  */
 export class GridWordParseUtil {
 
+    public static bufferSizeOf(word: GridWord): number {
+        return 7 * SIZE_UINT32 + SIZE_UINT16 * word.string.length;
+    }
+
     public static parseFromBuffer(buffer: ArrayBuffer,
                                   offset: number): GridWord {
         const VIEW = new DataView(buffer);
