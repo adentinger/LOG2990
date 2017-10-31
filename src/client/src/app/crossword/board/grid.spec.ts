@@ -1,5 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { Grid } from './grid';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';

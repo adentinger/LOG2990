@@ -3,15 +3,12 @@ import { Injectable } from '@angular/core';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/grid-mock';
-import { CrosswordGameService } from '../crossword-game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { registerHandlers, PacketHandler, PacketEvent } from '../../../../../common/src/index';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
-import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
-import { SelectionService } from '../selection.service';
 import { Grid } from './grid';
 
 @Injectable()
@@ -19,9 +16,7 @@ export class CrosswordGridService {
 
     private readonly GRID = new Grid();
 
-    constructor(private crosswordGameService: CrosswordGameService,
-                private selectionService: SelectionService,
-                private packetManager: PacketManagerClient) {
+    constructor(private packetManager: PacketManagerClient) {
         registerHandlers(this, packetManager);
 
         // This mock is meant to stay as an initial view

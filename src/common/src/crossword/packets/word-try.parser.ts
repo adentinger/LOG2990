@@ -27,7 +27,7 @@ export class GameJoinParser extends PacketParser<WordTryPacket> {
 
     public parse(data: ArrayBuffer): WordTryPacket {
         const VIEW = new DataView(data);
-        const ID = VIEW.getInt32(0 * SIZE_UINT32)
+        const ID = VIEW.getInt32(0 * SIZE_UINT32);
         const Y = VIEW.getInt32(1 * SIZE_UINT32);
         const X = VIEW.getInt32(2 * SIZE_UINT32);
         const WORD_LENGTH = VIEW.getInt32(3 * SIZE_UINT32);

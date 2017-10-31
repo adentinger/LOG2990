@@ -1,5 +1,4 @@
-import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 
 import { DefinitionsService, Definitions, Answers } from './definitions.service';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
@@ -21,8 +20,6 @@ export class DefinitionFieldComponent {
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
     @Input() public cheatMode: boolean;
-
-    private selectionSubscription: Subscription;
 
     constructor(private definitionService: DefinitionsService,
                 private selectionService: SelectionService,

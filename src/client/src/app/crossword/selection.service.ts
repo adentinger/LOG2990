@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
-import { CrosswordGridService } from '../crossword/board/crossword-grid.service';
-import { Direction } from '../../../../common/src/crossword/crossword-enums';
 import { GridWord } from '../../../../common/src/crossword/grid-word';
 import { Definition } from './definition-field/definition';
 

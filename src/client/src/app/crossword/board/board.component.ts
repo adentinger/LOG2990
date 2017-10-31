@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
-import { DefinitionsService } from '../definition-field/definitions.service';
 import { SelectionService } from '../selection.service';
 
 import '../../../../../common/src/crossword/packets/word-try.parser';

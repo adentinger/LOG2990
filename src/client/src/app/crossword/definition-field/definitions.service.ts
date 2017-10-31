@@ -1,8 +1,6 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Definition as SerializedDirection } from '../../../../../common/src/crossword/definition';
 import { Definition } from './definition';
-import { CrosswordGameService } from '../crossword-game.service';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
 import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import { PacketManagerClient } from '../../packet-manager-client';
