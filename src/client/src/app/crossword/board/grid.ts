@@ -20,7 +20,6 @@ export class Grid {
         this.words = words.slice();
         this.userInputInternal = Grid.NO_USER_INPUT;
         this.regenerateEverything();
-        console.log(this.data);
     }
 
     public addWord(word: GridWord): void {
