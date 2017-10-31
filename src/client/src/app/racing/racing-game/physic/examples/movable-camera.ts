@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { DynamicPhysicElement, DynamicPhysicMesh } from '../dynamic-object';
-import { IPhysicElement } from '../object';
 import { PhysicUtils } from '../engine';
 import { Seconds } from '../../../types';
 import { UIInputs } from '../../ui-input.service';

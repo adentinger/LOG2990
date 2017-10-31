@@ -6,6 +6,8 @@ import { MockMaps } from '../../admin-screen/map-editor/mock-maps';
 import { MapConverterService } from '../../admin-screen/map-editor/map-converter.service';
 import { PhysicEngine } from './physic/engine';
 import { RacingUnitConversionService } from '../../admin-screen/map-editor/racing-unit-conversion.service';
+import { UIInputs } from './ui-input.service';
+import { EventManager } from '../../event-manager.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -15,21 +17,24 @@ describe('RacingGameService', () => {
                 PhysicEngine,
                 MockMaps,
                 MapConverterService,
-                RacingUnitConversionService
+                RacingUnitConversionService,
+                EventManager,
+                UIInputs
             ]
         });
     });
 
     let service: RacingGameService;
 
-    beforeEach(inject([RacingGameService, MockMaps, MapConverterService], (injectedService: RacingGameService,
+    beforeEach(inject([RacingGameService, MockMaps, MapConverterService, UIInputs], (injectedService: RacingGameService,
         mockMapsProvider: MockMaps,
-        mapConverterService: MapConverterService) => {
+        mapConverterService: MapConverterService,
+        userInputs: UIInputs) => {
         service = injectedService;
         const CANVAS = document.createElement('CANVAS') as HTMLCanvasElement;
         CANVAS.width = 1000;
         CANVAS.height = 500;
-        service.initialise(CANVAS, mapConverterService.serialize(mockMapsProvider.functionalMap1()));
+        service.initialise(CANVAS, mapConverterService.serialize(mockMapsProvider.functionalMap1()), userInputs);
     }));
 
     it('should be created', () => {

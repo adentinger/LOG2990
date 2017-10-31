@@ -1,9 +1,7 @@
 import * as THREE from 'three';
 import { IPhysicElement, isPhysicElement } from './object';
 import { Collidable, isCollidable, CollisionInfo } from './collidable';
-import { Point, Line, ShoelaceAlgorithm } from '../../../../../../common/src/math';
-import { EventManager } from '../../../event-manager.service';
-import { Ball } from './examples/ball';
+import { Point, Line } from '../../../../../../common/src/math';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -11,10 +9,9 @@ export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
     private static readonly LENGTH_TO_FORCE_CONSTANT = 0.75; // N/m^2
 
-    private shoelace: ShoelaceAlgorithm = new ShoelaceAlgorithm();
     private root: THREE.Object3D;
 
-    constructor(private eventManager: EventManager) { }
+    constructor() { }
 
     public setRoot(root: THREE.Object3D) {
         this.root = root;
@@ -70,7 +67,7 @@ export class PhysicUtils {
             applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
                 .sub(this.getVector2FromVector3(target.position));
 
-            const lineVector = this.getVector3FromPoint(intersectionLine.translation);
+            // const lineVector = this.getVector3FromPoint(intersectionLine.translation);
         }
 
         return collisionOccured;
@@ -172,23 +169,6 @@ export class PhysicUtils {
         return targetLines;
     }
 
-    private translateBoundingLines(lines: Line[], collidable: Collidable): void {
-        this.applyMatrixToLines(lines, this.getTranslationMatrix(this.getVector2FromVector3(collidable.position)));
-    }
-
-    private applyMatrixToLines(lines: Line[], matrix: THREE.Matrix3): void {
-        for (const line of lines) {
-            const origin = new THREE.Vector3(line.origin.x, line.origin.y, 1);
-            const destination = new THREE.Vector3(line.destination.x, line.destination.y, 1);
-            origin.applyMatrix3(matrix);
-            destination.applyMatrix3(matrix);
-            line.origin.x = origin.x;
-            line.origin.y = origin.y;
-            line.destination.x = destination.x;
-            line.destination.y = destination.y;
-        }
-    }
-
     private getVector2FromVector3(vector: THREE.Vector3): THREE.Vector2 {
         return new THREE.Vector2(vector.x, vector.z);
     }
@@ -203,24 +183,6 @@ export class PhysicUtils {
 
     private getVector3FromPoint(point: Point): THREE.Vector3 {
         return new THREE.Vector3(point.x, 0, point.y);
-    }
-
-    private getTranslationMatrix(position: THREE.Vector2): THREE.Matrix3 {
-        const translationMatrix = new THREE.Matrix3()
-            .set(1, 0, position.x,
-            0, 1, position.y,
-            0, 0, 0);
-
-        return translationMatrix;
-    }
-
-    private getRotationMatrix(angle: number): THREE.Matrix3 {
-        const rotationMatrix = new THREE.Matrix3()
-            .set(Math.cos(angle), -Math.sin(angle), 0,
-            Math.sin(angle), Math.cos(angle), 0,
-            0, 0, 1);
-
-        return rotationMatrix;
     }
 
     private getChildren(object: THREE.Object3D): THREE.Object3D[] {

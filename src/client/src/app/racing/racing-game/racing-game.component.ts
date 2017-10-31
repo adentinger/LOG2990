@@ -7,8 +7,6 @@ import { MapService } from '../services/map.service';
 import { UIInputs, KEYDOWN_EVENT } from './ui-input.service';
 import { PhysicEngine } from './physic/engine';
 
-import { Seconds } from '../types';
-import { Vector3 } from 'three';
 import { Point } from '../../../../../common/src/math/point';
 
 import { SkyboxMode } from './skybox';

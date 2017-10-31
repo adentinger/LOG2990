@@ -1,5 +1,4 @@
-import { Injectable, HostListener, Directive, OnDestroy, OnInit } from '@angular/core';
-import { Point } from '../../../../../common/src/math';
+import { HostListener, Directive, OnDestroy, OnInit } from '@angular/core';
 import { EventManager } from '../../event-manager.service';
 
 export enum MouseButton {
@@ -31,7 +30,6 @@ export const MOUSEUP_EVENT = 'userinput-mouseup';
 export class UIInputs implements OnInit, OnDestroy {
     private pressedKeys: Set<string> = new Set();
     private pressedMouseButtons: Set<MouseButton> = new Set();
-    private mousePosition: Point = new Point();
 
     constructor(private eventManager: EventManager) { }
 

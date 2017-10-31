@@ -8,9 +8,9 @@ const FRICTION = 10; // m/s^2
 const ACCELERATION = 20; // m/s^2
 const DESIRED_SPEED = 10; // m/s
 
-const ANGULAR_FRICTION = Math.PI / 2; // rad/s^2
-const ANGULAR_ACCELERATION = Math.PI; // rad/s^2
-const DESIRED_ANGULAR_SPEED = Math.PI / 2; // rad/s
+const ANGULAR_FRICTION = Math.PI; // rad/s^2
+const ANGULAR_ACCELERATION = 2 * Math.PI; // rad/s^2
+const DESIRED_ANGULAR_SPEED = Math.PI; // rad/s
 
 const KEY_FORWARD = 'w';
 const KEY_BACK = 's';
@@ -31,7 +31,6 @@ export class Ball extends DynamicCollidableMesh {
         this.geometry.computeBoundingBox();
         this.boundingBox = this.geometry.boundingBox;
         this.material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-        // this.add(this.arrow);
     }
 
     public update(engine: PhysicUtils, deltaTime: Seconds) {
@@ -39,7 +38,7 @@ export class Ball extends DynamicCollidableMesh {
         super.update(engine, deltaTime);
     }
 
-    /* public updateVelocity(deltaTime: number): void {
+    public updateVelocity(deltaTime: number): void {
         const velocityDirection = this.velocity.clone().normalize();
         const FRICTION_VECTOR = velocityDirection.multiplyScalar(-FRICTION);
         this.velocity.addScaledVector(FRICTION_VECTOR, deltaTime);
@@ -51,7 +50,7 @@ export class Ball extends DynamicCollidableMesh {
         const ANGULAR_FRICTION_VECTOR = angularVelocityDirection.multiplyScalar(-ANGULAR_FRICTION);
         this.angularVelocity.addScaledVector(ANGULAR_FRICTION_VECTOR, deltaTime);
         super.updateAngularVelocity(deltaTime);
-    } */
+    }
 
     public setUIInput(userInputService: UIInputs): void {
         this.userInputService = userInputService;

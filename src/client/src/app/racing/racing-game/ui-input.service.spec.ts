@@ -1,11 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { UIInputs } from './ui-input.service';
+import { EventManager } from '../../event-manager.service';
 
 describe('UIInputService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [UIInputs]
+            providers: [UIInputs, EventManager]
         });
     });
 

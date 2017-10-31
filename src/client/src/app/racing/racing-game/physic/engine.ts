@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PhysicUtils } from './utils';
-import { IPhysicElement, isPhysicElement } from './object';
 import * as THREE from 'three';
 import { Seconds } from '../../types';
 import { EventManager } from '../../../event-manager.service';
@@ -18,7 +17,7 @@ export class PhysicEngine {
     private timer: any = null;
 
     constructor(private eventManager: EventManager) {
-        this.physicUtils = new PhysicUtils(eventManager);
+        this.physicUtils = new PhysicUtils();
     }
 
     public setRoot(root: THREE.Object3D) {

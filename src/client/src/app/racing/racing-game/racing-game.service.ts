@@ -47,15 +47,15 @@ export class RacingGameService {
         this.newRacingGame(canvas);
         this.physicEngine.setRoot(this.renderer.SCENE);
 
-        this.renderer.CAMERA1.setUIInput(userInputs);
-        this.renderer.CAMERA2.setUIInput(userInputs);
+        // this.renderer.CAMERA1.setUIInput(userInputs);
+        // this.renderer.CAMERA2.setUIInput(userInputs);
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
 
         const BALL1 = new Ball(0.5);
         BALL1.position.set(0, 0, -3);
-        // BALL1.setUIInput(userInputs);
+        BALL1.setUIInput(userInputs);
         this.map.add(BALL1);
         const BALL2 = new Ball(0.5);
         BALL2.position.set(1.5, 0, -1.75);
