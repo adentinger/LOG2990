@@ -8,8 +8,6 @@ import { CrosswordTimerPacket } from '../../../../common/src/crossword/packets/c
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
 import '../../../../common/src/crossword/packets/crossword-timer.parser';
 
-const TIME_MAX = 3600000; // 1 hour
-
 /**
  * @class CrosswordGameService
  * Has the purpose of sending all packets from the client to the server
