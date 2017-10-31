@@ -13,7 +13,6 @@ import { CrosswordGameService } from './crossword-game.service';
 export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
-    public selectedDefinition: number;
     @ViewChild(BoardComponent) public gameBoard: BoardComponent;
 
     constructor(private crosswordGameService: CrosswordGameService) { }
