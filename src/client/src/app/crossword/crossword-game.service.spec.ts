@@ -11,32 +11,33 @@ describe('CrosswordGridService', () => {
         });
     });
 
-    it('should be created', inject([CrosswordGameService], (service: CrosswordGameService) => {
-        expect(service).toBeTruthy();
+    let crosswordGameService: CrosswordGameService;
+
+    beforeEach(inject([CrosswordGameService], (injectedCrosswordGameService) => {
+        crosswordGameService = injectedCrosswordGameService;
     }));
 
-    it('the service should return something', inject([CrosswordGameService],
-        (service: CrosswordGameService) => {
-        expect(service.getCurrentGame()).toBeDefined();
-    }));
+    it('should be created', () => {
+        expect(crosswordGameService).toBeTruthy();
+    });
 
-    it('the game should have a property "player1"', inject([CrosswordGameService],
-        (service: CrosswordGameService) => {
-        expect(service.getCurrentGame().player1).toBeDefined();
-    }));
+    it('the service should return something', () => {
+        expect(crosswordGameService.getCurrentGame()).toBeDefined();
+    });
 
-    it('the game should have a property "player2"', inject([CrosswordGameService],
-        (service: CrosswordGameService) => {
-        expect(service.getCurrentGame().player2).toBeDefined();
-    }));
+    it('the game should have a property "player1"', () => {
+        expect(crosswordGameService.getCurrentGame().player1).toBeDefined();
+    });
 
-    it('the game should have a property "difficulty"', inject([CrosswordGameService],
-        (service: CrosswordGameService) => {
-        expect(service.getCurrentGame().difficulty).toBeDefined();
-    }));
+    it('the game should have a property "player2"', () => {
+        expect(crosswordGameService.getCurrentGame().player2).toBeDefined();
+    });
 
-    it('the game should have a property "gameMode"', inject([CrosswordGameService],
-        (service: CrosswordGameService) => {
-        expect(service.getCurrentGame().gameMode).toBeDefined();
-    }));
+    it('the game should have a property "difficulty"', () => {
+        expect(crosswordGameService.getCurrentGame().difficulty).toBeDefined();
+    });
+
+    it('the game should have a property "gameMode"', () => {
+        expect(crosswordGameService.getCurrentGame().gameMode).toBeDefined();
+    });
 });
