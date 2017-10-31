@@ -8,6 +8,7 @@ import { SelectionService } from '../selection.service';
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import { HighlightGrid } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
+import { Grid } from '../../../../../common/src/grid';
 
 @Component({
     selector: 'app-board',
@@ -15,6 +16,8 @@ import { Subscription } from 'rxjs/Subscription';
     styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit, OnDestroy {
+
+    public readonly DIMENSIONS = Array(Grid.DIMENSIONS);
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
@@ -36,8 +39,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.selectionSubscription.unsubscribe();
     }
 
-    public get crosswordGrid() {
-        return this.crosswordGridService['gridWithoutUserInput'];
+    public getGridCharAt(row: number, column: number) {
+        return this.crosswordGridService.getCharAt(row, column);
     }
 
     private onSelect(selected: GridWord): void {

@@ -12,17 +12,12 @@ import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { SelectionService } from '../selection.service';
+import { Grid } from './grid';
 
 @Injectable()
 export class CrosswordGridService {
 
-    private static readonly BLACK_SQUARE = '0';
-    private static readonly GRID_DIMENSION = 10;
-
-    private horizontalGridWords: Map<number, GridWord>;
-    private verticalGridWords:   Map<number, GridWord>;
-
-    private gridWithoutUserInput: string[][] = [];
+    private readonly GRID = new Grid();
 
     constructor(private crosswordGameService: CrosswordGameService,
                 private selectionService: SelectionService,
@@ -30,43 +25,24 @@ export class CrosswordGridService {
         registerHandlers(this, packetManager);
 
         // This mock is meant to stay as an initial view
-        this.horizontalGridWords = new Map(ARRAY_GRIDWORD_H.map(
-            (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-        this.verticalGridWords = new Map(ARRAY_GRIDWORD_V.map(
-            (value: GridWord, index: number) => <[number, GridWord]>[index, value]));
-
-        this.gridWithoutUserInput = this.getViewableGrid();
+        ARRAY_GRIDWORD_H.forEach((word) => {
+            this.GRID.addWord(word);
+        });
+        ARRAY_GRIDWORD_V.forEach((word) => {
+            this.GRID.addWord(word);
+        });
     }
 
-    public getViewableGrid(): string[][] {
-        const VIEWABLE_GRID: string[][] = [];
-        return VIEWABLE_GRID;
+    public getCharAt(row: number, column: number): string {
+        return this.GRID.getCharAt(row, column);
     }
 
     public getWord(index: number, direction: Direction): GridWord {
-        if (direction === Direction.horizontal) {
-            return this.horizontalGridWords.get(index);
-        }
-        else if (direction === Direction.vertical) {
-            return this.verticalGridWords.get(index);
-        }
-        else {
-            throw new Error('Unknown direction: "' + direction + '"');
-        }
+        return this.GRID.getWord(index, direction);
     }
 
     public setUserInput(input: string): void {
-        // if (this.selectionService.hasSelectedWord) {
-        //     const SELECTED_WORD = this.selectionService.selectionValue;
-        //     if (input.length < SELECTED_WORD.length) {
-        //         this.inputLettersOnGrid(SELECTED_WORD, input);
-        //     }
-        //     else if (input.length === SELECTED_WORD.length) {
-        //         this.inputLettersOnGrid(SELECTED_WORD, input);
-        //         this.sendWordToServer(input, SELECTED_WORD);
-        //         this.selectionService.selection.next(SELECTED_WORD);
-        //     }
-        // }
+        this.GRID.userInput = input;
     }
 
     public sendWordToServer(input: string, word: GridWord) {
