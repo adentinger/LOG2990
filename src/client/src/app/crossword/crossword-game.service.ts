@@ -65,12 +65,4 @@ export class CrosswordGameService {
         return this.changeTimerValueOn;
     }
 
-    public changeTimerValue(seconds: string) {
-        let time = Number(seconds);
-        if (Number.isNaN(time)) {
-            time = TIME_MAX;
-        }
-
-        this.packetManager.sendPacket(CrosswordTimerPacket, new CrosswordTimerPacket(time));
-    }
 }

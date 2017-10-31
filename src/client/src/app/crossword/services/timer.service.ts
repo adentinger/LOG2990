@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { PacketManagerClient } from '../../packet-manager-client';
 import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
-import { PacketHandler, PacketEvent } from '../../../../../common/src/index';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
 import '../../../../../common/src/crossword/packets/crossword-timer.parser';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -23,10 +23,15 @@ export class TimerService {
         this.timer.next(TimerService.DEFAULT_TIME);
         this.serverTimerSubscription =
             this.subscribeServerToTimeChanges();
+        registerHandlers(this, packetManager);
     }
 
     public get timer(): Subject<number> {
         return this.timerInternal;
+    }
+
+    public get timerValue(): number {
+        return this.timerValueInternal;
     }
 
     @PacketHandler(CrosswordTimerPacket)

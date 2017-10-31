@@ -3,6 +3,7 @@ import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGame } from '../class/crossword-game';
 import { GameDetailsService } from './game-details.service';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { TimerService } from '../services/timer.service';
 
 @Component({
     selector: 'app-game-details',
@@ -10,13 +11,15 @@ import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
     styleUrls: ['./game-details.component.css']
 })
 export class GameDetailsComponent implements OnInit {
+
     public crosswordGame: CrosswordGame;
     public player1: string;
     public difficulty: string;
     public gameMode: GameMode;
 
-    constructor(private crosswordGameService: CrosswordGameService, private gameDetailsService: GameDetailsService,
-        private ngZone: NgZone) { }
+    constructor(private crosswordGameService: CrosswordGameService,
+                private timerService: TimerService,
+                private ngZone: NgZone) { }
 
     public ngOnInit(): void {
         this.crosswordGame = this.crosswordGameService.getCurrentGame();
@@ -30,6 +33,7 @@ export class GameDetailsComponent implements OnInit {
     }
 
     public get timerValue() {
-        return this.gameDetailsService.countdown * 1000;
+        return this.timerService.timerValue * 1000;
     }
+
 }

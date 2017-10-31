@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { CrosswordGameService } from '../crossword-game.service';
+import { TimerService } from '../services/timer.service';
 
 @Component({
     selector: 'app-cheat-mode',
@@ -11,7 +12,8 @@ export class CheatModeComponent implements OnInit {
 
     @ViewChild('timerInput') private timerInput: ElementRef;
 
-    constructor(private crosswordGameService: CrosswordGameService) { }
+    constructor(private crosswordGameService: CrosswordGameService,
+                private timerService: TimerService) { }
 
     public ngOnInit() {
     }
@@ -75,7 +77,7 @@ export class CheatModeComponent implements OnInit {
 
     public changeTimerValue(): void {
         this.checkTimerInput();
-        this.crosswordGameService.changeTimerValue(
+        this.timerService.timer.next(
             this.timerInput.nativeElement.value
         );
     }
