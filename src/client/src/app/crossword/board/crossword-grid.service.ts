@@ -36,15 +36,15 @@ export class CrosswordGridService {
         return this.GRID.getWord(index, direction);
     }
 
-    public setUserInput(input: GridWord): void {
-        this.GRID.userInput = input;
+    public setUserInput(word: GridWord): void {
+        this.GRID.userInput = word;
+        if (word.length === word.string.length) {
+            this.sendWordToServer(word);
+        }
     }
 
-    public sendWordToServer(input: string, word: GridWord) {
-        const newGridWord = Object.assign(new GridWord, word);
-        newGridWord.string = input;
-
-        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(newGridWord));
+    private sendWordToServer(word: GridWord) {
+        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(word));
     }
 
     @PacketHandler(GridWordPacket)
