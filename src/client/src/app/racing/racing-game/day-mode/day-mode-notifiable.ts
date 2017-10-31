@@ -1,5 +1,5 @@
-import { DayMode } from './day-mode-manager';
 import { hasFunctions } from '../../../../../../common/src/utils';
+import { DayMode } from './day-mode';
 
 export interface DayModeNotifiable extends THREE.Object3D {
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
-import { DayMode } from '../../day-mode/day-mode-manager';
+import { DayMode } from '../../day-mode/day-mode';
 
 export class Skybox extends THREE.Mesh implements DayModeNotifiable {
 

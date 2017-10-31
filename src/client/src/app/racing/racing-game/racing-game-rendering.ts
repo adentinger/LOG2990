@@ -7,12 +7,14 @@ import { PerspectiveCamera } from './perspective-camera';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
 import { EventManager } from '../../event-manager.service';
+import { Lighting } from './three-objects/lighting/lighting';
 
 export class RacingGameRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
     public readonly SCENE: THREE.Scene;
     public readonly RENDERER: THREE.WebGLRenderer;
+    public readonly LIGHTING = new Lighting();
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
     public readonly CAMERA1: PerspectiveCamera;
@@ -35,8 +37,7 @@ export class RacingGameRenderer {
 
         this.displayWorldRef = true;
 
-        const LIGHTS = this.getLights();
-        this.SCENE.add(...LIGHTS);
+        this.SCENE.add(this.LIGHTING);
 
         const SPHERE = new THREE.Mesh(
             new THREE.SphereGeometry(0.5),
@@ -93,24 +94,6 @@ export class RacingGameRenderer {
     public updateDayMode(newMode: DayMode): void {
         this.DAY_MODE_MANAGER.mode = newMode;
         this.DAY_MODE_MANAGER.updateScene(this.SCENE);
-    }
-
-    private getLights(): any {
-        const LIGHTS = [
-            new THREE.PointLight(0xffffff, 0.3),
-            new THREE.PointLight(0xffffff, 0.3),
-            new THREE.PointLight(0xffffff, 0.3)
-        ];
-        const positions = [
-            [10, 50, 100],
-            [-10, 50, -100],
-            [-100, 50, 10]
-        ];
-        for (let i = 0; i < LIGHTS.length; ++i) {
-            [LIGHTS[i].position.x, LIGHTS[i].position.y, LIGHTS[i].position.z] = positions[i];
-        }
-
-        return LIGHTS;
     }
 
 }

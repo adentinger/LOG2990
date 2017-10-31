@@ -40,7 +40,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.mapService.getByName(mapName)
                 .then(map => {
                     this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs, this.eventManager);
-                    this.racingGame.resizeCanvas(this.windowHalfX * 2, this.windowHalfY * 2);
+                    this.onResize();
                 });
         });
     }
