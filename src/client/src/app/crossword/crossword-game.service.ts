@@ -25,11 +25,6 @@ export class CrosswordGameService {
 
     private gameId: string = null;
 
-    public selectedWordIndex = 0;
-    public direction: Direction;
-    public lastSelectedWordIndex = 0;
-    public aDefinitionIsSelected = false;
-
     public crosswordGame: CrosswordGame = CROSSWORD_GAME;
 
     public constructor(private packetManager: PacketManagerClient) { }
