@@ -9,7 +9,7 @@ import { GridWord } from '../grid-word';
  */
 export class WordTryResultPacket  {
 
-    constructor(public found: boolean,
-                public word: GridWord) { }
+    constructor(public found?: boolean,
+                public word?: GridWord) { }
 
 }
