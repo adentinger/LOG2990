@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { BoardComponent } from './board/board.component';
@@ -14,6 +14,7 @@ export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
     @ViewChild(BoardComponent) public gameBoard: BoardComponent;
+    @ViewChild('timerInput') private timerInput: ElementRef;
 
     constructor(private crosswordGameService: CrosswordGameService) { }
 
@@ -71,7 +72,16 @@ export class CrosswordComponent implements OnInit {
         }
     }
 
-    public changeTimerValue(seconds: string): void {
-        this.crosswordGameService.changeTimerValue(seconds);
+    public checkTimerInput(): void {
+        let input: string = this.timerInput.nativeElement.value;
+        input = input.replace(/[^0-9]/ig, '');
+        this.timerInput.nativeElement.value = input;
+    }
+
+    public changeTimerValue(): void {
+        this.checkTimerInput();
+        this.crosswordGameService.changeTimerValue(
+            this.timerInput.nativeElement.value
+        );
     }
 }

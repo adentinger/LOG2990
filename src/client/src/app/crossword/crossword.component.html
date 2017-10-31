@@ -14,7 +14,8 @@
           #timerInput
           *ngIf='isTimerBeingSet() && isCheatModeOn()'
           type='text'
-          (keyup.enter)='changeTimerValue(timerInput.value)'
+          (keyup)='checkTimerInput()'
+          (keyup.enter)='changeTimerValue()'
           size='5px'
         />
       </div>
