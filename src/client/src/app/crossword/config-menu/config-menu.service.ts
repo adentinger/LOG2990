@@ -127,18 +127,14 @@ export class ConfigMenuService {
     }
 
     private sendGameConfiguration(): void {
-        console.log('sending to url: ' + ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH);
-        console.log('sending:' + this.getDisplayedSettings().toString());
-
         this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
             this.getDisplayedSettings())
-            .subscribe(
-            (response) => {
-                console.log('response on client: ' + JSON.stringify(response));
+            .toPromise()
+            .then((response) => {
                 this.crosswordGameService.setGameId(response['id']);
                 // get informations to init game on client
-            },
-            (error: Error) => {
+            })
+            .catch((error: Error) => {
                 console.log('error on client : ' + error.message);
             });
         this.isConfiguringGame = false;
