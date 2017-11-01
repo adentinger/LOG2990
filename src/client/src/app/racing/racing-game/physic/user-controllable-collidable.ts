@@ -24,6 +24,10 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected angularAcceleration = 2 * Math.PI; // rad/s^2
     protected maxAngularSpeed = Math.PI / 2; // rad/s
 
+    protected get front(): THREE.Vector3 {
+        return new THREE.Vector3(0, 0, -1).applyEuler(this.rotation);
+    }
+
     public update(engine: PhysicUtils, deltaTime: Seconds) {
         this.applyUserInputs(deltaTime);
         super.update(engine, deltaTime);
@@ -33,6 +37,10 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         const velocityDirection = this.velocity.clone().normalize();
         const FRICTION_VECTOR = velocityDirection.multiplyScalar(-this.friction);
         this.velocity.addScaledVector(FRICTION_VECTOR, deltaTime);
+
+        const speed = this.velocity.length();
+        const direction = Math.sign(this.velocity.dot(this.front));
+        this.velocity.copy(this.front.multiplyScalar(direction * speed));
         super.updateVelocity(deltaTime);
     }
 
@@ -43,8 +51,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         super.updateAngularVelocity(deltaTime);
     }
 
-    public updateRotation(deltaTime: Seconds): void {
-    }
+    public updateRotation(deltaTime: Seconds): void { }
 
     public setUIInput(userInputService: UIInputs): void {
         this.userInputs = userInputService;

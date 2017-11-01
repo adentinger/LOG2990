@@ -9,7 +9,7 @@ import { CollidableMesh } from './physic/collidable';
 import { Meters } from '../types';
 import { DayMode } from './day-mode/day-mode-manager';
 import { UIInputs } from './ui-input.service';
-import { Cube } from './physic/examples/ball';
+import { Cube } from './physic/examples/cube';
 import { Car } from './three-objects/car/car';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { EventManager } from '../../event-manager.service';

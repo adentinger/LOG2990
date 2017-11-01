@@ -52,7 +52,8 @@ export class Car extends UserControllableCollidableMesh implements DayModeNotifi
     public readonly corner3 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
     public readonly corner4 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff7f00 }));
 
-    protected maxSpeed = 15; // m/s
+    protected maxSpeed = 50; // m/s
+    protected maxAngularSpeed = Math.PI; // rad/s
 
     constructor(carColor: CarColor) {
         super();
