@@ -1,6 +1,8 @@
 import { isDayModeNotifiable } from './day-mode-notifiable';
 import { DayMode } from './day-mode';
 
+export { DayMode } from './day-mode';
+
 export class DayModeManager {
 
     public mode: DayMode = DayMode.DAY;

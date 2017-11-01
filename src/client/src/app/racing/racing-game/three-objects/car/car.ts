@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
+import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { CarHeadlight } from './car-headlight';
 
 export interface CarLights {
@@ -9,24 +10,52 @@ export interface CarLights {
     headlightRight: THREE.Light;
 }
 
-export class Car extends THREE.Mesh {
+interface CarLightOptions {
+    color: number;
+    intensity: number;
+    distance: number;
+    angle: number;
+    exponent: number;
+    decay: number;
+    headlightPositions: THREE.Vector3[];
+}
+
+export class Car extends UserControllableCollidableMesh {
 
     private static readonly JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
     private static readonly BASE_PATH = 'assets/racing/car_model/';
     private static readonly FILE_EXTENSION = '.json';
 
-    private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
-        new THREE.Vector3(-0.56077, 0.63412, -2.75),
-        new THREE.Vector3( 0.56077, 0.63412, -2.75)
-    ];
+    private static readonly HEADLIGHT_OPTIONS: CarLightOptions = {
+        color: 0xfbf2b5,
+        intensity: 1,
+        distance: 10,
+        angle: Math.PI / 4,
+        exponent: 0.6,
+        decay: 1.3,
+        headlightPositions: [
+            new THREE.Vector3(-0.56077, 0.63412, -2.75),
+            new THREE.Vector3(0.56077, 0.63412, -2.75)
+        ]
+    };
 
     private logger = Logger.getLogger('Car');
     private lights: CarLights;
+    private boundingBox: THREE.Box3;
+    public readonly corner1 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+    public readonly corner2 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+    public readonly corner3 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
+    public readonly corner4 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff7f00 }));
+
+    protected maxSpeed = 15; // m/s
 
     constructor(carColor: CarColor) {
         super();
         this.addLights();
-        this.addCarParts(carColor);
+        this.addCarParts(carColor).then(() => {
+            this.boundingBox = new THREE.Box3().setFromObject(this);
+        });
+        this.boundingBox = new THREE.Box3().setFromObject(this);
     }
 
     private async addCarParts(color: CarColor): Promise<void> {
@@ -55,9 +84,11 @@ export class Car extends THREE.Mesh {
                 Car.BASE_PATH + name + Car.FILE_EXTENSION,
                 (geometry, materials) => {
                     const CAR_PART = new THREE.Mesh(geometry, materials[0]);
+                    geometry.computeVertexNormals();
+                    geometry['computeMorphNormals']();
                     resolve(CAR_PART);
                 },
-                () => {},
+                () => { },
                 (reason) => this.logger.warn(reason)
             );
         });
@@ -80,17 +111,24 @@ export class Car extends THREE.Mesh {
                             resolve(bodyMesh);
                         })
                         .catch(() => reject());
-                    })
-                );
-            });
+                })
+            );
+        });
         return Promise.all(COLORED_CAR_PARTS);
     }
 
     private addLights(): void {
         const HEADLIGHTS = [];
         const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, -1);
-        Car.HEADLIGHT_POSITIONS.forEach((headlightPosition) => {
-            const HEADLIGHT = new CarHeadlight();
+        Car.HEADLIGHT_OPTIONS.headlightPositions.forEach((headlightPosition) => {
+            const HEADLIGHT = new THREE.SpotLight(
+                Car.HEADLIGHT_OPTIONS.color,
+                Car.HEADLIGHT_OPTIONS.intensity,
+                Car.HEADLIGHT_OPTIONS.distance,
+                Car.HEADLIGHT_OPTIONS.angle,
+                Car.HEADLIGHT_OPTIONS.exponent,
+                Car.HEADLIGHT_OPTIONS.decay
+            );
             HEADLIGHT.position.copy(headlightPosition);
             HEADLIGHT.target.position.copy(
                 headlightPosition.clone().add(HEADLIGHT_FRONT_DIRECTION)

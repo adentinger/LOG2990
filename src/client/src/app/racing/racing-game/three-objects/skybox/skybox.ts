@@ -44,9 +44,8 @@ export class Skybox extends THREE.Mesh implements DayModeNotifiable {
             default: throw new Error('Invalid skybox mode: "' + mode + '"');
         }
 
-        const CUBE =
-            new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300, 1, 1, 1),
-                           Skybox.makeShader(texture));
+        const CUBE = new THREE.Mesh(new THREE.CubeGeometry(500, 500, 500, 1, 1, 1),
+                                    Skybox.makeShader(texture));
 
         return CUBE;
     }

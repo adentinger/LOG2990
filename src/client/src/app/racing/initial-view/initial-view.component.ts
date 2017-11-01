@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { MapService } from '../services/map.service';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';

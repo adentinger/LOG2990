@@ -2,12 +2,6 @@ import { Point } from './point';
 import { Vector } from './vector';
 import { Interval } from './interval';
 
-export enum IntersectionType {
-    INTERSECT_NONE = 0,
-    INTERSECT_POINT,
-    INTERSECT_LINE
-}
-
 export class Line {
 
     public origin: Point;
@@ -25,9 +19,7 @@ export class Line {
 
     public get slope(): number {
         const TRANSLATION = this.translation;
-        if (TRANSLATION.x !== 0) {
-            return TRANSLATION.y / TRANSLATION.x;
-        }
+        return TRANSLATION.y / TRANSLATION.x;
     }
 
     public get intercept(): number {
@@ -35,13 +27,23 @@ export class Line {
     }
 
     public equals(that: Line): boolean {
-        return (this.origin     .equals(that.origin) &&
-                this.destination.equals(that.destination)) ||
-               (this.origin     .equals(that.destination) &&
+        return (this.origin.equals(that.origin) &&
+            this.destination.equals(that.destination)) ||
+            (this.origin.equals(that.destination) &&
                 this.destination.equals(that.origin));
     }
 
-    public intersectsWith(that: Line): IntersectionType {
+    /**
+     * Get the interpolated point between the origin and the destination.
+     * @param proportion The proportion of the line. Must be between 0 and 1.
+     */
+    public interpollate(proportion: number): Point {
+        const x = this.origin.x + (this.destination.x - this.origin.x) * (proportion);
+        const y = this.origin.y + (this.destination.y - this.origin.y) * (proportion);
+        return new Point(x, y);
+    }
+
+    public intersectsWith(that: Line): Point[] {
 
         const point1 = this.origin;
         const point2 = that.origin;
@@ -49,7 +51,6 @@ export class Line {
         const vector2 = that.translation;
         let numerator: number;
         let denominator: number;
-        let intersect = IntersectionType.INTERSECT_NONE;
         const THIS_DOMAIN_X = new Interval(this.origin.x, this.destination.x);
         const THAT_DOMAIN_X = new Interval(that.origin.x, that.destination.x);
         const THIS_DOMAIN_Y = new Interval(this.origin.y, this.destination.y);
@@ -60,8 +61,14 @@ export class Line {
             if (denominator !== 0) {
                 numerator = (point2.y - point1.y) / vector1.y - (point2.x - point1.x) / vector1.x;
             }
-            else {
-                intersect = (this.intercept === that.intercept) ? IntersectionType.INTERSECT_LINE : IntersectionType.INTERSECT_NONE;
+            else if (this.intercept === that.intercept) {
+                const domainX = THIS_DOMAIN_X.intersect(THAT_DOMAIN_X);
+                const domainY = THIS_DOMAIN_Y.intersect(THAT_DOMAIN_Y);
+                const x1 = domainX.lower;
+                const x2 = domainX.upper;
+                const y1 = this.slope > 0 ? domainY.lower : domainY.upper;
+                const y2 = this.slope > 0 ? domainY.upper : domainY.lower;
+                return [new Point(x1, y1), new Point(x2, y2)];
             }
         }
         else if (vector1.x === 0) {
@@ -69,9 +76,13 @@ export class Line {
                 numerator = (point1.x - point2.x);
                 denominator = vector2.x;
             }
-            else {
-                intersect = (point1.x === point2.x && !THIS_DOMAIN_Y.intersect(THAT_DOMAIN_Y).isEmpty()) ?
-                            IntersectionType.INTERSECT_LINE : IntersectionType.INTERSECT_NONE;
+            else if (point1.x === point2.x && !THIS_DOMAIN_Y.intersect(THAT_DOMAIN_Y).isEmpty()) {
+                const domainY = THIS_DOMAIN_Y.intersect(THAT_DOMAIN_Y);
+                const x1 = point1.x;
+                const x2 = point2.x;
+                const y1 = domainY.lower;
+                const y2 = domainY.upper;
+                return [new Point(x1, y1), new Point(x2, y2)];
             }
         }
         else if (vector1.y === 0) {
@@ -79,22 +90,36 @@ export class Line {
                 numerator = (point1.y - point2.y);
                 denominator = vector2.y;
             }
-            else {
-                intersect = (point1.y === point2.y && !THIS_DOMAIN_X.intersect(THAT_DOMAIN_X).isEmpty()) ?
-                            IntersectionType.INTERSECT_LINE : IntersectionType.INTERSECT_NONE;
+            else if (point1.y === point2.y && !THIS_DOMAIN_X.intersect(THAT_DOMAIN_X).isEmpty()) {
+                const domainX = THIS_DOMAIN_X.intersect(THAT_DOMAIN_X);
+                const x1 = domainX.lower;
+                const x2 = domainX.upper;
+                const y1 = point1.y;
+                const y2 = point2.y;
+                return [new Point(x1, y1), new Point(x2, y2)];
             }
         }
 
 
         if (numerator !== undefined && denominator !== undefined) {
-            const PARAMETRIC_CONSTANT = numerator / denominator;
-            const Y = PARAMETRIC_CONSTANT * vector2.y + point2.y;
-            const X = PARAMETRIC_CONSTANT * vector2.x + point2.x;
-            intersect = (THIS_DOMAIN_Y.contains(Y) && THAT_DOMAIN_Y.contains(Y)) &&
-                        (THIS_DOMAIN_X.contains(X) && THAT_DOMAIN_X.contains(X)) ?
-                        IntersectionType.INTERSECT_POINT : IntersectionType.INTERSECT_NONE;
+            return this.getPointFromParametricConstant(numerator / denominator, that);
         }
-        return intersect;
+        return [];
+    }
+
+    private getPointFromParametricConstant(parametricConstant: number, that: Line): Point[] {
+        const THIS_DOMAIN_X = new Interval(this.origin.x, this.destination.x);
+        const THAT_DOMAIN_X = new Interval(that.origin.x, that.destination.x);
+        const THIS_DOMAIN_Y = new Interval(this.origin.y, this.destination.y);
+        const THAT_DOMAIN_Y = new Interval(that.origin.y, that.destination.y);
+
+        const Y = parametricConstant * that.translation.y + that.origin.y;
+        const X = parametricConstant * that.translation.x + that.origin.x;
+        if ((THIS_DOMAIN_Y.contains(Y) && THAT_DOMAIN_Y.contains(Y)) &&
+            (THIS_DOMAIN_X.contains(X) && THAT_DOMAIN_X.contains(X))) {
+            return [new Point(X, Y)];
+        }
+        return [];
     }
 
 }

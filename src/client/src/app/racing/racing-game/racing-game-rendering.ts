@@ -2,93 +2,93 @@ import * as THREE from 'three';
 
 import { Skybox } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
-import { Car } from './three-objects/car/car';
+import { OrthographicCamera } from './orthographic-camera';
+import { PerspectiveCamera } from './perspective-camera';
 import { CarColorGreen } from './three-objects/car/car-color-green';
-import { DayModeManager } from './day-mode/day-mode-manager';
-import { DayMode } from './day-mode/day-mode';
+import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
+import { EventManager } from '../../event-manager.service';
 import { Lighting } from './three-objects/lighting/lighting';
 
-export class RacingGameRendering {
-    private static readonly ARROW_HELPERS: THREE.ArrowHelper[] = [
-        new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0xff0000),
-        new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), 1, 0x00ff00),
-        new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(), 1, 0x0000ff)
-    ];
-
-    public readonly WIDTH: number = window.innerWidth;
-    public readonly HEIGHT: number = window.innerHeight;
-
-    public readonly VIEW_ANGLE: number = 90;
-    public readonly ASPECT: number = this.WIDTH / this.HEIGHT;
-
-    public readonly NEAR: number = 0.05;
-    public readonly FAR: number = 500;
+export class RacingGameRenderer {
+    private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
     public readonly SCENE: THREE.Scene;
-    public readonly CAMERA: THREE.PerspectiveCamera;
     public readonly RENDERER: THREE.WebGLRenderer;
     public readonly LIGHTING = new Lighting();
     public readonly SKYBOX: Skybox;
     public readonly PLANE: RacingGamePlane;
+    public readonly CAMERA1: PerspectiveCamera;
+    public readonly CAMERA2 = new OrthographicCamera;
+    public readonly cameraHelper: THREE.CameraHelper;
 
-    private readonly DAY_MODE_MANAGER = new DayModeManager();
+    public currentCamera: 0 | 1 = 0;
 
     private displayWorldRefInternal: boolean;
+    private readonly DAY_MODE_MANAGER = new DayModeManager();
 
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement, eventManager: EventManager) {
         this.SCENE = new THREE.Scene();
-        this.RENDERER = new THREE.WebGLRenderer({canvas: canvas});
-        this.CAMERA = new THREE.PerspectiveCamera(
-            this.VIEW_ANGLE,
-            this.ASPECT,
-            this.NEAR,
-            this.FAR);
+        this.RENDERER = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+
         this.SKYBOX = new Skybox();
+
         this.PLANE = new RacingGamePlane();
-        const wireframePlane = new RacingGamePlane();
-        (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).map = null;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color( 0xffffff );
-        wireframePlane.rotation.set(0, 0, 0);
-        this.PLANE.add(wireframePlane);
+        this.SCENE.add(this.PLANE);
+
         this.displayWorldRef = true;
 
-        this.CAMERA.add(this.SKYBOX);
-        this.SCENE.add(this.PLANE);
-        this.SCENE.add(this.CAMERA);
         this.SCENE.add(this.LIGHTING);
-
-        const CAR = new Car(new CarColorGreen());
-        setInterval(() => CAR.position.setZ(CAR.position.z + 0.01), 1000 / 60);
-        this.SCENE.add(CAR);
 
         const SPHERE = new THREE.Mesh(
             new THREE.SphereGeometry(0.5),
-            new THREE.MeshPhongMaterial({color: 0x880000})
+            new THREE.MeshPhongMaterial({ color: 0x880000 })
         );
         SPHERE.position.z = -5;
         SPHERE.position.y = .5;
         this.SCENE.add(SPHERE);
+
+        this.CAMERA1 = new PerspectiveCamera(eventManager);
+        this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
+
+        this.CAMERA1.add(this.SKYBOX);
     }
 
     public set displayWorldRef(value: boolean) {
         this.displayWorldRefInternal = value;
         if (value) {
-            this.SCENE.add(...RacingGameRendering.ARROW_HELPERS);
+            this.SCENE.add(RacingGameRenderer.AXIS_HELPER);
         }
         else {
-            RacingGameRendering.ARROW_HELPERS.forEach(this.SCENE.remove);
+            this.SCENE.remove(RacingGameRenderer.AXIS_HELPER);
         }
     }
 
-    public setupScene(): void {
-        this.setupCamera();
-    }
+    public render(): void {
+        const screenSize = this.RENDERER.getSize();
+        this.RENDERER.setScissorTest(true);
+        this.CAMERA2.updatePosition();
 
-    private setupCamera(): void {
-        this.CAMERA.rotation.order = 'YXZ';
-        this.CAMERA.position.set(0, 1, 0);
-        this.CAMERA.lookAt(this.SCENE.position);
+        if (this.currentCamera === 1) {
+            this.SCENE.add(this.cameraHelper);
+        }
+        this.RENDERER.setViewport(0, 0, screenSize.width, screenSize.height);
+        this.RENDERER.setScissor(0, 0, screenSize.width, screenSize.height);
+        this.RENDERER.render(this.SCENE, this.currentCamera === 0 ? this.CAMERA1 : this.CAMERA2);
+        if (this.currentCamera === 1) {
+            this.SCENE.remove(this.cameraHelper);
+        }
+
+        if (this.currentCamera === 0) {
+            this.SCENE.add(this.cameraHelper);
+        }
+        this.RENDERER.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
+            screenSize.width * 0.20, screenSize.height * 0.20);
+        this.RENDERER.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
+            screenSize.width * 0.20, screenSize.height * 0.20);
+        this.RENDERER.render(this.SCENE, this.currentCamera === 0 ? this.CAMERA2 : this.CAMERA1);
+        if (this.currentCamera === 0) {
+            this.SCENE.remove(this.cameraHelper);
+        }
     }
 
     public updateDayMode(newMode: DayMode): void {
