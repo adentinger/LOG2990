@@ -55,7 +55,6 @@ export class RacingGameService {
 
         this.newRacingGame(canvas, eventManager);
         this.physicEngine.setRoot(this.renderer.SCENE);
-        this.renderer.updateDayMode(this.dayMode);
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
@@ -63,10 +62,6 @@ export class RacingGameService {
         this.CAR.setUIInput(userInputs);
         this.CAR.translateZ(15);
         this.renderer.SCENE.add(this.CAR);
-        this.renderer.SCENE.add(this.CAR.corner1);
-        this.renderer.SCENE.add(this.CAR.corner2);
-        this.renderer.SCENE.add(this.CAR.corner3);
-        this.renderer.SCENE.add(this.CAR.corner4);
 
         this.renderer.CAMERA1.setTarget(this.CAR);
         this.renderer.CAMERA2.setTarget(this.CAR);
@@ -94,6 +89,7 @@ export class RacingGameService {
 
         this.physicEngine.start();
         this.startRendering();
+        this.renderer.updateDayMode(this.dayMode);
     }
 
     public finalize() {

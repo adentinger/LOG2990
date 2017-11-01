@@ -4,53 +4,30 @@ import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
 import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { CarHeadlight } from './car-headlight';
-import { Kilograms } from '../../../types';
-import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
-import { DayMode } from '../../day-mode/day-mode';
+import { Kilograms, Seconds } from '../../../types';
 
 export interface CarLights {
     headlightLeft: THREE.Light;
     headlightRight: THREE.Light;
 }
 
-interface CarLightOptions {
-    color: number;
-    intensity: number;
-    distance: number;
-    angle: number;
-    exponent: number;
-    decay: number;
-    headlightPositions: THREE.Vector3[];
-}
-
-export class Car extends UserControllableCollidableMesh implements DayModeNotifiable {
+export class Car extends UserControllableCollidableMesh {
+    private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
 
     private static readonly JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
     private static readonly BASE_PATH = 'assets/racing/car_model/';
     private static readonly FILE_EXTENSION = '.json';
 
-    private static readonly HEADLIGHT_OPTIONS: CarLightOptions = {
-        color: 0xfbf2b5,
-        intensity: 1,
-        distance: 10,
-        angle: Math.PI / 4,
-        exponent: 0.6,
-        decay: 1.3,
-        headlightPositions: [
-            new THREE.Vector3(-0.56077, 0.63412, -2.65),
-            new THREE.Vector3(0.56077, 0.63412, -2.65)
-        ]
-    };
+    private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
+        new THREE.Vector3(-0.56077, 0.63412, -2.5),
+        new THREE.Vector3( 0.56077, 0.63412, -2.5)
+    ];
 
     public readonly mass: Kilograms = 100;
 
     private logger = Logger.getLogger('Car');
     private lights: CarLights;
     private boundingBox: THREE.Box3;
-    public readonly corner1 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
-    public readonly corner2 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
-    public readonly corner3 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
-    public readonly corner4 = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({ color: 0xff7f00 }));
 
     protected maxSpeed = 50; // m/s
     protected maxAngularSpeed = Math.PI; // rad/s
@@ -58,15 +35,8 @@ export class Car extends UserControllableCollidableMesh implements DayModeNotifi
     constructor(carColor: CarColor) {
         super();
         this.addLights();
-        this.addCarParts(carColor).then(() => {
-            this.boundingBox = new THREE.Box3().setFromObject(this);
-        });
+        this.addCarParts(carColor);
         this.boundingBox = new THREE.Box3().setFromObject(this);
-    }
-
-    public dayModeChanged(mode: DayMode) {
-        this.lights.headlightRight.intensity = mode.CAR_HEADLIGHT_OPTIONS.intensity;
-        this.lights.headlightLeft.intensity = mode.CAR_HEADLIGHT_OPTIONS.intensity;
     }
 
     private async addCarParts(color: CarColor): Promise<void> {
@@ -130,18 +100,19 @@ export class Car extends UserControllableCollidableMesh implements DayModeNotifi
         return Promise.all(COLORED_CAR_PARTS);
     }
 
+    public updateAngularVelocity(deltaTime: Seconds) {
+        const angularVelocityToSpeedRatio = this.angularVelocity.length() / this.velocity.length();
+        if (angularVelocityToSpeedRatio > Car.MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO) {
+            this.angularVelocity.setLength(Car.MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO * this.velocity.length());
+        }
+        super.updateAngularVelocity(deltaTime);
+    }
+
     private addLights(): void {
         const HEADLIGHTS = [];
         const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, -1);
-        Car.HEADLIGHT_OPTIONS.headlightPositions.forEach((headlightPosition) => {
-            const HEADLIGHT = new THREE.SpotLight(
-                Car.HEADLIGHT_OPTIONS.color,
-                Car.HEADLIGHT_OPTIONS.intensity,
-                Car.HEADLIGHT_OPTIONS.distance,
-                Car.HEADLIGHT_OPTIONS.angle,
-                Car.HEADLIGHT_OPTIONS.exponent,
-                Car.HEADLIGHT_OPTIONS.decay
-            );
+        Car.HEADLIGHT_POSITIONS.forEach((headlightPosition) => {
+            const HEADLIGHT = new CarHeadlight();
             HEADLIGHT.position.copy(headlightPosition);
             HEADLIGHT.target.position.copy(
                 headlightPosition.clone().add(HEADLIGHT_FRONT_DIRECTION)

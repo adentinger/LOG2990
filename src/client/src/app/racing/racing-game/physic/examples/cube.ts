@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import { UserControllableCollidableMesh } from '../user-controllable-collidable';
-import { DynamicCollidableMesh } from '../dynamic-collidable';
-import { Kilograms, Seconds } from '../../../types';
-import { UIInputs } from '../../ui-input.service';
-import { PhysicUtils } from '../engine';
+import { Kilograms } from '../../../types';
 
 export class Cube extends UserControllableCollidableMesh {
     constructor(public readonly radius: number, public mass: Kilograms = 1) {

@@ -11,7 +11,6 @@ export interface LightOptions {
 
 export interface LightingOptions {
     keyLight: LightOptions;
-    fillLight: LightOptions;
     backlight: LightOptions;
 }
 
@@ -23,21 +22,18 @@ export interface LightingOptions {
 export class Lighting extends THREE.Object3D implements DayModeNotifiable {
 
     private readonly KEY_LIGHT: THREE.DirectionalLight;
-    private readonly FILL_LIGHT: THREE.DirectionalLight;
     private readonly BACK_LIGHT: THREE.AmbientLight;
 
     constructor() {
         super();
         this.KEY_LIGHT  = new THREE.DirectionalLight(0x000000, 0);
-        this.FILL_LIGHT = new THREE.DirectionalLight(0x000000, 0);
         this.BACK_LIGHT = new THREE.AmbientLight(0x000000, 0);
-        this.add(this.KEY_LIGHT, /* this.FILL_LIGHT,  */this.BACK_LIGHT);
+        this.add(this.KEY_LIGHT, this.BACK_LIGHT);
     }
 
     public dayModeChanged(newMode: DayMode): void {
         const OPTIONS = newMode.LIGHTING_OPTIONS;
         this.changeLightOptionsFor(this.KEY_LIGHT, OPTIONS.keyLight);
-        this.changeLightOptionsFor(this.FILL_LIGHT, OPTIONS.fillLight);
         this.changeLightOptionsFor(this.BACK_LIGHT, OPTIONS.backlight);
     }
 

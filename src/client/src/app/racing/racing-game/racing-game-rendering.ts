@@ -4,7 +4,6 @@ import { Skybox } from './three-objects/skybox/skybox';
 import { RacingGamePlane } from './racing-game-map/racing-game-plane';
 import { OrthographicCamera } from './orthographic-camera';
 import { PerspectiveCamera } from './perspective-camera';
-import { CarColorGreen } from './three-objects/car/car-color-green';
 import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
 import { EventManager } from '../../event-manager.service';
 import { Lighting } from './three-objects/lighting/lighting';
@@ -86,6 +85,16 @@ export class RacingGameRenderer {
     public updateDayMode(newMode: DayMode): void {
         this.DAY_MODE_MANAGER.mode = newMode;
         this.DAY_MODE_MANAGER.updateScene(this.SCENE);
+    }
+
+    public switchCamera1Position() {
+        if (this.CAMERA1.position.equals(PerspectiveCamera.DEFAULT_POSITION)) {
+            this.CAMERA1.position.copy(PerspectiveCamera.DRIVER_POSITION);
+            this.CAMERA1.fov = 35;
+        } else {
+            this.CAMERA1.position.copy(PerspectiveCamera.DEFAULT_POSITION);
+            this.CAMERA1.fov = 45;
+        }
     }
 
 }

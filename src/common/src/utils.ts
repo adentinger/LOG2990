@@ -13,7 +13,7 @@ export function isJson(pseudoJson: string): boolean {
 export interface Constructor<T = any> {
     new(...argv: any[]): T;
 }
-export interface Class<T extends InstanceOf<any> = any> extends Constructor<T> {
+export interface Class<T extends InstanceOf<any> = any> extends Function {
     prototype: T;
 }
 
@@ -21,7 +21,7 @@ export interface InstanceOf<C extends Class<InstanceOf<C>>> {
     readonly constructor: C;
 }
 
-interface PrototypeGetter { getPrototypeOf: <T extends InstanceOf<Class>>(obj: T) => T; }
+export interface PrototypeGetter { getPrototypeOf: <T extends InstanceOf<Class>>(obj: T) => T; }
 export declare const Object: PrototypeGetter & ObjectConstructor;
 
 export function toArrayBuffer(str: string): ArrayBuffer {

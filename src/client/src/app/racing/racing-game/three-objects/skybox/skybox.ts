@@ -8,12 +8,7 @@ export class Skybox extends THREE.Mesh implements DayModeNotifiable {
     private static cubeNight: THREE.Mesh = Skybox.createCube(DayMode.NIGHT);
     private static cubeDay: THREE.Mesh = Skybox.createCube(DayMode.DAY);
 
-    private currentCube: THREE.Mesh = Skybox.cubeDay;
-
-    constructor() {
-        super();
-        this.add(this.currentCube);
-    }
+    private currentCube: THREE.Mesh;
 
     private static makeShader(texture: THREE.CubeTexture): THREE.ShaderMaterial {
         const SHADER = THREE.ShaderLib['cube'];
@@ -74,6 +69,7 @@ export class Skybox extends THREE.Mesh implements DayModeNotifiable {
     }
 
     public dayModeChanged(newMode: DayMode) {
+        console.log('Skybox DayMode Changed');
         let currentCube: THREE.Mesh;
         if (newMode === DayMode.DAY) {
             currentCube = Skybox.cubeDay;

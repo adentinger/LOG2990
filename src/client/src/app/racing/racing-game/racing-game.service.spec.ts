@@ -1,7 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
 import { MockMaps } from '../../admin-screen/map-editor/mock-maps';
 import { MapConverterService } from '../../admin-screen/map-editor/map-converter.service';
 import { PhysicEngine } from './physic/engine';
@@ -26,15 +25,16 @@ describe('RacingGameService', () => {
 
     let service: RacingGameService;
 
-    beforeEach(inject([RacingGameService, MockMaps, MapConverterService, UIInputs], (injectedService: RacingGameService,
+    beforeEach(inject([RacingGameService, MockMaps, MapConverterService, UIInputs, EventManager], (injectedService: RacingGameService,
         mockMapsProvider: MockMaps,
         mapConverterService: MapConverterService,
-        userInputs: UIInputs) => {
+        userInputs: UIInputs,
+        eventManager: EventManager) => {
         service = injectedService;
         const CANVAS = document.createElement('CANVAS') as HTMLCanvasElement;
         CANVAS.width = 1000;
         CANVAS.height = 500;
-        service.initialise(CANVAS, mapConverterService.serialize(mockMapsProvider.functionalMap1()), userInputs);
+        service.initialise(CANVAS, mapConverterService.serialize(mockMapsProvider.functionalMap1()), userInputs, eventManager);
     }));
 
     it('should be created', () => {

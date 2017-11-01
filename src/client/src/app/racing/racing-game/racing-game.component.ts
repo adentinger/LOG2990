@@ -7,9 +7,8 @@ import { MapService } from '../services/map.service';
 import { UIInputs, KEYDOWN_EVENT } from './ui-input.service';
 import { PhysicEngine } from './physic/engine';
 
-import { Point } from '../../../../../common/src/math/point';
-
 import { EventManager } from '../../event-manager.service';
+import { Class } from '../../../../../common/src/utils';
 
 @Component({
     selector: 'app-racing-game',
@@ -68,6 +67,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
         if (this.uiInputs.isKeyPressed('n')) {
             this.racingGame.changeDayMode();
+        }
+        if (this.uiInputs.isKeyPressed('v')) {
+            this.racingGame.renderer.switchCamera1Position();
         }
 
         const isAllowedKeyCombination =

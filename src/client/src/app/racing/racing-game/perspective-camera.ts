@@ -3,8 +3,8 @@ import { EventManager } from '../../event-manager.service';
 import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 
 export class PerspectiveCamera extends THREE.PerspectiveCamera {
-    private static readonly DRIVER_POSITION = new THREE.Vector3(-0.25, 1.15, -0.1);
-    private static readonly DEFAULT_POSITION = new THREE.Vector3(0, 2, 5);
+    public static readonly DRIVER_POSITION = new THREE.Vector3(-0.25, 1.15, -0.1);
+    public static readonly DEFAULT_POSITION = new THREE.Vector3(0, 2, 5);
 
     private static readonly WIDTH: number = window.innerWidth;
     private static readonly HEIGHT: number = window.innerHeight;
@@ -15,7 +15,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
 
     private target: THREE.Object3D;
 
-    public constructor(private eventManager: EventManager) {
+    public constructor(eventManager: EventManager) {
         super(
             PerspectiveCamera.VIEW_ANGLE,
             PerspectiveCamera.ASPECT,
@@ -42,11 +42,13 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
     }
 
     @EventManager.Listener(BEFORE_PHYSIC_UPDATE_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private onBeforeUpdate(event: EventManager.Event<void>) {
         this.target.remove(this);
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private onAfterUpdate(event: EventManager.Event<void>) {
         this.target.add(this);
     }

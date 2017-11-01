@@ -9,8 +9,6 @@ const KEY_BACK = 's';
 const KEY_RIGHT = 'd';
 const KEY_LEFT = 'a';
 
-const ROTATION_RATIO = Math.PI / 6; // rad/m
-
 const FRONT = new THREE.Vector3(0, 0, -1);
 
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
@@ -20,12 +18,12 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected acceleration: Newtons = 20;
     protected maxSpeed = 10; // m/s
 
-    protected angularFriction: number = Math.PI; // rad/s^2
-    protected angularAcceleration = 2 * Math.PI; // rad/s^2
+    protected angularFriction: number = 2 * Math.PI; // rad/s^2
+    protected angularAcceleration = 4 * Math.PI; // rad/s^2
     protected maxAngularSpeed = Math.PI / 2; // rad/s
 
     protected get front(): THREE.Vector3 {
-        return new THREE.Vector3(0, 0, -1).applyEuler(this.rotation);
+        return FRONT.clone().applyEuler(this.rotation);
     }
 
     public update(engine: PhysicUtils, deltaTime: Seconds) {
@@ -51,7 +49,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         super.updateAngularVelocity(deltaTime);
     }
 
-    public updateRotation(deltaTime: Seconds): void { }
+    public updateRotation(deltaTime: Seconds): void {}
 
     public setUIInput(userInputService: UIInputs): void {
         this.userInputs = userInputService;
@@ -66,7 +64,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
             const angularAcceleration = angularAccelerationDirection.multiplyScalar(this.angularAcceleration)
                 .multiplyScalar(angularAccelerationFactor);
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
-            const rotationRestriction = this.velocity.dot(FRONT.clone().applyEuler(this.rotation).setY(0)) / this.maxSpeed;
+            const rotationRestriction = this.velocity.dot(this.front.clone().setY(0)) / this.maxSpeed;
             this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * this.maxAngularSpeed * deltaTime) +
                 2 * Math.PI) % (2 * Math.PI);
 
