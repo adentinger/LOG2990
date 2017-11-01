@@ -110,7 +110,7 @@ export class PhysicUtils {
             lineVector.negate();
         }
 
-        const scalarForce = PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
+        const scalarForce = target.mass * PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
             ((applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length()) ** 2);
 
         const force: THREE.Vector2 = this.getVector2FromVector3(

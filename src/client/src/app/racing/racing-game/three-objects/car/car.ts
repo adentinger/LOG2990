@@ -4,6 +4,9 @@ import { Logger } from '../../../../../../../common/src/index';
 import { CarColor } from './car-color';
 import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { CarHeadlight } from './car-headlight';
+import { Kilograms } from '../../../types';
+import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
+import { DayMode } from '../../day-mode/day-mode';
 
 export interface CarLights {
     headlightLeft: THREE.Light;
@@ -20,7 +23,7 @@ interface CarLightOptions {
     headlightPositions: THREE.Vector3[];
 }
 
-export class Car extends UserControllableCollidableMesh {
+export class Car extends UserControllableCollidableMesh implements DayModeNotifiable {
 
     private static readonly JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
     private static readonly BASE_PATH = 'assets/racing/car_model/';
@@ -34,10 +37,12 @@ export class Car extends UserControllableCollidableMesh {
         exponent: 0.6,
         decay: 1.3,
         headlightPositions: [
-            new THREE.Vector3(-0.56077, 0.63412, -2.75),
-            new THREE.Vector3(0.56077, 0.63412, -2.75)
+            new THREE.Vector3(-0.56077, 0.63412, -2.65),
+            new THREE.Vector3(0.56077, 0.63412, -2.65)
         ]
     };
+
+    public readonly mass: Kilograms = 100;
 
     private logger = Logger.getLogger('Car');
     private lights: CarLights;
@@ -56,6 +61,11 @@ export class Car extends UserControllableCollidableMesh {
             this.boundingBox = new THREE.Box3().setFromObject(this);
         });
         this.boundingBox = new THREE.Box3().setFromObject(this);
+    }
+
+    public dayModeChanged(mode: DayMode) {
+        this.lights.headlightRight.intensity = mode.CAR_HEADLIGHT_OPTIONS.intensity;
+        this.lights.headlightLeft.intensity = mode.CAR_HEADLIGHT_OPTIONS.intensity;
     }
 
     private async addCarParts(color: CarColor): Promise<void> {
@@ -86,6 +96,7 @@ export class Car extends UserControllableCollidableMesh {
                     const CAR_PART = new THREE.Mesh(geometry, materials[0]);
                     geometry.computeVertexNormals();
                     geometry['computeMorphNormals']();
+                    (materials[0] as THREE.MeshPhongMaterial).shininess = 1000;
                     resolve(CAR_PART);
                 },
                 () => { },
@@ -108,6 +119,7 @@ export class Car extends UserControllableCollidableMesh {
                             const RGB_COLOR = color.getRgb();
                             [BODY_MATERIAL.color.r, BODY_MATERIAL.color.g, BODY_MATERIAL.color.b]
                                 = [RGB_COLOR.r, RGB_COLOR.g, RGB_COLOR.b];
+                            BODY_MATERIAL.shininess = 1000;
                             resolve(bodyMesh);
                         })
                         .catch(() => reject());

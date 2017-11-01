@@ -55,6 +55,7 @@ export class RacingGameService {
 
         this.newRacingGame(canvas, eventManager);
         this.physicEngine.setRoot(this.renderer.SCENE);
+        this.renderer.updateDayMode(this.dayMode);
 
         this.map = new RenderableMap(map);
         this.renderer.SCENE.add(this.map);
@@ -71,7 +72,7 @@ export class RacingGameService {
         this.renderer.CAMERA2.setTarget(this.CAR);
 
         const BALL1 = new Cube(0.5);
-        BALL1.position.set(0, 0, -13);
+        BALL1.position.set(0, 0, -3);
         this.map.add(BALL1);
         const BALL2 = new Cube(0.5);
         BALL2.position.set(1.5, 0, -1.75);

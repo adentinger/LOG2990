@@ -9,6 +9,10 @@ const KEY_BACK = 's';
 const KEY_RIGHT = 'd';
 const KEY_LEFT = 'a';
 
+const ROTATION_RATIO = Math.PI / 6; // rad/m
+
+const FRONT = new THREE.Vector3(0, 0, -1);
+
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected userInputs: UIInputs;
 
@@ -18,7 +22,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
 
     protected angularFriction: number = Math.PI; // rad/s^2
     protected angularAcceleration = 2 * Math.PI; // rad/s^2
-    protected maxAngularSpeed = Math.PI; // rad/s
+    protected maxAngularSpeed = Math.PI / 2; // rad/s
 
     public update(engine: PhysicUtils, deltaTime: Seconds) {
         this.applyUserInputs(deltaTime);
@@ -39,26 +43,31 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         super.updateAngularVelocity(deltaTime);
     }
 
+    public updateRotation(deltaTime: Seconds): void {
+    }
+
     public setUIInput(userInputService: UIInputs): void {
         this.userInputs = userInputService;
     }
 
     private applyUserInputs(deltaTime: Seconds) {
         if (this.userInputs != null) {
-            const accelerationDirection = this.getAccelerationDirection();
             const angularAccelerationDirection = this.getAngularAccelerationDirection();
 
-            const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
             const angularAccelerationFactor = (this.maxAngularSpeed - angularAccelerationDirection.dot(this.angularVelocity)) /
                 this.maxAngularSpeed;
-
-            const acceleration = accelerationDirection.multiplyScalar(this.acceleration)
-                .multiplyScalar(accelerationFactor);
             const angularAcceleration = angularAccelerationDirection.multiplyScalar(this.angularAcceleration)
                 .multiplyScalar(angularAccelerationFactor);
-
-            this.velocity.addScaledVector(acceleration, deltaTime);
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
+            const rotationRestriction = this.velocity.dot(FRONT.clone().applyEuler(this.rotation).setY(0)) / this.maxSpeed;
+            this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * this.maxAngularSpeed * deltaTime) +
+                2 * Math.PI) % (2 * Math.PI);
+
+            const accelerationDirection = this.getAccelerationDirection();
+            const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
+            const acceleration = accelerationDirection.multiplyScalar(this.acceleration)
+                .multiplyScalar(accelerationFactor);
+            this.velocity.addScaledVector(acceleration, deltaTime);
         }
     }
 

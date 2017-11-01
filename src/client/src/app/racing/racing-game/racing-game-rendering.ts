@@ -39,14 +39,6 @@ export class RacingGameRenderer {
 
         this.SCENE.add(this.LIGHTING);
 
-        const SPHERE = new THREE.Mesh(
-            new THREE.SphereGeometry(0.5),
-            new THREE.MeshPhongMaterial({ color: 0x880000 })
-        );
-        SPHERE.position.z = -5;
-        SPHERE.position.y = .5;
-        this.SCENE.add(SPHERE);
-
         this.CAMERA1 = new PerspectiveCamera(eventManager);
         this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
 

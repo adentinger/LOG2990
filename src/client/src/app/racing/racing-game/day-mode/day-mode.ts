@@ -48,7 +48,7 @@ class DayModeDay extends DayMode {
             },
             backlight: {
                 color: COLOR,
-                intensity: 0.33,
+                intensity: 0.4,
                 rotation: new THREE.Euler(Math.PI / 8, -3 * Math.PI / 4, 0, 'YXZ')
             }
         };
