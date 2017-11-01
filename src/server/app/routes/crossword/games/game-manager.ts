@@ -118,7 +118,6 @@ export class GameManager {
         for (const GAME of this.games) {
             if (socketId === GAME[1].player1Id ||
                 socketId === GAME[1].player2Id) {
-                // console.log('found a game: ' + JSON.stringify(game[1]));
                 return GAME[1];
             }
         }
@@ -126,8 +125,8 @@ export class GameManager {
     }
 
     private sendAllDefinitions(gameId: string, socketId: string): void {
-        const horizontalDefinitions: Map<number, Definition> = this.games.get(gameId).horizontalDefinitions;
-        const verticalDefinitions: Map<number, Definition> = this.games.get(gameId).verticalDefinitions;
+        const horizontalDefinitions = this.games.get(gameId).horizontalDefinitions;
+        const verticalDefinitions = this.games.get(gameId).verticalDefinitions;
 
         for (let i = 0; i < horizontalDefinitions.size; i++) {
             this.sendDefinition(i, Direction.horizontal, horizontalDefinitions.get(i), socketId);

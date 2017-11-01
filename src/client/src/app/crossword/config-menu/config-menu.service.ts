@@ -22,6 +22,7 @@ export abstract class ConfigMenuStateConfirm extends ConfigMenuState {
 
 @Injectable()
 export class ConfigMenuService {
+
     private static readonly SERVER_ADDRESS = 'http://localhost:3000';
     private static readonly GAMES_PATH = '/crossword/games/';
     private static readonly STATE_CONFIRM = -1;
@@ -124,7 +125,8 @@ export class ConfigMenuService {
         const currentState = this.getCurrentState();
         delete this.gameConfiguration[currentState.id];
     }
-    public sendGameConfiguration(): void {
+
+    private sendGameConfiguration(): void {
         console.log('sending to url: ' + ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH);
         console.log('sending:' + this.getDisplayedSettings().toString());
 
@@ -141,4 +143,5 @@ export class ConfigMenuService {
             });
         this.isConfiguringGame = false;
     }
+
 }
