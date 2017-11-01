@@ -131,7 +131,7 @@ export class ConfigMenuService {
             this.getDisplayedSettings())
             .toPromise()
             .then((response) => {
-                this.crosswordGameService.setGameId(response['id']);
+                this.crosswordGameService.joinGame(response['id']);
                 // get informations to init game on client
             })
             .catch((error: Error) => {

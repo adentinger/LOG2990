@@ -31,10 +31,11 @@ export class CrosswordGameService {
         return this.crosswordGame;
     }
 
-    public setGameId(id: string): void {
+    public joinGame(id: string): void {
         if (!this.gameId) {
             this.gameId = id;
             // use packetmanager to join this game
+            console.log('setting id to', id);
             this.packetManager.sendPacket(GameJoinPacket, new GameJoinPacket(this.gameId));
         }
     }
