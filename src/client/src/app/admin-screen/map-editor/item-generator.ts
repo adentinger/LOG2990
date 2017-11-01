@@ -4,6 +4,7 @@ import { Constructor } from '../../../../../common/src/utils';
 import { Interval } from '../../../../../common/src/math/interval';
 import { Point } from '../../../../../common/src/math/point';
 import { Vector } from '../../../../../common/src/math/vector';
+import { SpeedBoost } from './speed-boost';
 
 export class ItemGenerator {
 
@@ -18,7 +19,7 @@ export class ItemGenerator {
         const MAX_AMOUNT_OF_ITEMS = 5;
         const currentArrayLength = itemArray.length;
 
-        if (constructor.toString() === 'SpeedBoost') {
+        if (constructor === SpeedBoost) {
             this.generatePositions(map, true);
         }
         else {
@@ -52,12 +53,14 @@ export class ItemGenerator {
 
         while (this.allPositions.length < MAX_NUMBER_OF_ITEMS) {
             let isNotUsed = true;
-            if (speedBoost) {
+            if (speedBoost === true) {
                 const index = Math.round(Math.random() * (this.halfSegments.length - 2) + 1);
                 newPosition = Math.round(Math.random() * (this.halfSegments[index].getLength()) + this.halfSegments[index].lower);
+                console.log('allo');
             }
             else {
                 newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
+                console.log('allo2');
             }
 
             for (let j = 0; j < this.allPositions.length; j++) {
@@ -85,7 +88,7 @@ export class ItemGenerator {
             itemArray.pop();
         }
 
-        if (constructor.toString() === 'SpeedBoost') {
+        if (constructor === SpeedBoost) {
             this.generatePositions(map, true);
         }
         else {
@@ -139,6 +142,7 @@ export class ItemGenerator {
 
         point.x += lastMapCoordinates.x;
         point.y += lastMapCoordinates.y;
+
         return point;
     }
 }
