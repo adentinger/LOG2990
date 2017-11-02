@@ -104,7 +104,6 @@ export class CrosswordGame {
     }
 
     private async fetchGrid(difficulty: Difficulty): Promise<void> {
-        console.log('HI');
         let grid: Grid;
         switch (difficulty) {
             case Difficulty.easy: {
