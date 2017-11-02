@@ -1,4 +1,4 @@
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DEFINITIONS_MOCK_H, DEFINITIONS_MOCK_V } from '../mocks/definitions-mock';
 import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/gridwords-mock';
@@ -20,8 +20,8 @@ export class CrosswordGame {
     private static idCounter = 0;
 
     public readonly id: number;
+    public readonly numberOfPlayers: PlayerNumber;
     public countdown = CrosswordGame.COUNTDOWN_INITAL;
-    // public gridWordReceived: GridWord;
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
@@ -31,13 +31,14 @@ export class CrosswordGame {
     public verticalDefinitions: Map<number, Definition> = new Map;
     public horizontalDefinitions: Map<number, Definition> = new Map;
 
-    private gameMode: GameMode;
-
     public player1Id: string = null;
     public player2Id: string = null;
 
+    private gameMode: GameMode;
+
     constructor(configs: CrosswordGameConfigs) {
         this.id = CrosswordGame.idCounter++;
+        this.numberOfPlayers = configs.playerNumber;
         this.gameMode = configs.gameMode;
 
         // MOCK : get grid words from mock

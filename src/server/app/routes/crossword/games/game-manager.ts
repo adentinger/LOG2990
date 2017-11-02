@@ -1,4 +1,4 @@
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
@@ -88,7 +88,6 @@ export class GameManager {
 
         // send all definitions
         this.sendAllDefinitions(gameToJoin, playerSocketId);
-
     }
 
     /**
@@ -102,7 +101,6 @@ export class GameManager {
         const socketId: string = event.socketid;
 
         const game: CrosswordGame = this.getGameFromSocketId(event.socketid);
-
         const ANSWER: GridWord = wordTry;
         if (!game.validateUserAnswer(wordTry)) {
             ANSWER.string = '';
@@ -136,8 +134,19 @@ export class GameManager {
         }
     }
 
-    private addPlayerToGame(playerId: string, gameId: string): void {
-        this.games.get(gameId).player1Id = playerId;
+    private addPlayerToGame(playerId: string, gameId: string): PlayerNumber {
+        const GAME = this.games.get(gameId);
+        if (GAME.player1Id == null) {
+            GAME.player1Id = playerId;
+            return 1;
+        }
+        else if (GAME.player2Id == null && GAME.numberOfPlayers >= 2) {
+            GAME.player2Id = playerId;
+            return 2;
+        }
+        else {
+            throw new Error('Cannot add a new player: max number reached.');
+        }
     }
 
     private sendDefinition(index: number, direction: Direction, definition: Definition, socketId: string) {
