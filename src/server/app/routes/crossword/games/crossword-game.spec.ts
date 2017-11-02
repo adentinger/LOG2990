@@ -27,7 +27,7 @@ describe('The Crossword Game', () => {
         done();
     });
 
-    describe('addPlayerToGame', () => {
+    describe('addPlayer', () => {
         it('should players to the game', () => {
             const GAME = new CrosswordGame({
                 createJoin: CreateOrJoin.create,
@@ -37,8 +37,8 @@ describe('The Crossword Game', () => {
             });
             const PLAYER1 = 'asdf123';
             const PLAYER2 = 'qwertyuiop';
-            GAME.addPlayerToGame(PLAYER1);
-            GAME.addPlayerToGame(PLAYER2);
+            GAME.addPlayer(PLAYER1);
+            GAME.addPlayer(PLAYER2);
             expect(GAME.isPlayerInGame(PLAYER1)).to.be.true;
             expect(GAME.isPlayerInGame(PLAYER2)).to.be.true;
         });
@@ -58,12 +58,12 @@ describe('The Crossword Game', () => {
             });
             const PLAYER1 = 'TAM ARAR';
             const PLAYER2 = 'ERIC CHAO';
-            GAME1PLAYER.addPlayerToGame(PLAYER1);
-            expect(() => GAME1PLAYER.addPlayerToGame(PLAYER2)).to.throw;
+            GAME1PLAYER.addPlayer(PLAYER1);
+            expect(() => GAME1PLAYER.addPlayer(PLAYER2)).to.throw;
 
-            GAME2PLAYERS.addPlayerToGame(PLAYER1);
-            GAME2PLAYERS.addPlayerToGame(PLAYER2);
-            expect(() => GAME2PLAYERS.addPlayerToGame('PASCAL LACASSE')).to.throw;
+            GAME2PLAYERS.addPlayer(PLAYER1);
+            GAME2PLAYERS.addPlayer(PLAYER2);
+            expect(() => GAME2PLAYERS.addPlayer('PASCAL LACASSE')).to.throw;
         });
     });
 
@@ -76,8 +76,8 @@ describe('The Crossword Game', () => {
         });
         const PLAYER1 = 'ADAM CÔTÉ';
         const PLAYER2 = 'EMIR BELHADDAD';
-        GAME.addPlayerToGame(PLAYER1);
-        GAME.addPlayerToGame(PLAYER2);
+        GAME.addPlayer(PLAYER1);
+        GAME.addPlayer(PLAYER2);
         expect(GAME.isPlayerInGame(PLAYER1)).to.be.true;
         expect(GAME.isPlayerInGame(PLAYER2)).to.be.true;
         expect(GAME.isPlayerInGame('CHUCK NORRIS')).to.be.false;

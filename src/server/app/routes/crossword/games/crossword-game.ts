@@ -71,7 +71,7 @@ export class CrosswordGame {
         }
     }
 
-    public addPlayerToGame(playerId: string): PlayerNumber {
+    public addPlayer(playerId: string): PlayerNumber {
         if (this.playerIds.length < this.numberOfPlayers) {
             this.playerIds.push(playerId);
             return this.playerIds.length;

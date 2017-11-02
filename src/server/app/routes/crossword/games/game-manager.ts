@@ -78,7 +78,7 @@ export class GameManager {
         const GAME = this.getGameFromSocketId(event.value.gameId);
         const PLAYER_ID = event.socketid;
 
-        GAME.addPlayerToGame(PLAYER_ID);
+        GAME.addPlayer(PLAYER_ID);
 
         // send all gridWords
         const gridWord = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
