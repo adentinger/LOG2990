@@ -19,7 +19,6 @@ const ID_LENGTH = 8;
 
 export class GameManager {
 
-    // private crosswordGridGenerator:
     private static instance: GameManager;
     private games: Map<string, CrosswordGame> = new Map();
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
