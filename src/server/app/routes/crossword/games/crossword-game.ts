@@ -94,15 +94,6 @@ export class CrosswordGame {
         return this.playerIds.findIndex((id) => id === playerId) >= 0;
     }
 
-    public getGameInfo(): Object {
-        return {
-            player1Id: this.playerIds[0],
-            player2Id: this.playerIds[1],
-            numberOfGridWords: this.getNumberOfWordsInGrid(),
-            numberOfDefinitions: this.getNumberOfDefinitions(),
-        };
-    }
-
     private async fetchGrid(difficulty: Difficulty): Promise<void> {
         let grid: Grid;
         switch (difficulty) {
@@ -129,16 +120,6 @@ export class CrosswordGame {
         for (let i = 0; i < DEFINITIONS_MOCK_H.length; i++) {
             this.horizontalDefinitions.set(i, DEFINITIONS_MOCK_H[i]);
         }
-    }
-
-    private getNumberOfDefinitions(): number {
-        return this.horizontalDefinitions.size
-            + this.verticalDefinitions.size;
-    }
-
-    private getNumberOfWordsInGrid(): number {
-        return this.horizontalGridWords.size +
-            this.verticalGridWords.size;
     }
 
     private startTimer() {

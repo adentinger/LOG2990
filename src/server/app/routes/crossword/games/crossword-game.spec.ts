@@ -21,11 +21,6 @@ describe('The Crossword Game', () => {
         done();
     });
 
-    it('should be able to provide basic information', (done) => {
-        expect(gameToTest.getGameInfo()).to.be.not.null;
-        done();
-    });
-
     describe('addPlayer', () => {
         it('should players to the game', () => {
             const GAME = new CrosswordGame({
