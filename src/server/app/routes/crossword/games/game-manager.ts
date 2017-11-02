@@ -1,4 +1,4 @@
-import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { CrosswordGame } from './crossword-game';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
