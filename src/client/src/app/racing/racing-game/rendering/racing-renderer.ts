@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 
-import { Skybox } from './three-objects/skybox/skybox';
-import { RacingGamePlane } from './racing-game-map/racing-game-plane';
-import { OrthographicCamera } from './orthographic-camera';
-import { PerspectiveCamera } from './perspective-camera';
-import { DayMode, DayModeManager } from './day-mode/day-mode-manager';
-import { EventManager } from '../../event-manager.service';
-import { Lighting } from './three-objects/lighting/lighting';
+import { Skybox } from '../models/skybox/skybox';
+import { RacingGamePlane } from '../racing-game-map/racing-game-plane';
+import { OrthographicCamera } from '../orthographic-camera';
+import { PerspectiveCamera } from '../perspective-camera';
+import { DayMode, DayModeManager } from '../day-mode/day-mode-manager';
+import { EventManager } from '../../../event-manager.service';
+import { Lighting } from '../models/lighting/lighting';
 
-export class RacingGameRenderer {
+export class RacingRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
     public readonly SCENE: THREE.Scene;
@@ -47,10 +47,10 @@ export class RacingGameRenderer {
     public set displayWorldRef(value: boolean) {
         this.displayWorldRefInternal = value;
         if (value) {
-            this.SCENE.add(RacingGameRenderer.AXIS_HELPER);
+            this.SCENE.add(RacingRenderer.AXIS_HELPER);
         }
         else {
-            this.SCENE.remove(RacingGameRenderer.AXIS_HELPER);
+            this.SCENE.remove(RacingRenderer.AXIS_HELPER);
         }
     }
 

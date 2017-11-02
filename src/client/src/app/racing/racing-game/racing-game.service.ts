@@ -1,33 +1,23 @@
 import { Injectable } from '@angular/core';
+import * as THREE from 'three';
 
-import { RacingGameRenderer } from './racing-game-rendering';
+import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import * as THREE from 'three';
 import { CollidableMesh } from './physic/collidable';
 import { Meters } from '../types';
 import { DayMode } from './day-mode/day-mode-manager';
-import { UIInputs } from './ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { Cube } from './physic/examples/cube';
-import { Car } from './three-objects/car/car';
-import { CarColorGreen } from './three-objects/car/car-color-green';
+import { Car } from './models/car/car';
+import { CarColorGreen } from './models/car/car-color-green';
 import { EventManager } from '../../event-manager.service';
-
-class Wall extends CollidableMesh {
-    public readonly mass = Infinity;
-    constructor(width: Meters, heigth: Meters) {
-        super(
-            new THREE.PlaneGeometry(width, heigth),
-            new THREE.MeshBasicMaterial({ wireframe: true })
-        );
-    }
-}
 
 @Injectable()
 export class RacingGameService {
 
-    public renderer: RacingGameRenderer;
+    public renderer: RacingRenderer;
     private animationRequestId = 0;
     private isRendering = false;
     private dayMode: DayMode = DayMode.DAY;
@@ -40,7 +30,7 @@ export class RacingGameService {
     private newRacingGame(canvas: HTMLCanvasElement, eventManager: EventManager): boolean {
         let gameCreated = false;
 
-        this.renderer = new RacingGameRenderer(canvas, eventManager);
+        this.renderer = new RacingRenderer(canvas, eventManager);
         if (this.renderer !== null) {
             gameCreated = true;
         }
@@ -73,19 +63,6 @@ export class RacingGameService {
         BALL2.position.set(1.5, 0, -1.75);
         BALL2.velocity.set(-1, 0, -1);
         this.map.add(BALL2);
-
-        const wall1 = new Wall(10, 10);
-        wall1.position.set(0, 0, -5);
-        const wall2 = new Wall(10, 10);
-        wall2.position.set(5, 0, 0);
-        wall2.rotation.y = 3 * Math.PI / 2;
-        const wall3 = new Wall(10, 10);
-        wall3.position.set(-5, 0, 0);
-        wall3.rotation.y = Math.PI / 2;
-        const wall4 = new Wall(10, 10);
-        wall4.position.set(0, 0, 5);
-        wall4.rotation.y = Math.PI;
-        this.map.add(wall1, wall2, wall3, wall4);
 
         this.physicEngine.start();
         this.startRendering();

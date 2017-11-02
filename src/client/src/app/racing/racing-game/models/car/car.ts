@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { Logger } from '../../../../../../../common/src/index';
+import { Logger } from '../../../../../../../common/src';
 import { CarColor } from './car-color';
 import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { CarHeadlight } from './car-headlight';

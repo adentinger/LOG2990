@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
 import { MapService } from '../services/map.service';
-import { UIInputs, KEYDOWN_EVENT } from './ui-input.service';
+import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { PhysicEngine } from './physic/engine';
 
 import { EventManager } from '../../event-manager.service';
@@ -18,14 +18,12 @@ import { Class } from '../../../../../common/src/utils';
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
+    public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
 
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
-
-    private windowHalfX = window.innerWidth * 0.5;
-    private windowHalfY = window.innerHeight * 0.5 - RacingGameComponent.HEADER_HEIGHT * 0.5;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -35,7 +33,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
+        this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.mapService.getByName(mapName)
                 .then(map => {
                     this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs, this.eventManager);
@@ -53,8 +51,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private onResize() {
         const height = window.innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = window.innerWidth;
-        this.windowHalfX = width * 0.5;
-        this.windowHalfY = height * 0.5;
 
         this.racingGame.resizeCanvas(width, height);
     }

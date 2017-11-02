@@ -5,7 +5,7 @@ import { MockMaps } from '../../admin-screen/map-editor/mock-maps';
 import { MapConverterService } from '../../admin-screen/map-editor/map-converter.service';
 import { PhysicEngine } from './physic/engine';
 import { RacingUnitConversionService } from '../../admin-screen/map-editor/racing-unit-conversion.service';
-import { UIInputs } from './ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 
 describe('RacingGameService', () => {

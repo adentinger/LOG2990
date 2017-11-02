@@ -8,7 +8,7 @@ import { MapService } from './services/map.service';
 import { RacingGameComponent } from './racing-game/racing-game.component';
 import { MapBestTimeComponent } from './initial-view/map-best-time/map-best-time.component';
 import { MapThumbnailComponent } from './initial-view/map-thumbnail/map-thumbnail.component';
-import { UIInputs } from './racing-game/ui-input.service';
+import { UIInputs } from './services/ui-input.service';
 
 @NgModule({
     imports: [

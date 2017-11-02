@@ -1,13 +1,15 @@
+import { hasFunctions, FunctionDescriptor } from '../../../../../common/src/utils';
+
 export enum DayMode {
     DAY,
     NIGHT
 }
 
 export interface DayModeChangeNotifiable {
-    changeModeTo(mode: DayMode): void;
+    onDayModeChange(mode: DayMode): void;
 }
 
+const FUNCTIONS: FunctionDescriptor[] = [{name: 'onDayModeChange', parameterCount: 1}];
 export function isDayModeChangeNotifiable(object: any): object is DayModeChangeNotifiable {
-    return object != null && 'changeModeTo' in object && typeof object['changeModeTo'] === 'function' &&
-        object['changeModeTo'].length >= 1;
+    return object != null && hasFunctions(object, FUNCTIONS);
 }

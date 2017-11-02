@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-import { CarHeadlightDayModeOptions } from '../three-objects/car/car-headlight';
-import { LightingOptions } from '../three-objects/lighting/lighting';
+import { CarHeadlightDayModeOptions } from '../models/car/car-headlight';
+import { LightingOptions } from '../models/lighting/lighting';
 
 /**
  * Class whose values (DAY and NIGHT) contain the data required to go to
