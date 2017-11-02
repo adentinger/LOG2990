@@ -31,8 +31,7 @@ export class CrosswordGame {
     public verticalDefinitions: Map<number, Definition> = new Map;
     public horizontalDefinitions: Map<number, Definition> = new Map;
 
-    public player1Id: string = null;
-    public player2Id: string = null;
+    private readonly playerIds: string[] = [];
 
     private gameMode: GameMode;
 
@@ -58,13 +57,10 @@ export class CrosswordGame {
         }
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
-            if (this.player1Id === socketId) {
-                this.player1Id = null;
-                // And warn the other player
-            }
-            if (this.player2Id === socketId) {
-                this.player2Id = null;
-                // And warn the other player
+            const INDEX = this.playerIds.findIndex((playerId) => playerId === socketId);
+            const FOUND = INDEX >= 0;
+            if (FOUND) {
+                this.playerIds[INDEX] = null;
             }
         });
 
@@ -75,12 +71,26 @@ export class CrosswordGame {
         }
     }
 
+    public addPlayerToGame(playerId: string): PlayerNumber {
+        if (this.playerIds.length < this.numberOfPlayers) {
+            this.playerIds.push(playerId);
+            return this.playerIds.length;
+        }
+        else {
+            throw new Error('Cannot add a new player: max number reached.');
+        }
+    }
+
+    public isPlayerInGame(playerId: string): boolean {
+        return this.playerIds.findIndex((id) => id === playerId) >= 0;
+    }
+
     public getGameInfo(): Object {
         return {
-            'player1Id': this.player1Id,
-            'player2Id': this.player2Id,
-            'numberOfGridWords': this.getNumberOfWordsInGrid(),
-            'numberOfDefinitions': this.getNumberOfDefinitions(),
+            player1Id: this.playerIds[0],
+            player2Id: this.playerIds[1],
+            numberOfGridWords: this.getNumberOfWordsInGrid(),
+            numberOfDefinitions: this.getNumberOfDefinitions(),
         };
     }
 
@@ -97,10 +107,15 @@ export class CrosswordGame {
     private startTimer() {
         setInterval(() => {
             this.countdown--;
-            if (this.player1Id !== null) {
-                logger.log('(game #%s) Timer: %d', this.id, this.countdown);
-                this.packetManager.sendPacket(CrosswordTimerPacket, new CrosswordTimerPacket(this.countdown), this.player1Id);
-            }
+            this.playerIds.forEach((playerId) => {
+                if (playerId !== null) {
+                    logger.log('(game #%s) Timer: %d', this.id, this.countdown);
+                    this.packetManager.sendPacket(
+                        CrosswordTimerPacket,
+                        new CrosswordTimerPacket(this.countdown), playerId
+                    );
+                }
+            });
         }, 1000);
     };
 

@@ -75,19 +75,19 @@ export class GameManager {
 
     @PacketHandler(GameJoinPacket)
     public gameJoinHandler(event: PacketEvent<GameJoinPacket>) {
-        const gameToJoin = event.value.gameId;
-        const playerSocketId = event.socketid;
+        const GAME = this.getGameFromSocketId(event.value.gameId);
+        const PLAYER_ID = event.socketid;
 
-        this.addPlayerToGame(event.socketid, gameToJoin);
+        GAME.addPlayerToGame(PLAYER_ID);
 
         // send all gridWords
         const gridWord = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
         this.sendGridWord(
             gridWord,
-            playerSocketId);
+            PLAYER_ID);
 
         // send all definitions
-        this.sendAllDefinitions(gameToJoin, playerSocketId);
+        this.sendAllDefinitions(GAME, PLAYER_ID);
     }
 
     /**
@@ -113,39 +113,25 @@ export class GameManager {
      * @param socketId : Id of a player
      */
     private getGameFromSocketId(socketId: string): CrosswordGame {
-        for (const GAME of this.games) {
+        const GAME: CrosswordGame = null;
+        this.games.forEach((game) => {
             if (socketId === GAME[1].player1Id ||
                 socketId === GAME[1].player2Id) {
                 return GAME[1];
             }
-        }
-        return null;
+        });
+        return GAME;
     }
 
-    private sendAllDefinitions(gameId: string, socketId: string): void {
-        const horizontalDefinitions = this.games.get(gameId).horizontalDefinitions;
-        const verticalDefinitions = this.games.get(gameId).verticalDefinitions;
+    private sendAllDefinitions(game: CrosswordGame, socketId: string): void {
+        const horizontalDefinitions = game.horizontalDefinitions;
+        const verticalDefinitions = game.verticalDefinitions;
 
         for (let i = 0; i < horizontalDefinitions.size; i++) {
             this.sendDefinition(i, Direction.horizontal, horizontalDefinitions.get(i), socketId);
         }
         for (let i = 0; i < verticalDefinitions.size; i++) {
             this.sendDefinition(i, Direction.vertical, verticalDefinitions.get(i), socketId);
-        }
-    }
-
-    private addPlayerToGame(playerId: string, gameId: string): PlayerNumber {
-        const GAME = this.games.get(gameId);
-        if (GAME.player1Id == null) {
-            GAME.player1Id = playerId;
-            return 1;
-        }
-        else if (GAME.player2Id == null && GAME.numberOfPlayers >= 2) {
-            GAME.player2Id = playerId;
-            return 2;
-        }
-        else {
-            throw new Error('Cannot add a new player: max number reached.');
         }
     }
 
