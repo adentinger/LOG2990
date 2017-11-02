@@ -116,15 +116,11 @@ export class GameManager {
     }
 
     private sendAllDefinitions(game: CrosswordGame, socketId: string): void {
-        const horizontalDefinitions = game.horizontalDefinitions;
-        const verticalDefinitions = game.verticalDefinitions;
+        const DEFINITIONS_WITH_INDEX = game.definitionsWithIndex;
 
-        for (let i = 0; i < horizontalDefinitions.size; i++) {
-            this.sendDefinition(i, horizontalDefinitions.get(i), socketId);
-        }
-        for (let i = 0; i < verticalDefinitions.size; i++) {
-            this.sendDefinition(i, verticalDefinitions.get(i), socketId);
-        }
+        DEFINITIONS_WITH_INDEX.forEach((definitionWithIndex) => {
+            this.sendDefinition(definitionWithIndex[1], definitionWithIndex[0], socketId);
+        });
     }
 
     private sendDefinition(index: number, definition: Definition, socketId: string) {
@@ -136,10 +132,8 @@ export class GameManager {
     }
 
     private sendAllGridWords(game: CrosswordGame, playerId: string): void {
-        game.horizontalGridWords.forEach((word) => {
-            this.sendGridWord(word, playerId);
-        });
-        game.verticalGridWords.forEach((word) => {
+        const WORDS = game.words;
+        WORDS.forEach((word) => {
             this.sendGridWord(word, playerId);
         });
     }

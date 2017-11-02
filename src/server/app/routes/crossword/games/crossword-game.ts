@@ -26,11 +26,11 @@ export class CrosswordGame {
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
-    public horizontalGridWords: Map<number, GridWord> = new Map();
-    public verticalGridWords: Map<number, GridWord> = new Map();
+    private horizontalGridWords: Map<number, GridWord> = new Map();
+    private verticalGridWords: Map<number, GridWord> = new Map();
 
-    public verticalDefinitions: Map<number, Definition> = new Map;
-    public horizontalDefinitions: Map<number, Definition> = new Map;
+    private verticalDefinitions: Map<number, Definition> = new Map;
+    private horizontalDefinitions: Map<number, Definition> = new Map;
 
     private readonly playerIds: string[] = [];
 
@@ -56,6 +56,28 @@ export class CrosswordGame {
         if (this.gameMode === GameMode.Dynamic) {
             this.startTimer();
         }
+    }
+
+    public get words(): GridWord[] {
+        const WORDS: GridWord[] = [];
+        this.horizontalGridWords.forEach((word) => {
+            WORDS.push(word);
+        });
+        this.verticalGridWords.forEach((word) => {
+            WORDS.push(word);
+        });
+        return WORDS;
+    }
+
+    public get definitionsWithIndex(): [Definition, number][] {
+        const DEFINITIONS: [Definition, number][] = [];
+        this.horizontalDefinitions.forEach((definition, index) => {
+            DEFINITIONS.push([definition, index]);
+        });
+        this.verticalDefinitions.forEach((definition, index) => {
+            DEFINITIONS.push([definition, index]);
+        });
+        return DEFINITIONS;
     }
 
     public addPlayer(playerId: string): PlayerNumber {

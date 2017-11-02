@@ -16,9 +16,8 @@ describe('The Crossword Game', () => {
         gameToTest = new CrosswordGame(createMockGameConfigs());
     });
 
-    it('should contain horizontal and vertical grid words', (done) => {
-        expect(gameToTest.horizontalGridWords).to.be.not.null;
-        expect(gameToTest.verticalGridWords).to.be.not.null;
+    it('should contain grid words', (done) => {
+        expect(gameToTest.words).to.be.not.null;
         done();
     });
 
