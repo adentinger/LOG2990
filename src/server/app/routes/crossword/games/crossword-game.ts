@@ -1,7 +1,6 @@
 import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DEFINITIONS_MOCK_H, DEFINITIONS_MOCK_V } from '../mocks/definitions-mock';
-import { ARRAY_GRIDWORD_H, ARRAY_GRIDWORD_V } from '../mocks/gridwords-mock';
 import { Definition } from '../../../../../common/src/crossword/definition';
 import { PacketManagerServer } from '../../../packet-manager';
 import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
@@ -9,7 +8,9 @@ import '../../../../../common/src/crossword/packets/crossword-timer.parser';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
 import '../../../../../common/src/crossword/packets/word-try.parser';
-import { Direction, GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
+import { GridBanks } from '../grid-bank/grid-banks';
+import { Grid } from '../grid-generator/grid';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -40,21 +41,7 @@ export class CrosswordGame {
         this.numberOfPlayers = configs.playerNumber;
         this.gameMode = configs.gameMode;
 
-        // MOCK : get grid words from mock
-        for (let i = 0; i < ARRAY_GRIDWORD_H.length; i++) {
-            this.horizontalGridWords.set(ARRAY_GRIDWORD_H[i].id, ARRAY_GRIDWORD_H);
-        }
-        for (let i = 0; i < ARRAY_GRIDWORD_V.length; i++) {
-            this.verticalGridWords.set(ARRAY_GRIDWORD_V[i].id, ARRAY_GRIDWORD_V);
-        }
-
-        /// MOCK : will get definitions from lexic by http requests
-        for (let i = 0; i < DEFINITIONS_MOCK_V.length; i++) {
-            this.verticalDefinitions.set(i, DEFINITIONS_MOCK_V[i]);
-        }
-        for (let i = 0; i < DEFINITIONS_MOCK_H.length; i++) {
-            this.horizontalDefinitions.set(i, DEFINITIONS_MOCK_H[i]);
-        }
+        this.fetchGrid(configs.difficulty).catch((reason) => console.log(reason));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
             const INDEX = this.playerIds.findIndex((playerId) => playerId === socketId);
@@ -94,6 +81,42 @@ export class CrosswordGame {
         };
     }
 
+    private async fetchGrid(difficulty: Difficulty): Promise<void> {
+        const ON_FAIL = () => {
+            throw new Error('');
+        };
+        let grid: Grid;
+        switch (difficulty) {
+            case Difficulty.easy: {
+                 GridBanks.getInstance().getEasyGrid()
+                    .then((resolvedGrid) => grid = resolvedGrid)
+                    .catch(ON_FAIL);
+                break;
+            }
+            case Difficulty.medium: {
+                GridBanks.getInstance().getNormalGrid()
+                   .then((resolvedGrid) => grid = resolvedGrid)
+                   .catch(ON_FAIL);
+                break;
+            }
+            case Difficulty.hard: {
+                GridBanks.getInstance().getHardGrid()
+                   .then((resolvedGrid) => grid = resolvedGrid)
+                   .catch(ON_FAIL);
+                break;
+            }
+            default: throw new Error(`Unknown difficulty: ${difficulty}`);
+        }
+
+        /// MOCK : will get definitions from lexic by http requests
+        for (let i = 0; i < DEFINITIONS_MOCK_V.length; i++) {
+            this.verticalDefinitions.set(i, DEFINITIONS_MOCK_V[i]);
+        }
+        for (let i = 0; i < DEFINITIONS_MOCK_H.length; i++) {
+            this.horizontalDefinitions.set(i, DEFINITIONS_MOCK_H[i]);
+        }
+    }
+
     private getNumberOfDefinitions(): number {
         return this.horizontalDefinitions.size
             + this.verticalDefinitions.size;
@@ -105,6 +128,7 @@ export class CrosswordGame {
     }
 
     private startTimer() {
+        const ONE_SECOND = 1000;
         setInterval(() => {
             this.countdown--;
             this.playerIds.forEach((playerId) => {
@@ -116,7 +140,7 @@ export class CrosswordGame {
                     );
                 }
             });
-        }, 1000);
+        }, ONE_SECOND);
     };
 
     @PacketHandler(CrosswordTimerPacket)
