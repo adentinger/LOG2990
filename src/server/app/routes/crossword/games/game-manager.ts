@@ -122,18 +122,19 @@ export class GameManager {
         const verticalDefinitions = game.verticalDefinitions;
 
         for (let i = 0; i < horizontalDefinitions.size; i++) {
-            this.sendDefinition(i, Direction.horizontal, horizontalDefinitions.get(i), socketId);
+            this.sendDefinition(i, horizontalDefinitions.get(i), socketId);
         }
         for (let i = 0; i < verticalDefinitions.size; i++) {
-            this.sendDefinition(i, Direction.vertical, verticalDefinitions.get(i), socketId);
+            this.sendDefinition(i, verticalDefinitions.get(i), socketId);
         }
     }
 
-    private sendDefinition(index: number, direction: Direction, definition: Definition, socketId: string) {
+    private sendDefinition(index: number, definition: Definition, socketId: string) {
         this.packetManager.sendPacket(
             GameDefinitionPacket,
-            new GameDefinitionPacket(index, direction, definition),
-            socketId);
+            new GameDefinitionPacket(index, definition.direction, definition),
+            socketId
+        );
     }
 
     private sendAllGridWords(game: CrosswordGame, playerId: string): void {
@@ -149,6 +150,7 @@ export class GameManager {
         this.packetManager.sendPacket(
             GridWordPacket,
             new GridWordPacket(gridWord),
-            socketId);
+            socketId
+        );
     }
 }
