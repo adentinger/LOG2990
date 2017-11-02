@@ -60,12 +60,8 @@ export class CrosswordGame {
         return this.wordsInternal.slice();
     }
 
-    public get definitionsWithIndex(): [Definition, number][] {
-        const DEFINITIONS_WITH_INDEX: [Definition, number][] = [];
-        this.definitionsInternal.forEach((definition, index) => {
-            DEFINITIONS_WITH_INDEX.push([definition, index]);
-        });
-        return DEFINITIONS_WITH_INDEX;
+    public get definitions(): Definition[] {
+        return this.definitionsInternal.slice();
     }
 
     public addPlayer(playerId: string): PlayerNumber {

@@ -116,10 +116,10 @@ export class GameManager {
     }
 
     private sendAllDefinitions(game: CrosswordGame, socketId: string): void {
-        const DEFINITIONS_WITH_INDEX = game.definitionsWithIndex;
+        const DEFINITIONS = game.definitions;
 
-        DEFINITIONS_WITH_INDEX.forEach((definitionWithIndex) => {
-            this.sendDefinition(definitionWithIndex[1], definitionWithIndex[0], socketId);
+        DEFINITIONS.forEach((definition, index) => {
+            this.sendDefinition(index + 1, definition, socketId);
         });
     }
 
