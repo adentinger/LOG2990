@@ -5,6 +5,8 @@ import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 import { CrosswordGameService } from '../crossword-game.service';
 import '../../../../../common/src/crossword/packets/game-join.parser';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { GameMode, Difficulty, CreateOrJoin } from '../../../../../common/src/crossword/crossword-enums';
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
 
@@ -81,6 +83,7 @@ export class ConfigMenuService {
         const displayedSettings = {};
         for (const setting in this.gameConfiguration) {
             if (this.gameConfiguration.hasOwnProperty(setting)) {
+                console.log(setting, this.gameConfiguration);
                 const state = this.states.find((value: ConfigMenuState) => value.id === +setting);
                 let options: string[];
                 if (ConfigMenuState.hasFetchableOptions(state)) {
@@ -95,6 +98,17 @@ export class ConfigMenuService {
             }
         }
         return displayedSettings;
+    }
+
+    private parseConfiguration(): CrosswordGameConfigs {
+        const CONFIGURATION = {
+            gameMode: GameMode.Classic,
+            difficulty: Difficulty.easy,
+            playerNumber: 2,
+            createJoin: CreateOrJoin.create
+        };
+
+        return CONFIGURATION;
     }
 
     public selectOption(optionId: number): void {
@@ -127,8 +141,9 @@ export class ConfigMenuService {
     }
 
     private sendGameConfiguration(): void {
+        console.log('settings:', this.getDisplayedSettings());
         this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
-            this.getDisplayedSettings())
+            this.parseConfiguration())
             .toPromise()
             .then((response) => {
                 this.crosswordGameService.joinGame(response['id']);

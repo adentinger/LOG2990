@@ -82,31 +82,24 @@ export class CrosswordGame {
     }
 
     private async fetchGrid(difficulty: Difficulty): Promise<void> {
-        const ON_FAIL = () => {
-            throw new Error('');
-        };
+        console.log('HI');
         let grid: Grid;
         switch (difficulty) {
             case Difficulty.easy: {
-                 GridBanks.getInstance().getEasyGrid()
-                    .then((resolvedGrid) => grid = resolvedGrid)
-                    .catch(ON_FAIL);
+                 grid = await GridBanks.getInstance().getEasyGrid();
                 break;
             }
             case Difficulty.medium: {
-                GridBanks.getInstance().getNormalGrid()
-                   .then((resolvedGrid) => grid = resolvedGrid)
-                   .catch(ON_FAIL);
+                grid = await GridBanks.getInstance().getNormalGrid();
                 break;
             }
             case Difficulty.hard: {
-                GridBanks.getInstance().getHardGrid()
-                   .then((resolvedGrid) => grid = resolvedGrid)
-                   .catch(ON_FAIL);
+                grid = await GridBanks.getInstance().getHardGrid();
                 break;
             }
             default: throw new Error(`Unknown difficulty: ${difficulty}`);
         }
+        console.log(grid);
 
         /// MOCK : will get definitions from lexic by http requests
         for (let i = 0; i < DEFINITIONS_MOCK_V.length; i++) {
