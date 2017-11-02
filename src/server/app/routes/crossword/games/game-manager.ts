@@ -80,13 +80,7 @@ export class GameManager {
 
         GAME.addPlayer(PLAYER_ID);
 
-        // send all gridWords
-        const gridWord = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
-        this.sendGridWord(
-            gridWord,
-            PLAYER_ID);
-
-        // send all definitions
+        this.sendAllGridWords(GAME, PLAYER_ID);
         this.sendAllDefinitions(GAME, PLAYER_ID);
     }
 
@@ -140,6 +134,15 @@ export class GameManager {
             GameDefinitionPacket,
             new GameDefinitionPacket(index, direction, definition),
             socketId);
+    }
+
+    private sendAllGridWords(game: CrosswordGame, playerId: string): void {
+        game.horizontalGridWords.forEach((word) => {
+            this.sendGridWord(word, playerId);
+        });
+        game.verticalGridWords.forEach((word) => {
+            this.sendGridWord(word, playerId);
+        });
     }
 
     private sendGridWord(gridWord: GridWord, socketId: string) {
