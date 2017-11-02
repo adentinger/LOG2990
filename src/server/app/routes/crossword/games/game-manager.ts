@@ -6,7 +6,6 @@ import { GameDefinitionPacket } from '../../../../../common/src/crossword/packet
 import { PacketManagerServer } from '../../../packet-manager';
 
 import { Definition } from '../../../../../common/src/crossword/definition';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
