@@ -13,6 +13,7 @@ import { Grid } from '../grid-generator/grid';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
+import '../../../../../common/src/crossword/packets/game-definition.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
 
@@ -83,12 +84,13 @@ export class Game {
     }
 
     private sendGridWords(socketId: string): void {
-        this.words.forEach((word) =>
-            this.packetManager.sendPacket(
-                GridWordPacket,
-                new GridWordPacket(word),
-                socketId
-            )
+        this.words.forEach((word) => {
+                this.packetManager.sendPacket(
+                    GridWordPacket,
+                    new GridWordPacket(word),
+                    socketId
+                );
+            }
         );
     }
 
@@ -190,7 +192,7 @@ export class Game {
                 ),
                 index: index
             };
-            this.definitionsInternal.push(DEFINITION_WITH_INDEX);
+            DEFINITIONS.push(DEFINITION_WITH_INDEX);
         }
 
         this.definitionsInternal = DEFINITIONS;
