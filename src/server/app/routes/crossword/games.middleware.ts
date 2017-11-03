@@ -36,7 +36,6 @@ export class CrosswordGamesMiddleWare {
 
     @Route('post', '/')
     public postGame(req: express.Request, res: express.Response): void {
-        // logger.log('MIDDLEWARE TRIGGERED');
         res.status(HttpStatus.ACCEPTED);
 
         logger.log(req.body);
@@ -47,9 +46,7 @@ export class CrosswordGamesMiddleWare {
     }
     @Route('get', '/:id')
     public getGame(req: express.Request, res: express.Response): void {
-        // res.status(HttpStatus.ACCEPTED);
         let game;
-        logger.log('\nprocessing req =' + req.body);
         try {
             game = GameManager.getInstance().getGame(req.params.id);
         } catch (error) {
