@@ -83,6 +83,10 @@ export class Game {
         }
     }
 
+    private async clearPlayerGrid(playerId: string): Promise<void> {
+        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
+    }
+
     private sendGridWords(socketId: string): void {
         this.words.forEach((word) => {
                 this.packetManager.sendPacket(
@@ -115,10 +119,6 @@ export class Game {
         const GRID = await this.fetchGrid(difficulty);
         this.wordsInternal = this.makeWordsFromGrid(GRID);
         await this.assignDefinitions();
-    }
-
-    private async clearPlayerGrid(playerId: string): Promise<void> {
-        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
     }
 
     private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
