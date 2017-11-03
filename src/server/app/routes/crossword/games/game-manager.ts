@@ -72,8 +72,13 @@ export class GameManager {
     }
 
     @PacketHandler(GameJoinPacket)
-    public gameJoinHandler(event: PacketEvent<GameJoinPacket>) {
-        const GAME = this.getGameFromSocketId(event.value.gameId);
+    public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
+        const GAME_ID = Number(event.value.gameId);
+        if (Number.isNaN(GAME_ID)) {
+            console.error(`Game ID ${event.value.gameId} invalid. Packet dropped.`);
+            return;
+        }
+        const GAME = this.getGameFromId(GAME_ID);
         const PLAYER_ID = event.socketid;
 
         GAME.addPlayer(PLAYER_ID);
@@ -92,7 +97,7 @@ export class GameManager {
         const wordTry: GridWord = event.value.wordTry;
         const socketId: string = event.socketid;
 
-        const game: CrosswordGame = this.getGameFromSocketId(event.socketid);
+        const game: CrosswordGame = this.getGameFromPlayerId(event.socketid);
         const ANSWER: GridWord = wordTry;
         if (!game.validateUserAnswer(wordTry)) {
             ANSWER.string = '';
@@ -100,19 +105,38 @@ export class GameManager {
         this.sendGridWord(ANSWER, socketId);
     }
 
+    private getGameFromId(id: number): CrosswordGame {
+        let foundGame: CrosswordGame = null;
+        this.games.forEach((game) => {
+            if (game.id === id) {
+                foundGame = game;
+            }
+        });
+        if (foundGame !== null) {
+            return foundGame;
+        }
+        else {
+            throw new Error(`Game "${id}" not found`);
+        }
+    }
+
     /**
      * Returns a game given the socketId of one of its player
      * @param socketId : Id of a player
      */
-    private getGameFromSocketId(socketId: string): CrosswordGame {
-        const GAME: CrosswordGame = null;
+    private getGameFromPlayerId(playerId: string): CrosswordGame {
+        let foundGame: CrosswordGame = null;
         this.games.forEach((game) => {
-            if (socketId === GAME[1].player1Id ||
-                socketId === GAME[1].player2Id) {
-                return GAME[1];
+            if (game.isPlayerInGame(playerId)) {
+                foundGame = game;
             }
         });
-        return GAME;
+        if (foundGame !== null) {
+            return foundGame;
+        }
+        else {
+            throw new Error(`Player "${playerId}" not found in any game`);
+        }
     }
 
     private sendAllDefinitions(game: CrosswordGame, socketId: string): void {
