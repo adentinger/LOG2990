@@ -21,7 +21,7 @@ export class CrosswordGameService {
     private showWordsOn = false;
     private changeTimerValueOn = false;
 
-    private gameId: string = null;
+    private gameId: number = null;
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
 
@@ -31,7 +31,7 @@ export class CrosswordGameService {
         return this.crosswordGame;
     }
 
-    public joinGame(id: string): void {
+    public joinGame(id: number): void {
         if (!this.gameId) {
             this.gameId = id;
             // use packetmanager to join this game

@@ -1,5 +1,5 @@
 export class GameJoinPacket {
 
-    constructor(public gameId: string) { }
+    constructor(public gameId: number) { }
 
 }
