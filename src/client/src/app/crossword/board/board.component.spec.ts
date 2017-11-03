@@ -7,6 +7,7 @@ import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { CrosswordGridService } from './crossword-grid.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
+import { SelectionService } from '../selection.service';
 
 describe('BoardComponent', () => {
     let component: BoardComponent;
@@ -19,7 +20,8 @@ describe('BoardComponent', () => {
                 CrosswordGameService,
                 {provide: PacketManagerClient, useValue: packetManagerClient},
                 DefinitionsService,
-                CrosswordGridService
+                CrosswordGridService,
+                SelectionService
             ]
         })
             .compileComponents();

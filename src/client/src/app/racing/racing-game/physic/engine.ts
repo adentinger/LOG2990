@@ -32,7 +32,7 @@ export class PhysicEngine {
                 const deltaTimeMs = now - last;
                 this.updateWorld(deltaTimeMs / 1000);
                 last = now;
-            }, 1000 / PhysicEngine.UPDATE_FREQUENCY);
+            }, 1000 / PhysicEngine.UPDATE_FREQUENCY); // facteur de conversion entre ms et s
         }
     }
 

@@ -17,17 +17,6 @@ export class PhysicUtils {
         this.root = root;
     }
 
-    public applyCollisionsTo(target: Collidable): boolean {
-        let hasCollided = false;
-        const collidables: Collidable[] = this.getAllPhysicObjects()
-            .filter((object) => object !== target && isCollidable(object)) as Collidable[];
-        for (const collidable of collidables) {
-            const collisionOccured = this.applyCollision(target, collidable);
-            hasCollided = hasCollided || collisionOccured;
-        }
-        return hasCollided;
-    }
-
     public getCollisionsOf(target: Collidable): CollisionInfo[] {
         const collisions: CollisionInfo[] = [];
         const collidables: Collidable[] = this.getAllPhysicObjects()
@@ -47,30 +36,6 @@ export class PhysicUtils {
         const objects: THREE.Object3D[] = [this.root];
         objects.push(...this.getChildren(this.root));
         return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
-    }
-
-    private applyCollision(target: Collidable, source: Collidable): boolean {
-        let collisionOccured = false;
-
-        const targetLines: Line[] = this.getBoundingLines(target);
-        const sourceLines: Line[] = this.getBoundingLines(source);
-
-        const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
-        let applicationPoint: THREE.Vector2;
-
-        if (intersectionPoints.length >= 2) {
-            collisionOccured = true;
-            const intersection1 = intersectionPoints[0][2];
-            const intersection2 = intersectionPoints[1][2];
-            const intersectionLine: Line = new Line(intersection1, intersection2);
-
-            applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
-                .sub(this.getVector2FromVector3(target.position));
-
-            // const lineVector = this.getVector3FromPoint(intersectionLine.translation);
-        }
-
-        return collisionOccured;
     }
 
     private getCollision(target: Collidable, source: Collidable): CollisionInfo {

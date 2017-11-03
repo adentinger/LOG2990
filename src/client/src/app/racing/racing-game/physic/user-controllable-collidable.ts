@@ -15,7 +15,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected userInputs: UIInputs;
 
     protected friction: Newtons = 10;
-    protected acceleration: Newtons = 20;
+    protected acceleration = 20; // m/s^2
     protected maxSpeed = 10; // m/s
 
     protected angularFriction: number = 2 * Math.PI; // rad/s^2
@@ -31,7 +31,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         super.update(engine, deltaTime);
     }
 
-    public updateVelocity(deltaTime: number): void {
+    public updateVelocity(deltaTime: Seconds): void {
         const velocityDirection = this.velocity.clone().normalize();
         const FRICTION_VECTOR = velocityDirection.multiplyScalar(-this.friction);
         this.velocity.addScaledVector(FRICTION_VECTOR, deltaTime);
@@ -42,7 +42,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         super.updateVelocity(deltaTime);
     }
 
-    public updateAngularVelocity(deltaTime: number): void {
+    public updateAngularVelocity(deltaTime: Seconds): void {
         const angularVelocityDirection = this.angularVelocity.clone().normalize();
         const ANGULAR_FRICTION_VECTOR = angularVelocityDirection.multiplyScalar(-this.angularFriction);
         this.angularVelocity.addScaledVector(ANGULAR_FRICTION_VECTOR, deltaTime);
