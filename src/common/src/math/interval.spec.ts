@@ -1,3 +1,4 @@
+import 'mocha';
 import { expect } from 'chai';
 import { Interval } from './interval';
 
@@ -19,7 +20,7 @@ describe('Interval', () => {
         expect(INTERVAL.upper).to.deep.equal(UPPER_BOUND);
     });
 
-    it('should verify is number is in bound', () => {
+    it('should verify if number is in bound', () => {
         const LOWER_BOUND = 10;
         const UPPER_BOUND = 100;
         const NUMBER_IN_BOUND = 50;

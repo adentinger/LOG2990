@@ -6,6 +6,7 @@ import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { DefinitionsService } from './definitions.service';
 import { CrosswordGridService } from '../board/crossword-grid.service';
+import { SelectionService } from '../selection.service';
 
 describe('DefinitionFieldComponent', () => {
     let component: DefinitionFieldComponent;
@@ -18,7 +19,8 @@ describe('DefinitionFieldComponent', () => {
                 CrosswordGameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
                 DefinitionsService,
-                CrosswordGridService
+                CrosswordGridService,
+                SelectionService
             ]
         })
             .compileComponents();

@@ -3,11 +3,8 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { MapService } from '../services/map.service';
-import { UIInputs, KEYDOWN_EVENT } from './ui-input.service';
+import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { PhysicEngine } from './physic/engine';
-
-import { Point } from '../../../../../common/src/math/point';
 
 import { EventManager } from '../../event-manager.service';
 
@@ -19,29 +16,25 @@ import { EventManager } from '../../event-manager.service';
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
+    public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
 
-    @ViewChild('racingGameCanvas')
-    public racingGameCanvas: ElementRef;
+    @ViewChild('gameContainer')
+    public racingGameContainer: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
 
-    private windowHalfX = window.innerWidth * 0.5;
-    private windowHalfY = window.innerHeight * 0.5 - RacingGameComponent.HEADER_HEIGHT * 0.5;
-
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
-        private mapService: MapService,
         private eventManager: EventManager) {
         this.eventManager.registerClass(this);
     }
 
     public ngOnInit(): void {
-        this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
-            this.mapService.getByName(mapName)
-                .then(map => {
-                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs, this.eventManager);
-                    this.onResize();
-                });
+        this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
+            this.racingGame.loadMap(mapName).then(() => {
+                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.uiInputs);
+                this.updateRendererSize();
+            });
         });
     }
 
@@ -51,13 +44,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @HostListener('window:resize', ['$event'])
     // tslint:disable-next-line:no-unused-variable
-    private onResize() {
+    private updateRendererSize() {
         const height = window.innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = window.innerWidth;
-        this.windowHalfX = width * 0.5;
-        this.windowHalfY = height * 0.5;
 
-        this.racingGame.resizeCanvas(width, height);
+        this.racingGame.updateRendererSize(width, height);
     }
 
     @EventManager.Listener(KEYDOWN_EVENT)
@@ -70,11 +61,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.changeDayMode();
         }
 
-        const isAllowedKeyCombination =
+        const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
             this.uiInputs.isKeyPressed('f5');
 
-        if (!isAllowedKeyCombination) {
+        if (!areAllowedKeyCombinationsPressed) {
             return false; // Prevent Default behaviors
         }
     }

@@ -1,12 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { ConnectionBackend, Http, RequestOptions, BaseRequestOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
 import { RacingGameService } from './racing-game.service';
-import { MockMaps } from '../../admin-screen/map-editor/mock-maps';
-import { MapConverterService } from '../../admin-screen/map-editor/map-converter.service';
 import { PhysicEngine } from './physic/engine';
-import { RacingUnitConversionService } from '../../admin-screen/map-editor/racing-unit-conversion.service';
-import { UIInputs } from './ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
+import { MapService } from '../services/map.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -14,10 +14,11 @@ describe('RacingGameService', () => {
             providers: [
                 RacingGameService,
                 PhysicEngine,
-                MockMaps,
-                MapConverterService,
-                RacingUnitConversionService,
                 EventManager,
+                MapService,
+                {provide: ConnectionBackend, useClass: MockBackend},
+                {provide: RequestOptions, useClass: BaseRequestOptions},
+                Http,
                 UIInputs
             ]
         });
@@ -25,16 +26,11 @@ describe('RacingGameService', () => {
 
     let service: RacingGameService;
 
-    beforeEach(inject([RacingGameService, MockMaps, MapConverterService, UIInputs, EventManager], (injectedService: RacingGameService,
-        mockMapsProvider: MockMaps,
-        mapConverterService: MapConverterService,
-        eventManager: EventManager,
+    beforeEach(inject([RacingGameService, UIInputs], (injectedService: RacingGameService,
         userInputs: UIInputs) => {
         service = injectedService;
-        const CANVAS = document.createElement('CANVAS') as HTMLCanvasElement;
-        CANVAS.width = 1000;
-        CANVAS.height = 500;
-        service.initialise(CANVAS, mapConverterService.serialize(mockMapsProvider.functionalMap1()), userInputs, eventManager);
+        const CONTAINER = document.createElement('div') as HTMLDivElement;
+        service.initialise(CONTAINER, userInputs);
     }));
 
     it('should be created', () => {
