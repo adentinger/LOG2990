@@ -1,5 +1,5 @@
 import { DynamicCollidableMesh } from './dynamic-collidable';
-import { UIInputs } from '../ui-input.service';
+import { UIInputs } from '../../services/ui-input.service';
 import { PhysicUtils } from './engine';
 import { Seconds, Newtons } from '../../types';
 import * as THREE from 'three';
@@ -9,6 +9,8 @@ const KEY_BACK = 's';
 const KEY_RIGHT = 'd';
 const KEY_LEFT = 'a';
 
+const FRONT = new THREE.Vector3(0, 0, -1);
+
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected userInputs: UIInputs;
 
@@ -16,9 +18,13 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected acceleration: Newtons = 20;
     protected maxSpeed = 10; // m/s
 
-    protected angularFriction: number = Math.PI; // rad/s^2
-    protected angularAcceleration = 2 * Math.PI; // rad/s^2
-    protected maxAngularSpeed = Math.PI; // rad/s
+    protected angularFriction: number = 2 * Math.PI; // rad/s^2
+    protected angularAcceleration = 4 * Math.PI; // rad/s^2
+    protected maxAngularSpeed = Math.PI / 2; // rad/s
+
+    protected get front(): THREE.Vector3 {
+        return FRONT.clone().applyEuler(this.rotation);
+    }
 
     public update(engine: PhysicUtils, deltaTime: Seconds) {
         this.applyUserInputs(deltaTime);
@@ -29,6 +35,10 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         const velocityDirection = this.velocity.clone().normalize();
         const FRICTION_VECTOR = velocityDirection.multiplyScalar(-this.friction);
         this.velocity.addScaledVector(FRICTION_VECTOR, deltaTime);
+
+        const speed = this.velocity.length();
+        const direction = Math.sign(this.velocity.dot(this.front));
+        this.velocity.copy(this.front.multiplyScalar(direction * speed));
         super.updateVelocity(deltaTime);
     }
 
@@ -39,26 +49,30 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         super.updateAngularVelocity(deltaTime);
     }
 
+    public updateRotation(deltaTime: Seconds): void {}
+
     public setUIInput(userInputService: UIInputs): void {
         this.userInputs = userInputService;
     }
 
     private applyUserInputs(deltaTime: Seconds) {
         if (this.userInputs != null) {
-            const accelerationDirection = this.getAccelerationDirection();
             const angularAccelerationDirection = this.getAngularAccelerationDirection();
 
-            const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
             const angularAccelerationFactor = (this.maxAngularSpeed - angularAccelerationDirection.dot(this.angularVelocity)) /
                 this.maxAngularSpeed;
-
-            const acceleration = accelerationDirection.multiplyScalar(this.acceleration)
-                .multiplyScalar(accelerationFactor);
             const angularAcceleration = angularAccelerationDirection.multiplyScalar(this.angularAcceleration)
                 .multiplyScalar(angularAccelerationFactor);
-
-            this.velocity.addScaledVector(acceleration, deltaTime);
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
+            const rotationRestriction = this.velocity.dot(this.front.clone().setY(0)) / this.maxSpeed;
+            this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * this.maxAngularSpeed * deltaTime) +
+                2 * Math.PI) % (2 * Math.PI);
+
+            const accelerationDirection = this.getAccelerationDirection();
+            const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
+            const acceleration = accelerationDirection.multiplyScalar(this.acceleration)
+                .multiplyScalar(accelerationFactor);
+            this.velocity.addScaledVector(acceleration, deltaTime);
         }
     }
 

@@ -14,7 +14,7 @@ export class RacingGamePlane extends PhysicMesh {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.offset.set(0, 0);
         texture.repeat.set(Track.WIDTH_MAX, Track.HEIGHT_MAX);
-        this.material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide });
+        this.material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.DoubleSide, shininess: 0 });
         this.rotateX(Math.PI / 2);
         this.receiveShadow = true;
 
