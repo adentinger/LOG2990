@@ -50,13 +50,9 @@ export class RacingGameService {
             position.add(POSITION_INCREMENT);
         });
 
-        // racetrack segments
-        const segment1 = new RacetrackSegment();
-        this.map.add(segment1);
+        // racetrack segments /////////////////////////////////////////////
 
-        const junction1 = new RacetrackJunction();
-        junction1.position.z = -30;
-        this.map.add(junction1);
+        ///////////////////////////////////////////////////////////////////
 
         this.physicEngine.start();
         this.renderer.startRendering();

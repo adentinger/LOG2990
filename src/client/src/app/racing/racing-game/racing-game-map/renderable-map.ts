@@ -6,6 +6,7 @@ import { SerializedPuddle } from '../../../../../../common/src/racing/serialized
 import { SerializedSpeedBoost } from '../../../../../../common/src/racing/serialized-speed-boost';
 import { PhysicMesh } from '../physic/object';
 import { RacingGamePlane } from './racing-game-plane';
+import { RacetrackSegment } from '../three-objects/racetrack/racetrack-segment';
 
 export class RenderableMap extends PhysicMesh {
 
@@ -34,13 +35,43 @@ export class RenderableMap extends PhysicMesh {
         wireframePlane.rotation.set(0, 0, 0);
         this.PLANE.add(wireframePlane);
 
+        ///////////////////////////////////
+        const segment1 = new RacetrackSegment();
+        const segment1Length = this.calculateRoadtrackLength(segment1);
+        segment1.position.x = this.mapPoints[0].x + segment1Length / 2;
+        segment1.position.z = this.mapPoints[0].y;
+
+        const lol = this.angleBetweenTwoVectors(this.mapPoints[0], this.mapPoints[1]);
+
+        const scaleFactor = this.calculateDistanceBetweenPoints() / segment1Length;
+        segment1.scale.x = scaleFactor;
+        segment1.rotation.z = lol;
+
+
+        this.add(segment1);
+
         this.add(this.PLANE);
-        console.log(this.mapPoints);
     }
 
     public placeRacetrack(): void {
-        // use mapPoints to 
     }
 
+    public calculateRoadtrackLength(object: THREE.Object3D): number {
+        const objectTemp = new THREE.Box3().setFromObject(object);
+        return objectTemp.max.z - objectTemp.min.z;
+    }
+
+    public calculateDistanceBetweenPoints(): number {
+        return this.mapPoints[1].x - this.mapPoints[0].x;
+     }
+
+     public angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {
+        let angle = (Math.atan2(nextPoint.y - currentPoint.y, nextPoint.x - currentPoint.x));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+        return angle;
+     }
 
 }

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CollidableMesh } from '../../physic/collidable';
 
-export class RacetrackSegment extends CollidableMesh {
+export class RacetrackSegment extends THREE.Mesh {
 
     public static readonly mass = 0;
 
