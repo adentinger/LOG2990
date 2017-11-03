@@ -46,6 +46,8 @@ export class RacingGameService {
         this.cars.forEach((car) => {
             car.position.copy(position);
             position.add(POSITION_INCREMENT);
+            car.velocity.set(0, 0, -Math.random() * 40);
+            car.angularVelocity.set(0, (Math.random() - 0.5) * 2, 0);
         });
 
         this.physicEngine.start();
