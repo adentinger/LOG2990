@@ -46,7 +46,7 @@ export class Game {
         this.numberOfPlayers = configs.playerNumber;
         this.gameMode = configs.gameMode;
 
-        this.initializeGridData(configs.difficulty).catch((reason) => console.log(reason));
+        this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
             const INDEX = this.playerIds.findIndex((playerId) => playerId === socketId);
@@ -116,7 +116,7 @@ export class Game {
         return this.playerIds.findIndex((id) => id === playerId) >= 0;
     }
 
-    private async initializeGridData(difficulty: Difficulty): Promise<void> {
+    private async initializeData(difficulty: Difficulty): Promise<void> {
         this.wordsInternal =
             await GameInitializer.getInstance().initializeGrid(difficulty);
         await this.assignDefinitions();
