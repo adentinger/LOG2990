@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { Definition } from './definition';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
-import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
+import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
+import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
+import '../../../../../common/src/crossword/packets/clear-grid.parser';
 
 export interface Answers {
     horizontal: string[];
@@ -52,7 +54,6 @@ export class DefinitionsService {
 
     @PacketHandler(GameDefinitionPacket)
     public gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
-
         const definitionIndex = event.value.index;
         const serializedDefinition = event.value.definition;
         const direction = event.value.direction;
@@ -64,9 +65,14 @@ export class DefinitionsService {
         } else if (direction === Direction.vertical) {
             this.verticalDefinitions.set(definitionIndex, DEFINITION);
         }
-        console.log('Definition Added');
+    }
 
-        // TODO update game definitions with incomming definition
+    @PacketHandler(ClearGridPacket)
+    private clearDefinitions(): void {
+        this.horizontalDefinitions = new Map();
+        this.verticalDefinitions = new Map();
+        this.horizontalAnswers = [];
+        this.verticalAnswers = [];
     }
 
 }
