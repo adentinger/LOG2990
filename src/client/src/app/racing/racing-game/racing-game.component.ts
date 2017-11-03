@@ -3,12 +3,10 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { MapService } from '../services/map.service';
 import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { PhysicEngine } from './physic/engine';
 
 import { EventManager } from '../../event-manager.service';
-import { warn } from '../../../../../common/src/utils';
 
 @Component({
     selector: 'app-racing-game',

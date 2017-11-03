@@ -1,14 +1,12 @@
 import * as THREE from 'three';
 
 import { Skybox } from '../models/skybox/skybox';
-import { RacingGamePlane } from '../racing-game-map/racing-game-plane';
 import { OrthographicCamera } from './orthographic-camera';
 import { PerspectiveCamera } from './perspective-camera';
 import { DayMode, DayModeManager } from '../day-mode/day-mode-manager';
 import { EventManager } from '../../../event-manager.service';
 import { Lighting } from '../models/lighting/lighting';
 import { RenderableMap } from '../racing-game-map/renderable-map';
-import { Car } from '../models/car/car';
 
 export type CameraId = 0 | 1;
 
@@ -43,6 +41,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.canvasContainer.appendChild(this.domElement);
 
         this.scene.add(this.lighting);
+        this.scene.add(RacingRenderer.AXIS_HELPER);
     }
 
     public finalize() {

@@ -5,11 +5,8 @@ import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import { CollidableMesh } from './physic/collidable';
-import { Meters } from '../types';
 import { DayMode } from './day-mode/day-mode-manager';
 import { UIInputs } from '../services/ui-input.service';
-import { Cube } from './physic/examples/cube';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
@@ -33,7 +30,7 @@ export class RacingGameService {
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
-        private eventManager: EventManager) {
+        eventManager: EventManager) {
         this.renderer = new RacingRenderer(eventManager);
     }
 
