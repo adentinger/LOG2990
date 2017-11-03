@@ -92,10 +92,6 @@ export class GameManager {
         }
     }
 
-    /**
-     * Returns a game given the socketId of one of its player
-     * @param socketId : Id of a player
-     */
     private getGameFromPlayerId(playerId: string): Game {
         let foundGame: Game = null;
         this.games.forEach((game) => {
