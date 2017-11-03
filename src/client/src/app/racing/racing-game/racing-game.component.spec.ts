@@ -6,7 +6,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { RacingGameService } from './racing-game.service';
 import { MapService } from '../services/map.service';
 import { HttpModule } from '@angular/http';
-import { UIInputs } from './ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 
 describe('RacingGameComponent', () => {

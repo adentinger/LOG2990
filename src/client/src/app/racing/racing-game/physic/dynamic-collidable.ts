@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PhysicUtils } from './engine';
 import { Seconds, Kilograms } from '../../types';
 import { DynamicPhysicMesh, DynamicPhysicElement } from './dynamic-object';
-import { Collidable, CollisionInfo, CollidableMesh } from './collidable';
+import { Collidable, CollisionInfo } from './collidable';
 
 export interface DynamicCollidable extends DynamicPhysicElement, Collidable {
     velocity: THREE.Vector3; // m/s

@@ -2,13 +2,12 @@ import * as THREE from 'three';
 import { IPhysicElement, isPhysicElement } from './object';
 import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import { Point, Line } from '../../../../../../common/src/math';
-import { Car } from '../three-objects/car/car';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
-    private static readonly LENGTH_TO_FORCE_CONSTANT = 10; // N/m^2
+    private static readonly LENGTH_TO_FORCE_CONSTANT = 5; // N*m^2
 
     private root: THREE.Object3D;
 
@@ -16,17 +15,6 @@ export class PhysicUtils {
 
     public setRoot(root: THREE.Object3D) {
         this.root = root;
-    }
-
-    public applyCollisionsTo(target: Collidable): boolean {
-        let hasCollided = false;
-        const collidables: Collidable[] = this.getAllPhysicObjects()
-            .filter((object) => object !== target && isCollidable(object)) as Collidable[];
-        for (const collidable of collidables) {
-            const collisionOccured = this.applyCollision(target, collidable);
-            hasCollided = hasCollided || collisionOccured;
-        }
-        return hasCollided;
     }
 
     public getCollisionsOf(target: Collidable): CollisionInfo[] {
@@ -50,30 +38,6 @@ export class PhysicUtils {
         return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
     }
 
-    private applyCollision(target: Collidable, source: Collidable): boolean {
-        let collisionOccured = false;
-
-        const targetLines: Line[] = this.getBoundingLines(target);
-        const sourceLines: Line[] = this.getBoundingLines(source);
-
-        const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
-        let applicationPoint: THREE.Vector2;
-
-        if (intersectionPoints.length >= 2) {
-            collisionOccured = true;
-            const intersection1 = intersectionPoints[0][2];
-            const intersection2 = intersectionPoints[1][2];
-            const intersectionLine: Line = new Line(intersection1, intersection2);
-
-            applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
-                .sub(this.getVector2FromVector3(target.position));
-
-            // const lineVector = this.getVector3FromPoint(intersectionLine.translation);
-        }
-
-        return collisionOccured;
-    }
-
     private getCollision(target: Collidable, source: Collidable): CollisionInfo {
         let collision: CollisionInfo = null;
 
@@ -83,13 +47,6 @@ export class PhysicUtils {
 
         const targetLines: Line[] = this.getBoundingLines(target);
         const sourceLines: Line[] = this.getBoundingLines(source);
-
-        if (target instanceof Car) {
-            target.corner1.position.set(targetLines[0].origin.x, 2, targetLines[0].origin.y);
-            target.corner2.position.set(targetLines[1].origin.x, 2, targetLines[1].origin.y);
-            target.corner3.position.set(targetLines[2].origin.x, 2, targetLines[2].origin.y);
-            target.corner4.position.set(targetLines[3].origin.x, 2, targetLines[3].origin.y);
-        }
 
         const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
 
@@ -110,8 +67,8 @@ export class PhysicUtils {
             lineVector.negate();
         }
 
-        const scalarForce = PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
-            ((applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length()) ** 2);
+        const scalarForce = target.mass * PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
+            ((applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length()) ** 3);
 
         const force: THREE.Vector2 = this.getVector2FromVector3(
             lineVector.normalize().cross(UP).multiplyScalar(scalarForce)

@@ -115,7 +115,7 @@ export function hasFunctions(objectToCheck: any, functionDescriptors: FunctionDe
         const FUNCTION_TO_CHECK = functionDescriptors[i];
         hasFunctions =
             FUNCTION_TO_CHECK.name in objectToCheck &&
-            objectToCheck[FUNCTION_TO_CHECK.name].length === FUNCTION_TO_CHECK.parameterCount;
+            objectToCheck[FUNCTION_TO_CHECK.name].length >= FUNCTION_TO_CHECK.parameterCount;
     }
     return hasFunctions;
 }

@@ -1,12 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { EventManager, EventListener } from './event-manager.service';
+import { EventManager } from './event-manager.service';
 
 class Foo {
     constructor(private eventManager: EventManager) {
         this.eventManager.registerClass(this);
     }
 
-    @EventListener('myEvent')
+    @EventManager.Listener('myEvent')
     // tslint:disable-next-line:no-unused-variable
     private myEventListener(event: EventManager.Event<number>) {
         event.data *= 2;
