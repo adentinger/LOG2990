@@ -42,10 +42,10 @@ export class RacingGameService {
         this.renderer.setCamerasTarget(userCar);
 
         const position = new THREE.Vector3();
-        const positionIncrement = new THREE.Vector3(2, 0, 0);
+        const POSITION_INCREMENT = new THREE.Vector3(2, 0, 0);
         this.cars.forEach((car) => {
             car.position.copy(position);
-            position.add(positionIncrement);
+            position.add(POSITION_INCREMENT);
         });
 
         this.physicEngine.start();
