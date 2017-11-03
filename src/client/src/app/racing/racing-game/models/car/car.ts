@@ -34,8 +34,8 @@ export class Car extends UserControllableCollidableMesh {
     private static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = Car.loadColoredCarParts();
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
-        new THREE.Vector3(-0.56077, 0.63412, -2.5),
-        new THREE.Vector3(0.56077, 0.63412, -2.5)
+        new THREE.Vector3(-0.56077, 0.63412, -1.6),
+        new THREE.Vector3(0.56077, 0.63412, -1.6)
     ];
 
     private static readonly SHININESS = 1000;
