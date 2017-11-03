@@ -15,12 +15,10 @@ import '../../../../../common/src/crossword/packets/game-join.parser';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 
-const ID_LENGTH = 8;
-
 export class GameManager {
 
     private static instance: GameManager;
-    private games: Map<string, CrosswordGame> = new Map();
+    private games: Map<number, CrosswordGame> = new Map();
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
     private constructor() {
@@ -34,18 +32,13 @@ export class GameManager {
         return GameManager.instance;
     }
 
-    public newGame(configs: CrosswordGameConfigs): string {
-        let newId: string;
-        do {
-            newId = this.generateRandomString(ID_LENGTH);
-        } while (this.games.has(newId));
-
-        // TODO initialize game
-        this.games.set(newId, new CrosswordGame(configs));
-        return newId;
+    public newGame(configs: CrosswordGameConfigs): number {
+        const GAME = new CrosswordGame(configs);
+        this.games.set(GAME.id, GAME);
+        return GAME.id;
     }
 
-    public getGame(id: string): CrosswordGame {
+    public getGame(id: number): CrosswordGame {
         if (this.games.has(id)) {
             return this.games.get(id);
         } else {
@@ -57,18 +50,8 @@ export class GameManager {
         return this.games.size;
     }
 
-    public deleteGame(id: string): boolean {
+    public deleteGame(id: number): boolean {
         return this.games.delete(id);
-    }
-
-    private generateRandomString(length: number): string {
-        let text = '';
-        const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
-
-        for (let i = 0; i < length; i++) {
-            text += charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-        return text;
     }
 
     @PacketHandler(GameJoinPacket)
