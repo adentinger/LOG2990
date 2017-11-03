@@ -1,18 +1,17 @@
 import * as THREE from 'three';
-import { CollidableMesh } from '../../physic/collidable';
 import { Meters } from '../../../types';
+import { PhysicMesh } from '../../physic/object';
 
-export class RacetrackSegment extends CollidableMesh {
+export class RacetrackSegment extends PhysicMesh {
 
-    private readonly texture = THREE.ImageUtils.loadTexture('./assets/racing/ground_asphalt_old_07.png');
-    public readonly mass = Infinity;
+    public static readonly mass = 0;
 
-    constructor(radius: Meters, segments: number) {
+    // private static readonly radius = 20;
+    // private static readonly segments = 4;
 
+    constructor(radius: Meters = 20, segments: number = 4) {
         super(new THREE.CircleGeometry(radius, segments));
-
-        this.material = new THREE.MeshBasicMaterial({ map: this.texture });
-
+        const texture = THREE.ImageUtils.loadTexture('./assets/racing/ground_asphalt_old_07.png');
+        this.material = new THREE.MeshBasicMaterial({ map: texture });
     }
-
 }

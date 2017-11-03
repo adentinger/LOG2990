@@ -13,6 +13,7 @@ import { Cube } from './physic/examples/ball';
 import { Car } from './three-objects/car/car';
 import { CarColorGreen } from './three-objects/car/car-color-green';
 import { EventManager } from '../../event-manager.service';
+import { RacetrackSegment } from './three-objects/racetrack/racetrack-segment';
 
 class Wall extends CollidableMesh {
     public readonly mass = Infinity;
@@ -90,6 +91,10 @@ export class RacingGameService {
         wall4.position.set(0, 0, 5);
         wall4.rotation.y = Math.PI;
         this.map.add(wall1, wall2, wall3, wall4);
+
+        // racetrack segments
+        const segment1 = new RacetrackSegment();
+        this.map.add(segment1);
 
         this.physicEngine.start();
         this.startRendering();
