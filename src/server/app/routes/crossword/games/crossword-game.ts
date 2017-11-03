@@ -10,6 +10,8 @@ import '../../../../../common/src/crossword/packets/word-try.parser';
 import { GameMode, Difficulty, Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
+import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
+import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -67,11 +69,36 @@ export class CrosswordGame {
     public addPlayer(playerId: string): PlayerNumber {
         if (this.playerIds.length < this.numberOfPlayers) {
             this.playerIds.push(playerId);
+            this.sendGridWords(playerId);
+            this.sendDefinitions(playerId);
             return this.playerIds.length;
         }
         else {
             throw new Error('Cannot add a new player: max number reached.');
         }
+    }
+
+    private sendGridWords(socketId: string): void {
+        this.words.forEach((word) =>
+            this.packetManager.sendPacket(
+                GridWordPacket,
+                new GridWordPacket(word),
+                socketId
+            )
+        );
+    }
+
+    private sendDefinitions(socketId: string): void {
+        const definitionsWithIndex = this.definitions;
+        definitionsWithIndex.forEach((definitionWithIndex) => {
+            const index = definitionWithIndex.index;
+            const definition = definitionWithIndex.definition;
+            this.packetManager.sendPacket(
+                GameDefinitionPacket,
+                new GameDefinitionPacket(index, definition.direction, definition),
+                socketId
+            );
+        });
     }
 
     public isPlayerInGame(playerId: string): boolean {
