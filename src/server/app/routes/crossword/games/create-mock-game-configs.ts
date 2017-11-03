@@ -1,10 +1,10 @@
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
-import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
+import { Difficulty, GameMode, CreateOrJoin } from '../../../../../common/src/crossword/crossword-enums';
 
 export function createMockGameConfigs(): CrosswordGameConfigs {
     const gameModes = [GameMode.Classic, GameMode.Dynamic];
-    const playerNumbers = ['1', '2'];
-    const createJoinChoices = ['create', 'join'];
+    const playerNumbers: PlayerNumber[] = [1, 2];
+    const createJoinChoices = [CreateOrJoin.create, CreateOrJoin.join];
     const difficulties = [Difficulty.easy, Difficulty.medium, Difficulty.hard];
 
     const randGameMode = gameModes[Math.floor(Math.random() * gameModes.length)];

@@ -5,6 +5,8 @@ import { ConfigMenuState, PageId } from './config-menu-state';
 import { FetchableOptionList, ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 import { CrosswordGameService } from '../crossword-game.service';
 import '../../../../../common/src/crossword/packets/game-join.parser';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { GameMode, Difficulty, CreateOrJoin } from '../../../../../common/src/crossword/crossword-enums';
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
 
@@ -22,6 +24,7 @@ export abstract class ConfigMenuStateConfirm extends ConfigMenuState {
 
 @Injectable()
 export class ConfigMenuService {
+
     private static readonly SERVER_ADDRESS = 'http://localhost:3000';
     private static readonly GAMES_PATH = '/crossword/games/';
     private static readonly STATE_CONFIRM = -1;
@@ -80,6 +83,7 @@ export class ConfigMenuService {
         const displayedSettings = {};
         for (const setting in this.gameConfiguration) {
             if (this.gameConfiguration.hasOwnProperty(setting)) {
+                console.log(setting, this.gameConfiguration);
                 const state = this.states.find((value: ConfigMenuState) => value.id === +setting);
                 let options: string[];
                 if (ConfigMenuState.hasFetchableOptions(state)) {
@@ -94,6 +98,17 @@ export class ConfigMenuService {
             }
         }
         return displayedSettings;
+    }
+
+    private parseConfiguration(): CrosswordGameConfigs {
+        const CONFIGURATION = {
+            gameMode: GameMode.Classic,
+            difficulty: Difficulty.easy,
+            playerNumber: 2,
+            createJoin: CreateOrJoin.create
+        };
+
+        return CONFIGURATION;
     }
 
     public selectOption(optionId: number): void {
@@ -124,21 +139,20 @@ export class ConfigMenuService {
         const currentState = this.getCurrentState();
         delete this.gameConfiguration[currentState.id];
     }
-    public sendGameConfiguration(): void {
-        console.log('sending to url: ' + ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH);
-        console.log('sending:' + this.getDisplayedSettings().toString());
 
+    private sendGameConfiguration(): void {
+        console.log('settings:', this.getDisplayedSettings());
         this.http.post(ConfigMenuService.SERVER_ADDRESS + ConfigMenuService.GAMES_PATH,
-            this.getDisplayedSettings())
-            .subscribe(
-            (response) => {
-                console.log('response on client: ' + JSON.stringify(response));
-                this.crosswordGameService.setGameId(response['id']);
+            this.parseConfiguration())
+            .toPromise()
+            .then((response) => {
+                this.crosswordGameService.joinGame(response['id']);
                 // get informations to init game on client
-            },
-            (error: Error) => {
+            })
+            .catch((error: Error) => {
                 console.log('error on client : ' + error.message);
             });
         this.isConfiguringGame = false;
     }
+
 }

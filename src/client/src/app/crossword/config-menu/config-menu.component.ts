@@ -15,6 +15,9 @@ import { ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 })
 export class ConfigMenuComponent implements OnInit {
 
+    public ngOnInit() {
+    }
+
     get currentState(): ConfigMenuState {
         return this.configMenuService.getCurrentState();
     }
@@ -44,9 +47,6 @@ export class ConfigMenuComponent implements OnInit {
 
     public selectOption(id: number) {
         this.configMenuService.selectOption(id);
-    }
-
-    public ngOnInit() {
     }
 
     public stateBack() {

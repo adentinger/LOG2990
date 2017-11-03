@@ -22,7 +22,7 @@ export abstract class GridBank {
     private bank: Collection;
     private logger = Logger.getLogger('GridBank');
 
-    constructor(difficulty: Difficulty) {
+    protected constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
         this.initializeBank();
     }

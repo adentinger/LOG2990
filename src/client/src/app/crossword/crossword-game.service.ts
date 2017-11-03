@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 
 import { CrosswordGame } from './class/crossword-game';
-import { CROSSWORD_GAME } from './mocks/crossword-game-mock';
+import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import { CrosswordTimerPacket } from '../../../../common/src/crossword/packets/crossword-timer.packet';
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
 import '../../../../common/src/crossword/packets/crossword-timer.parser';
-
-const TIME_MAX = 3600000; // 1 hour
 
 /**
  * @class CrosswordGameService
@@ -23,14 +21,9 @@ export class CrosswordGameService {
     private showWordsOn = false;
     private changeTimerValueOn = false;
 
-    private gameId: string = null;
+    private gameId: number = null;
 
-    public selectedWordIndex = 0;
-    public direction: Direction;
-    public lastSelectedWordIndex = 0;
-    public aDefinitionIsSelected = false;
-
-    public crosswordGame: CrosswordGame = CROSSWORD_GAME;
+    private crosswordGame: CrosswordGame = mockCrosswordGame();
 
     public constructor(private packetManager: PacketManagerClient) { }
 
@@ -38,10 +31,11 @@ export class CrosswordGameService {
         return this.crosswordGame;
     }
 
-    public setGameId(id: string): void {
+    public joinGame(id: number): void {
         if (!this.gameId) {
             this.gameId = id;
             // use packetmanager to join this game
+            console.log('setting id to', id);
             this.packetManager.sendPacket(GameJoinPacket, new GameJoinPacket(this.gameId));
         }
     }
@@ -54,30 +48,12 @@ export class CrosswordGameService {
         return this.cheatModeOn;
     }
 
-    public getCheatModeStateText(): string {
-        if (this.cheatModeOn) {
-            return 'Disable';
-        }
-        else {
-            return 'Enable';
-        }
-    }
-
     public setShowWordsOnOff(): void {
         this.showWordsOn = !this.showWordsOn;
     }
 
     public getShowWordsState(): boolean {
         return this.showWordsOn;
-    }
-
-    public getShowWordsStateText(): string {
-        if (this.showWordsOn) {
-            return 'Hide words';
-        }
-        else {
-            return 'Show words';
-        }
     }
 
     public setTimerOnOff(): void {
@@ -88,21 +64,4 @@ export class CrosswordGameService {
         return this.changeTimerValueOn;
     }
 
-    public getTimerStateText(): string {
-        if (this.changeTimerValueOn) {
-            return 'Disable';
-        }
-        else {
-            return 'Set time';
-        }
-    }
-
-    public changeTimerValue(seconds: string) {
-        let time = Number(seconds);
-        if (Number.isNaN(time)) {
-            time = TIME_MAX;
-        }
-
-        this.packetManager.sendPacket(CrosswordTimerPacket, new CrosswordTimerPacket(time));
-    }
 }

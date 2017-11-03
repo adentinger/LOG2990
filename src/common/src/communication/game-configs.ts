@@ -1,8 +1,10 @@
-import { Difficulty, GameMode } from '../crossword/crossword-enums';
+import { Difficulty, GameMode, CreateOrJoin } from '../crossword/crossword-enums';
+
+export type PlayerNumber = number;
 
 export interface CrosswordGameConfigs {
     gameMode: GameMode;
-    playerNumber: string;
-    createJoin: string;
+    playerNumber: PlayerNumber;
+    createJoin: CreateOrJoin;
     difficulty: Difficulty;
 }

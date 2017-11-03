@@ -9,6 +9,8 @@ import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
+import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
+import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
 
 @Injectable()
@@ -43,14 +45,20 @@ export class CrosswordGridService {
         }
     }
 
-    private sendWordToServer(word: GridWord) {
+    private sendWordToServer(word: GridWord): void {
         this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(word));
     }
 
     @PacketHandler(GridWordPacket)
-    public updateGridWord(event: PacketEvent<GridWordPacket>) {
+    public updateGridWord(event: PacketEvent<GridWordPacket>): void {
         console.log('new gridword received from server: ' + JSON.stringify(event.value.gridword));
         // send change to grid
+        this.GRID.addWord(event.value.gridword);
+    }
+
+    @PacketHandler(ClearGridPacket)
+    public clearGrid(): void {
+        this.GRID.empty();
     }
 
 }

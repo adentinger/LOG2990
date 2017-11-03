@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { GameManager } from './game-manager';
-import { CrosswordGame } from './crossword-game';
+import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 
 describe('The Game Manager Service', () => {
@@ -16,14 +16,14 @@ describe('The Game Manager Service', () => {
     });
 
     it('should return an id upon game creation', (done) => {
-        const idObtained: string = gameManager.newGame(createMockGameConfigs());
+        const idObtained = gameManager.newGame(createMockGameConfigs());
         expect(idObtained).to.be.not.null;
         done();
     });
 
     it('should creates new games which are accessible by their ids', (done) => {
-        const idObtained: string = gameManager.newGame(createMockGameConfigs());
-        const game: CrosswordGame = gameManager.getGame(idObtained);
+        const idObtained = gameManager.newGame(createMockGameConfigs());
+        const game: Game = gameManager.getGame(idObtained);
         expect(game).to.be.not.null;
         done();
     });
@@ -43,12 +43,12 @@ describe('The Game Manager Service', () => {
         // console.log('max n:' + MAX_N);
 
         const nGames = Math.floor(Math.random() * MAX_N) + 1;
-        const gameIds: string[] = [];
+        const gameIds: number[] = [];
         for (let i = 0; i < nGames; i++) {
             gameIds.push(gameManager.newGame(createMockGameConfigs()));
         }
         const randomNumberToDelete = Math.floor(Math.random() * gameIds.length);
-        const idToDelete: string = gameIds[randomNumberToDelete];
+        const idToDelete = gameIds[randomNumberToDelete];
         gameManager.deleteGame(idToDelete);
         expect(gameManager.getNumberOfActiveGames()).to.equal(nGames - 1);
         expect(gameManager.getGame(idToDelete)).to.equal(null);

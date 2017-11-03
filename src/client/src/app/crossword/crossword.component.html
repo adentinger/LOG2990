@@ -5,16 +5,10 @@
     </div>
     <div class="col-md-4">
       <app-game-details></app-game-details>
-      <div>Cheat mode:
-        <br>
-        <button (click)='setCheatModeOnOff()'>{{getCheatModeStateText()}}</button>
-        <button *ngIf='getCheatModeState()' (click)='setShowWordsOnOff()'>{{getShowWordsStateText()}}</button>
-        <button *ngIf='getCheatModeState()' (click)='setTimerOnOff()'>{{getTimerStateText()}}</button>
-        <input #timerInput *ngIf='getTimerState() && getCheatModeState()' type='text' (keyup.enter)='changeTimerValue(timerInput.value)' size='5px'/>
-      </div>
-      <app-definition-field [cheatMode]='getShowWordsState()'></app-definition-field>
+      <app-cheat-mode></app-cheat-mode>
+      <app-definition-field [cheatMode]='isShowWordsOn()'></app-definition-field>
     </div>
   </div>
 </div>
 
-<app-config-menu *ngIf="gameIsBeingConfigured===true"></app-config-menu>
+<app-config-menu *ngIf="gameIsBeingConfigured"></app-config-menu>
