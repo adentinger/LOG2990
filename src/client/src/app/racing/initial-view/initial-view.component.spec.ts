@@ -5,6 +5,7 @@ import { InitialViewComponent } from './initial-view.component';
 import { MapThumbnailComponent } from './map-thumbnail/map-thumbnail.component';
 import { MapBestTimeComponent } from './map-best-time/map-best-time.component';
 import { MapService } from '../services/map.service';
+import { RouterModule } from '@angular/router';
 
 describe('InitialViewComponent', () => {
     let component: InitialViewComponent;
@@ -13,7 +14,8 @@ describe('InitialViewComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpModule
+                HttpModule,
+                RouterModule
             ],
             declarations: [
                 InitialViewComponent,

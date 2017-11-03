@@ -1,56 +1,82 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
-import { DefinitionsService } from '../definition-field/definitions.service';
+import { SelectionService } from '../selection.service';
+
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { HighlightGrid } from './crossword-tile/highlight-grid';
+import { Subscription } from 'rxjs/Subscription';
+import { Grid } from '../../../../../common/src/grid';
+import { Owner } from '../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss']
 })
+export class BoardComponent implements OnInit, OnDestroy {
 
-export class BoardComponent implements OnInit {
-    public indexOfDefinition: number;
+    public readonly DIMENSIONS = Array(Grid.DIMENSIONS);
+
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    public onSelect(indexDefinition: number): void {
-        this.indexOfDefinition = indexDefinition;
-        if (this.indexOfDefinition !== null) {
+    private highlightGrid = new HighlightGrid();
+    private selectionSubscription: Subscription;
+
+    constructor(private crosswordGridService: CrosswordGridService,
+                private selectionService: SelectionService) {
+    }
+
+    public ngOnInit(): void {
+        this.selectionSubscription =
+            this.selectionService.selection.subscribe(
+                (selected) => this.onSelect(selected)
+            );
+    }
+
+    public ngOnDestroy(): void {
+        this.selectionSubscription.unsubscribe();
+    }
+
+    public getGridCharAt(row: number, column: number) {
+        return this.crosswordGridService.getCharAt(row, column);
+    }
+
+    private onSelect(selected: GridWord): void {
+        this.highlightGrid = new HighlightGrid(selected);
+        if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
         }
-
-        this.crosswordGridService.clearGridOfUselessLetters();
     }
 
-    constructor(private crosswordGridService: CrosswordGridService,
-        private definitionsService: DefinitionsService) { }
-
-    public ngOnInit(): void {
-        this.crosswordGrid = this.crosswordGridService.getViewableGrid();
+    public onInputChange(inputValue: string) {
+        const USER_WORD = this.makeWordFromInput(inputValue);
+        this.inputBuffer.nativeElement.value = USER_WORD.string;
+        this.crosswordGridService.setUserInput(USER_WORD);
     }
 
-    public onChange(inputValue) {
+    public isHighlighted(row: number, column: number): boolean {
+        return this.highlightGrid.isSelected(row, column);
+    }
 
-        const input = this.crosswordGridService.stripSymbols(inputValue);
-        this.inputBuffer.nativeElement.value = input;
-        if (this.definitionsService.selectedDirection === Direction.horizontal) {
-            const word = this.crosswordGridService.horizontalGridWords.get(this.indexOfDefinition);
-            this.crosswordGridService.onInputChange(input, word);
+    private makeWordFromInput(input: string): GridWord {
+        input = input.replace(/[^a-zA-Z]/g, '');
+        input = input.toLowerCase();
+
+        const SELECTED_WORD = this.selectionService.selectionValue;
+        if (input.length > SELECTED_WORD.length) {
+            input = input.substr(0, SELECTED_WORD.length);
         }
-        else if (this.definitionsService.selectedDirection === Direction.vertical) {
-            const word = this.crosswordGridService.verticalGridWords.get(this.indexOfDefinition);
-            this.crosswordGridService.onInputChange(input, word);
-        }
+        return new GridWord(
+            -1,
+            SELECTED_WORD.y,
+            SELECTED_WORD.x,
+            SELECTED_WORD.length,
+            SELECTED_WORD.direction,
+            Owner.none,
+            input
+        );
     }
 
-    public get crosswordGrid() {
-        return this.crosswordGridService.crosswordGrid;
-    }
-
-    public set crosswordGrid(value: string[][]) {
-        this.crosswordGridService.crosswordGrid = value;
-    }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGame } from '../class/crossword-game';
 import { GameDetailsService } from './game-details.service';
+import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-game-details',
@@ -12,7 +13,7 @@ export class GameDetailsComponent implements OnInit {
     public crosswordGame: CrosswordGame;
     public player1: string;
     public difficulty: string;
-    public gameMode: string;
+    public gameMode: GameMode;
 
     constructor(private crosswordGameService: CrosswordGameService, private gameDetailsService: GameDetailsService,
         private ngZone: NgZone) { }

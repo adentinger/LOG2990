@@ -1,10 +1,15 @@
 <div id='crossword-board-container'>
   <div #crosswordBoard id='crossword-board'>
-    <div *ngFor='let row of crosswordGrid; let j = index'>
-      <label *ngFor='let square of row; let i = index'>
-      <app-tile [tileRow]='j' [tileColumn]='i' [tileChar]='crosswordGrid[j][i]'></app-tile>
+    <div *ngFor='let row of DIMENSIONS; let rowNumber = index'>
+      <label *ngFor='let column of DIMENSIONS; let columnNumber = index'>
+        <app-tile
+          [tileRow]='rowNumber'
+          [tileColumn]='columnNumber'
+          [tileChar]='getGridCharAt(rowNumber, columnNumber)'
+          [highlighted]='isHighlighted(rowNumber, columnNumber)'>
+        </app-tile>
       </label>
     </div>
-    <input type='text' id='inputText' #inputBuffer (keyup)='onChange($event.target.value)'/>
+    <input type='text' id='inputText' #inputBuffer (keyup)='onInputChange($event.target.value)' />
   </div>
 </div>

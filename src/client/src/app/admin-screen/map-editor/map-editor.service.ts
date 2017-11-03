@@ -118,6 +118,10 @@ export class MapEditorService {
     }
 
     public popPoint(): Point {
+        if (this.currentMap.isClosed()) {
+            this.destroyItems();
+        }
+
         return this.map.path.points.pop();
     }
 
@@ -191,5 +195,11 @@ export class MapEditorService {
 
     public randomiseSpeedBoosts(): void {
         this.itemGenerator.randomlyModifyObjectsTypePositions(SpeedBoost, this.currentMap, this.currentMap.speedBoosts);
+    }
+
+    public destroyItems(): void {
+        this.currentMap.potholes = [];
+        this.currentMap.puddles = [];
+        this.currentMap.speedBoosts = [];
     }
 }

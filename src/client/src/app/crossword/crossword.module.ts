@@ -17,6 +17,7 @@ import { CrosswordGameService } from './crossword-game.service';
 import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
 import { CrosswordGridService } from './board/crossword-grid.service';
 import { GameDetailsService } from './game-details/game-details.service';
+import { SelectionService } from './selection.service';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import { GameDetailsService } from './game-details/game-details.service';
         DefinitionsService,
         CrosswordGameService,
         CrosswordGridService,
-        GameDetailsService
+        GameDetailsService,
+        SelectionService
     ],
     exports: [
         CrosswordComponent

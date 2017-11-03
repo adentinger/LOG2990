@@ -1,61 +1,88 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
-import { SkyboxMode } from './skybox';
+import { MapService } from '../services/map.service';
+import { UIInputs, KEYDOWN_EVENT } from './ui-input.service';
+import { PhysicEngine } from './physic/engine';
 
-const LEFT_MOUSE_BUTTON = 0;
+import { Point } from '../../../../../common/src/math/point';
+
+import { EventManager } from '../../event-manager.service';
 
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
     styleUrls: ['./racing-game.component.css'],
-    providers: [RacingGameService]
+    providers: [RacingGameService, PhysicEngine]
 })
-export class RacingGameComponent implements OnInit {
-
-    @ViewChild('racingGame')
-    public racingGame: ElementRef;
+export class RacingGameComponent implements OnInit, OnDestroy {
+    public static readonly HEADER_HEIGHT = 50;
 
     @ViewChild('racingGameCanvas')
     public racingGameCanvas: ElementRef;
+    @ViewChild('userInputs')
+    private uiInputs: UIInputs;
 
     private windowHalfX = window.innerWidth * 0.5;
-    private windowHalfY = window.innerHeight * 0.5;
+    private windowHalfY = window.innerHeight * 0.5 - RacingGameComponent.HEADER_HEIGHT * 0.5;
 
-    constructor(private racingGameRenderer: RacingGameService) { }
+    constructor(private racingGame: RacingGameService,
+        private route: ActivatedRoute,
+        private mapService: MapService,
+        private eventManager: EventManager) {
+        this.eventManager.registerClass(this);
+    }
 
     public ngOnInit(): void {
-        this.racingGameRenderer.initialise(this.racingGameCanvas.nativeElement);
+        this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
+            this.mapService.getByName(mapName)
+                .then(map => {
+                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs, this.eventManager);
+                    this.onResize();
+                });
+        });
     }
 
-    public onResize() {
-        const height = (window).innerHeight;
-        const width = (window).innerWidth;
+    public ngOnDestroy() {
+        this.racingGame.finalize();
+    }
 
+    @HostListener('window:resize', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
+    private onResize() {
+        const height = window.innerHeight - RacingGameComponent.HEADER_HEIGHT;
+        const width = window.innerWidth;
         this.windowHalfX = width * 0.5;
         this.windowHalfY = height * 0.5;
-        this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
-        this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
+
+        this.racingGame.resizeCanvas(width, height);
     }
 
-    public onMouseMove(e: MouseEvent) {
-        const MOUSE_POSITION = new Point(
-            (e.clientX - this.windowHalfX) / (this.windowHalfX),
-            (e.clientY - this.windowHalfY) / (this.windowHalfY)
-        );
-        this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
-    }
-
-    public onClick(e: MouseEvent) {
-        if (e.button === LEFT_MOUSE_BUTTON) {
-            const SKYBOX = this.racingGameRenderer.racingGameRendering.SKYBOX;
-            switch (SKYBOX.mode) {
-                case SkyboxMode.DAY: SKYBOX.mode = SkyboxMode.NIGHT; break;
-                case SkyboxMode.NIGHT: SKYBOX.mode = SkyboxMode.DAY; break;
-                default: break;
-            }
+    @EventManager.Listener(KEYDOWN_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private onKeyDown() {
+        if (this.uiInputs.isKeyPressed('c')) {
+            this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
         }
+        if (this.uiInputs.isKeyPressed('n')) {
+            this.racingGame.changeDayMode();
+        }
+
+        const isAllowedKeyCombination =
+            this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
+            this.uiInputs.isKeyPressed('f5');
+
+        if (!isAllowedKeyCombination) {
+            return false; // Prevent Default behaviors
+        }
+    }
+
+    @HostListener('window:contextmenu', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
+    private preventEvent(event: Event) {
+        return false; // Prevent Default behaviors
     }
 
 }

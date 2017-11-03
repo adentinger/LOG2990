@@ -9,48 +9,22 @@ import { DefinitionsService } from '../definition-field/definitions.service';
 describe('CrosswordGridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [CrosswordGridService, CrosswordGameService,
+            providers: [
+                CrosswordGridService, CrosswordGameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
-                DefinitionsService]
+                DefinitionsService
+            ]
         });
     });
 
-    it('should be created', inject([CrosswordGridService], (service: CrosswordGridService) => {
-        expect(service).toBeTruthy();
+    let crosswordGridService: CrosswordGridService;
+
+    beforeEach(inject([CrosswordGridService], (injectedService) => {
+        crosswordGridService = injectedService;
     }));
 
-    it('the first square should not contain a character', inject([CrosswordGridService], (service: CrosswordGridService) => {
-        const firstLetter = service.getViewableGrid()[0][0];
-        expect(firstLetter).toMatch(/^$/i);
-    }));
-
-    it('should return an array', inject([CrosswordGridService], (service: CrosswordGridService) => {
-        const grid: any = service.getViewableGrid();
-        expect(grid).toEqual(jasmine.any(Array));
-    }));
-
-    it('should be 10 square high', inject([CrosswordGridService], (service: CrosswordGridService) => {
-        const grid: any = service.getViewableGrid();
-        expect(grid.length).toEqual(10);
-    }));
-
-    it('should be 10 square wide', inject([CrosswordGridService], (service: CrosswordGridService) => {
-        const grid: any = service.getViewableGrid()[0];
-        expect(grid.length).toEqual(10);
-    }));
-
-    it('should be filled with at least 35% letters', inject([CrosswordGridService], (service: CrosswordGridService) => {
-        const grid: any = service.getViewableGrid();
-        const regex = new RegExp('^0$');
-        let counter = 0;
-        for (const row of grid) {
-            for (const square of row) {
-                if (regex.test(square)) {
-                    counter++;
-                }
-            }
-        }
-        expect(100 - counter).toBeGreaterThan(35);
-    }));
+    it('should be created', () => {
+        expect(crosswordGridService).toBeTruthy();
+    });
 
 });

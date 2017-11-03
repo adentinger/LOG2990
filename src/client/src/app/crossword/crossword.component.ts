@@ -25,11 +25,6 @@ export class CrosswordComponent implements OnInit {
     public ngOnInit(): void {
     }
 
-    public onSelectedDefinitionChange(event) {
-        this.selectedDefinition = event;
-        this.gameBoard.onSelect(event);
-    }
-
     public setCheatModeOnOff(): void {
         this.crosswordGameService.setCheatModeOnOff();
     }

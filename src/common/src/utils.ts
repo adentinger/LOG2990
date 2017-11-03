@@ -13,7 +13,7 @@ export function isJson(pseudoJson: string): boolean {
 export interface Constructor<T = any> {
     new(...argv: any[]): T;
 }
-export interface Class<T = any> extends Constructor<T> {
+export interface Class<T extends InstanceOf<any> = any> extends Function {
     prototype: T;
 }
 
@@ -21,7 +21,7 @@ export interface InstanceOf<C extends Class<InstanceOf<C>>> {
     readonly constructor: C;
 }
 
-interface PrototypeGetter { getPrototypeOf: <T extends InstanceOf<Class>>(obj: T) => T; }
+export interface PrototypeGetter { getPrototypeOf: <T extends InstanceOf<Class>>(obj: T) => T; }
 export declare const Object: PrototypeGetter & ObjectConstructor;
 
 export function toArrayBuffer(str: string): ArrayBuffer {
@@ -70,4 +70,52 @@ export class NotImplementedError extends Error {
         message = message ? ': ' + message : '';
         super(NotImplementedError.ERROR_MESSAGE + (message));
     }
+}
+
+export interface FunctionDescriptor {
+    name: string;
+    parameterCount: number;
+}
+
+export type TypeOf = 'undefined' | 'boolean' | 'number' | 'string' | 'object';
+export interface NativeAttributeDescriptor {
+    name: string;
+    type: TypeOf;
+}
+export interface AttributeDescriptor {
+    name: string;
+    parent: Class;
+}
+
+export function hasNativeAttributes(objectToCheck: any, attributeDescriptors: NativeAttributeDescriptor[]): boolean {
+    let hasAttributes = objectToCheck != null;
+    for (let i = 0; i < attributeDescriptors.length && hasAttributes; ++i) {
+        const FUNCTION_TO_CHECK = attributeDescriptors[i];
+        hasAttributes =
+            FUNCTION_TO_CHECK.name in objectToCheck &&
+            typeof objectToCheck[FUNCTION_TO_CHECK.name] === FUNCTION_TO_CHECK.type;
+    }
+    return hasAttributes;
+}
+
+export function hasAttributes(objectToCheck: any, attributeDescriptors: AttributeDescriptor[]): boolean {
+    let hasAttributes = objectToCheck != null;
+    for (let i = 0; i < attributeDescriptors.length && hasAttributes; ++i) {
+        const FUNCTION_TO_CHECK = attributeDescriptors[i];
+        hasAttributes =
+            FUNCTION_TO_CHECK.name in objectToCheck &&
+            objectToCheck[FUNCTION_TO_CHECK.name] instanceof FUNCTION_TO_CHECK.parent;
+    }
+    return hasAttributes;
+}
+
+export function hasFunctions(objectToCheck: any, functionDescriptors: FunctionDescriptor[]): boolean {
+    let hasFunctions = objectToCheck != null;
+    for (let i = 0; i < functionDescriptors.length && hasFunctions; ++i) {
+        const FUNCTION_TO_CHECK = functionDescriptors[i];
+        hasFunctions =
+            FUNCTION_TO_CHECK.name in objectToCheck &&
+            objectToCheck[FUNCTION_TO_CHECK.name].length === FUNCTION_TO_CHECK.parameterCount;
+    }
+    return hasFunctions;
 }

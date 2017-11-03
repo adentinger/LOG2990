@@ -1,15 +1,18 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
-import { Definition } from '../../../../../common/src/crossword/definition';
-import { DefinitionsService } from './definitions.service';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+
+import { DefinitionsService, Definitions, Answers } from './definitions.service';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGridService } from '../board/crossword-grid.service';
+import { SelectionService } from '../selection.service';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Definition } from './definition';
 
 @Component({
     selector: 'app-definition-field',
     templateUrl: './definition-field.component.html',
     styleUrls: ['./definition-field.component.css']
 })
-export class DefinitionFieldComponent implements OnInit {
+export class DefinitionFieldComponent {
 
     public readonly HORIZONTAL = Direction.horizontal;
     public readonly VERTICAL = Direction.vertical;
@@ -18,54 +21,33 @@ export class DefinitionFieldComponent implements OnInit {
 
     @Input() public cheatMode: boolean;
 
-    @Output() public selectedDefinition: EventEmitter<number> = new EventEmitter<number>();
-
-    // public definitions: Definition[] = [];
-
-    public answers: string[] = [];
-
-    constructor(private definitionService: DefinitionsService, private crosswordGridService: CrosswordGridService) {
-        this.selectedDefinition = definitionService.internalSelectedDefinition;
+    constructor(private definitionService: DefinitionsService,
+                private selectionService: SelectionService,
+                private crosswordGridService: CrosswordGridService) {
     }
 
-    public get horizontalDefinitions(): Definition[] {
-        return <Definition[]>Array.from(this.definitionService.horizontalDefinitions.values());
+    public get definitions(): Definitions {
+        return this.definitionService.definitions;
     }
 
-    public get verticalDefinitions(): Definition[] {
-        return <Definition[]>Array.from(this.definitionService.verticalDefinitions.values());
+    public get answers(): Answers {
+        return this.definitionService.answers;
     }
 
-    public ngOnInit(): void {
-        // this.definitions = this.definitionService.getDefinitions();
-        this.answers = this.definitionService.getAnswers();
+    public onDefinitionClicked(index: number, direction: Direction): void {
+        const SELECTED_WORD: GridWord =
+            this.crosswordGridService.getWord(index, direction);
+        this.selectionService.selection.next(SELECTED_WORD);
     }
 
-    public get selectedDefinitionId() {
-        return this.definitionService.selectedDefinitionId;
-    }
-
-    public set selectedDefinitionId(selectedDefinitionId) {
-        this.definitionService.selectedDefinitionId = selectedDefinitionId;
-    }
-
-    public get selectedDirection() {
-        return this.definitionService.selectedDirection;
-    }
-
-    public onSelect(index: number, direction: Direction, event): void {
-
-        if (direction === Direction.horizontal) {
-            if (this.crosswordGridService.horizontalGridWords.get(index).string === '') {
-                this.definitionService.onSelect(index, direction, event);
-            }
-        } else if (direction === Direction.vertical) {
-            if (this.crosswordGridService.verticalGridWords.get(index).string === '') {
-                this.definitionService.onSelect(index, direction, event);
-            }
-        }
-    }
     public onClickOutside(): void {
-        this.definitionService.onClickOutside();
+        this.selectionService.selection.next(SelectionService.NO_SELECTION);
     }
+
+    public checkIfSelected(index: number, direction: Direction): boolean {
+        return this.selectionService.isDefinitionSelected(
+            new Definition(index, direction, '')
+        );
+    }
+
 }

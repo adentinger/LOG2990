@@ -17,7 +17,7 @@ export class ItemGenerator {
 
     public addObstacle<ItemGenerated extends Item>(constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
         const MAX_AMOUNT_OF_ITEMS = 5;
-        const currentArrayLength = itemArray.length;
+        const CURRENT_ARRAY_LENGTH = itemArray.length;
 
         if (constructor === SpeedBoost) {
             this.generatePositions(map, true);
@@ -26,13 +26,13 @@ export class ItemGenerator {
             this.generatePositions(map);
         }
 
-        if (currentArrayLength === 0) {
-            const item = new constructor(this.allPositions[currentArrayLength]);
+        if (CURRENT_ARRAY_LENGTH === 0) {
+            const item = new constructor(this.allPositions[CURRENT_ARRAY_LENGTH]);
             itemArray.push(item);
         }
-        else if (currentArrayLength < MAX_AMOUNT_OF_ITEMS) {
+        else if (CURRENT_ARRAY_LENGTH < MAX_AMOUNT_OF_ITEMS) {
             for (let i = 0; i < 2; i++) {
-                const item = new constructor(this.allPositions[currentArrayLength + i]);
+                const item = new constructor(this.allPositions[CURRENT_ARRAY_LENGTH + i]);
                 itemArray.push(item);
             }
         }
@@ -56,11 +56,9 @@ export class ItemGenerator {
             if (speedBoost === true) {
                 const index = Math.round(Math.random() * (this.halfSegments.length - 2) + 1);
                 newPosition = Math.round(Math.random() * (this.halfSegments[index].getLength()) + this.halfSegments[index].lower);
-                console.log('allo');
             }
             else {
                 newPosition = Math.round(Math.random() * (MAP_LENGTH)) + map.firstStretchLength();
-                console.log('allo2');
             }
 
             for (let j = 0; j < this.allPositions.length; j++) {
@@ -82,9 +80,9 @@ export class ItemGenerator {
     public randomlyModifyObjectsTypePositions<ItemGenerated extends Item>
     (constructor: Constructor<ItemGenerated>, map: Map, itemArray: Item[]): void {
 
-        const itemArrayLength = itemArray.length;
+        const CURRENT_ARRAY_LENGTH = itemArray.length;
 
-        for (let i = 0; i < itemArrayLength; i++) {
+        for (let i = 0; i < CURRENT_ARRAY_LENGTH; i++) {
             itemArray.pop();
         }
 
@@ -95,7 +93,7 @@ export class ItemGenerator {
             this.generatePositions(map);
         }
 
-        for (let i = 0; i < itemArrayLength; i++) {
+        for (let i = 0; i < CURRENT_ARRAY_LENGTH; i++) {
             itemArray.push(new constructor(this.allPositions[i]));
         }
     }
