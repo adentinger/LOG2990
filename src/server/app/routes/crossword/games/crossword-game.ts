@@ -29,13 +29,9 @@ export class CrosswordGame {
     public countdown = CrosswordGame.COUNTDOWN_INITAL;
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
-
     private wordsInternal: GridWord[] = [];
-
     private definitionsInternal: DefinitionWithIndex[] = [];
-
     private readonly playerIds: string[] = [];
-
     private gameMode: GameMode;
 
     constructor(configs: CrosswordGameConfigs) {
