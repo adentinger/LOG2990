@@ -11,7 +11,10 @@ import { GameMode, Difficulty, Direction, Owner } from '../../../../../common/sr
 import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
+import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
+import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
+import '../../../../../common/src/crossword/packets/clear-grid.parser';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -69,6 +72,7 @@ export class Game {
     public addPlayer(playerId: string): PlayerNumber {
         if (this.playerIds.length < this.numberOfPlayers) {
             this.playerIds.push(playerId);
+            this.clearPlayerGrid(playerId);
             this.sendGridWords(playerId);
             this.sendDefinitions(playerId);
             return this.playerIds.length;
@@ -109,6 +113,10 @@ export class Game {
         const GRID = await this.fetchGrid(difficulty);
         this.wordsInternal = this.makeWordsFromGrid(GRID);
         await this.assignDefinitions();
+    }
+
+    private async clearPlayerGrid(playerId: string): Promise<void> {
+        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
     }
 
     private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
