@@ -51,8 +51,6 @@ export class CrosswordGridService {
 
     @PacketHandler(GridWordPacket)
     public updateGridWord(event: PacketEvent<GridWordPacket>): void {
-        console.log('new gridword received from server: ' + JSON.stringify(event.value.gridword));
-        // send change to grid
         this.GRID.addWord(event.value.gridword);
     }
 
