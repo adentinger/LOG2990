@@ -36,7 +36,7 @@ export class RenderableMap extends PhysicMesh {
         this.PLANE.add(wireframePlane);
 
         ///////////////////////////////////
-        const segment1 = new RacetrackSegment();
+        const segment1 = new RacetrackSegment(10);
         const segment1Length = this.calculateRoadtrackLength(segment1);
         segment1.position.x = this.mapPoints[0].x + segment1Length / 2;
         segment1.position.z = this.mapPoints[0].y;
