@@ -9,8 +9,6 @@ import { Point } from '../../../../../common/src/math/point';
 import { PointIndex } from './point-index';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { MapService } from '../../racing/services/map.service';
-import { Pothole } from './pothole';
-import { Puddle } from './puddle';
 
 const LEFT_MOUSE_BUTTON = 0;
 const RIGHT_MOUSE_BUTTON = 2;

@@ -1,4 +1,3 @@
-import { MapColors } from './map-colors';
 import { AbstractMapItem } from './abstract-map-item';
 import { AbstractItemColors } from './abstract-item-colors';
 

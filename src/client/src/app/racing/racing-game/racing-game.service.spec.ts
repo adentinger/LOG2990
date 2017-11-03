@@ -1,7 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
 import { MockMaps } from '../../admin-screen/map-editor/mock-maps';
 import { MapConverterService } from '../../admin-screen/map-editor/map-converter.service';
 import { PhysicEngine } from './physic/engine';

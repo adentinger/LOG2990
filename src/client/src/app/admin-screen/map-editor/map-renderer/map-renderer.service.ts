@@ -5,7 +5,6 @@ import { Drawable } from './drawable';
 import { MapPath } from './map-path';
 import { Point } from '../../../../../../common/src/math/point';
 import { PointIndex } from '../point-index';
-import { NormalPothole } from './normal-pothole';
 import { MapItems } from './map-items';
 
 @Injectable()
