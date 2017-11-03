@@ -4,9 +4,10 @@ import { DayModeNotifiable } from '../../day-mode/day-mode-notifiable';
 import { DayMode } from '../../day-mode/day-mode';
 
 export class Skybox extends THREE.Mesh implements DayModeNotifiable {
+    private static readonly ASSETS_PATH = '/assets/racing/skybox/';
 
-    private static cubeNight: THREE.Mesh = Skybox.createCube(DayMode.NIGHT);
-    private static cubeDay: THREE.Mesh = Skybox.createCube(DayMode.DAY);
+    private static readonly cubeNight: THREE.Mesh = Skybox.createCube(DayMode.NIGHT);
+    private static readonly cubeDay: THREE.Mesh = Skybox.createCube(DayMode.DAY);
 
     private currentCube: THREE.Mesh;
 
@@ -29,7 +30,7 @@ export class Skybox extends THREE.Mesh implements DayModeNotifiable {
         let texture: THREE.CubeTexture;
 
         const loader = new THREE.CubeTextureLoader();
-        loader.setPath('/assets/racing/skybox/');
+        loader.setPath(Skybox.ASSETS_PATH);
 
         switch (mode) {
             case DayMode.DAY: // fallthrough
@@ -69,7 +70,6 @@ export class Skybox extends THREE.Mesh implements DayModeNotifiable {
     }
 
     public dayModeChanged(newMode: DayMode) {
-        console.log('Skybox DayMode Changed');
         let currentCube: THREE.Mesh;
         if (newMode === DayMode.DAY) {
             currentCube = Skybox.cubeDay;

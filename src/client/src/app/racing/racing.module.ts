@@ -27,8 +27,7 @@ import { UIInputs } from './services/ui-input.service';
         UIInputs
     ],
     providers: [
-        MapService,
-        UIInputs
+        MapService
     ]
 })
 export class RacingModule { }

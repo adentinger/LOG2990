@@ -2,99 +2,120 @@ import * as THREE from 'three';
 
 import { Skybox } from '../models/skybox/skybox';
 import { RacingGamePlane } from '../racing-game-map/racing-game-plane';
-import { OrthographicCamera } from '../orthographic-camera';
-import { PerspectiveCamera } from '../perspective-camera';
+import { OrthographicCamera } from './orthographic-camera';
+import { PerspectiveCamera } from './perspective-camera';
 import { DayMode, DayModeManager } from '../day-mode/day-mode-manager';
 import { EventManager } from '../../../event-manager.service';
 import { Lighting } from '../models/lighting/lighting';
+import { RenderableMap } from '../racing-game-map/renderable-map';
+import { Car } from '../models/car/car';
 
-export class RacingRenderer {
+export type CameraId = 0 | 1;
+
+export class RacingRenderer extends THREE.WebGLRenderer {
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
-    public readonly SCENE: THREE.Scene;
-    public readonly RENDERER: THREE.WebGLRenderer;
-    public readonly LIGHTING = new Lighting();
-    public readonly SKYBOX: Skybox;
-    public readonly PLANE: RacingGamePlane;
-    public readonly CAMERA1: PerspectiveCamera;
-    public readonly CAMERA2 = new OrthographicCamera;
-    public readonly cameraHelper: THREE.CameraHelper;
+    private canvasContainer: HTMLDivElement;
 
-    public currentCamera: 0 | 1 = 0;
+    protected readonly scene = new THREE.Scene();
+    protected readonly lighting = new Lighting();
+    protected readonly skybox = new Skybox();
+    protected readonly cameras: [PerspectiveCamera, OrthographicCamera] = [null, null];
 
-    private displayWorldRefInternal: boolean;
-    private readonly DAY_MODE_MANAGER = new DayModeManager();
+    private animationRequestId = -1;
+    private isRendering = false;
 
-    constructor(canvas: HTMLCanvasElement, eventManager: EventManager) {
-        this.SCENE = new THREE.Scene();
-        this.RENDERER = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    public currentCamera: CameraId = 0;
 
-        this.SKYBOX = new Skybox();
+    private readonly dayModeManager = new DayModeManager();
 
-        this.PLANE = new RacingGamePlane();
-        this.SCENE.add(this.PLANE);
+    constructor(eventManager: EventManager) {
+        super({ antialias: true });
 
-        this.displayWorldRef = true;
+        this.cameras[0] = new PerspectiveCamera(eventManager);
+        this.cameras[1] = new OrthographicCamera();
 
-        this.SCENE.add(this.LIGHTING);
-
-        this.CAMERA1 = new PerspectiveCamera(eventManager);
-        this.cameraHelper = new THREE.CameraHelper(this.CAMERA1);
-
-        this.CAMERA1.add(this.SKYBOX);
+        this.cameras[0].add(this.skybox);
     }
 
-    public set displayWorldRef(value: boolean) {
-        this.displayWorldRefInternal = value;
-        if (value) {
-            this.SCENE.add(RacingRenderer.AXIS_HELPER);
-        }
-        else {
-            this.SCENE.remove(RacingRenderer.AXIS_HELPER);
+    public initialize(container: HTMLDivElement) {
+        this.canvasContainer = container;
+        this.canvasContainer.appendChild(this.domElement);
+
+        this.scene.add(this.lighting);
+    }
+
+    public finalize() {
+        this.canvasContainer.removeChild(this.domElement);
+
+        // Remove all children to be ready for the next game.
+        this.scene.children.forEach(this.scene.remove, this.scene);
+    }
+
+    public startRendering(): void {
+        if (!this.isRendering) {
+            this.isRendering = true;
+            this.runRenderLoop();
         }
     }
 
-    public render(): void {
-        const screenSize = this.RENDERER.getSize();
-        this.RENDERER.setScissorTest(true);
-        this.CAMERA2.updatePosition();
+    public stopRendering(): void {
+        if (this.animationRequestId !== 0) {
+            cancelAnimationFrame(this.animationRequestId);
+            this.animationRequestId = 0;
+        }
+        this.isRendering = false;
+    }
 
-        if (this.currentCamera === 1) {
-            this.SCENE.add(this.cameraHelper);
-        }
-        this.RENDERER.setViewport(0, 0, screenSize.width, screenSize.height);
-        this.RENDERER.setScissor(0, 0, screenSize.width, screenSize.height);
-        this.RENDERER.render(this.SCENE, this.currentCamera === 0 ? this.CAMERA1 : this.CAMERA2);
-        if (this.currentCamera === 1) {
-            this.SCENE.remove(this.cameraHelper);
-        }
+    public runRenderLoop(): void {
+        this.animationRequestId =
+            requestAnimationFrame(() => this.runRenderLoop());
 
-        if (this.currentCamera === 0) {
-            this.SCENE.add(this.cameraHelper);
-        }
-        this.RENDERER.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
-            screenSize.width * 0.20, screenSize.height * 0.20);
-        this.RENDERER.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
-            screenSize.width * 0.20, screenSize.height * 0.20);
-        this.RENDERER.render(this.SCENE, this.currentCamera === 0 ? this.CAMERA2 : this.CAMERA1);
-        if (this.currentCamera === 0) {
-            this.SCENE.remove(this.cameraHelper);
-        }
+        this.renderGame();
+    }
+
+    public renderGame(): void {
+        const screenSize = this.getSize();
+        this.setScissorTest(true);
+        this.cameras[1].updatePosition();
+
+        this.setViewport(0, 0, screenSize.width, screenSize.height);
+        this.setScissor(0, 0, screenSize.width, screenSize.height);
+        this.render(this.scene, this.cameras[this.currentCamera]);
+
+        this.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
+                         screenSize.width * 0.20, screenSize.height * 0.20);
+        this.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
+                        screenSize.width * 0.20, screenSize.height * 0.20);
+        this.render(this.scene, this.cameras[+!this.currentCamera]);
+    }
+
+    public setCamerasTarget(target: THREE.Object3D): void {
+        this.cameras.forEach((camera) => camera.setTarget(target));
+    }
+
+    public updateSize(width: number, height: number) {
+        this.setSize(width, height);
+
+        this.cameras[0].aspect = width / height;
+        this.cameras[0].updateProjectionMatrix();
+
+        this.cameras[1].left = this.cameras[1].bottom * (width / height);
+        this.cameras[1].right = this.cameras[1].top * (width / height);
+        this.cameras[1].updateProjectionMatrix();
+    }
+
+    public addMap(map: RenderableMap) {
+        this.scene.add(map);
+    }
+
+    public removeMap(map: RenderableMap) {
+        this.scene.remove(map);
     }
 
     public updateDayMode(newMode: DayMode): void {
-        this.DAY_MODE_MANAGER.mode = newMode;
-        this.DAY_MODE_MANAGER.updateScene(this.SCENE);
-    }
-
-    public switchCamera1Position() {
-        if (this.CAMERA1.position.equals(PerspectiveCamera.DEFAULT_POSITION)) {
-            this.CAMERA1.position.copy(PerspectiveCamera.DRIVER_POSITION);
-            this.CAMERA1.fov = 35;
-        } else {
-            this.CAMERA1.position.copy(PerspectiveCamera.DEFAULT_POSITION);
-            this.CAMERA1.fov = 45;
-        }
+        this.dayModeManager.mode = newMode;
+        this.dayModeManager.updateScene(this.scene);
     }
 
 }

@@ -8,7 +8,7 @@ import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { PhysicEngine } from './physic/engine';
 
 import { EventManager } from '../../event-manager.service';
-import { Class } from '../../../../../common/src/utils';
+import { warn } from '../../../../../common/src/utils';
 
 @Component({
     selector: 'app-racing-game',
@@ -20,25 +20,23 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
     public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
 
-    @ViewChild('racingGameCanvas')
-    public racingGameCanvas: ElementRef;
+    @ViewChild('gameContainer')
+    public racingGameContainer: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
-        private mapService: MapService,
         private eventManager: EventManager) {
         this.eventManager.registerClass(this);
     }
 
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
-            this.mapService.getByName(mapName)
-                .then(map => {
-                    this.racingGame.initialise(this.racingGameCanvas.nativeElement, map, this.uiInputs, this.eventManager);
-                    this.onResize();
-                });
+            this.racingGame.loadMap(mapName).then(() => {
+                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.uiInputs);
+                this.updateRendererSize();
+            });
         });
     }
 
@@ -48,11 +46,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @HostListener('window:resize', ['$event'])
     // tslint:disable-next-line:no-unused-variable
-    private onResize() {
+    private updateRendererSize() {
         const height = window.innerHeight - RacingGameComponent.HEADER_HEIGHT;
         const width = window.innerWidth;
 
-        this.racingGame.resizeCanvas(width, height);
+        this.racingGame.updateRendererSize(width, height);
     }
 
     @EventManager.Listener(KEYDOWN_EVENT)
@@ -64,15 +62,12 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         if (this.uiInputs.isKeyPressed('n')) {
             this.racingGame.changeDayMode();
         }
-        if (this.uiInputs.isKeyPressed('v')) {
-            this.racingGame.renderer.switchCamera1Position();
-        }
 
-        const isAllowedKeyCombination =
+        const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
             this.uiInputs.isKeyPressed('f5');
 
-        if (!isAllowedKeyCombination) {
+        if (!areAllowedKeyCombinationsPressed) {
             return false; // Prevent Default behaviors
         }
     }

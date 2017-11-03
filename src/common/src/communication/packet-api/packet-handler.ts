@@ -48,7 +48,7 @@ export declare interface PacketManagerContainter<S extends Socket> {
 }
 
 export function PacketHandlerClass() {
-    return function <T extends Class<PacketManagerContainter<Socket>>>(target: T) {
+    return function <T extends Constructor<PacketManagerContainter<Socket>>>(target: T) {
         logger.info('New class of handlers: %s', target.name || DEFAULT_CLASSNAME);
         if (!handlers.has(target)) {
             handlers.set(target, new Map());
