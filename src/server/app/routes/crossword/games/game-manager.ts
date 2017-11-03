@@ -94,15 +94,15 @@ export class GameManager {
      */
     @PacketHandler(WordTryPacket)
     public wordTryHandler(event: PacketEvent<WordTryPacket>) {
-        const wordTry: GridWord = event.value.wordTry;
-        const socketId: string = event.socketid;
+        const WORD_TRY: GridWord = event.value.wordTry;
+        const PLAYER_ID: string = event.socketid;
 
-        const game: CrosswordGame = this.getGameFromPlayerId(event.socketid);
-        const ANSWER: GridWord = wordTry;
-        if (!game.validateUserAnswer(wordTry)) {
+        const game: CrosswordGame = this.getGameFromPlayerId(PLAYER_ID);
+        const ANSWER: GridWord = WORD_TRY;
+        if (!game.validateUserAnswer(WORD_TRY)) {
             ANSWER.string = '';
         }
-        this.sendGridWord(ANSWER, socketId);
+        this.sendGridWord(ANSWER, PLAYER_ID);
     }
 
     private getGameFromId(id: number): CrosswordGame {
