@@ -2,6 +2,12 @@ import { Difficulty, Direction, Owner } from '../../../../../common/src/crosswor
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
+import { Definition } from '../../../../../common/src/crossword/definition';
+
+export interface DefinitionWithIndex {
+    definition: Definition;
+    index: number;
+}
 
 export class GameInitializer {
 
@@ -17,6 +23,37 @@ export class GameInitializer {
         const grid = await this.fetchGrid(difficulty);
         const gridWords = this.convertGridToGridWords(grid);
         return gridWords;
+    }
+
+    public async getDefinitionsOf(gridWords: GridWord[]): Promise<DefinitionWithIndex[]> {
+        const DEFINITIONS: DefinitionWithIndex[] = [];
+
+        let currentHorizontalId = 1;
+        let currentVerticalId = 1;
+        for (let i = 0; i < gridWords.length; ++i) {
+            const WORD = gridWords[i];
+
+            let index;
+            if (WORD.direction === Direction.horizontal) {
+                index = currentHorizontalId;
+                ++currentHorizontalId;
+            }
+            else {
+                index = currentVerticalId;
+                ++currentVerticalId;
+            }
+
+            const DEFINITION_WITH_INDEX = {
+                definition: new Definition(
+                    'CHUCK NORRIS IS SO COOL',
+                    WORD.direction
+                ),
+                index: index
+            };
+            DEFINITIONS.push(DEFINITION_WITH_INDEX);
+        }
+
+        return DEFINITIONS;
     }
 
     private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
