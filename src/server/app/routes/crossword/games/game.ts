@@ -16,6 +16,7 @@ import { GameDefinitionPacket } from '../../../../../common/src/crossword/packet
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
+import { GameInitializer } from './game-initializer';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -116,55 +117,9 @@ export class Game {
     }
 
     private async initializeGridData(difficulty: Difficulty): Promise<void> {
-        const GRID = await this.fetchGrid(difficulty);
-        this.wordsInternal = this.makeWordsFromGrid(GRID);
+        this.wordsInternal =
+            await GameInitializer.getInstance().initializeGrid(difficulty);
         await this.assignDefinitions();
-    }
-
-    private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
-        switch (difficulty) {
-            case Difficulty.easy: {
-                return await GridBanks.getInstance().getEasyGrid();
-            }
-            case Difficulty.medium: {
-                return await GridBanks.getInstance().getNormalGrid();
-            }
-            case Difficulty.hard: {
-                return await GridBanks.getInstance().getHardGrid();
-            }
-            default: throw new Error(`Unknown difficulty: ${difficulty}`);
-        }
-    }
-
-    private makeWordsFromGrid(grid: Grid): GridWord[] {
-        const HORIZONTAL_WORDS: GridWord[] =
-            grid.across.map(
-                (word, index) =>
-                    new GridWord(
-                        index + 1,
-                        word.position.row,
-                        word.position.column,
-                        word.value.length,
-                        Direction.horizontal,
-                        Owner.none,
-                        word.value
-                    )
-            );
-        const VERTICAL_WORDS: GridWord[] =
-            grid.vertical.map(
-                (word, index) =>
-                    new GridWord(
-                        index + 1,
-                        word.position.row,
-                        word.position.column,
-                        word.value.length,
-                        Direction.vertical,
-                        Owner.none,
-                        word.value
-                    )
-            );
-
-        return HORIZONTAL_WORDS.concat(VERTICAL_WORDS);
     }
 
     private async assignDefinitions(): Promise<void> {
