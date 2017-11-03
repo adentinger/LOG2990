@@ -11,6 +11,7 @@ import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
+import { RacetrackSegment } from './three-objects/racetrack/racetrack-segment';
 
 @Injectable()
 export class RacingGameService {
