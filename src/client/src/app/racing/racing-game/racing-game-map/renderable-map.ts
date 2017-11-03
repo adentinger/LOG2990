@@ -30,10 +30,17 @@ export class RenderableMap extends PhysicMesh {
         const wireframePlane = new RacingGamePlane();
         (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
         (<THREE.MeshBasicMaterial>wireframePlane.material).map = null;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color( 0xffffff );
+        (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color(0xffffff);
         wireframePlane.rotation.set(0, 0, 0);
         this.PLANE.add(wireframePlane);
 
         this.add(this.PLANE);
+        console.log(this.mapPoints);
     }
+
+    public placeRacetrack(): void {
+        // use mapPoints to 
+    }
+
+
 }

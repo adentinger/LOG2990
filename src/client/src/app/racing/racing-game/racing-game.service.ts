@@ -12,11 +12,12 @@ import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 import { RacetrackSegment } from './three-objects/racetrack/racetrack-segment';
+import { RacetrackJunction } from './three-objects/racetrack/racetrack-junction';
 
 @Injectable()
 export class RacingGameService {
     private static readonly CONTROLLABLE_CAR_IDX = 2;
-    private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional1();
+    private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional2();
 
     public readonly renderer: RacingRenderer;
     private dayMode: DayMode = DayMode.DAY;
@@ -52,6 +53,10 @@ export class RacingGameService {
         // racetrack segments
         const segment1 = new RacetrackSegment();
         this.map.add(segment1);
+
+        const junction1 = new RacetrackJunction();
+        junction1.position.z = -30;
+        this.map.add(junction1);
 
         this.physicEngine.start();
         this.renderer.startRendering();

@@ -1,8 +1,7 @@
 import * as THREE from 'three';
-import { Meters } from '../../../types';
-import { PhysicMesh } from '../../physic/object';
+import { CollidableMesh } from '../../physic/collidable';
 
-export class RacetrackSegment extends PhysicMesh {
+export class RacetrackSegment extends CollidableMesh {
 
     public static readonly mass = 0;
 
@@ -12,6 +11,9 @@ export class RacetrackSegment extends PhysicMesh {
     constructor() {
         super(new THREE.CircleGeometry(RacetrackSegment.RADIUS, RacetrackSegment.SEGMENTS));
         const texture = THREE.ImageUtils.loadTexture('../../../../../assets/racing/textures/ground_asphalt_old_07.png');
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.offset.set(2, 2);
+        texture.repeat.set(6, 6);
         this.material = new THREE.MeshBasicMaterial({ map: texture });
         this.rotation.x = 3 * Math.PI / 2;
         this.position.z = -10;
