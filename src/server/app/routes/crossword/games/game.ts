@@ -22,13 +22,13 @@ export interface DefinitionWithIndex {
     index: number;
 }
 
-export class CrosswordGame {
+export class Game {
     private static readonly COUNTDOWN_INITAL = COUNTDOWN_DEFAULT_VALUE;
     private static idCounter = 0;
 
     public readonly id: number;
     public readonly numberOfPlayers: PlayerNumber;
-    public countdown = CrosswordGame.COUNTDOWN_INITAL;
+    public countdown = Game.COUNTDOWN_INITAL;
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
     private wordsInternal: GridWord[] = [];
@@ -37,7 +37,7 @@ export class CrosswordGame {
     private gameMode: GameMode;
 
     constructor(configs: CrosswordGameConfigs) {
-        this.id = CrosswordGame.idCounter++;
+        this.id = Game.idCounter++;
         this.numberOfPlayers = configs.playerNumber;
         this.gameMode = configs.gameMode;
 

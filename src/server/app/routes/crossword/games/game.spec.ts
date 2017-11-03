@@ -1,19 +1,19 @@
 import { expect } from 'chai';
-import { CrosswordGame } from './crossword-game';
+import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 import { CreateOrJoin, Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
         const mockConfig = createMockGameConfigs();
-        const game = new CrosswordGame(mockConfig);
+        const game = new Game(mockConfig);
         expect(game).to.be.not.null;
         done();
     });
 
-    let gameToTest: CrosswordGame;
+    let gameToTest: Game;
     beforeEach(() => {
-        gameToTest = new CrosswordGame(createMockGameConfigs());
+        gameToTest = new Game(createMockGameConfigs());
     });
 
     it('should contain grid words', (done) => {
@@ -23,7 +23,7 @@ describe('The Crossword Game', () => {
 
     describe('addPlayer', () => {
         it('should players to the game', () => {
-            const GAME = new CrosswordGame({
+            const GAME = new Game({
                 createJoin: CreateOrJoin.create,
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
@@ -38,13 +38,13 @@ describe('The Crossword Game', () => {
         });
 
         it('should not add more players to the game than the max number of players', () => {
-            const GAME1PLAYER = new CrosswordGame({
+            const GAME1PLAYER = new Game({
                 createJoin: CreateOrJoin.create,
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 1
             });
-            const GAME2PLAYERS = new CrosswordGame({
+            const GAME2PLAYERS = new Game({
                 createJoin: CreateOrJoin.create,
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
@@ -62,7 +62,7 @@ describe('The Crossword Game', () => {
     });
 
     it('should tell whether a certain player is in the game', () => {
-        const GAME = new CrosswordGame({
+        const GAME = new Game({
             createJoin: CreateOrJoin.create,
             difficulty: Difficulty.easy,
             gameMode: GameMode.Classic,

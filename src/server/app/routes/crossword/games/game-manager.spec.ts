@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { GameManager } from './game-manager';
-import { CrosswordGame } from './crossword-game';
+import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 
 describe('The Game Manager Service', () => {
@@ -23,7 +23,7 @@ describe('The Game Manager Service', () => {
 
     it('should creates new games which are accessible by their ids', (done) => {
         const idObtained = gameManager.newGame(createMockGameConfigs());
-        const game: CrosswordGame = gameManager.getGame(idObtained);
+        const game: Game = gameManager.getGame(idObtained);
         expect(game).to.be.not.null;
         done();
     });
