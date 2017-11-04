@@ -27,6 +27,7 @@ export class Game {
     public readonly numberOfPlayers: PlayerNumber;
     public countdown = Game.COUNTDOWN_INITAL;
 
+    private readonly initialized: Promise<void>;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
@@ -36,7 +37,8 @@ export class Game {
         this.id = Game.idCounter++;
         this.numberOfPlayers = configs.playerNumber;
 
-        this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
+        this.initialized =
+            this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
             const INDEX = this.playerIds.findIndex((playerId) => playerId === socketId);
@@ -64,9 +66,11 @@ export class Game {
     public addPlayer(playerId: string): PlayerNumber {
         if (this.playerIds.length < this.numberOfPlayers) {
             this.playerIds.push(playerId);
-            this.clearPlayerGrid(playerId);
-            this.sendGridWords(playerId);
-            this.sendDefinitions(playerId);
+            this.initialized.then(() => {
+                this.clearPlayerGrid(playerId);
+                this.sendGridWords(playerId);
+                this.sendDefinitions(playerId);
+            }).catch((reason) => console.log(reason));
             return this.playerIds.length;
         }
         else {
