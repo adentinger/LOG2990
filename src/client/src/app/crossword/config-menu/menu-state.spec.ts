@@ -14,4 +14,14 @@ describe('ConfigMenuService', () => {
         expect(state.options).not.toBe(OPTIONS);
     });
 
+    it('should add an option', () => {
+        const state = new MenuState();
+        expect(state.options.length).toEqual(0);
+        const option = {name: 'test', nextState: MenuState.none};
+        state.addOption(option);
+        const options = state.options;
+        expect(options.length).toEqual(1);
+        expect(options[0]).toEqual(option);
+    });
+
 });
