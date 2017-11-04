@@ -37,14 +37,14 @@ export class ConfigMenuService {
             { name: 'Start', nextPage: ConfigMenuService.STATE_SEND }
         ]
     };
+
     public isConfiguringGame = true;
+    public createdGameId;
 
     private states: ConfigMenuState[] = [];
     private currentStateId: PageId;
     private gameConfiguration: SavedSettings = {};
     private stateStack: number[] = [];
-
-    public createdGameId;
 
     constructor(private location: Location,
         private http: HttpClient,
