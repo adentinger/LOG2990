@@ -1,18 +1,20 @@
-import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { PacketManagerServer } from '../../../packet-manager';
 import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
 import '../../../../../common/src/crossword/packets/crossword-timer.parser';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
-import { Logger } from '../../../../../common/src/logger';
-import '../../../../../common/src/crossword/packets/word-try.parser';
-import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
+import { GameStartPacket } from '../../../../../common/src/crossword/packets/game-start.packet';
+import '../../../../../common/src/crossword/packets/game-start.parser';
+
+import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { PacketManagerServer } from '../../../packet-manager';
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { Logger } from '../../../../../common/src/logger';
+import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { GameInitializer, DefinitionWithIndex } from './game-initializer';
 
 const logger = Logger.getLogger('CrosswordGame');
@@ -28,6 +30,7 @@ export class Game {
     public countdown = Game.COUNTDOWN_INITAL;
 
     private readonly initialized: Promise<void>;
+    private started = false;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
@@ -71,6 +74,9 @@ export class Game {
                 this.sendGridWords(playerId);
                 this.sendDefinitions(playerId);
             }).catch((reason) => console.log(reason));
+            if (this.playerIds.length === this.numberOfPlayers) {
+                this.start();
+            }
             return this.playerIds.length;
         }
         else {
@@ -115,6 +121,18 @@ export class Game {
             await GameInitializer.getInstance().initializeGrid(difficulty);
         this.definitionsInternal =
         await GameInitializer.getInstance().getDefinitionsOf(this.words, difficulty);
+    }
+
+    private start(): void {
+        if (!this.started) {
+            this.started = true;
+            this.playerIds.forEach((playerId) => {
+                this.packetManager.sendPacket(GameStartPacket, new GameStartPacket(), playerId);
+            });
+        }
+        else {
+            throw new Error('Cannot start game: Game already started.');
+        }
     }
 
     private startTimer() {
