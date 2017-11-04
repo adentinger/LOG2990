@@ -4,6 +4,7 @@ import { DefinitionsService } from './definition-field/definitions.service';
 import { BoardComponent } from './board/board.component';
 import { CrosswordGameService } from './crossword-game.service';
 import { TimerService } from './services/timer.service';
+import { ConfigMenuService } from './config-menu/config-menu.service';
 
 @Component({
     selector: 'app-crossword',
@@ -11,7 +12,8 @@ import { TimerService } from './services/timer.service';
     providers: [
         SimpleTimer,
         DefinitionsService,
-        TimerService
+        TimerService,
+        ConfigMenuService
     ]
 })
 export class CrosswordComponent implements OnInit {
