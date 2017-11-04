@@ -17,6 +17,7 @@ import { Grid } from './grid';
 export class CrosswordGridService {
 
     private readonly GRID = new Grid();
+    private callbacks: (() => void)[] = [];
 
     constructor(private packetManager: PacketManagerClient) {
         registerHandlers(this, packetManager);
@@ -45,18 +46,28 @@ export class CrosswordGridService {
         }
     }
 
+    public addOnChangeCallback(callback: () => void): void {
+        this.callbacks.push(callback);
+    }
+
     private sendWordToServer(word: GridWord): void {
         this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(word));
+    }
+
+    private onChange(): void {
+        this.callbacks.forEach((callback) => callback());
     }
 
     @PacketHandler(GridWordPacket)
     public updateGridWord(event: PacketEvent<GridWordPacket>): void {
         this.GRID.addWord(event.value.gridword);
+        this.onChange();
     }
 
     @PacketHandler(ClearGridPacket)
     public clearGrid(): void {
         this.GRID.empty();
+        this.onChange();
     }
 
 }

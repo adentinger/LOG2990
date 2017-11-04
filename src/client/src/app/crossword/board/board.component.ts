@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
@@ -24,7 +24,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     private selectionSubscription: Subscription;
 
     constructor(private crosswordGridService: CrosswordGridService,
-                private selectionService: SelectionService) {
+                private selectionService: SelectionService,
+                private ngZone: NgZone) {
+        this.crosswordGridService.
+            addOnChangeCallback(() => this.ngZone.run(() => {}));
     }
 
     public ngOnInit(): void {
