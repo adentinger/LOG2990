@@ -60,4 +60,10 @@ export class LexiconCaller {
             }).setTimeout(0).end();
         });
     }
+
+    public getDefinitions(word: string): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            resolve(['CHUCK NORRIS IS SO COOL']);
+        });
+    }
 }
