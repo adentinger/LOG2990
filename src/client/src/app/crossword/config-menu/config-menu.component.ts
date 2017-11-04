@@ -15,6 +15,8 @@ import { ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
 })
 export class ConfigMenuComponent implements OnInit {
 
+    constructor(private configMenuService: ConfigMenuService) { }
+
     public ngOnInit() {
     }
 
@@ -42,8 +44,6 @@ export class ConfigMenuComponent implements OnInit {
     public getObjectEntries(object: any): [any, any][] {
         return Object.entries(object);
     }
-
-    constructor(private configMenuService: ConfigMenuService) { }
 
     public selectOption(id: number) {
         this.configMenuService.selectOption(id);
