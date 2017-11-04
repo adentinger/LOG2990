@@ -5,13 +5,21 @@ export interface Option {
 
 export class MenuState {
 
-    private name: string;
-    private options: Option[];
+    private nameInternal: string;
+    private optionsInternal: Option[];
 
     constructor(name: string = '',
                 options: Option[] = []) {
-        this.name = name;
-        this.options = options.slice();
+        this.nameInternal = name;
+        this.optionsInternal = options.slice();
+    }
+
+    public get name(): string {
+        return this.name;
+    }
+
+    public get options(): Option[] {
+        return this.optionsInternal.slice();
     }
 
 }
