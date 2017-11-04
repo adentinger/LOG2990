@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MenuState } from './menu-state';
+import { MenuState, Option } from './menu-state';
 
 /**
  * @class MenuAutomatonService
@@ -50,6 +50,9 @@ export class MenuAutomatonService {
 
     public get state(): MenuState {
         return this.stateInternal;
+    }
+
+    public chooseOption(option: Option): void {
     }
 
 }
