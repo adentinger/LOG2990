@@ -30,6 +30,7 @@ export class DefinitionsService {
     private verticalDefinitions: Map<number, Definition> = new Map();
     private horizontalAnswers: string[] = [];
     private verticalAnswers: string[] = [];
+    private onChangeCallbacks: (() => void)[] = [];
 
     constructor(private packetManager: PacketManagerClient) {
 
@@ -52,6 +53,16 @@ export class DefinitionsService {
         };
     }
 
+    public pushOnChangeCallback(callback: () => void): void {
+        this.onChangeCallbacks.push(callback);
+    }
+
+    private onChange(): void {
+        this.onChangeCallbacks.forEach((callback) => {
+            callback();
+        });
+    }
+
     @PacketHandler(GameDefinitionPacket)
     public gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
         const definitionIndex = event.value.index;
@@ -65,6 +76,7 @@ export class DefinitionsService {
         } else if (direction === Direction.vertical) {
             this.verticalDefinitions.set(definitionIndex, DEFINITION);
         }
+        this.onChange();
     }
 
     @PacketHandler(ClearGridPacket)
@@ -73,6 +85,7 @@ export class DefinitionsService {
         this.verticalDefinitions = new Map();
         this.horizontalAnswers = [];
         this.verticalAnswers = [];
+        this.onChange();
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, NgZone } from '@angular/core';
 
 import { DefinitionsService, Definitions, Answers } from './definitions.service';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
@@ -23,7 +23,11 @@ export class DefinitionFieldComponent {
 
     constructor(private definitionService: DefinitionsService,
                 private selectionService: SelectionService,
-                private crosswordGridService: CrosswordGridService) {
+                private crosswordGridService: CrosswordGridService,
+                private ngZone: NgZone) {
+        this.definitionService.pushOnChangeCallback(() => {
+            this.ngZone.run(() => {});
+        });
     }
 
     public get definitions(): Definitions {
