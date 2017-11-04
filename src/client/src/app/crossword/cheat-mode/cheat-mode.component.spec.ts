@@ -2,6 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CheatModeComponent } from './cheat-mode.component';
 import { CrosswordGameService } from '../crossword-game.service';
+import { PacketManagerClient } from '../../packet-manager-client';
+import { TimerService } from '../services/timer.service';
+import { packetManagerClient } from '../../packet-manager.service';
 
 describe('CheatModeComponent', () => {
     let component: CheatModeComponent;
@@ -13,7 +16,9 @@ describe('CheatModeComponent', () => {
                 CheatModeComponent
             ],
             providers: [
-                CrosswordGameService
+                CrosswordGameService,
+                TimerService,
+                {provide: PacketManagerClient, useValue: packetManagerClient}
             ]
         })
         .compileComponents();

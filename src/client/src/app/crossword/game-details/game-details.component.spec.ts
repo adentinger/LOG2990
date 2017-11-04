@@ -5,6 +5,7 @@ import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { CrosswordGameService } from '../crossword-game.service';
 import { GameDetailsService } from './game-details.service';
+import { TimerService } from '../services/timer.service';
 
 describe('GameDetailsComponent', () => {
     let component: GameDetailsComponent;
@@ -13,8 +14,12 @@ describe('GameDetailsComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [GameDetailsComponent],
-            providers: [{provide: PacketManagerClient, useValue: packetManagerClient},
-                CrosswordGameService, GameDetailsService]
+            providers: [
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                CrosswordGameService,
+                GameDetailsService,
+                TimerService
+            ]
         })
             .compileComponents();
     }));
