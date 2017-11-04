@@ -110,7 +110,7 @@ export class Game {
         this.wordsInternal =
             await GameInitializer.getInstance().initializeGrid(difficulty);
         this.definitionsInternal =
-            await GameInitializer.getInstance().getDefinitionsOf(this.words);
+        await GameInitializer.getInstance().getDefinitionsOf(this.words, difficulty);
     }
 
     private startTimer() {

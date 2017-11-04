@@ -3,6 +3,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
 import { Definition } from '../../../../../common/src/crossword/definition';
+import { LexiconCaller } from '../lexic/lexicon-caller';
 
 export interface DefinitionWithIndex {
     definition: Definition;
@@ -25,16 +26,16 @@ export class GameInitializer {
         return gridWords;
     }
 
-    public async getDefinitionsOf(gridWords: GridWord[]): Promise<DefinitionWithIndex[]> {
+    public async getDefinitionsOf(gridWords: GridWord[], difficulty: Difficulty): Promise<DefinitionWithIndex[]> {
         const DEFINITIONS: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
         for (let i = 0; i < gridWords.length; ++i) {
-            const WORD = gridWords[i];
+            const word = gridWords[i];
 
             let index;
-            if (WORD.direction === Direction.horizontal) {
+            if (word.direction === Direction.horizontal) {
                 index = currentHorizontalId;
                 ++currentHorizontalId;
             }
@@ -44,10 +45,7 @@ export class GameInitializer {
             }
 
             const DEFINITION_WITH_INDEX = {
-                definition: new Definition(
-                    'CHUCK NORRIS IS SO COOL',
-                    WORD.direction
-                ),
+                definition: await this.getDefinitionOfWord(word, difficulty),
                 index: index
             };
             DEFINITIONS.push(DEFINITION_WITH_INDEX);
@@ -100,6 +98,15 @@ export class GameInitializer {
             );
 
         return HORIZONTAL_WORDS.concat(VERTICAL_WORDS);
+    }
+
+    private async getDefinitionOfWord(word: GridWord, difficulty: Difficulty): Promise<Definition> {
+        const definitions = await LexiconCaller.getInstance().getDefinitions(word.string);
+        const definition = new Definition(
+            definitions[0],
+            word.direction
+        );
+        return definition;
     }
 
 }
