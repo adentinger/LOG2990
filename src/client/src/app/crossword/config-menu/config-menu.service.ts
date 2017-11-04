@@ -10,7 +10,7 @@ import { GameMode, Difficulty, CreateOrJoin } from '../../../../../common/src/cr
 
 export const MENU_CONFIG_URL = 'menuConfigUrl';
 
-export interface Settings {
+interface Settings {
     [index: string]: string;
 }
 
