@@ -1,3 +1,29 @@
-<p>
-  config-menu works!
-</p>
+<div class="disclaimer" *ngIf="isConfiguringGame"></div>
+<div class="outer-menu" *ngIf="isConfiguringGame">
+  <div class="menu">
+    <!--For development-->
+      <button (click)="isConfiguringGame = false" style="float: right;">X</button>
+    <!-- -->
+    <h2 class="text-center">Make a Choice!</h2>
+    <div class="menu-page-container">
+      <div
+        *ngIf="true"
+        class="menu-page"
+        [ngClass]="{'active-page': true}">
+        <h4>NAME</h4>
+        <table *ngIf="true">
+          <thead><tr>Settings:</tr></thead>
+          <tbody>
+            <tr *ngFor="let param of [['ONE', 'ONE_ONE'], ['TWO', 'TWO_TWO']]">
+              <td>{{param[0]}}:</td><td>{{param[1]}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button
+          *ngFor="let option of ['TEST1', 'TEST2']; let optionId = index"
+          (click)="log(optionId)">{{option}}</button>
+        <button (click)="log('STATE_BACK')">Back</button>
+      </div>
+    </div>
+  </div>
+</div>

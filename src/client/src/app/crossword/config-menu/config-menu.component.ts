@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfigMenuComponent implements OnInit {
 
+    public isConfiguringGame = true;
+
     constructor() { }
 
     public ngOnInit(): void {
+    }
+
+    public log(...args): void {
+        console.log(...args);
     }
 
 }
