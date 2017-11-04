@@ -17,7 +17,7 @@ export class ConfigMenuComponent implements OnInit {
 
     constructor(private configMenuService: ConfigMenuService) { }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
     }
 
     get currentState(): ConfigMenuState {
@@ -45,11 +45,11 @@ export class ConfigMenuComponent implements OnInit {
         return Object.entries(object);
     }
 
-    public selectOption(id: number) {
+    public selectOption(id: number): void {
         this.configMenuService.selectOption(id);
     }
 
-    public stateBack() {
+    public stateBack(): void {
         this.configMenuService.goBackState();
     }
 
