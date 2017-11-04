@@ -4,8 +4,9 @@ import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
 import { Point } from '../../../../../common/src/math/point';
 import { Vector } from '../../../../../common/src/math/vector';
-import { Line, IntersectionType } from '../../../../../common/src/math/line';
+import { Line } from '../../../../../common/src/math/line';
 import { ShoelaceAlgorithm } from '../../../../../common/src/math/shoelace-algorithm';
+import { Interval } from '../../../../../common/src/math/interval';
 
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
@@ -14,7 +15,7 @@ export enum MapError {
     NONE = 0,       // No error
     NOT_CLOSED,     // Map path is not closed
     SMALL_ANGLE,    // An angle is < 45°
-    SEGMENT_LENGTH, // A segment is to small
+    SEGMENT_LENGTH, // A segment is too small
     LINES_CROSS     // Two lines cross
 }
 
@@ -160,10 +161,10 @@ export class Map {
 
                 const INTERSECTION = LINES[i].intersectsWith(LINES[j]);
 
-                const IS_INTERSECTING = (INTERSECTION !== IntersectionType.INTERSECT_NONE);
+                const IS_INTERSECTING = (INTERSECTION.length !== 0);
                 const PATH_CLOSED = this.isClosed();
                 const NOT_NEIGHBORS = (j !== i + 1 && logicImplies(PATH_CLOSED, logicImplies(i === 0, j !== LINES.length - 1)));
-                const INTERSECTION_IS_POINT = (INTERSECTION === IntersectionType.INTERSECT_POINT);
+                const INTERSECTION_IS_POINT = (INTERSECTION.length === 1);
 
                 if (IS_INTERSECTING && logicImplies(INTERSECTION_IS_POINT, NOT_NEIGHBORS)) {
                     LINES_THAT_CROSS.push([LINES[i], LINES[j]]);
@@ -187,4 +188,18 @@ export class Map {
         return SMALL_SEGMENTS;
     }
 
+    public calucateHalfSegment(): Interval[] {
+        const halfSegments = [];
+        let currentLength = 0;
+        for (let i = 0; i < this.path.points.length - 1; i++) {
+            const POINT1 = this.path.points[i];
+            const POINT2 = this.path.points[i + 1];
+            const segmentLength = Vector.fromPoints(POINT1, POINT2).norm();
+            const halfSementLength = (segmentLength / 2) + currentLength;
+            halfSegments.push(new Interval(currentLength, halfSementLength));
+            currentLength += segmentLength;
+        }
+
+        return halfSegments;
+    }
 }

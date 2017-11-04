@@ -1,84 +1,95 @@
 import { Injectable } from '@angular/core';
+import * as THREE from 'three';
 
-import { RacingGameRendering } from './racing-game-rendering';
-import { Point } from '../../../../../common/src/math/point';
-import { Interval } from '../../../../../common/src/math/interval';
-import { DayMode } from './day-mode/day-mode';
+import { RacingRenderer } from './rendering/racing-renderer';
+import { PhysicEngine } from './physic/engine';
+import { RenderableMap } from './racing-game-map/renderable-map';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
+import { DayMode } from './day-mode/day-mode-manager';
+import { UIInputs } from '../services/ui-input.service';
+import { Car } from './models/car/car';
+import { EventManager } from '../../event-manager.service';
+import { MapService } from '../services/map.service';
+import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
+import { BoostBox } from './physic/examples/boost-box';
+import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 
 @Injectable()
 export class RacingGameService {
+    private static readonly CONTROLLABLE_CAR_IDX = 2;
+    private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional1();
 
-    public racingGameRendering: RacingGameRendering;
-    private animationRequestId = 0;
-    private isRendering = false;
-    private cursorPositionInternal = new Point(0, 0);
+    public readonly renderer: RacingRenderer;
     private dayMode: DayMode = DayMode.DAY;
+    private cars: Car[] = [
+        new Car(new THREE.Color('green')),
+        new Car(new THREE.Color('yellow')),
+        new Car(new THREE.Color('blue')),
+        new Car(new THREE.Color('red'))
+    ];
+    private readonly boxes;
 
-    constructor() { }
+    private map: RenderableMap;
 
-    private newRacingGame(canvas: HTMLCanvasElement): boolean {
-        let gameCreated = false;
+    constructor(private physicEngine: PhysicEngine,
+        private mapService: MapService,
+        eventManager: EventManager) {
+        this.renderer = new RacingRenderer(eventManager);
+        this.boxes = [
+            new BoostBox(eventManager).translateZ(-3),
+            new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10)
+        ];
+    }
 
-        this.racingGameRendering = new RacingGameRendering(canvas);
-        if (this.racingGameRendering !== null) {
-            gameCreated = true;
+    public initialise(container: HTMLDivElement, userInputs: UIInputs): void {
+        this.renderer.initialize(container);
+
+        const userCar = this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
+        userCar.setUIInput(userInputs);
+        this.renderer.setCamerasTarget(userCar);
+
+        const position = new THREE.Vector3();
+        const POSITION_INCREMENT = new THREE.Vector3(2, 0, 0);
+        this.cars.forEach((car) => {
+            car.position.copy(position);
+            position.add(POSITION_INCREMENT);
+        });
+
+        this.physicEngine.start();
+        this.renderer.startRendering();
+        this.renderer.updateDayMode(this.dayMode);
+    }
+
+    public finalize() {
+        this.physicEngine.stop();
+        this.renderer.stopRendering();
+
+        this.renderer.finalize();
+    }
+
+    public loadMap(mapName: string): Promise<void> {
+        return this.mapService.getByName(mapName)
+            .then(map => this.setMap(map))
+            .catch(() => this.setMap(RacingGameService.DEFAULT_MAP_DEV));
+    }
+
+    private setMap(map: SerializedMap): void {
+        if (this.map) {
+            this.cars.forEach(this.map.remove, this.map);
+            this.boxes.forEach(this.map.remove, this.map);
+            this.renderer.removeMap(this.map);
         }
 
-        return gameCreated;
+        this.map = new RenderableMap(map);
+        this.physicEngine.setRoot(this.map);
+        this.renderer.addMap(this.map);
+
+        this.map.add(...this.cars);
+        this.map.add(...this.boxes);
     }
 
-    public initialise(canvas: HTMLCanvasElement): void {
-        this.newRacingGame(canvas);
-        this.startRendering();
-        this.racingGameRendering.setupScene();
-        this.racingGameRendering.updateDayMode(this.dayMode);
-    }
-
-    /**
-     * @returns A point where x and y belong to [-1, 1],
-     * -1 corresponding (respectively) to left and top,
-     * and 1 corresponding (respectively) to right and bottom
-     * of the screen.
-     */
-    public get cursorPosition(): Point {
-        return this.cursorPositionInternal;
-    }
-
-    public set cursorPosition(cursorPosition: Point) {
-        const VALID_INTERVAL = new Interval(-1, 1);
-        const IS_CURSOR_VALID =
-            VALID_INTERVAL.contains(cursorPosition.x) &&
-            VALID_INTERVAL.contains(cursorPosition.y);
-
-        if (IS_CURSOR_VALID) {
-            this.racingGameRendering.CAMERA.rotation.x = -Math.PI / 2 * cursorPosition.y;
-            this.racingGameRendering.CAMERA.rotation.y = -Math.PI * cursorPosition.x;
-            this.cursorPositionInternal = cursorPosition;
-        }
-        else {
-            throw new Error('Cursor position invalid: (' +
-                cursorPosition.x + ', ' + cursorPosition.y + ')');
-        }
-    }
-
-    public renderGame(): void {
-        this.animationRequestId =
-            requestAnimationFrame(() => this.renderGame());
-        this.racingGameRendering.RENDERER.render(this.racingGameRendering.SCENE, this.racingGameRendering.CAMERA);
-    }
-
-    public startRendering(): void {
-        if (!this.isRendering) {
-            this.isRendering = true;
-            this.renderGame();
-        }
-    }
-
-    public stopRendering(): void {
-        if (this.animationRequestId !== 0) {
-            cancelAnimationFrame(this.animationRequestId);
-        }
-        this.isRendering = false;
+    public updateRendererSize(width: number, height: number) {
+        this.renderer.updateSize(width, height);
     }
 
     public changeDayMode(): void {
@@ -89,7 +100,7 @@ export class RacingGameService {
             default: break;
         }
         this.dayMode = newMode;
-        this.racingGameRendering.updateDayMode(this.dayMode);
+        this.renderer.updateDayMode(this.dayMode);
     }
 
 }

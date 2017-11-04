@@ -1,100 +1,79 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Vector3 } from 'three';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
-import { RenderableMap } from './racing-game-map/renderable-map';
-import { MapService } from '../services/map.service';
+import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { PhysicEngine } from './physic/engine';
 
-const LEFT_MOUSE_BUTTON = 0;
+import { EventManager } from '../../event-manager.service';
 
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
     styleUrls: ['./racing-game.component.css'],
-    providers: [RacingGameService]
+    providers: [RacingGameService, PhysicEngine]
 })
-export class RacingGameComponent implements OnInit {
-    private static readonly HEADER_HEIGHT = 50;
+export class RacingGameComponent implements OnInit, OnDestroy {
+    public static readonly HEADER_HEIGHT = 50;
+    public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
 
-    @ViewChild('racingGame')
-    public racingGame: ElementRef;
+    @ViewChild('gameContainer')
+    public racingGameContainer: ElementRef;
+    @ViewChild('userInputs')
+    private uiInputs: UIInputs;
 
-    @ViewChild('racingGameCanvas')
-    public racingGameCanvas: ElementRef;
-
-    private windowHalfX = window.innerWidth * 0.5;
-    private windowHalfY = window.innerHeight * 0.5;
-
-    private map: RenderableMap;
-
-    constructor(private racingGameRenderer: RacingGameService, private route: ActivatedRoute, private mapService: MapService) { }
+    constructor(private racingGame: RacingGameService,
+        private route: ActivatedRoute,
+        private eventManager: EventManager) {
+        this.eventManager.registerClass(this);
+    }
 
     public ngOnInit(): void {
-        this.racingGameRenderer.initialise(this.racingGameCanvas.nativeElement);
-        this.route.paramMap.switchMap((params: ParamMap) => [params.get('map-name')]).subscribe(mapName => {
-            this.mapService.getByName(mapName)
-            .then(map => this.map = new RenderableMap(map));
+        this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
+            this.racingGame.loadMap(mapName).then(() => {
+                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.uiInputs);
+                this.updateRendererSize();
+            });
         });
-        this.resizeCanvas();
-        (<HTMLCanvasElement>this.racingGameCanvas.nativeElement).requestPointerLock();
+    }
+
+    public ngOnDestroy() {
+        this.racingGame.finalize();
     }
 
     @HostListener('window:resize', ['$event'])
-    public onResize() {
-        this.resizeCanvas();
+    // tslint:disable-next-line:no-unused-variable
+    private updateRendererSize() {
+        const height = window.innerHeight - RacingGameComponent.HEADER_HEIGHT;
+        const width = window.innerWidth;
+
+        this.racingGame.updateRendererSize(width, height);
     }
 
-    private resizeCanvas() {
-        const height = (window).innerHeight - RacingGameComponent.HEADER_HEIGHT;
-        const width = (window).innerWidth;
-
-        this.windowHalfX = width * 0.5;
-        this.windowHalfY = height * 0.5;
-        this.racingGameRenderer.racingGameRendering.RENDERER.setSize(width, height);
-        this.racingGameRenderer.racingGameRendering.CAMERA.aspect = width / height;
-        this.racingGameRenderer.racingGameRendering.CAMERA.updateProjectionMatrix();
-    }
-
-    @HostListener('mousemove', ['$event'])
-    public onMouseMove(e: MouseEvent) {
-        const MOUSE_POSITION = new Point(
-            (e.clientX - this.windowHalfX) / (this.windowHalfX),
-            (e.clientY - RacingGameComponent.HEADER_HEIGHT - this.windowHalfY) / (this.windowHalfY)
-        );
-        this.racingGameRenderer.cursorPosition = MOUSE_POSITION;
-    }
-
-    @HostListener('window:keydown', ['$event'])
-    private onKeyUp(event: KeyboardEvent) {
-        if (!event.ctrlKey || event.key !== 'I') { // Allows for Ctrl+Shift+I
-            event.preventDefault();
+    @EventManager.Listener(KEYDOWN_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private onKeyDown() {
+        if (this.uiInputs.isKeyPressed('c')) {
+            this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
+        }
+        if (this.uiInputs.isKeyPressed('n')) {
+            this.racingGame.changeDayMode();
         }
 
-        const position = this.racingGameRenderer.racingGameRendering.CAMERA.position;
-        const rotation = this.racingGameRenderer.racingGameRendering.CAMERA.rotation;
-        if (event.key.toLowerCase() === 'w') {
-            position.add((new Vector3(0, 0, -1)).applyEuler(rotation).setY(0).normalize().multiplyScalar(0.1));
-        }
-        if (event.key.toLowerCase() === 's') {
-            position.add((new Vector3(0, 0, -1)).applyEuler(rotation).setY(0).normalize().multiplyScalar(-0.1));
-        }
-        if (event.key.toLowerCase() === 'd') {
-            position.add((new Vector3(1, 0, 0)).applyEuler(rotation).setY(0).normalize().multiplyScalar(0.1));
-        }
-        if (event.key.toLowerCase() === 'a') {
-            position.add((new Vector3(1, 0, 0)).applyEuler(rotation).setY(0).normalize().multiplyScalar(-0.1));
-        }
-        if (event.key.toLowerCase() === 'n') {
-            this.racingGameRenderer.changeDayMode();
+        const areAllowedKeyCombinationsPressed =
+            this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
+            this.uiInputs.isKeyPressed('f5');
+
+        if (!areAllowedKeyCombinationsPressed) {
+            return false; // Prevent Default behaviors
         }
     }
 
     @HostListener('window:contextmenu', ['$event'])
+    // tslint:disable-next-line:no-unused-variable
     private preventEvent(event: Event) {
-        event.preventDefault();
+        return false; // Prevent Default behaviors
     }
 
 }

@@ -1,3 +1,4 @@
+import 'mocha';
 import { expect } from 'chai';
 import { Interval } from './interval';
 
@@ -19,7 +20,7 @@ describe('Interval', () => {
         expect(INTERVAL.upper).to.deep.equal(UPPER_BOUND);
     });
 
-    it('should verify is number is in bound', () => {
+    it('should verify if number is in bound', () => {
         const LOWER_BOUND = 10;
         const UPPER_BOUND = 100;
         const NUMBER_IN_BOUND = 50;
@@ -42,5 +43,14 @@ describe('Interval', () => {
         const FIRST_INTERVAL = new Interval(50, 100);
         expect(INTERVAL_1.intersect(INTERVAL_2)).to.deep.equal(FIRST_INTERVAL);
         expect(INTERVAL_1.intersect(INTERVAL_3).isEmpty()).to.be.true;
+    });
+
+    it('return the length of an interval', () => {
+        const LOWER_BOUND_1 = 10;
+        const UPPER_BOUND_1 = 100;
+
+        const INTERVAL_1 = new Interval(UPPER_BOUND_1, LOWER_BOUND_1);
+
+        expect(INTERVAL_1.getLength()).equal(90);
     });
 });

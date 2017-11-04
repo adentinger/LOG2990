@@ -1,55 +1,40 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { ConnectionBackend, Http, RequestOptions, BaseRequestOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
 import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
+import { PhysicEngine } from './physic/engine';
+import { UIInputs } from '../services/ui-input.service';
+import { EventManager } from '../../event-manager.service';
+import { MapService } from '../services/map.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                RacingGameService
+                RacingGameService,
+                PhysicEngine,
+                EventManager,
+                MapService,
+                {provide: ConnectionBackend, useClass: MockBackend},
+                {provide: RequestOptions, useClass: BaseRequestOptions},
+                Http,
+                UIInputs
             ]
         });
     });
 
     let service: RacingGameService;
 
-    beforeEach(inject([RacingGameService], (injectedService: RacingGameService) => {
+    beforeEach(inject([RacingGameService, UIInputs], (injectedService: RacingGameService,
+        userInputs: UIInputs) => {
         service = injectedService;
-        const CANVAS = document.createElement('CANVAS') as HTMLCanvasElement;
-        CANVAS.width = 1000;
-        CANVAS.height = 500;
-        service.initialise(CANVAS);
+        const CONTAINER = document.createElement('div') as HTMLDivElement;
+        service.initialise(CONTAINER, userInputs);
     }));
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-
-    describe('cursorPosition', () => {
-
-        it('should move the internal mouse cursor', () => {
-            const CURSOR_POSITION = new Point(0.5, -0.78);
-            // Should not throw
-            service.cursorPosition = CURSOR_POSITION;
-        });
-
-        it('should throw an error when the cursor is invalid', () => {
-            const INITIAL_POSITION = service.cursorPosition;
-            const INVALID_CURSORS: Point[] = [
-                new Point(-1.001, 0), new Point(1.001, 0),
-                new Point(0, -1.001), new Point(0, 1.001),
-                new Point(-1.001, -1.001), new Point(1.001, 1.001),
-                new Point(-1.001, 1.001), new Point(1.001, -1.001)
-            ];
-
-            INVALID_CURSORS.forEach((point) => {
-                expect(() => service.cursorPosition = point).toThrow();
-                expect(service.cursorPosition).toBe(INITIAL_POSITION);
-            });
-        });
-
-    });
-
 
 });

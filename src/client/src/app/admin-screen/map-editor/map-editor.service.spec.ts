@@ -7,6 +7,7 @@ import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serial
 import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from '../../../../../common/src/math/point';
+import { ItemGenerator } from './item-generator';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
@@ -16,7 +17,8 @@ describe('MapEditorService', () => {
                 MapConverterService,
                 RacingUnitConversionService,
                 MockMaps,
-                MockSerializedMaps
+                MockSerializedMaps,
+                ItemGenerator
             ]
         });
     });
@@ -124,4 +126,11 @@ describe('MapEditorService', () => {
         expect(service.path).toEqual(mockMaps.functionalMap1().path);
     });
 
+    it('should destroy items', () => {
+        service['map'] = mockMaps.functionalMap2();
+        service.destroyItems();
+        expect(service['map'].potholes.length).toEqual(0);
+        expect(service['map'].puddles.length).toEqual(0);
+        expect(service['map'].speedBoosts.length).toEqual(0);
+    });
 });

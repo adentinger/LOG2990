@@ -8,6 +8,10 @@ import { Point } from '../../../../../common/src/math/point';
 import { Path } from './path';
 import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
+import { Pothole } from './pothole';
+import { Puddle } from './puddle';
+import { ItemGenerator } from './item-generator';
+import { SpeedBoost } from './speed-boost';
 
 @Injectable()
 export class MapEditorService {
@@ -18,7 +22,8 @@ export class MapEditorService {
     private map: Map;
 
     constructor(private converter: RacingUnitConversionService,
-                private mapConverter: MapConverterService) {
+                private mapConverter: MapConverterService,
+                private itemGenerator: ItemGenerator) {
         this.newMap();
     }
 
@@ -113,6 +118,10 @@ export class MapEditorService {
     }
 
     public popPoint(): Point {
+        if (this.currentMap.isClosed()) {
+            this.destroyItems();
+        }
+
         return this.map.path.points.pop();
     }
 
@@ -164,4 +173,33 @@ export class MapEditorService {
         return this.mapWidth > 0 && this.mapHeight > 0;
     }
 
+    public addPothole(): void {
+        this.itemGenerator.addObstacle(Pothole, this.currentMap, this.currentMap.potholes);
+    }
+
+    public addPuddles(): void {
+        this.itemGenerator.addObstacle(Puddle, this.currentMap, this.currentMap.puddles);
+    }
+
+    public addSpeedBoosts(): void {
+        this.itemGenerator.addObstacle(SpeedBoost, this.currentMap, this.currentMap.speedBoosts);
+    }
+
+    public randomisePothole(): void {
+        this.itemGenerator.randomlyModifyObjectsTypePositions(Pothole, this.currentMap, this.currentMap.potholes);
+    }
+
+    public randomisePuddles(): void {
+        this.itemGenerator.randomlyModifyObjectsTypePositions(Puddle, this.currentMap, this.currentMap.puddles);
+    }
+
+    public randomiseSpeedBoosts(): void {
+        this.itemGenerator.randomlyModifyObjectsTypePositions(SpeedBoost, this.currentMap, this.currentMap.speedBoosts);
+    }
+
+    public destroyItems(): void {
+        this.currentMap.potholes = [];
+        this.currentMap.puddles = [];
+        this.currentMap.speedBoosts = [];
+    }
 }
