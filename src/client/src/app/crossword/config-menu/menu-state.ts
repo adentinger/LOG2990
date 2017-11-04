@@ -5,6 +5,8 @@ export interface Option {
 
 export class MenuState {
 
+    public static readonly none = null;
+
     private nameInternal: string;
     private optionsInternal: Option[];
 
@@ -20,6 +22,9 @@ export class MenuState {
 
     public get options(): Option[] {
         return this.optionsInternal.slice();
+    }
+
+    public addOption(option: Option): void {
     }
 
 }

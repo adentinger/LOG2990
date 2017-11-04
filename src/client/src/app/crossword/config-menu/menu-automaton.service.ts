@@ -16,7 +16,14 @@ export class MenuAutomatonService {
     private path: MenuState[] = [];
     private stateInternal: MenuState = null;
 
-    constructor() {}
+    constructor() {
+        const gameMode = new MenuState('Select game mode');
+        const playerNumber = new MenuState('Select number of players');
+        const difficulty = new MenuState('Select difficulty');
+        const createOrJoin = new MenuState('Create or join game?');
+        const chooseGame = new MenuState('Choose game');
+        const confirm = new MenuState('Confirm choice?');
+    }
 
     public get state(): MenuState {
         return this.stateInternal;
