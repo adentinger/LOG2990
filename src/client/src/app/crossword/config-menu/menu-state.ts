@@ -17,7 +17,7 @@ export class MenuState {
     }
 
     public get name(): string {
-        return this.name;
+        return this.nameInternal;
     }
 
     public get options(): Option[] {
