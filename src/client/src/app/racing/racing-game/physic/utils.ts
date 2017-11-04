@@ -107,7 +107,6 @@ export class PhysicUtils {
                 if (intersectionPoints.length > 0) {
                     intersections.push(...intersectionPoints.map(point =>
                         [targetLine, sourceLine, point] as [Line, Line, Point]));
-                    // intersections.push([targetLine, sourceLine, intersectionPoints[0]]);
                 }
             }
 
