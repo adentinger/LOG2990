@@ -25,6 +25,7 @@ export class MenuState {
     }
 
     public addOption(option: Option): void {
+        this.optionsInternal.push(option);
     }
 
 }
