@@ -31,12 +31,10 @@ export class Game {
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
     private readonly playerIds: string[] = [];
-    private gameMode: GameMode;
 
     constructor(configs: CrosswordGameConfigs) {
         this.id = Game.idCounter++;
         this.numberOfPlayers = configs.playerNumber;
-        this.gameMode = configs.gameMode;
 
         this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
 
@@ -50,7 +48,7 @@ export class Game {
 
         registerHandlers(this, this.packetManager);
 
-        if (this.gameMode === GameMode.Dynamic) {
+        if (configs.gameMode === GameMode.Dynamic) {
             this.startTimer();
         }
     }
