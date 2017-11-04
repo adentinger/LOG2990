@@ -11,6 +11,10 @@ export interface GameConfiguration {
     difficulty: Difficulty;
 }
 
+/**
+ * @class ConfigMenuService
+ * @description Handles sending the configuration to the server.
+ */
 @Injectable()
 export class ConfigMenuService {
 
