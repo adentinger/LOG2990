@@ -14,7 +14,7 @@ export abstract class CollidableMesh extends PhysicMesh implements Collidable {
 }
 
 export function isCollidable(object: IPhysicElement): object is Collidable {
-    return object != null && 'geometry' in object && object['geometry'] instanceof THREE.Geometry &&
+    return object != null && 'geometry' in object &&
         'mass' in object && typeof object['mass'] === 'number';
 }
 

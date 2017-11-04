@@ -17,7 +17,7 @@ export class PhysicEngine {
     private timer: any = null;
 
     constructor(private eventManager: EventManager) {
-        this.physicUtils = new PhysicUtils();
+        this.physicUtils = new PhysicUtils(eventManager);
     }
 
     public setRoot(root: THREE.Object3D) {

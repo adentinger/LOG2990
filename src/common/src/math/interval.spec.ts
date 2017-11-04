@@ -51,6 +51,6 @@ describe('Interval', () => {
 
         const INTERVAL_1 = new Interval(UPPER_BOUND_1, LOWER_BOUND_1);
 
-        expect(INTERVAL_1.getLength).equal(90);
+        expect(INTERVAL_1.getLength()).equal(90);
     });
 });

@@ -29,7 +29,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     constructor(eventManager: EventManager) {
         super({ antialias: true });
-        this.shadowMap.enabled = true;
+        this.shadowMap.enabled = false;
         this.shadowMap.type = THREE.PCFSoftShadowMap;
 
         this.cameras[0] = new PerspectiveCamera(eventManager);
