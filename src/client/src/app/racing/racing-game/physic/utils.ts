@@ -10,11 +10,20 @@ export const COLLISION_EVENT = 'physic-collision';
 
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
-    private static readonly SPRING_CONSTANT = 0.5; // N*m^2
+    private static readonly SPRING_CONSTANT = 1; // N*m^2
 
     private root: THREE.Object3D;
 
     constructor(private eventManager: EventManager) { }
+
+    public static getObjectDimensions(obj: THREE.Object3D): THREE.Vector3 {
+        const rotation = obj.rotation.toArray();
+        obj.rotation.set(0, 0, 0);
+        const box1 = new THREE.Box3().setFromObject(obj);
+        obj.rotation.fromArray(rotation);
+        box1.translate(obj.position.clone().negate());
+        return new THREE.Vector3().subVectors(box1.max, box1.min);
+    }
 
     public setRoot(root: THREE.Object3D) {
         this.root = root;
