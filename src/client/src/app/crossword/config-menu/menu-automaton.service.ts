@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MenuState } from './menu-state';
 
 /**
  * @class MenuAutomatonService
@@ -11,6 +12,14 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class MenuAutomatonService {
 
-    constructor() { }
+    private states: MenuState[];
+    private path: MenuState[] = [];
+    private stateInternal: MenuState = null;
+
+    constructor() {}
+
+    public get state(): MenuState {
+        return this.stateInternal;
+    }
 
 }
