@@ -53,6 +53,17 @@ export class MenuAutomatonService {
     }
 
     public chooseOption(option: Option): void {
+        const index = this.state.options.findIndex(
+            optionOfState => optionOfState === option
+        );
+        const found = index >= 0;
+        if (found) {
+            this.path.push(this.state);
+            this.stateInternal = option.nextState;
+        }
+        else {
+            throw new Error(`Option inexistant.`);
+        }
     }
 
 }
