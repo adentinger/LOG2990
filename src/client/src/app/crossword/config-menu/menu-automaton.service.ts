@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { MenuState, Option } from './menu-state';
 import { GameMode, Difficulty, CreateOrJoin } from '../../../../../common/src/crossword/crossword-enums';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 
 interface States {
     gameMode:     MenuState;
@@ -124,5 +125,8 @@ export class MenuAutomatonService {
         }
     }
 
+    public getConfiguration(): CrosswordGameConfigs {
+        return null;
+    }
 
 }
