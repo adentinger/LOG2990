@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MenuAutomatonService } from './menu-automaton.service';
 import { Subscription } from 'rxjs/Subscription';
+
+import { MenuAutomatonService } from './menu-automaton.service';
 
 @Component({
     selector: 'app-config-menu',
