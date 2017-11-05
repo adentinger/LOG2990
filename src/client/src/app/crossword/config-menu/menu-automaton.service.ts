@@ -22,7 +22,7 @@ interface States {
 export class MenuAutomatonService {
 
     private states: States;
-    private path: MenuState[] = [];
+    private path: MenuState[];
     private stateInternal: MenuState = null;
 
     constructor() {
@@ -30,6 +30,7 @@ export class MenuAutomatonService {
     }
 
     private initialize(): void {
+        this.path = [];
         this.createStates();
         this.addStateTransitions();
         this.moveToInitialState();
