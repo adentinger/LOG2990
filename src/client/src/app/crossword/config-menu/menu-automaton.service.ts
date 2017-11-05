@@ -10,6 +10,11 @@ interface States {
     confirm:      MenuState;
 }
 
+interface Transition {
+    state: MenuState;
+    option: Option;
+}
+
 /**
  * @class MenuAutomatonService
  * @description Represents the Finite State Machine of the configuration menu.
@@ -22,7 +27,7 @@ interface States {
 export class MenuAutomatonService {
 
     private states: States;
-    private path: MenuState[];
+    private path: Transition[];
     private stateInternal: MenuState = null;
 
     constructor() {
@@ -30,7 +35,6 @@ export class MenuAutomatonService {
     }
 
     private initialize(): void {
-        this.path = [];
         this.createStates();
         this.addStateTransitions();
         this.moveToInitialState();
@@ -67,6 +71,7 @@ export class MenuAutomatonService {
     }
 
     private moveToInitialState(): void {
+        this.path = [{state: this.states.gameMode, option: null}];
         this.stateInternal = this.states.gameMode;
     }
 
@@ -80,7 +85,7 @@ export class MenuAutomatonService {
         );
         const found = index >= 0;
         if (found) {
-            this.path.push(this.state);
+            this.path.push({state: this.state, option: option});
             this.stateInternal = option.nextState;
         }
         else {
@@ -91,7 +96,7 @@ export class MenuAutomatonService {
     public goBack(): void {
         if (this.path.length >= 2) {
             this.path.pop();
-            this.stateInternal = this.path[this.path.length - 1];
+            this.stateInternal = this.path[this.path.length - 1].state;
         }
         else if (this.path.length === 1) {
             this.path.pop();
