@@ -11,7 +11,7 @@ export class MenuState {
     public static readonly none = new MenuState();
 
     private nameInternal: string;
-    private fieldName: string;
+    private fieldNameInternal: string;
     private optionsInternal: Option[];
     private arriveInternal = new Subject<void>();
     private leaveInternal = new Subject<void>();
@@ -20,12 +20,16 @@ export class MenuState {
                 fieldName: string = '',
                 options: Option[] = []) {
         this.nameInternal = name;
-        this.fieldName = fieldName;
+        this.fieldNameInternal = fieldName;
         this.optionsInternal = options.slice();
     }
 
     public get name(): string {
         return this.nameInternal;
+    }
+
+    public get fieldName(): string {
+        return this.fieldNameInternal;
     }
 
     public get options(): Option[] {

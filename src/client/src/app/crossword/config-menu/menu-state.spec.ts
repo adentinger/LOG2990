@@ -9,6 +9,7 @@ describe('ConfigMenuService', () => {
         const OPTIONS = [{name: 'option1', nextState: null, value: 42}];
         const state = new MenuState(NAME, FIELD_NAME, OPTIONS);
         expect(state.name).toEqual(NAME);
+        expect(state.fieldName).toEqual(FIELD_NAME);
         expect(state.options).toEqual(OPTIONS);
         expect(state.options).not.toBe(OPTIONS);
     });
