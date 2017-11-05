@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { MenuState, Option } from './menu-state';
 
+interface States {
+    gameMode:     MenuState;
+    playerNumber: MenuState;
+    difficulty:   MenuState;
+    createOrJoin: MenuState;
+    chooseGame:   MenuState;
+    confirm:      MenuState;
+}
+
 /**
  * @class MenuAutomatonService
  * @description Represents the Finite State Machine of the configuration menu.
@@ -12,40 +21,52 @@ import { MenuState, Option } from './menu-state';
 @Injectable()
 export class MenuAutomatonService {
 
-    private states: MenuState[];
+    private states: States;
     private path: MenuState[] = [];
     private stateInternal: MenuState = null;
 
     constructor() {
-        // Create states
-        const gameMode = new MenuState('Select game mode');
-        const playerNumber = new MenuState('Select number of players');
-        const difficulty = new MenuState('Select difficulty');
-        const createOrJoin = new MenuState('Create or join game?');
-        const chooseGame = new MenuState('Choose game');
-        const confirm = new MenuState('Confirm choice?');
+        this.initialize();
+    }
 
-        // Add state transitions
-        gameMode.addOption({name: 'Classic', nextState: playerNumber});
-        gameMode.addOption({name: 'Dynamic', nextState: playerNumber});
+    private initialize(): void {
+        this.createStates();
+        this.addStateTransitions();
+        this.moveToInitialState();
+    }
 
-        playerNumber.addOption({name: 'One player', nextState: difficulty});
-        playerNumber.addOption({name: 'Two players', nextState: createOrJoin});
+    private createStates(): void {
+        this.states = {
+            gameMode: new MenuState('Select game mode'),
+            playerNumber: new MenuState('Select number of players'),
+            difficulty: new MenuState('Select difficulty'),
+            createOrJoin: new MenuState('Create or join game?'),
+            chooseGame: new MenuState('Choose game'),
+            confirm: new MenuState('Confirm choice?')
+        };
+    }
 
-        difficulty.addOption({name: 'Easy', nextState: confirm});
-        difficulty.addOption({name: 'Normal', nextState: confirm});
-        difficulty.addOption({name: 'Hard', nextState: confirm});
+    private addStateTransitions(): void {
+        this.states.gameMode.addOption({name: 'Classic', nextState: this.states.playerNumber});
+        this.states.gameMode.addOption({name: 'Dynamic', nextState: this.states.playerNumber});
 
-        createOrJoin.addOption({name: 'Create game', nextState: difficulty});
-        createOrJoin.addOption({name: 'Join game', nextState: chooseGame});
+        this.states.playerNumber.addOption({name: 'One player', nextState: this.states.difficulty});
+        this.states.playerNumber.addOption({name: 'Two players', nextState: this.states.createOrJoin});
 
-        chooseGame.addOption({name: 'Done', nextState: confirm});
+        this.states.difficulty.addOption({name: 'Easy', nextState: this.states.confirm});
+        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm});
+        this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm});
 
-        confirm.addOption({name: 'Start', nextState: MenuState.none});
+        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty});
+        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame});
 
-        // Setup things
-        this.stateInternal = gameMode;
-        this.states = [gameMode, playerNumber, difficulty, createOrJoin, chooseGame, confirm];
+        this.states.chooseGame.addOption({name: 'Done', nextState: this.states.confirm});
+
+        this.states.confirm.addOption({name: 'Start', nextState: MenuState.none});
+    }
+
+    private moveToInitialState(): void {
+        this.stateInternal = this.states.gameMode;
     }
 
     public get state(): MenuState {
@@ -67,6 +88,8 @@ export class MenuAutomatonService {
     }
 
     public setOnConfigEndCallback(callback: () => void): void {
+        this.states.confirm.setOnArriveCallback(callback);
     }
+
 
 }
