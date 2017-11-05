@@ -14,7 +14,7 @@ describe('UserDisplayableGameData', () => {
 
     it('should deserialize game ids', () => {
         const DATA = new UserDisplayableGameData(-42, DEFAULT_MODE, DEFAULT_DIFFICULTY);
-        expect(DATA.id).toEqual('-42');
+        expect(DATA.id).toEqual(-42);
     });
 
     it('should deserialize game modes', () => {

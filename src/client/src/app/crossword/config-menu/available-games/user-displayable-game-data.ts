@@ -8,17 +8,17 @@ import { GameMode, Difficulty } from '../../../../../../common/src/crossword/cro
  */
 export class UserDisplayableGameData {
 
-    private idInternal: string;
+    private idInternal: GameId;
     private modeInternal: string;
     private difficultyInternal: string;
 
     constructor(gameId: GameId, gameMode: GameMode, difficulty: Difficulty) {
-        this.idInternal = this.deserializeGameId(gameId);
+        this.idInternal = gameId;
         this.modeInternal = this.deserializeGameMode(gameMode);
         this.difficultyInternal = this.deserializeDifficulty(difficulty);
     }
 
-    public get id(): string {
+    public get id(): GameId {
         return this.idInternal;
     }
 
@@ -28,10 +28,6 @@ export class UserDisplayableGameData {
 
     public get difficulty(): string {
         return this.difficultyInternal;
-    }
-
-    private deserializeGameId(gameId: GameId): string {
-        return gameId.toString();
     }
 
     private deserializeGameMode(gameMode: GameMode): string {
