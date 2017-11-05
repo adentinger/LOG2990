@@ -28,16 +28,16 @@ export class MenuState {
         return this.optionsInternal.slice();
     }
 
-    public addOption(option: Option): void {
-        this.optionsInternal.push(option);
-    }
-
     public get arrive(): Subject<void> {
         return this.arriveInternal;
     }
 
     public get leave(): Subject<void> {
         return this.leaveInternal;
+    }
+
+    public addOption(option: Option): void {
+        this.optionsInternal.push(option);
     }
 
 }
