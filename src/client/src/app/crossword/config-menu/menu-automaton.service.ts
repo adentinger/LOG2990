@@ -36,6 +36,10 @@ export class MenuAutomatonService {
         this.initialize();
     }
 
+    public get state(): MenuState {
+        return this.stateInternal;
+    }
+
     public get configEnd(): Subject<void> {
         return this.states.confirm.leave;
     }
@@ -87,10 +91,6 @@ export class MenuAutomatonService {
         this.stateInternal = this.states.gameMode;
         this.states.gameMode.arrive.next();
         this.path = [{state: this.states.gameMode, option: null}];
-    }
-
-    public get state(): MenuState {
-        return this.stateInternal;
     }
 
     public chooseOption(option: Option): void {
