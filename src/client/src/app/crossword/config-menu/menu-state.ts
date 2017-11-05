@@ -9,6 +9,7 @@ export class MenuState {
 
     private nameInternal: string;
     private optionsInternal: Option[];
+    private onArriveCallback = () => {};
 
     constructor(name: string = '',
                 options: Option[] = []) {
@@ -26,6 +27,10 @@ export class MenuState {
 
     public addOption(option: Option): void {
         this.optionsInternal.push(option);
+    }
+
+    public setOnArriveCallback(callback: () => void): void {
+        this.onArriveCallback = callback;
     }
 
 }
