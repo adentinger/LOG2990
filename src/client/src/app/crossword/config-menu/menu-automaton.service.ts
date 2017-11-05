@@ -126,7 +126,17 @@ export class MenuAutomatonService {
     }
 
     public getConfiguration(): CrosswordGameConfigs {
-        return null;
+        const config: CrosswordGameConfigs = {
+            gameMode: null,
+            playerNumber: null,
+            difficulty: null,
+            createJoin: null,
+            gameId: null
+        };
+        this.path.forEach((transition) => {
+            config[transition.state.fieldName] = transition.option.value;
+        });
+        return config;
     }
 
 }
