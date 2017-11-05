@@ -7,7 +7,9 @@ import { SerializedSpeedBoost } from '../../../../../../common/src/racing/serial
 import { PhysicMesh } from '../physic/object';
 import { RacingGamePlane } from './racing-game-plane';
 import { RacetrackSegment } from '../three-objects/racetrack/racetrack-segment';
+import { RacetrackJunction } from '../three-objects/racetrack/racetrack-junction';
 import { Track } from '../../track';
+import { Vector } from '../../../../../../common/src/math/vector';
 
 export class RenderableMap extends PhysicMesh {
 
@@ -35,7 +37,7 @@ export class RenderableMap extends PhysicMesh {
         (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color(0xffffff);
         wireframePlane.rotation.set(0, 0, 0);
         this.PLANE.add(wireframePlane);
-        this.PLANE.position.set(Track.WIDTH_MAX / 2, 0, -Track.HEIGHT_MAX / 2);
+        this.PLANE.position.set(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2);
 
         ///////////////////////////////////
         const point1 = new THREE.Vector2(this.mapPoints[0].x, this.mapPoints[0].y);
@@ -51,8 +53,22 @@ export class RenderableMap extends PhysicMesh {
         console.log(this.mapPoints[0]);
         segment1.position.add(new THREE.Vector3(this.mapPoints[0].x + segmentLength / 2, 0, -this.mapPoints[0].y));
 
+        // We trace the junctions first (on 0.01 layer)
+        for (const i of this.mapPoints) {
+            console.log('point - x=' + i.x + ' y=' + i.y);
+            const junc = new RacetrackJunction();
+            junc.position.add(new THREE.Vector3(i.x, 0, i.y));
+            this.add(junc);
+        }
 
-        this.add(segment1);
+        const reference: Vector = new Vector(1.0, 0.0);
+        for (let i = 0; i < this.mapPoints.length; i++) {
+            const currentPoint = this.mapPoints[i];
+            const nextPoint = this.mapPoints[(i + 1) % this.mapPoints.length];
+            const segmentVector: Vector = new Vector(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y);
+            const angleOfSegment = undefined;
+            // TODO place segment properly
+        }
 
         this.add(this.PLANE);
     }
@@ -64,6 +80,6 @@ export class RenderableMap extends PhysicMesh {
             angle += 360;
         }
         return angle;
-     }
+    }
 
 }
