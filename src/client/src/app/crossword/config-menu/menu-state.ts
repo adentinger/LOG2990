@@ -1,4 +1,4 @@
-import { Subject } from "rxjs/Subject";
+import { Subject } from 'rxjs/Subject';
 
 export interface Option {
     name: string;
@@ -7,7 +7,7 @@ export interface Option {
 
 export class MenuState {
 
-    public static readonly none = null;
+    public static readonly none = new MenuState();
 
     private nameInternal: string;
     private optionsInternal: Option[];
