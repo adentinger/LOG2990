@@ -13,15 +13,15 @@ export class GameManager {
     private games: Map<number, Game> = new Map();
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
-    private constructor() {
-        registerHandlers(this, this.packetManager);
-    }
-
     public static getInstance() {
         if (!GameManager.instance) {
             GameManager.instance = new GameManager();
         }
         return GameManager.instance;
+    }
+
+    private constructor() {
+        registerHandlers(this, this.packetManager);
     }
 
     public newGame(configs: CrosswordGameConfigs): number {
