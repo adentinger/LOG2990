@@ -35,6 +35,14 @@ export class MenuAutomatonService {
         this.initialize();
     }
 
+    public get configEnd(): Subject<void> {
+        return this.states.confirm.arrive;
+    }
+
+    public get chooseGame(): Subject<void> {
+        return this.states.chooseGame.arrive;
+    }
+
     private initialize(): void {
         this.createStates();
         this.addStateTransitions();
@@ -106,10 +114,6 @@ export class MenuAutomatonService {
         else {
             throw new Error('Cannot go back: already at the initial configuration menu');
         }
-    }
-
-    public get configEnd(): Subject<void> {
-        return this.states.confirm.arrive;
     }
 
 
