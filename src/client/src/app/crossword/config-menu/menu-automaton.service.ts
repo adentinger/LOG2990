@@ -66,4 +66,7 @@ export class MenuAutomatonService {
         }
     }
 
+    public setOnConfigEndCallback(callback: () => void): void {
+    }
+
 }
