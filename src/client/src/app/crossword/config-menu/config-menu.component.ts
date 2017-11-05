@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
+import { AvailableGamesComponent } from './available-games/available-games.component';
 
 @Component({
     selector: 'app-config-menu',
@@ -14,16 +15,25 @@ import { MenuAutomatonService } from './menu-automaton.service';
 export class ConfigMenuComponent implements OnInit, OnDestroy {
 
     public isConfiguringGame = true;
-    private subscriptions: Subscription[] = [];
+    public shouldShowAvailableGames = false;
 
-    constructor(public menuAutomaton: MenuAutomatonService) {
-        const subscription = this.menuAutomaton.configEnd.subscribe(
-            () => this.isConfiguringGame = false
-        );
-        this.subscriptions.push(subscription);
-    }
+    private subscriptions: Subscription[] = [];
+    @ViewChild(AvailableGamesComponent)
+    private availableGamesComponent: AvailableGamesComponent;
+
+    constructor(public menuAutomaton: MenuAutomatonService) { }
 
     public ngOnInit(): void {
+        const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
+            () => this.shouldShowAvailableGames = true
+        );
+        const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
+            () => this.shouldShowAvailableGames = false
+        );
+        const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
+            () => this.isConfiguringGame = false
+        );
+        this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
     }
 
     public ngOnDestroy(): void {

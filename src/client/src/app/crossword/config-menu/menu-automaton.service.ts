@@ -46,8 +46,12 @@ export class MenuAutomatonService {
         return this.states.confirm.leave;
     }
 
-    public get chooseGame(): Subject<void> {
+    public get chooseGameArrive(): Subject<void> {
         return this.states.chooseGame.arrive;
+    }
+
+    public get chooseGameLeave(): Subject<void> {
+        return this.states.chooseGame.leave;
     }
 
     private initialize(): void {

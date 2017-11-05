@@ -11,6 +11,9 @@
         class="menu-page"
         [ngClass]="{'active-page': true}">
         <h4>{{menuAutomaton.state.name}}</h4>
+        <div *ngIf="shouldShowAvailableGames">
+          <app-available-games></app-available-games>
+        </div>
         <button
           *ngFor="let option of menuAutomaton.state.options"
           (click)="menuAutomaton.chooseOption(option)">{{option.name}}</button>
