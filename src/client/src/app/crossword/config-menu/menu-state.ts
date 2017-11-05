@@ -10,6 +10,7 @@ export class MenuState {
     private nameInternal: string;
     private optionsInternal: Option[];
     private onArriveCallback = () => {};
+    private onLeaveCallback = () => {};
 
     constructor(name: string = '',
                 options: Option[] = []) {
@@ -34,7 +35,7 @@ export class MenuState {
     }
 
     public leave(): void {
-
+        this.onLeaveCallback();
     }
 
     public setOnArriveCallback(callback: () => void): void {
@@ -42,6 +43,7 @@ export class MenuState {
     }
 
     public setOnLeaveCallback(callback: () => void): void {
+        this.onLeaveCallback = callback;
     }
 
 }
