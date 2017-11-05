@@ -48,7 +48,6 @@ export class RenderableMap extends PhysicMesh {
         const segment1 = new RacetrackSegment(segmentLength);
 
         const angle = this.angleBetweenTwoVectors(this.mapPoints[0], this.mapPoints[1]);
-        // segment1.rotation.z = angle;
 
         console.log(this.mapPoints[0]);
         segment1.position.add(new THREE.Vector3(this.mapPoints[0].x + segmentLength / 2, 0, -this.mapPoints[0].y));
@@ -56,9 +55,9 @@ export class RenderableMap extends PhysicMesh {
         // We trace the junctions first (on 0.01 layer)
         for (const i of this.mapPoints) {
             console.log('point - x=' + i.x + ' y=' + i.y);
-            const junc = new RacetrackJunction();
-            junc.position.add(new THREE.Vector3(i.x, 0, i.y));
-            this.add(junc);
+            const junction = new RacetrackJunction();
+            junction.position.add(new THREE.Vector3(i.x, 0, i.y));
+            this.add(junction);
         }
 
         const reference: Vector = new Vector(1.0, 0.0);

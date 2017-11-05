@@ -16,7 +16,7 @@ import { RacetrackJunction } from './three-objects/racetrack/racetrack-junction'
 
 @Injectable()
 export class RacingGameService {
-    private static readonly CONTROLLABLE_CAR_IDX = 2;
+    private static readonly CONTROLLABLE_CAR_IDX = 1;
     private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional2();
 
     public readonly renderer: RacingRenderer;
@@ -54,6 +54,12 @@ export class RacingGameService {
             car.position.copy(position);
             position.add(new THREE.Vector3(POSITION_INCREMENT, 0.0, 0.0));
         });
+
+        // TODO guide
+        const reference = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshBasicMaterial());
+        reference.position.add(startingLineCoordinates);
+        reference.position.add(new THREE.Vector3(1, 1, 1));
+        this.map.PLANE.add(reference);
 
         this.physicEngine.start();
         this.renderer.startRendering();
