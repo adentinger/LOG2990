@@ -88,6 +88,17 @@ export class MenuAutomatonService {
     }
 
     public goBack(): void {
+        if (this.path.length >= 2) {
+            this.path.pop();
+            this.stateInternal = this.path[this.path.length - 1];
+        }
+        else if (this.path.length === 1) {
+            this.path.pop();
+            this.moveToInitialState();
+        }
+        else {
+            throw new Error('Cannot go back: already at the initial configuration menu');
+        }
     }
 
     public setOnConfigEndCallback(callback: () => void): void {
