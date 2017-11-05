@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { UserDisplayableGameData } from '../config-menu/available-games/user-displayable-game-data';
 import { Logger } from '../../../../../common/src/index';
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
 
 @Injectable()
 export class GameService {
@@ -23,6 +23,13 @@ export class GameService {
                         (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
                     );
                 });
+        return promise;
+    }
+
+    public requestGame(gameConfig: CrosswordGameConfigs): Promise<PlayerNumber> {
+        const url = GameService.BASE_URL;
+        const promise =
+            this.http.post<PlayerNumber>(url, gameConfig).toPromise();
         return promise;
     }
 
