@@ -1,14 +1,26 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { UserDisplayableGameData } from '../config-menu/available-games/user-displayable-game-data';
+import { Logger } from '../../../../../common/src/index';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 
 @Injectable()
 export class GameService {
 
-    constructor() { }
+    private static readonly BASE_URL = 'http://localhost:3000/crossword/games';
+    private logger = Logger.getLogger('GameService');
+
+    constructor(private http: HttpClient) { }
 
     public getGames(): Promise<UserDisplayableGameData[]> {
-        return new Promise((resolve, reject) => resolve([]));
+        const url = GameService.BASE_URL;
+        const promise =
+            this.http.get<CrosswordGameConfigs[]>(url).toPromise()
+                .then((configs) => configs.map(
+                    (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
+                ));
+        return promise;
     }
 
 }
