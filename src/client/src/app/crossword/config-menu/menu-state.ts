@@ -11,8 +11,7 @@ export class MenuState {
     public static readonly none = new MenuState();
 
     private nameInternal: string;
-    private fieldName
-    : string;
+    private fieldName: string;
     private optionsInternal: Option[];
     private arriveInternal = new Subject<void>();
     private leaveInternal = new Subject<void>();
