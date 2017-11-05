@@ -134,7 +134,9 @@ export class MenuAutomatonService {
             gameId: null
         };
         this.path.forEach((transition) => {
-            config[transition.state.fieldName] = transition.option.value;
+            if (transition.state.fieldName !== null && transition.option !== null) {
+                config[transition.state.fieldName] = transition.option.value;
+            }
         });
         return config;
     }
