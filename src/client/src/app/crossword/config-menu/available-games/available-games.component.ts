@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { GameService } from '../../services/game.service';
 import { UserDisplayableGameData } from './user-displayable-game-data';
+import { GameId } from '../../../../../../common/src/communication/game-configs';
 
 @Component({
     selector: 'app-available-games',
@@ -11,6 +12,7 @@ import { UserDisplayableGameData } from './user-displayable-game-data';
 export class AvailableGamesComponent implements OnInit {
 
     private gamesInternal: UserDisplayableGameData[] = [];
+    public chosenGame: GameId = null;
 
     constructor(public gameService: GameService) {
         this.refresh();
@@ -24,6 +26,8 @@ export class AvailableGamesComponent implements OnInit {
     }
 
     public async refresh(): Promise<void> {
+        this.chosenGame = null;
+        this.gamesInternal = []; // Display nothing while we refresh
         this.gamesInternal = await this.gameService.getGames();
     }
 
