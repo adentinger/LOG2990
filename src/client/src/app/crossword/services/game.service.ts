@@ -17,9 +17,13 @@ export class GameService {
         const url = GameService.BASE_URL;
         const promise =
             this.http.get<CrosswordGameConfigs[]>(url).toPromise()
-                .then((configs) => configs.map(
-                    (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
-                ));
+                .then((configs) => {
+                        const twoPlayerGames = configs.filter((config) => config.playerNumber === 2);
+                        return twoPlayerGames.map(
+                            (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
+                        );
+                    }
+                );
         return promise;
     }
 
