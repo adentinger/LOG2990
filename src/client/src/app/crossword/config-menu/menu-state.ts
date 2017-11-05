@@ -25,16 +25,23 @@ export class MenuState {
         return this.optionsInternal.slice();
     }
 
-    public arrive(): void {
-        this.onArriveCallback();
-    }
-
     public addOption(option: Option): void {
         this.optionsInternal.push(option);
     }
 
+    public arrive(): void {
+        this.onArriveCallback();
+    }
+
+    public leave(): void {
+
+    }
+
     public setOnArriveCallback(callback: () => void): void {
         this.onArriveCallback = callback;
+    }
+
+    public setOnLeaveCallback(callback: () => void): void {
     }
 
 }
