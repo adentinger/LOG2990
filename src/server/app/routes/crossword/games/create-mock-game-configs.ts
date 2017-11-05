@@ -16,7 +16,8 @@ export function createMockGameConfigs(): CrosswordGameConfigs {
         gameMode: randGameMode,
         playerNumber: randPlayerNumber,
         createJoin: randCreateJoin,
-        difficulty: randDifficulty
+        difficulty: randDifficulty,
+        gameId: -1
     };
     return config;
 }
