@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GameService } from '../../services/game.service';
+import { UserDisplayableGameData } from './user-displayable-game-data';
 
 @Component({
     selector: 'app-available-games',
@@ -9,9 +10,21 @@ import { GameService } from '../../services/game.service';
 })
 export class AvailableGamesComponent implements OnInit {
 
-    constructor(public gameService: GameService) { }
+    private gamesInternal: UserDisplayableGameData[] = [];
+
+    constructor(public gameService: GameService) {
+        this.refresh();
+    }
 
     public ngOnInit() {
+    }
+
+    public get games(): UserDisplayableGameData[] {
+        return this.gamesInternal;
+    }
+
+    public async refresh(): Promise<void> {
+        this.gamesInternal = await this.gameService.getGames();
     }
 
 }

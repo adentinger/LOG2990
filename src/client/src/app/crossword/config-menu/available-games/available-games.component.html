@@ -1,3 +1,9 @@
-<p>
-  available-games works!
-</p>
+<div>
+  <h3>Available games:</h3>
+  <table>
+    <tr><th>ID</th><th>Mode</th><th>Difficulty</th></tr>
+    <ng-container *ngFor="let game of games">
+      <tr><td>{{game.id}}</td><td>{{game.mode}}</td><td>{{game.difficulty}}</td></tr>
+    </ng-container>
+  </table>
+</div>
