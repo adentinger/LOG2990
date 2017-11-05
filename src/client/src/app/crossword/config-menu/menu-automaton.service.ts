@@ -87,6 +87,9 @@ export class MenuAutomatonService {
         }
     }
 
+    public goBack(): void {
+    }
+
     public setOnConfigEndCallback(callback: () => void): void {
         this.states.confirm.setOnArriveCallback(callback);
     }
