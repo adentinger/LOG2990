@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { GameService } from '../../services/game.service';
 import { UserDisplayableGameData } from './user-displayable-game-data';
@@ -9,16 +9,13 @@ import { GameId } from '../../../../../../common/src/communication/game-configs'
     templateUrl: './available-games.component.html',
     styleUrls: ['./available-games.component.css']
 })
-export class AvailableGamesComponent implements OnInit {
+export class AvailableGamesComponent {
 
     private gamesInternal: UserDisplayableGameData[] = [];
     public chosenGame: GameId = null;
 
     constructor(public gameService: GameService) {
         this.refresh();
-    }
-
-    public ngOnInit() {
     }
 
     public get games(): UserDisplayableGameData[] {
