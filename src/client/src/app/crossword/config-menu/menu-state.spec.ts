@@ -1,12 +1,13 @@
-import { MenuState } from './menu-state';
+import { MenuState, Option } from './menu-state';
 
 describe('ConfigMenuService', () => {
 
     it('should be created', () => {
         expect(new MenuState()).toBeTruthy();
         const NAME = 'state1';
-        const OPTIONS = [{name: 'option1', nextState: null}];
-        const state = new MenuState(NAME, OPTIONS);
+        const FIELD_NAME = 'field1';
+        const OPTIONS = [{name: 'option1', nextState: null, value: 42}];
+        const state = new MenuState(NAME, FIELD_NAME, OPTIONS);
         expect(state.name).toEqual(NAME);
         expect(state.options).toEqual(OPTIONS);
         expect(state.options).not.toBe(OPTIONS);
@@ -15,7 +16,7 @@ describe('ConfigMenuService', () => {
     it('should add an option', () => {
         const state = new MenuState();
         expect(state.options.length).toEqual(0);
-        const option = {name: 'test', nextState: MenuState.none};
+        const option = {name: 'test', nextState: MenuState.none, value: 42};
         state.addOption(option);
         const options = state.options;
         expect(options.length).toEqual(1);

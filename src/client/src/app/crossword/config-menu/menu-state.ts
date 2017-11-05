@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 export interface Option {
     name: string;
     nextState: MenuState;
+    value: any;
 }
 
 export class MenuState {
@@ -10,13 +11,17 @@ export class MenuState {
     public static readonly none = new MenuState();
 
     private nameInternal: string;
+    private fieldName
+    : string;
     private optionsInternal: Option[];
     private arriveInternal = new Subject<void>();
     private leaveInternal = new Subject<void>();
 
     constructor(name: string = '',
+                fieldName: string = '',
                 options: Option[] = []) {
         this.nameInternal = name;
+        this.fieldName = fieldName;
         this.optionsInternal = options.slice();
     }
 

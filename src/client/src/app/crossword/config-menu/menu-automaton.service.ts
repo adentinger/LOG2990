@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { MenuState, Option } from './menu-state';
+import { GameMode, Difficulty, CreateOrJoin } from '../../../../../common/src/crossword/crossword-enums';
 
 interface States {
     gameMode:     MenuState;
@@ -56,32 +57,32 @@ export class MenuAutomatonService {
 
     private createStates(): void {
         this.states = {
-            gameMode: new MenuState('Select game mode'),
-            playerNumber: new MenuState('Select number of players'),
-            difficulty: new MenuState('Select difficulty'),
-            createOrJoin: new MenuState('Create or join game?'),
-            chooseGame: new MenuState('Choose game'),
-            confirm: new MenuState('Confirm choice?')
+            gameMode: new MenuState('Select game mode', 'gameMode'),
+            playerNumber: new MenuState('Select number of players', 'playerNumber'),
+            difficulty: new MenuState('Select difficulty', 'difficulty'),
+            createOrJoin: new MenuState('Create or join game?', 'createJoin'),
+            chooseGame: new MenuState('Choose game', 'gameId'),
+            confirm: new MenuState('Confirm choice?', null)
         };
     }
 
     private addStateTransitions(): void {
-        this.states.gameMode.addOption({name: 'Classic', nextState: this.states.playerNumber});
-        this.states.gameMode.addOption({name: 'Dynamic', nextState: this.states.playerNumber});
+        this.states.gameMode.addOption({name: 'Classic', nextState: this.states.playerNumber, value: GameMode.Classic});
+        this.states.gameMode.addOption({name: 'Dynamic', nextState: this.states.playerNumber, value: GameMode.Dynamic});
 
-        this.states.playerNumber.addOption({name: 'One player', nextState: this.states.difficulty});
-        this.states.playerNumber.addOption({name: 'Two players', nextState: this.states.createOrJoin});
+        this.states.playerNumber.addOption({name: 'One player', nextState: this.states.difficulty, value: 1});
+        this.states.playerNumber.addOption({name: 'Two players', nextState: this.states.createOrJoin, value: 2});
 
-        this.states.difficulty.addOption({name: 'Easy', nextState: this.states.confirm});
-        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm});
-        this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm});
+        this.states.difficulty.addOption({name: 'Easy', nextState: this.states.confirm, value: Difficulty.easy});
+        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.medium});
+        this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm, value: Difficulty.hard});
 
-        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty});
-        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame});
+        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty, value: CreateOrJoin.create});
+        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame, value: CreateOrJoin.join});
 
-        this.states.chooseGame.addOption({name: 'Done', nextState: this.states.confirm});
+        this.states.chooseGame.addOption({name: 'Done', nextState: this.states.confirm, value: undefined});
 
-        this.states.confirm.addOption({name: 'Start', nextState: MenuState.none});
+        this.states.confirm.addOption({name: 'Start', nextState: MenuState.none, value: null});
     }
 
     private moveToInitialState(): void {
