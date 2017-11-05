@@ -24,6 +24,11 @@ export class GameManager {
         registerHandlers(this, this.packetManager);
     }
 
+    public get gamesConfigurations(): CrosswordGameConfigs[] {
+        const gameConfigs: CrosswordGameConfigs[] = [];
+        return gameConfigs;
+    }
+
     public newGame(configs: CrosswordGameConfigs): number {
         const GAME = new Game(configs);
         this.games.set(GAME.id, GAME);
