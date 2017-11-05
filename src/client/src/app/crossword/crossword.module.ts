@@ -18,6 +18,7 @@ import { GameDetailsService } from './game-details/game-details.service';
 import { SelectionService } from './selection.service';
 import { CheatModeComponent } from './cheat-mode/cheat-mode.component';
 import { ConfigMenuComponent } from './config-menu/config-menu.component';
+import { AvailableGamesComponent } from './config-menu/available-games/available-games.component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { ConfigMenuComponent } from './config-menu/config-menu.component';
         CrosswordTileComponent,
         CheatModeComponent,
         ConfigMenuComponent,
+        AvailableGamesComponent,
     ],
     providers: [
         HttpClient,
