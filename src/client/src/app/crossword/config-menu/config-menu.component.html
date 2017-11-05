@@ -11,14 +11,6 @@
         class="menu-page"
         [ngClass]="{'active-page': true}">
         <h4>{{menuAutomaton.state.name}}</h4>
-        <table *ngIf="true">
-          <thead><tr>Options:</tr></thead>
-          <tbody>
-            <tr *ngFor="let param of [['ONE', 'ONE_ONE'], ['TWO', 'TWO_TWO']]">
-              <td>{{param[0]}}:</td><td>{{param[1]}}</td>
-            </tr>
-          </tbody>
-        </table>
         <button
           *ngFor="let option of menuAutomaton.state.options"
           (click)="menuAutomaton.chooseOption(option)">{{option.name}}</button>
