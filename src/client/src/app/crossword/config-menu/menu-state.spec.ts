@@ -30,4 +30,12 @@ describe('ConfigMenuService', () => {
         state.arrive();
     });
 
+    it('should call a callback when we leave that state', () => {
+        const state = new MenuState();
+        let wasCallbackCalled = false;
+        const callback = () => wasCallbackCalled = true;
+        state.setOnLeaveCallback(callback);
+        state.leave();
+    });
+
 });
