@@ -1,7 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CrosswordGameService } from '../crossword-game.service';
 import { CrosswordGame } from '../class/crossword-game';
-import { GameDetailsService } from './game-details.service';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { TimerService } from '../services/timer.service';
 

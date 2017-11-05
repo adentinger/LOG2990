@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
-import { BoardComponent } from './board/board.component';
 import { CrosswordGameService } from './crossword-game.service';
 import { TimerService } from './services/timer.service';
 import { ConfigMenuService } from './config-menu/config-menu.service';

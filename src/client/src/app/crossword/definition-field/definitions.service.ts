@@ -80,6 +80,7 @@ export class DefinitionsService {
     }
 
     @PacketHandler(ClearGridPacket)
+    // tslint:disable-next-line:no-unused-variable
     private clearDefinitions(): void {
         this.horizontalDefinitions = new Map();
         this.verticalDefinitions = new Map();

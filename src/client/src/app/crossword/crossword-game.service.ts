@@ -4,8 +4,6 @@ import { CrosswordGame } from './class/crossword-game';
 import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
-import { CrosswordTimerPacket } from '../../../../common/src/crossword/packets/crossword-timer.packet';
-import { Direction } from '../../../../common/src/crossword/crossword-enums';
 import '../../../../common/src/crossword/packets/crossword-timer.parser';
 
 /**

@@ -1,5 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { MenuState } from './menu-state';
 
 describe('ConfigMenuService', () => {
