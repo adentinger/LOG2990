@@ -8,5 +8,5 @@ export interface CrosswordGameConfigs {
     playerNumber: PlayerNumber;
     createJoin: CreateOrJoin;
     difficulty: Difficulty;
-    gameId: GameId;
+    gameId?: GameId;
 }
