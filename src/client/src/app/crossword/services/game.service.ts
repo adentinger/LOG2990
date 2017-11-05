@@ -18,12 +18,11 @@ export class GameService {
         const promise =
             this.http.get<CrosswordGameConfigs[]>(url).toPromise()
                 .then((configs) => {
-                        const twoPlayerGames = configs.filter((config) => config.playerNumber === 2);
-                        return twoPlayerGames.map(
-                            (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
-                        );
-                    }
-                );
+                    const twoPlayerGames = configs.filter((config) => config.playerNumber === 2);
+                    return twoPlayerGames.map(
+                        (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
+                    );
+                });
         return promise;
     }
 
