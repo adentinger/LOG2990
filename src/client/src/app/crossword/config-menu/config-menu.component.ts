@@ -30,8 +30,4 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
-    public log(...args): void {
-        console.log(...args);
-    }
-
 }
