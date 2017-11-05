@@ -35,6 +35,25 @@ describe('MenuAutomatonService', () => {
 
     });
 
+    describe('goBack', () => {
+
+        it('should move us back by one state where we are not at the initial state', () => {
+            const state0 = menuAutomaton.state;
+            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+            const state1 = menuAutomaton.state;
+            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+            menuAutomaton.goBack();
+            expect(menuAutomaton.state).toEqual(state1);
+            menuAutomaton.goBack();
+            expect(menuAutomaton.state).toEqual(state0);
+        });
+
+        it('should throw an error when we are at the initial state', () => {
+            expect(() => menuAutomaton.goBack()).toThrow();
+        });
+
+    });
+
     it('should set up to one callback to be called when the configuration ends', () => {
         let i = 0;
         let wasCallbackCalled = false;
