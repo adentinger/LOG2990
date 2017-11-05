@@ -58,7 +58,7 @@ describe('MenuAutomatonService', () => {
         let i = 0;
         let wasCallbackCalled = false;
         const callback = () => wasCallbackCalled = true;
-        menuAutomaton.setOnConfigEndCallback(callback);
+        menuAutomaton.configEnd.subscribe(callback);
         while (i < 1000) {
             menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
             ++i;

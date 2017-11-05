@@ -26,16 +26,16 @@ describe('ConfigMenuService', () => {
         const state = new MenuState();
         let wasCallbackCalled = false;
         const callback = () => wasCallbackCalled = true;
-        state.setOnArriveCallback(callback);
-        state.arrive();
+        state.arrive.subscribe(callback);
+        state.arrive.next();
     });
 
     it('should call a callback when we leave that state', () => {
         const state = new MenuState();
         let wasCallbackCalled = false;
         const callback = () => wasCallbackCalled = true;
-        state.setOnLeaveCallback(callback);
-        state.leave();
+        state.leave.subscribe(callback);
+        state.leave.next();
     });
 
 });

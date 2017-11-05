@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MenuState, Option } from './menu-state';
+import { Subject } from 'rxjs/Subject';
 
 interface States {
     gameMode:     MenuState;
@@ -107,8 +108,8 @@ export class MenuAutomatonService {
         }
     }
 
-    public setOnConfigEndCallback(callback: () => void): void {
-        this.states.confirm.setOnArriveCallback(callback);
+    public get configEnd(): Subject<void> {
+        return this.states.confirm.arrive;
     }
 
 

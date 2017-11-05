@@ -1,3 +1,5 @@
+import { Subject } from "rxjs/Subject";
+
 export interface Option {
     name: string;
     nextState: MenuState;
@@ -9,8 +11,8 @@ export class MenuState {
 
     private nameInternal: string;
     private optionsInternal: Option[];
-    private onArriveCallback = () => {};
-    private onLeaveCallback = () => {};
+    private arriveInternal = new Subject<void>();
+    private leaveInternal = new Subject<void>();
 
     constructor(name: string = '',
                 options: Option[] = []) {
@@ -30,20 +32,12 @@ export class MenuState {
         this.optionsInternal.push(option);
     }
 
-    public arrive(): void {
-        this.onArriveCallback();
+    public get arrive(): Subject<void> {
+        return this.arriveInternal;
     }
 
-    public leave(): void {
-        this.onLeaveCallback();
-    }
-
-    public setOnArriveCallback(callback: () => void): void {
-        this.onArriveCallback = callback;
-    }
-
-    public setOnLeaveCallback(callback: () => void): void {
-        this.onLeaveCallback = callback;
+    public get leave(): Subject<void> {
+        return this.leaveInternal;
     }
 
 }
