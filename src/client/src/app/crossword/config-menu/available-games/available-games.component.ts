@@ -22,6 +22,15 @@ export class AvailableGamesComponent {
         return this.gamesInternal;
     }
 
+    public choose(index: number): void {
+        if (index >= 0 && index < this.gamesInternal.length) {
+            this.chosenGame = this.gamesInternal[index].id;
+        }
+        else {
+            throw new Error(`Choice index ${index} invalid`);
+        }
+    }
+
     public async refresh(): Promise<void> {
         this.chosenGame = null;
         this.gamesInternal = []; // Display nothing while we refresh
