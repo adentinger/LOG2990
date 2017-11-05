@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { MenuState, Option } from './menu-state';
 import { Subject } from 'rxjs/Subject';
+
+import { MenuState, Option } from './menu-state';
 
 interface States {
     gameMode:     MenuState;
@@ -36,7 +37,7 @@ export class MenuAutomatonService {
     }
 
     public get configEnd(): Subject<void> {
-        return this.states.confirm.arrive;
+        return this.states.confirm.leave;
     }
 
     public get chooseGame(): Subject<void> {
@@ -80,8 +81,12 @@ export class MenuAutomatonService {
     }
 
     private moveToInitialState(): void {
-        this.path = [{state: this.states.gameMode, option: null}];
+        if (this.stateInternal != null) {
+            this.stateInternal.leave.next();
+        }
         this.stateInternal = this.states.gameMode;
+        this.states.gameMode.arrive.next();
+        this.path = [{state: this.states.gameMode, option: null}];
     }
 
     public get state(): MenuState {
@@ -94,8 +99,10 @@ export class MenuAutomatonService {
         );
         const found = index >= 0;
         if (found) {
+            this.state.leave.next();
             this.path.push({state: this.state, option: option});
             this.stateInternal = option.nextState;
+            this.state.arrive.next();
         }
         else {
             throw new Error(`Option inexistant.`);
