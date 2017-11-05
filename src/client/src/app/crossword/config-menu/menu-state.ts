@@ -25,6 +25,10 @@ export class MenuState {
         return this.optionsInternal.slice();
     }
 
+    public arrive(): void {
+        this.onArriveCallback();
+    }
+
     public addOption(option: Option): void {
         this.optionsInternal.push(option);
     }

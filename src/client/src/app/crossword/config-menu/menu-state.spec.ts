@@ -22,4 +22,12 @@ describe('ConfigMenuService', () => {
         expect(options[0]).toEqual(option);
     });
 
+    it('should call a callback when we arrive to that state', () => {
+        const state = new MenuState();
+        let wasCallbackCalled = false;
+        const callback = () => wasCallbackCalled = true;
+        state.setOnArriveCallback(callback);
+        state.arrive();
+    });
+
 });
