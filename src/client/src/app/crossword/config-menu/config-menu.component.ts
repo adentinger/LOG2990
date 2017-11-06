@@ -23,12 +23,12 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
     public isConfiguringGame = true;
     public shouldShowAvailableGames = false;
 
-    private hasGameStarted = false;
     private subscriptions: Subscription[] = [];
     @ViewChild(AvailableGamesComponent)
     private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
+                private waitingService: WaitingService,
                 private gameService: GameService,
                 private gameHttpService: GameHttpService) { }
 
@@ -57,7 +57,7 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
     }
 
     public get shouldShowWaitingComponent(): boolean {
-        return !this.isConfiguringGame && !this.hasGameStarted;
+        return !this.isConfiguringGame && this.waitingService.isWaitingValue;
     }
 
     private useConfiguration(): void {
