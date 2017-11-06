@@ -114,7 +114,7 @@ export class MenuAutomatonService {
             optionOfState => optionOfState === option
         );
         const found = index >= 0;
-        if (found) {
+        if (found && this.state.canMoveToNextState()) {
             const oldState = this.state;
             this.path.push({state: this.state, option: option});
             this.stateInternal = option.nextState;
