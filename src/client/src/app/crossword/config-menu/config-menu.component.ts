@@ -35,24 +35,16 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
-            () => {
-                this.shouldShowAvailableGames = true;
-            }
+            () => this.shouldShowAvailableGames = true
         );
         const chooseGameLeaveSubscription = this.menuAutomaton.states.chooseGame.leave.subscribe(
-            () => {
-                this.shouldShowAvailableGames = false;
-            }
+            () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => {
-                this.useConfiguration();
-            }
+            () => this.useConfiguration()
         );
         const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
-            () => {
-                this.ngZone.run(() => {});
-            }
+            () => this.ngZone.run(() => {})
         );
         this.subscriptions.push(
             chooseGameArriveSubscription,
