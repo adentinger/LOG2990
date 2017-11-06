@@ -42,6 +42,16 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
             () => {
                 this.isConfiguringGame = false;
+                const userChoices = this.menuAutomaton.choices;
+                if (userChoices.createOrJoin === CreateOrJoin.create) {
+                    this.gameService.requestGame(userChoices.toGameConfiguration())
+                        .then((gameId) => {
+                            this.gameId.emit(gameId);
+                        });
+                }
+                else {
+                    this.gameId.emit(userChoices.chosenGame);
+                }
             }
         );
         this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
