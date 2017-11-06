@@ -112,11 +112,12 @@ export class MenuAutomatonService {
 
     private changeState(newState: MenuState, option: Option): void {
         const oldState = this.state;
-        this.path.push({state: this.state, option: option});
-        this.stateInternal = option.nextState;
         if (this.stateInternal.fieldName !== null) {
+            // Set user choice
             this.userChoiceService[this.stateInternal.fieldName] = option.value;
         }
+        this.path.push({state: this.state, option: option});
+        this.stateInternal = option.nextState;
         oldState.leave.next();
         this.state.arrive.next();
 
