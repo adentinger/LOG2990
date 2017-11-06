@@ -29,6 +29,16 @@ describe('MenuAutomatonService', () => {
             expect(menuAutomaton.state).not.toEqual(initialState);
         });
 
+        it('should not do anything when we should not go to next state', () => {
+            const state0 = menuAutomaton.state;
+            state0.canMoveToNextState = () => false;
+            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+            expect(menuAutomaton.state).toBe(state0);
+            state0.canMoveToNextState = () => true;
+            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+            expect(menuAutomaton.state).not.toBe(state0);
+        });
+
         it('should not accept an option that does not exist', () => {
             expect(() => menuAutomaton.chooseOption(null)).toThrow();
         });
