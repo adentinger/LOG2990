@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { MenuState, Option } from './menu-state';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
-import { MenuAutomatonChoices, CreateOrJoin } from './menu-automaton-choices';
+import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 
 interface States {
     gameMode:     MenuState;
@@ -50,16 +50,6 @@ export class MenuAutomatonService {
 
     public get configEnd(): Subject<void> {
         return this.configEndInternal;
-    }
-
-    public get choices(): MenuAutomatonChoices {
-        const choices = new MenuAutomatonChoices();
-        this.path.forEach((transition) => {
-            if (transition.state.fieldName !== null && transition.option !== null) {
-                choices[transition.state.fieldName] = transition.option.value;
-            }
-        });
-        return choices;
     }
 
     private initialize(): void {

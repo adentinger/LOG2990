@@ -5,7 +5,7 @@ import { MenuAutomatonService } from './menu-automaton.service';
 import { AvailableGamesComponent } from './available-games/available-games.component';
 import { GameHttpService } from '../services/game-http.service';
 import { GameId } from '../../../../../common/src/communication/game-configs';
-import { CreateOrJoin } from './menu-automaton-choices';
+import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';
 
@@ -15,7 +15,8 @@ import { WaitingService } from './waiting/waiting.service';
     styleUrls: ['./config-menu.component.css'],
     providers: [
         MenuAutomatonService,
-        WaitingService
+        WaitingService,
+        UserChoiceService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
@@ -30,7 +31,8 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 private waitingService: WaitingService,
                 private gameService: GameService,
-                private gameHttpService: GameHttpService) { }
+                private gameHttpService: GameHttpService,
+                private userChoiceService: UserChoiceService) { }
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
@@ -69,13 +71,12 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     private useConfiguration(): void {
         this.isConfiguringGame = false;
         this.waitingService.isWaiting.next(true);
-        const userChoices = this.menuAutomaton.choices;
-        const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
+        const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
             this.gameService.joinGame(this.availableGamesComponent.chosenGame);
         }
         else {
-            this.gameHttpService.createGame(userChoices.toGameConfiguration())
+            this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
                 .then((gameId) => {
                     this.gameService.joinGame(gameId);
                 });

@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { GameId, CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
-import { CreateOrJoin } from './menu-automaton-choices';
+
+export enum CreateOrJoin {
+    create,
+    join
+}
 
 /**
  * @class UserChoiceService
