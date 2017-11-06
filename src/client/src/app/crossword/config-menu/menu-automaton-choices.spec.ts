@@ -17,14 +17,12 @@ describe('MenuAutomatonChoices', () => {
             GameMode.Classic,
             1,
             Difficulty.hard,
-            CreateOrJoin.create,
-            42
+            CreateOrJoin.create
         );
         expect(otherChoices.gameMode).toEqual(GameMode.Classic);
         expect(otherChoices.playerNumber).toEqual(1);
         expect(otherChoices.difficulty).toEqual(Difficulty.hard);
         expect(otherChoices.createOrJoin).toEqual(CreateOrJoin.create);
-        expect(otherChoices.chosenGame).toEqual(42);
     });
 
     it('should create a game configuration', () => {
@@ -32,8 +30,7 @@ describe('MenuAutomatonChoices', () => {
             GameMode.Classic,
             1,
             Difficulty.hard,
-            CreateOrJoin.create,
-            42
+            CreateOrJoin.create
         );
         const gameConfiguration = otherChoices.toGameConfiguration();
         expect(gameConfiguration.gameMode).toEqual(GameMode.Classic);

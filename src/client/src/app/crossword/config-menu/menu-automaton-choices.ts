@@ -12,7 +12,6 @@ export class MenuAutomatonChoices {
     public playerNumber: PlayerNumber;
     public difficulty: Difficulty;
     public createOrJoin: CreateOrJoin;
-    public chosenGame: GameId;
 
     constructor(gameMode?: GameMode,
                 playerNumber?: PlayerNumber,
@@ -23,7 +22,6 @@ export class MenuAutomatonChoices {
         this.playerNumber = playerNumber;
         this.difficulty = difficulty;
         this.createOrJoin = createOrJoin;
-        this.chosenGame = chosenGame;
     }
 
     public toGameConfiguration(): CrosswordGameConfigs {
