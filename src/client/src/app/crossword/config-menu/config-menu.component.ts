@@ -43,7 +43,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
             () => {
                 this.shouldShowAvailableGames = false;
                 const chosenGame = this.availableGamesComponent.chosenGame;
-                if (!chosenGame) {
+                if (chosenGame === null) {
                     this.menuAutomaton.goBack();
                 }
             }
