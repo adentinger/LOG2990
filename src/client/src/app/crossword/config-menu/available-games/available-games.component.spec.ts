@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AvailableGamesComponent } from './available-games.component';
-import { GameService } from '../../services/game.service';
-import { HttpClientModule } from '@angular/common/http';
+import { GameHttpService } from '../../services/game-http.service';
 
 describe('AvailableGamesComponent', () => {
     let component: AvailableGamesComponent;
@@ -17,7 +17,7 @@ describe('AvailableGamesComponent', () => {
                 HttpClientModule
             ],
             providers: [
-                GameService
+                GameHttpService
             ]
         })
         .compileComponents();

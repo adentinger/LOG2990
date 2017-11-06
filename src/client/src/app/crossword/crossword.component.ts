@@ -3,7 +3,7 @@ import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { CrosswordGameService } from './crossword-game.service';
 import { TimerService } from './services/timer.service';
-import { GameService } from './services/game.service';
+import { GameHttpService } from './services/game-http.service';
 import { GameId, PlayerNumber } from '../../../../common/src/communication/game-configs';
 
 @Component({
@@ -13,7 +13,7 @@ import { GameId, PlayerNumber } from '../../../../common/src/communication/game-
         SimpleTimer,
         DefinitionsService,
         TimerService,
-        GameService,
+        GameHttpService,
         CrosswordGameService
     ]
 })

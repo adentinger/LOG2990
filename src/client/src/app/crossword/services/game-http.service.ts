@@ -5,14 +5,14 @@ import { UserDisplayableGameData } from '../config-menu/available-games/user-dis
 import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
 
 @Injectable()
-export class GameService {
+export class GameHttpService {
 
     private static readonly BASE_URL = 'http://localhost:3000/crossword/games';
 
     constructor(private http: HttpClient) { }
 
     public getGames(): Promise<UserDisplayableGameData[]> {
-        const url = GameService.BASE_URL;
+        const url = GameHttpService.BASE_URL;
         const promise =
             this.http.get<CrosswordGameConfigs[]>(url).toPromise()
                 .then((configs) => {
@@ -25,7 +25,7 @@ export class GameService {
     }
 
     public requestGame(gameConfig: CrosswordGameConfigs): Promise<GameId> {
-        const url = GameService.BASE_URL;
+        const url = GameHttpService.BASE_URL;
         const promise =
             this.http.post<GameId>(url, gameConfig).toPromise();
         return promise;

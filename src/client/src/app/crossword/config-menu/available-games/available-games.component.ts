@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { GameService } from '../../services/game.service';
+import { GameHttpService } from '../../services/game-http.service';
 import { UserDisplayableGameData } from './user-displayable-game-data';
 import { GameId } from '../../../../../../common/src/communication/game-configs';
 
@@ -14,7 +14,7 @@ export class AvailableGamesComponent {
     private gamesInternal: UserDisplayableGameData[] = [];
     public chosenGame: GameId = null;
 
-    constructor(public gameService: GameService) {
+    constructor(public gameService: GameHttpService) {
         this.refresh();
     }
 

@@ -1,19 +1,19 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
-import { GameService } from './game.service';
+import { GameHttpService } from './game-http.service';
 
-describe('GameService', () => {
+describe('GameHttpService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [GameService],
+            providers: [GameHttpService],
             imports: [
                 HttpClientModule
             ]
         });
     });
 
-    it('should be created', inject([GameService], (service: GameService) => {
+    it('should be created', inject([GameHttpService], (service: GameHttpService) => {
         expect(service).toBeTruthy();
     }));
 });

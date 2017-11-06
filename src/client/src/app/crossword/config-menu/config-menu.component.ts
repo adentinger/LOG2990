@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
 import { AvailableGamesComponent } from './available-games/available-games.component';
-import { GameService } from '../services/game.service';
+import { GameHttpService } from '../services/game-http.service';
 import { GameId } from '../../../../../common/src/communication/game-configs';
 import { CreateOrJoin } from './menu-automaton-choices';
 
@@ -27,7 +27,7 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
     private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                private gameService: GameService) { }
+                private gameService: GameHttpService) { }
 
     public ngOnInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
