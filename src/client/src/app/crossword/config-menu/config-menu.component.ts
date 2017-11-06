@@ -57,11 +57,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public get shouldBeDisplayed(): boolean {
-        return this.isConfiguringGame || this.shouldShowWaitingComponent;
-    }
-
-    public get shouldShowWaitingComponent(): boolean {
-        return !this.isConfiguringGame && this.waitingService.isWaitingValue;
+        return this.isConfiguringGame || this.waitingService.isWaitingValue;
     }
 
     // "Shoo! Go away! I don't want to see this component anymore!" =>
