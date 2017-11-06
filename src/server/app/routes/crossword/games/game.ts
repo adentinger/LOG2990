@@ -9,7 +9,7 @@ import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { GameStartPacket } from '../../../../../common/src/crossword/packets/game-start.packet';
 import '../../../../../common/src/crossword/packets/game-start.parser';
 
-import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs, PlayerNumber, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
@@ -25,7 +25,7 @@ export class Game {
     private static readonly COUNTDOWN_INITAL = COUNTDOWN_DEFAULT_VALUE;
     private static idCounter = 0;
 
-    public readonly id: number;
+    public readonly id: GameId;
     public readonly numberOfPlayers: PlayerNumber;
     public countdown = Game.COUNTDOWN_INITAL;
 
