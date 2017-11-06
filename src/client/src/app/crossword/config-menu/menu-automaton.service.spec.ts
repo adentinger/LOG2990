@@ -66,6 +66,14 @@ describe('MenuAutomatonService', () => {
         expect(wasCallbackCalled).toEqual(true);
     });
 
+    it('should tell whether it can go back one state', () => {
+        expect(menuAutomaton.canGoBack()).toBe(false);
+        menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+        expect(menuAutomaton.canGoBack()).toBe(true);
+        menuAutomaton.goBack();
+        expect(menuAutomaton.canGoBack()).toBe(false);
+    });
+
     it('should yield a game configuration', () => {
         let i = 0;
         let wasCallbackCalled = false;
