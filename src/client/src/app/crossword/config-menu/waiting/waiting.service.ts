@@ -12,10 +12,14 @@ export class WaitingService {
     private isWaitingInternal = new Subject<boolean>();
     private isWaitingValueInternal: boolean;
 
-    constructor() { }
+    constructor() {
+        this.isWaitingInternal.subscribe((value) => {
+            this.isWaitingValueInternal = value;
+        });
+    }
 
     public get isWaiting(): Subject<boolean> {
-        return null;
+        return this.isWaitingInternal;
     }
 
     public get isWaitingValue(): boolean {
