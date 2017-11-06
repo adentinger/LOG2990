@@ -19,7 +19,7 @@ describe('The Game Manager Service', () => {
     });
 
     it('should make available a list of game configurations', () => {
-        expect(gameManager.gamesConfigurations).to.deep.equal([]);
+        expect(gameManager.getGameConfigurations()).to.deep.equal([]);
         const CONFIGURATION: CrosswordGameConfigs = {
             difficulty: Difficulty.easy,
             gameId: undefined,
@@ -27,7 +27,7 @@ describe('The Game Manager Service', () => {
             playerNumber: 1
         };
         gameManager.newGame(CONFIGURATION);
-        expect(gameManager.gamesConfigurations).to.deep.equal(CONFIGURATION);
+        expect(gameManager.getGameConfigurations()).to.deep.equal(CONFIGURATION);
     });
 
     it('should return an id upon game creation', (done) => {
