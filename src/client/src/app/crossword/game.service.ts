@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { CrosswordGame } from './class/crossword-game';
 import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
+
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
-import '../../../../common/src/crossword/packets/crossword-timer.parser';
+import '../../../../common/src/crossword/packets/game-join.parser';
 
 /**
  * @class GameService
