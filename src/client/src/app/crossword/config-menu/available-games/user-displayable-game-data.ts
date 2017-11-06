@@ -1,4 +1,4 @@
-import { CrosswordGameConfigs, GameId } from '../../../../../../common/src/communication/game-configs';
+import { GameId } from '../../../../../../common/src/communication/game-configs';
 import { GameMode, Difficulty } from '../../../../../../common/src/crossword/crossword-enums';
 
 /**

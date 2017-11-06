@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { UserDisplayableGameData } from '../config-menu/available-games/user-displayable-game-data';
-import { Logger } from '../../../../../common/src/index';
 import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
 
 @Injectable()
 export class GameService {
 
     private static readonly BASE_URL = 'http://localhost:3000/crossword/games';
-    private logger = Logger.getLogger('GameService');
 
     constructor(private http: HttpClient) { }
 

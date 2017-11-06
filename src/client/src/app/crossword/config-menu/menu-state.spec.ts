@@ -1,4 +1,4 @@
-import { MenuState, Option } from './menu-state';
+import { MenuState } from './menu-state';
 
 describe('ConfigMenuService', () => {
 
