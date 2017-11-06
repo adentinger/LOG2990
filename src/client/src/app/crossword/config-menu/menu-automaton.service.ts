@@ -48,6 +48,10 @@ export class MenuAutomatonService {
         return this.statesInternal;
     }
 
+    public get configEnd(): Subject<void> {
+        return this.configEndInternal;
+    }
+
     public get choices(): MenuAutomatonChoices {
         const choices = new MenuAutomatonChoices();
         this.path.forEach((transition) => {

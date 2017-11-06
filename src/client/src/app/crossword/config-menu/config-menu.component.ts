@@ -48,7 +48,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
                 }
             }
         );
-        const configEndSubscription = this.menuAutomaton.states.confirm.leave.subscribe(
+        const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
             () => {
                 this.useConfiguration();
             }
