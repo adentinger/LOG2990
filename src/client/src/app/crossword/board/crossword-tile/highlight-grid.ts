@@ -2,6 +2,14 @@ import { GridWord } from '../../../../../../common/src/crossword/grid-word';
 import { Grid } from '../../../../../../common/src/grid';
 import { Direction } from '../../../../../../common/src/crossword/crossword-enums';
 
+export enum WhoIsSelecting {
+    noOne = 0,
+    player,
+    opponent,
+    both,
+    length
+}
+
 /**
  * Class which can tell whether a certain tile is selected.
  */
@@ -21,7 +29,7 @@ export class HighlightGrid {
         this.data = DATA;
     }
 
-    public isSelected(row: number, column: number): boolean {
+    public isSelected(row: number, column: number, player: WhoIsSelecting): boolean {
         return this.data[row][column];
     }
 

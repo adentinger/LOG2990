@@ -4,7 +4,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
 
 import '../../../../../common/src/crossword/packets/word-try.parser';
-import { HighlightGrid } from './crossword-tile/highlight-grid';
+import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
 import { Owner } from '../../../../../common/src/crossword/crossword-enums';
@@ -56,7 +56,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.crosswordGridService.setUserInput(USER_WORD);
     }
 
-    public isHighlighted(row: number, column: number): boolean {
+    public isHighlighted(row: number, column: number, player: WhoIsSelecting): boolean {
         return this.highlightGrid.isSelected(row, column);
     }
 
