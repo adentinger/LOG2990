@@ -1,5 +1,5 @@
 <div class="center">
-  <b>Name:</b> <input/>
+  <b>Name:</b> <input [(ngModel)]="userChoiceService.playerName"/>
 </div>
 <button
   *ngFor="let option of menuAutomaton.state.options"
