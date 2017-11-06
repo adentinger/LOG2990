@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
+import { PacketManagerClient } from '../../../packet-manager-client';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../../common/src/index';
+
+import { GameStartPacket } from '../../../../../../common/src/crossword/packets/game-start.packet';
+import '../../../../../../common/src/crossword/packets/game-start.parser';
+
 /**
  * @class WaitingService
  * @description Has the responsibility of containing whether we are waiting,
@@ -12,10 +18,11 @@ export class WaitingService {
     private isWaitingInternal = new Subject<boolean>();
     private isWaitingValueInternal: boolean;
 
-    constructor() {
+    constructor(private packetManager: PacketManagerClient) {
         this.isWaitingInternal.subscribe((value) => {
             this.isWaitingValueInternal = value;
         });
+        registerHandlers(this, packetManager);
     }
 
     public get isWaiting(): Subject<boolean> {
@@ -24,6 +31,11 @@ export class WaitingService {
 
     public get isWaitingValue(): boolean {
         return this.isWaitingValue;
+    }
+
+    @PacketHandler(GameStartPacket)
+    private gameStarted(event: PacketEvent<GameStartPacket>): void {
+        this.isWaitingInternal.next(false);
     }
 
 }
