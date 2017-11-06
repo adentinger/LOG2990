@@ -45,6 +45,11 @@ export class RenderableMap extends PhysicMesh {
         this.add(this.PLANE);
     }
 
+    public getAngleOfFirstSegment(): THREE.Euler {
+        // return new THREE.Vector3(1, 0, 1);
+        return new THREE.Euler(1, 0, 1);
+    }
+
     private placeJunctionsOnMap() {
         for (const i of this.mapPoints) {
             console.log('point - x=' + i.x + ' y=' + i.y);

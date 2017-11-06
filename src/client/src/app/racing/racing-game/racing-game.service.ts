@@ -48,18 +48,13 @@ export class RacingGameService {
         const startingLineCoordinates = new THREE.Vector3(this.map.mapPoints[0].x, 0.0, this.map.mapPoints[0].y);
         const POSITION_INCREMENT = 2;
         const carPlacementOffset: number = -0.5 * numberOfCars + ((numberOfCars % 2 === 0) ? - 0.5 * POSITION_INCREMENT : 0);
-        const position = startingLineCoordinates;
+        const position = new THREE.Vector3(1);
+        position.add(startingLineCoordinates);
         position.add(new THREE.Vector3(carPlacementOffset, 0.0, 0.0));
         this.cars.forEach((car) => {
             car.position.copy(position);
             position.add(new THREE.Vector3(POSITION_INCREMENT, 0.0, 0.0));
         });
-
-        // TODO guide
-        const reference = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshBasicMaterial());
-        reference.position.add(startingLineCoordinates);
-        reference.position.add(new THREE.Vector3(1, 1, 1));
-        this.map.PLANE.add(reference);
 
         this.physicEngine.start();
         this.renderer.startRendering();
