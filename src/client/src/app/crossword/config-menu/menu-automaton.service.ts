@@ -34,6 +34,7 @@ export class MenuAutomatonService {
     private states: States;
     private path: Transition[];
     private stateInternal: MenuState = null;
+    private configEndInternal = new Subject<void>();
 
     constructor() {
         this.initialize();
@@ -44,7 +45,7 @@ export class MenuAutomatonService {
     }
 
     public get configEnd(): Subject<void> {
-        return this.states.confirm.leave;
+        return this.configEndInternal;
     }
 
     public get chooseGameArrive(): Subject<void> {
@@ -119,6 +120,10 @@ export class MenuAutomatonService {
             this.stateInternal = option.nextState;
             oldState.leave.next();
             this.state.arrive.next();
+
+            if (this.state === MenuState.none) {
+                this.configEndInternal.next();
+            }
         }
         else {
             throw new Error(`Option inexistant.`);
