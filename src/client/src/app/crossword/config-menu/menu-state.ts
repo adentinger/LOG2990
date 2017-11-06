@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 export interface Option {
     name: string;
     nextState: MenuState;
-    value: any;
+    value?: any;
 }
 
 export class MenuState {

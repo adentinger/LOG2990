@@ -25,8 +25,3 @@ export enum GameMode {
     Classic,
     Dynamic,
 }
-
-export enum CreateOrJoin {
-    create,
-    join
-}

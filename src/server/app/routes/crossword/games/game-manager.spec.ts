@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { GameManager } from './game-manager';
 import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
-import { GameMode, CreateOrJoin, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
+import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 
 describe('The Game Manager Service', () => {
@@ -21,7 +21,6 @@ describe('The Game Manager Service', () => {
     it('should make available a list of game configurations', () => {
         expect(gameManager.gamesConfigurations).to.deep.equal([]);
         const CONFIGURATION: CrosswordGameConfigs = {
-            createJoin: CreateOrJoin.create,
             difficulty: Difficulty.easy,
             gameId: undefined,
             gameMode: GameMode.Classic,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { MenuState, Option } from './menu-state';
-import { GameMode, Difficulty, CreateOrJoin } from '../../../../../common/src/crossword/crossword-enums';
+import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 
 interface States {
@@ -82,12 +82,12 @@ export class MenuAutomatonService {
         this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.medium});
         this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm, value: Difficulty.hard});
 
-        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty, value: CreateOrJoin.create});
-        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame, value: CreateOrJoin.join});
+        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty});
+        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame});
 
-        this.states.chooseGame.addOption({name: 'Done', nextState: this.states.confirm, value: undefined});
+        this.states.chooseGame.addOption({name: 'Done', nextState: this.states.confirm});
 
-        this.states.confirm.addOption({name: 'Start', nextState: MenuState.none, value: null});
+        this.states.confirm.addOption({name: 'Start', nextState: MenuState.none});
     }
 
     private moveToInitialState(): void {
@@ -134,7 +134,6 @@ export class MenuAutomatonService {
             gameMode: null,
             playerNumber: null,
             difficulty: null,
-            createJoin: null,
             gameId: null
         };
         this.path.forEach((transition) => {

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
-import { CreateOrJoin, Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
@@ -24,7 +24,6 @@ describe('The Crossword Game', () => {
     describe('addPlayer', () => {
         it('should players to the game', () => {
             const GAME = new Game({
-                createJoin: CreateOrJoin.create,
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
@@ -39,13 +38,11 @@ describe('The Crossword Game', () => {
 
         it('should not add more players to the game than the max number of players', () => {
             const GAME1PLAYER = new Game({
-                createJoin: CreateOrJoin.create,
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 1
             });
             const GAME2PLAYERS = new Game({
-                createJoin: CreateOrJoin.create,
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
@@ -63,7 +60,6 @@ describe('The Crossword Game', () => {
 
     it('should tell whether a certain player is in the game', () => {
         const GAME = new Game({
-            createJoin: CreateOrJoin.create,
             difficulty: Difficulty.easy,
             gameMode: GameMode.Classic,
             playerNumber: 2
