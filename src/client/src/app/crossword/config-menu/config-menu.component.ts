@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, EventEmitter, Output } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
 import { AvailableGamesComponent } from './available-games/available-games.component';
+import { GameService } from '../services/game.service';
+import { GameId } from '../../../../../common/src/communication/game-configs';
 
 @Component({
     selector: 'app-config-menu',
@@ -16,12 +18,15 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
 
     public isConfiguringGame = true;
     public shouldShowAvailableGames = false;
+    @Output()
+    public gameId = new EventEmitter<GameId>();
 
     private subscriptions: Subscription[] = [];
     @ViewChild(AvailableGamesComponent)
     private availableGamesComponent: AvailableGamesComponent;
 
-    constructor(public menuAutomaton: MenuAutomatonService) { }
+    constructor(public menuAutomaton: MenuAutomatonService,
+                private gameService: GameService) { }
 
     public ngOnInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
@@ -34,7 +39,13 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
             () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => this.isConfiguringGame = false
+            () => {
+                this.isConfiguringGame = false;
+                this.gameService.requestGame(this.menuAutomaton.getConfiguration())
+                    .then((gameId) => {
+                        this.gameId.emit(gameId);
+                    });
+            }
         );
         this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
     }
