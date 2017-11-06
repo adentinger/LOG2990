@@ -7,13 +7,15 @@ import { GameHttpService } from '../services/game-http.service';
 import { GameId } from '../../../../../common/src/communication/game-configs';
 import { CreateOrJoin } from './menu-automaton-choices';
 import { GameService } from '../game.service';
+import { WaitingService } from './waiting/waiting.service';
 
 @Component({
     selector: 'app-config-menu',
     templateUrl: './config-menu.component.html',
     styleUrls: ['./config-menu.component.css'],
     providers: [
-        MenuAutomatonService
+        MenuAutomatonService,
+        WaitingService
     ]
 })
 export class ConfigMenuComponent implements OnInit, OnDestroy {
