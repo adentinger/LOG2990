@@ -24,7 +24,7 @@ export class GameHttpService {
         return promise;
     }
 
-    public requestGame(gameConfig: CrosswordGameConfigs): Promise<GameId> {
+    public createGame(gameConfig: CrosswordGameConfigs): Promise<GameId> {
         const url = GameHttpService.BASE_URL;
         const promise =
             this.http.post<GameId>(url, gameConfig).toPromise();

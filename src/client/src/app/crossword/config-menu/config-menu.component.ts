@@ -71,7 +71,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
             this.gameService.joinGame(userChoices.chosenGame);
         }
         else {
-            this.gameHttpService.requestGame(userChoices.toGameConfiguration())
+            this.gameHttpService.createGame(userChoices.toGameConfiguration())
                 .then((gameId) => {
                     this.gameService.joinGame(gameId);
                 });
