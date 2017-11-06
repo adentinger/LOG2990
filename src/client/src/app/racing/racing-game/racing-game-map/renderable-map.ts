@@ -10,6 +10,8 @@ import { RacetrackSegment } from '../three-objects/racetrack/racetrack-segment';
 import { RacetrackJunction } from '../three-objects/racetrack/racetrack-junction';
 import { Track } from '../../track';
 import { Vector } from '../../../../../../common/src/math/vector';
+import { Car } from '../models/car/car';
+import { Radians } from '../../types';
 
 export class RenderableMap extends PhysicMesh {
 
@@ -45,9 +47,26 @@ export class RenderableMap extends PhysicMesh {
         this.add(this.PLANE);
     }
 
-    public getAngleOfFirstSegment(): THREE.Euler {
-        // return new THREE.Vector3(1, 0, 1);
-        return new THREE.Euler(1, 0, 1);
+
+    public addCars(...cars: Car[]) {
+        // Place cars on starting line
+
+        const angleOfFirstSegment: Radians = -new THREE.Vector2(this.mapPoints[1].x - this.mapPoints[0].x,
+            this.mapPoints[1].y - this.mapPoints[0].y).angle() - Math.PI / 2;
+
+        const numberOfCars: number = cars.length;
+        const startingLineCoordinates = new THREE.Vector3(this.mapPoints[0].x, 0.0, this.mapPoints[0].y);
+        const POSITION_INCREMENT = 2;
+        const carPlacementOffset: number = (-0.5 * numberOfCars + ((numberOfCars % 2 !== 0) ? - 0.5 : 0)) * POSITION_INCREMENT;
+        const position = new THREE.Vector3(1);
+        position.add(new THREE.Vector3(carPlacementOffset, 0.0, 0.0));
+        cars.forEach((car) => {
+            car.rotation.set(0, angleOfFirstSegment, 0);
+            car.position.copy(position).applyEuler(new THREE.Euler(0, angleOfFirstSegment, 0));
+            car.position.add(startingLineCoordinates);
+            position.add(new THREE.Vector3(POSITION_INCREMENT, 0.0, 0.0));
+        });
+        this.add(...cars);
     }
 
     private placeJunctionsOnMap() {
@@ -69,8 +88,7 @@ export class RenderableMap extends PhysicMesh {
             let segment = new RacetrackSegment(segmentLength);
 
             const xyTranslation = this.getSegmentXandYTranslation(angle, segmentLength);
-            segment = this.translateSegmentInXandYWithExpectedOrientation(segment, angle, xyTranslation[0], xyTranslation[1], i);
-
+            segment = this.translateSegmentInXandYWithExpectedOrientation(segment, angle, xyTranslation.x, xyTranslation.y, i);
             this.add(segment);
         }
     }
@@ -79,10 +97,10 @@ export class RenderableMap extends PhysicMesh {
         return (Math.atan2(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y));
     }
 
-    private getSegmentXandYTranslation(angle: number, segmentLength: number) {
+    private getSegmentXandYTranslation(angle: number, segmentLength: number): THREE.Vector2 {
         const opposite = Math.sin(angle) * segmentLength / 2;   // sin(radians) = opposite / hypotenuse
         const adjacent = Math.cos(angle) * segmentLength / 2;   // cos(radians) = adjacent / hypotenuse
-        return [opposite, adjacent]; // x, y
+        return new THREE.Vector2(opposite, adjacent);
     }
 
     private translateSegmentInXandYWithExpectedOrientation(segment: RacetrackSegment, angle: number,

@@ -50,19 +50,6 @@ export class RacingGameService {
         userCar.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCar);
 
-        // Place cars on starting line
-        const numberOfCars: number = this.cars.length;
-        const startingLineCoordinates = new THREE.Vector3(this.map.mapPoints[0].x, 0.0, this.map.mapPoints[0].y);
-        const POSITION_INCREMENT = 2;
-        const carPlacementOffset: number = -0.5 * numberOfCars + ((numberOfCars % 2 === 0) ? - 0.5 * POSITION_INCREMENT : 0);
-        const position = new THREE.Vector3(1);
-        position.add(startingLineCoordinates);
-        position.add(new THREE.Vector3(carPlacementOffset, 0.0, 0.0));
-        this.cars.forEach((car) => {
-            car.position.copy(position);
-            position.add(new THREE.Vector3(POSITION_INCREMENT, 0.0, 0.0));
-        });
-
         this.physicEngine.start();
         this.renderer.startRendering();
         this.renderer.updateDayMode(this.dayMode);
@@ -92,7 +79,7 @@ export class RacingGameService {
         this.physicEngine.setRoot(this.map);
         this.renderer.addMap(this.map);
 
-        this.map.add(...this.cars);
+        this.map.addCars(...this.cars);
         this.map.add(...this.boxes);
     }
 
