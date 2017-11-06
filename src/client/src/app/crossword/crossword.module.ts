@@ -42,7 +42,6 @@ import { AvailableGamesComponent } from './config-menu/available-games/available
         HttpClient,
         SimpleTimer,
         DefinitionsService,
-        CrosswordGameService,
         CrosswordGridService,
         GameDetailsService,
         SelectionService

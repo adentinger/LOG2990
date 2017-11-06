@@ -13,7 +13,8 @@ import { GameId, PlayerNumber } from '../../../../common/src/communication/game-
         SimpleTimer,
         DefinitionsService,
         TimerService,
-        GameService
+        GameService,
+        CrosswordGameService
     ]
 })
 export class CrosswordComponent implements OnInit {
