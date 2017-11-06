@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { MenuState, Option } from './menu-state';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { MenuAutomatonChoices } from './menu-automaton-choices';
 
 interface States {
     gameMode:     MenuState;
@@ -128,19 +129,14 @@ export class MenuAutomatonService {
         }
     }
 
-    public getConfiguration(): CrosswordGameConfigs {
-        const config: CrosswordGameConfigs = {
-            gameMode: null,
-            playerNumber: null,
-            difficulty: null,
-            gameId: null
-        };
+    public get choices(): MenuAutomatonChoices {
+        const choices = new MenuAutomatonChoices();
         this.path.forEach((transition) => {
             if (transition.state.fieldName !== null && transition.option !== null) {
-                config[transition.state.fieldName] = transition.option.value;
+                choices[transition.state.fieldName] = transition.option.value;
             }
         });
-        return config;
+        return choices;
     }
 
 }

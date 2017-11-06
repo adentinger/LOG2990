@@ -5,6 +5,7 @@ import { MenuAutomatonService } from './menu-automaton.service';
 import { AvailableGamesComponent } from './available-games/available-games.component';
 import { GameService } from '../services/game.service';
 import { GameId } from '../../../../../common/src/communication/game-configs';
+import { CreateOrJoin } from './menu-automaton-choices';
 
 @Component({
     selector: 'app-config-menu',
@@ -41,10 +42,6 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
             () => {
                 this.isConfiguringGame = false;
-                this.gameService.requestGame(this.menuAutomaton.getConfiguration())
-                    .then((gameId) => {
-                        this.gameId.emit(gameId);
-                    });
             }
         );
         this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);

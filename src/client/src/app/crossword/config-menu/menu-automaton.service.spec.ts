@@ -75,7 +75,7 @@ describe('MenuAutomatonService', () => {
             menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
             ++i;
         }
-        const configuration = menuAutomaton.getConfiguration; // should not throw
+        const configuration = menuAutomaton.choices; // should not throw
         expect(configuration).toBeTruthy();
     });
 
