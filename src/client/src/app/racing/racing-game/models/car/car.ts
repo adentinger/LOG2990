@@ -5,6 +5,7 @@ import { UserControllableCollidableMesh } from '../../physic/user-controllable-c
 import { CarHeadlight } from './car-headlight';
 import { Kilograms, Seconds } from '../../../types';
 import { DayMode } from '../../day-mode/day-mode';
+import { PhysicUtils } from '../../physic/engine';
 
 export interface CarLights {
     headlightLeft: THREE.Light;
@@ -13,6 +14,7 @@ export interface CarLights {
 
 export class Car extends UserControllableCollidableMesh {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
+    private static readonly CAR_ENGINE_SOUND_URL = '/assets/racing/sounds/car-engine.ogg';
 
     private static logger = Logger.getLogger('Car');
 
@@ -50,12 +52,24 @@ export class Car extends UserControllableCollidableMesh {
     protected maxAngularSpeed = Math.PI; // rad/s
 
     public waitToLoad: Promise<void>;
+    public readonly audioListener = new THREE.AudioListener();
+    public readonly audio = new THREE.PositionalAudio(this.audioListener);
+    public readonly audioContext = new AudioContext();
 
     constructor(carColor: THREE.Color) {
         super();
         this.addLights();
         this.waitToLoad = this.addCarParts(carColor);
         this.boundingBox = new THREE.Box3().setFromObject(this);
+        this.add(this.audio);
+        this.audio.setLoop(true);
+        this.audio.setVolume(10);
+        this.audio.setPlaybackRate(0.1);
+        new THREE.AudioLoader().load(Car.CAR_ENGINE_SOUND_URL,
+            (buffer: THREE.AudioBuffer) => {
+                this.audio.setBuffer(buffer);
+                this.audio.play();
+            }, () => {}, Car.logger.error);
     }
 
     private static loadCarPart(name: string): Promise<THREE.Mesh> {
@@ -119,6 +133,11 @@ export class Car extends UserControllableCollidableMesh {
                 return coloredMesh;
             })
         ));
+    }
+
+    public update(utils: PhysicUtils, deltaTime: Seconds): void {
+        super.update(utils, deltaTime);
+        this.audio.setPlaybackRate(2 * (this.velocity.length()) / this.maxSpeed + 0.4);
     }
 
     public updateAngularVelocity(deltaTime: Seconds) {
