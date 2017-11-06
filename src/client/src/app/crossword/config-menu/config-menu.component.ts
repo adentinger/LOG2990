@@ -28,7 +28,9 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 private waitingService: WaitingService,
                 private gameService: GameService,
-                private gameHttpService: GameHttpService) { }
+                private gameHttpService: GameHttpService) {
+        this.waitingService.isWaiting.next(true);
+    }
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(

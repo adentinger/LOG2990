@@ -16,7 +16,7 @@ import '../../../../../../common/src/crossword/packets/game-start.parser';
 export class WaitingService {
 
     private isWaitingInternal = new Subject<boolean>();
-    private isWaitingValueInternal: boolean;
+    private isWaitingValueInternal = false;
 
     constructor(private packetManager: PacketManagerClient) {
         this.isWaitingInternal.subscribe((value) => {
@@ -35,6 +35,7 @@ export class WaitingService {
 
     @PacketHandler(GameStartPacket)
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
+        console.log('GAME IS STARTING');
         this.isWaitingInternal.next(false);
     }
 
