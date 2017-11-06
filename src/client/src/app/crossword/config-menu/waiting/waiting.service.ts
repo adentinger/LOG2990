@@ -35,7 +35,6 @@ export class WaitingService {
 
     @PacketHandler(GameStartPacket)
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
-        console.log('GAME IS STARTING');
         this.isWaitingInternal.next(false);
     }
 

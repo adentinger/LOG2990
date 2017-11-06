@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { MenuState, Option } from './menu-state';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
-import { MenuAutomatonChoices, CreateOrJoin } from './menu-automaton-choices';
+import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 
 interface States {
     gameMode:     MenuState;
@@ -31,12 +31,12 @@ interface Transition {
 @Injectable()
 export class MenuAutomatonService {
 
-    private states: States;
+    private statesInternal: States;
     private path: Transition[];
     private stateInternal: MenuState = null;
     private configEndInternal = new Subject<void>();
 
-    constructor() {
+    constructor(private userChoiceService: UserChoiceService) {
         this.initialize();
     }
 
@@ -44,26 +44,12 @@ export class MenuAutomatonService {
         return this.stateInternal;
     }
 
+    public get states(): States {
+        return this.statesInternal;
+    }
+
     public get configEnd(): Subject<void> {
         return this.configEndInternal;
-    }
-
-    public get chooseGameArrive(): Subject<void> {
-        return this.states.chooseGame.arrive;
-    }
-
-    public get chooseGameLeave(): Subject<void> {
-        return this.states.chooseGame.leave;
-    }
-
-    public get choices(): MenuAutomatonChoices {
-        const choices = new MenuAutomatonChoices();
-        this.path.forEach((transition) => {
-            if (transition.state.fieldName !== null && transition.option !== null) {
-                choices[transition.state.fieldName] = transition.option.value;
-            }
-        });
-        return choices;
     }
 
     private initialize(): void {
@@ -73,12 +59,12 @@ export class MenuAutomatonService {
     }
 
     private createStates(): void {
-        this.states = {
+        this.statesInternal = {
             gameMode: new MenuState('Select game mode', 'gameMode'),
             playerNumber: new MenuState('Select number of players', 'playerNumber'),
             difficulty: new MenuState('Select difficulty', 'difficulty'),
             createOrJoin: new MenuState('Create or join game?', 'createOrJoin'),
-            chooseGame: new MenuState('Choose game', 'chosenGame'),
+            chooseGame: new MenuState('Choose game', null),
             confirm: new MenuState('Confirm choice?', null)
         };
     }
@@ -115,14 +101,8 @@ export class MenuAutomatonService {
         );
         const found = index >= 0;
         if (found) {
-            const oldState = this.state;
-            this.path.push({state: this.state, option: option});
-            this.stateInternal = option.nextState;
-            oldState.leave.next();
-            this.state.arrive.next();
-
-            if (this.state === MenuState.none) {
-                this.configEndInternal.next();
+            if (this.state.canMoveToNextState()) {
+                this.changeState(option.nextState, option);
             }
         }
         else {
@@ -130,16 +110,29 @@ export class MenuAutomatonService {
         }
     }
 
+    private changeState(newState: MenuState, option: Option): void {
+        const oldState = this.state;
+        if (this.stateInternal.fieldName !== null) {
+            // Set user choice
+            this.userChoiceService[this.stateInternal.fieldName] = option.value;
+        }
+        this.path.push({state: this.state, option: option});
+        this.stateInternal = option.nextState;
+        oldState.leave.next();
+        this.state.arrive.next();
+
+        if (this.state === MenuState.none) {
+            this.configEndInternal.next();
+        }
+    }
+
     public goBack(): void {
-        if (this.path.length >= 2) {
+        if (this.path.length >= 1) {
             const oldState = this.state;
+            this.userChoiceService[this.stateInternal.fieldName] = undefined;
             this.stateInternal = this.path.pop().state;
             oldState.leave.next();
             this.stateInternal.arrive.next();
-        }
-        else if (this.path.length === 1) {
-            this.path.pop();
-            this.moveToInitialState();
         }
         else {
             throw new Error('Cannot go back: already at the initial configuration menu');

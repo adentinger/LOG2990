@@ -20,6 +20,7 @@ import { CheatModeComponent } from './cheat-mode/cheat-mode.component';
 import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { AvailableGamesComponent } from './config-menu/available-games/available-games.component';
 import { WaitingComponent } from './config-menu/waiting/waiting.component';
+import { ConfirmationComponent } from './config-menu/confirmation/confirmation.component';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import { WaitingComponent } from './config-menu/waiting/waiting.component';
         CheatModeComponent,
         ConfigMenuComponent,
         AvailableGamesComponent,
-        WaitingComponent
+        WaitingComponent,
+        ConfirmationComponent
     ],
     providers: [
         HttpClient,
