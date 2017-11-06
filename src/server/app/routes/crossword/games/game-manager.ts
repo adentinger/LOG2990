@@ -54,7 +54,7 @@ export class GameManager {
     @PacketHandler(GameJoinPacket)
     public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        if (gameId) {
+        if (!this.games.has(gameId)) {
             console.error(`Game ID ${event.value.gameId} invalid. Packet dropped.`);
             return;
         }
