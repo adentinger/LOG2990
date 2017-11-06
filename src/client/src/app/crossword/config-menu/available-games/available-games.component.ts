@@ -1,22 +1,40 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 
 import { GameHttpService } from '../../services/game-http.service';
 import { UserDisplayableGameData } from './user-displayable-game-data';
 import { GameId } from '../../../../../../common/src/communication/game-configs';
+import { Subscription } from 'rxjs/Subscription';
+import { MenuAutomatonService } from '../menu-automaton.service';
 
 @Component({
     selector: 'app-available-games',
     templateUrl: './available-games.component.html',
     styleUrls: ['./available-games.component.css']
 })
-export class AvailableGamesComponent {
+export class AvailableGamesComponent implements OnDestroy {
 
     private gamesInternal: UserDisplayableGameData[] = [];
+    private subscriptions: Subscription[] = [];
+
     @Input() public shouldDisplay = true;
     public chosenGame: GameId = null;
 
-    constructor(public gameHttpService: GameHttpService) {
-        this.refresh();
+    constructor(public gameHttpService: GameHttpService,
+                private menuAutomaton: MenuAutomatonService) {
+        // Refresh the list whenever we move to the 'chooseGame' screen.
+        const chooseGameState = this.menuAutomaton.states.chooseGame;
+        const chooseGameArriveSubscription =
+            chooseGameState.arrive.subscribe(() => {
+                this.refresh();
+            });
+        this.subscriptions.push(chooseGameArriveSubscription);
+
+        // We can leave the screen only if we picked a game.
+        chooseGameState.canMoveToNextState = () => this.chosenGame !== null;
+    }
+
+    public ngOnDestroy(): void {
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
     public get games(): UserDisplayableGameData[] {
