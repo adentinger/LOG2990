@@ -102,10 +102,8 @@ export class MenuAutomatonService {
     }
 
     private moveToInitialState(): void {
-        if (this.stateInternal != null) {
-            this.stateInternal.leave.next();
-        }
         this.stateInternal = this.states.gameMode;
+        this.stateInternal.leave.next();
         this.states.gameMode.arrive.next();
         this.path = [];
     }
@@ -116,9 +114,10 @@ export class MenuAutomatonService {
         );
         const found = index >= 0;
         if (found) {
-            this.state.leave.next();
+            const oldState = this.state;
             this.path.push({state: this.state, option: option});
             this.stateInternal = option.nextState;
+            oldState.leave.next();
             this.state.arrive.next();
         }
         else {
