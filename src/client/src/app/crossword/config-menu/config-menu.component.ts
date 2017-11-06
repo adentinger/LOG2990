@@ -33,13 +33,13 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
                 private gameHttpService: GameHttpService) { }
 
     public ngAfterViewInit(): void {
-        const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
+        const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
             () => {
                 this.shouldShowAvailableGames = true;
                 this.availableGamesComponent.refresh();
             }
         );
-        const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
+        const chooseGameLeaveSubscription = this.menuAutomaton.states.chooseGame.leave.subscribe(
             () => {
                 this.shouldShowAvailableGames = false;
                 const chosenGame = this.availableGamesComponent.chosenGame;
@@ -48,7 +48,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
                 }
             }
         );
-        const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
+        const configEndSubscription = this.menuAutomaton.states.confirm.leave.subscribe(
             () => {
                 this.useConfiguration();
             }
