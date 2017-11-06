@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, EventEmitter, Output, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, ViewChild, EventEmitter, Output, AfterViewInit, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
@@ -30,7 +30,8 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
                 public waitingService: WaitingService,
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
-                private userChoiceService: UserChoiceService) { }
+                private userChoiceService: UserChoiceService,
+                private ngZone: NgZone) { }
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
@@ -48,7 +49,17 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
                 this.useConfiguration();
             }
         );
-        this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
+        const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
+            () => {
+                this.ngZone.run(() => {});
+            }
+        );
+        this.subscriptions.push(
+            chooseGameArriveSubscription,
+            chooseGameLeaveSubscription,
+            configEndSubscription,
+            stopDisplayingSubscription
+        );
     }
 
     public ngOnDestroy(): void {
