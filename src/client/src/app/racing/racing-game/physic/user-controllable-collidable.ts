@@ -15,7 +15,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected userInputs: UIInputs;
 
     protected friction: Newtons = 10;
-    protected acceleration = 20; // m/s^2
+    protected acceleration = 30; // m/s^2
     protected maxSpeed = 10; // m/s
 
     protected angularFriction: number = 2 * Math.PI; // rad/s^2

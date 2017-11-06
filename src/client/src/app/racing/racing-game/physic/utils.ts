@@ -2,16 +2,28 @@ import * as THREE from 'three';
 import { IPhysicElement, isPhysicElement } from './object';
 import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import { Point, Line } from '../../../../../../common/src/math';
+import { EventManager } from '../../../event-manager.service';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
+export const COLLISION_EVENT = 'physic-collision';
+
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
-    private static readonly LENGTH_TO_FORCE_CONSTANT = 5; // N*m^2
+    private static readonly SPRING_CONSTANT = 1; // N*m^2
 
     private root: THREE.Object3D;
 
-    constructor() { }
+    constructor(private eventManager: EventManager) { }
+
+    public static getObjectDimensions(obj: THREE.Object3D): THREE.Vector3 {
+        const rotation = obj.rotation.toArray();
+        obj.rotation.set(0, 0, 0);
+        const box1 = new THREE.Box3().setFromObject(obj);
+        obj.rotation.fromArray(rotation);
+        box1.translate(obj.position.clone().negate());
+        return new THREE.Vector3().subVectors(box1.max, box1.min);
+    }
 
     public setRoot(root: THREE.Object3D) {
         this.root = root;
@@ -50,25 +62,34 @@ export class PhysicUtils {
 
         const intersectionPoints: [Line, Line, Point][] = this.getFirstIntersection(targetLines, sourceLines);
 
+        // We need at least 2 points of intersection to calculate the collision
         if (intersectionPoints.length < 2) {
             return null;
         }
 
-        const intersection1 = intersectionPoints[0][2];
-        const intersection2 = intersectionPoints[1][2];
+        const intersection1: Point = intersectionPoints[0][2];
+        const intersection2: Point = intersectionPoints[1][2];
         const intersectionLine: Line = new Line(intersection1, intersection2);
 
         const lineVector = this.getVector3FromPoint(intersectionLine.translation);
+        // The point of application of the force (against the target's position)
         const applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
             .sub(this.getVector2FromVector3(target.position));
 
+        // Check if the points are in the rigth order (to have them point clockwise against the target)
         const order = lineVector.clone().cross(UP).dot(this.getVector3FromVector2(applicationPoint));
         if (order > 0) {
             lineVector.negate();
         }
 
-        const scalarForce = target.mass * PhysicUtils.LENGTH_TO_FORCE_CONSTANT /
-            ((applicationPoint.length() / this.getVector2FromPoint(targetLines[0].origin).length()) ** 3);
+        const sourceMass = Number.isFinite(source.mass) ? source.mass : target.mass;
+
+        // Calculation of the force implied in the collision
+        const targetRadius = this.getVector2FromPoint(targetLines[0].origin)
+            .sub(this.getVector2FromVector3(target.position)).length();
+        const distanceToTarget = applicationPoint.length();
+        const scalarAcceleration = target.mass * PhysicUtils.SPRING_CONSTANT / ((distanceToTarget / targetRadius) ** 2);
+        const scalarForce = sourceMass * scalarAcceleration; // F = m*a
 
         const force: THREE.Vector2 = this.getVector2FromVector3(
             lineVector.normalize().cross(UP).multiplyScalar(scalarForce)
@@ -80,6 +101,8 @@ export class PhysicUtils {
             applicationPoint,
             force
         };
+
+        this.eventManager.fireEvent(COLLISION_EVENT, { name: COLLISION_EVENT, data: collision });
 
         return collision;
     }
@@ -93,7 +116,6 @@ export class PhysicUtils {
                 if (intersectionPoints.length > 0) {
                     intersections.push(...intersectionPoints.map(point =>
                         [targetLine, sourceLine, point] as [Line, Line, Point]));
-                    // intersections.push([targetLine, sourceLine, intersectionPoints[0]]);
                 }
             }
 

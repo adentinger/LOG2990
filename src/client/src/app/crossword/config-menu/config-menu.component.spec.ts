@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Location } from '@angular/common';
-import { SpyLocation } from '@angular/common/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ConfigMenuComponent } from './config-menu.component';
-import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
+import { AvailableGamesComponent } from './available-games/available-games.component';
+import { WaitingComponent } from './waiting/waiting.component';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
-import { CrosswordGameService } from '../crossword-game.service';
+import { GameService } from '../game.service';
+import { GameHttpService } from '../services/game-http.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -16,18 +16,20 @@ describe('ConfigMenuComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule
+                HttpClientModule
             ],
-            declarations: [ConfigMenuComponent],
+            declarations: [
+                ConfigMenuComponent,
+                AvailableGamesComponent,
+                WaitingComponent
+            ],
             providers: [
-                ConfigMenuService,
-                {provide: Location, useClass: SpyLocation},
-                { provide: MENU_CONFIG_URL, useValue: '/crossword/games/pending/10' },
-                {provide: PacketManagerClient, useValue: packetManagerClient},
-                CrosswordGameService
+                GameService,
+                GameHttpService,
+                {provide: PacketManagerClient, useValue: packetManagerClient}
             ]
         })
-            .compileComponents();
+        .compileComponents();
     }));
 
     beforeEach(() => {

@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
-import { BoardComponent } from './board/board.component';
-import { CrosswordGameService } from './crossword-game.service';
+import { GameService } from './game.service';
 import { TimerService } from './services/timer.service';
+import { GameHttpService } from './services/game-http.service';
+import { GameId, PlayerNumber } from '../../../../common/src/communication/game-configs';
 
 @Component({
     selector: 'app-crossword',
@@ -11,14 +12,16 @@ import { TimerService } from './services/timer.service';
     providers: [
         SimpleTimer,
         DefinitionsService,
-        TimerService
+        TimerService,
+        GameHttpService,
+        GameService
     ]
 })
 export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
 
-    constructor(private crosswordGameService: CrosswordGameService) { }
+    constructor(private crosswordGameService: GameService) { }
 
     public ngOnInit(): void {
     }

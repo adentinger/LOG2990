@@ -5,7 +5,7 @@ import { DayMode } from '../../day-mode/day-mode';
 
 export interface LightOptions {
     color: number;
-    rotation: THREE.Euler;
+    rotation?: THREE.Euler;
     intensity: number;
 }
 
@@ -26,8 +26,8 @@ export class Lighting extends THREE.Object3D implements DayModeNotifiable {
 
     constructor() {
         super();
-        this.KEY_LIGHT  = new THREE.DirectionalLight(0x000000, 0);
-        this.BACK_LIGHT = new THREE.AmbientLight(0x000000, 0);
+        this.KEY_LIGHT  = new THREE.DirectionalLight();
+        this.BACK_LIGHT = new THREE.AmbientLight();
         this.add(this.KEY_LIGHT, this.BACK_LIGHT);
     }
 
@@ -42,7 +42,9 @@ export class Lighting extends THREE.Object3D implements DayModeNotifiable {
         const BASE_VECTOR = new THREE.Vector3(0, 0, -1);
         light.color.setHex(options.color);
         light.intensity = options.intensity;
-        light.position.copy(BASE_VECTOR.applyEuler(options.rotation));
+        if (options.rotation) {
+            light.position.copy(BASE_VECTOR.applyEuler(options.rotation));
+        }
     }
 
 }

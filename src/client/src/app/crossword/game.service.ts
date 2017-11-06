@@ -3,19 +3,20 @@ import { Injectable } from '@angular/core';
 import { CrosswordGame } from './class/crossword-game';
 import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
+
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
-import { CrosswordTimerPacket } from '../../../../common/src/crossword/packets/crossword-timer.packet';
-import { Direction } from '../../../../common/src/crossword/crossword-enums';
-import '../../../../common/src/crossword/packets/crossword-timer.parser';
+import '../../../../common/src/crossword/packets/game-join.parser';
 
 /**
- * @class CrosswordGameService
- * Has the purpose of sending all packets from the client to the server
+ * @class GameService
+ * Represents the current game. Has the resposibilities of:
+ * 1) Containing the game's data
+ * 2) Sending all socket packets from the client to the server
  * The response from the server usually goes directly to the appropriate
  * service
  */
 @Injectable()
-export class CrosswordGameService {
+export class GameService {
 
     private cheatModeOn = false;
     private showWordsOn = false;

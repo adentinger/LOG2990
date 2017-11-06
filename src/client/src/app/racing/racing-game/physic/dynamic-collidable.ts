@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import { PhysicUtils } from './engine';
 import { Seconds, Kilograms } from '../../types';
-import { DynamicPhysicMesh, DynamicPhysicElement } from './dynamic-object';
-import { Collidable, CollisionInfo } from './collidable';
+import { DynamicPhysicMesh, DynamicPhysicElement, isDynamicPhysicElement } from './dynamic-object';
+import { Collidable, CollisionInfo, isCollidable } from './collidable';
 
-export interface DynamicCollidable extends DynamicPhysicElement, Collidable {
-    velocity: THREE.Vector3; // m/s
+export interface DynamicCollidable extends DynamicPhysicElement, Collidable { }
+
+export function isDynamicCollidable(obj: any): obj is DynamicCollidable {
+    return isDynamicPhysicElement(obj) && isCollidable(obj);
 }
 
 export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements DynamicCollidable {
@@ -33,9 +35,6 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
 
     protected getCollisions(utils: PhysicUtils, deltaTime: Seconds) {
         const collidingObjects: CollisionInfo[] = utils.getCollisionsOf(this);
-        if (collidingObjects.length > 0) {
-            // console.log('Collision', this.position, collidingObjects);
-        }
         return collidingObjects.map((collision: CollisionInfo) => {
             return <[THREE.Vector3, THREE.Vector3]>[
                 this.getVector3From(collision.applicationPoint),

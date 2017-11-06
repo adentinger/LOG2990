@@ -4,6 +4,7 @@ import { Logger } from '../../../../../../../common/src';
 import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { CarHeadlight } from './car-headlight';
 import { Kilograms, Seconds } from '../../../types';
+import { DayMode } from '../../day-mode/day-mode';
 
 export interface CarLights {
     headlightLeft: THREE.Light;
@@ -34,8 +35,8 @@ export class Car extends UserControllableCollidableMesh {
     private static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = Car.loadColoredCarParts();
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
-        new THREE.Vector3(-0.56077, 0.63412, -2.5),
-        new THREE.Vector3(0.56077, 0.63412, -2.5)
+        new THREE.Vector3(-0.56077, 0.63412, -1.7),
+        new THREE.Vector3(0.56077, 0.63412, -1.7)
     ];
 
     private static readonly SHININESS = 1000;
@@ -63,9 +64,13 @@ export class Car extends UserControllableCollidableMesh {
                 Car.BASE_PATH + name + Car.FILE_EXTENSION,
                 (geometry, materials) => {
                     const CAR_PART = new THREE.Mesh(geometry, materials[0]);
+                    CAR_PART.name = name;
                     geometry.computeVertexNormals();
                     geometry['computeMorphNormals']();
                     (materials[0] as THREE.MeshPhongMaterial).shininess = Car.SHININESS;
+                    (materials[0] as THREE.MeshPhongMaterial).emissiveIntensity = 0;
+                    CAR_PART.receiveShadow = true;
+                    CAR_PART.castShadow = true;
                     resolve(CAR_PART);
                 },
                 () => { },
@@ -142,6 +147,16 @@ export class Car extends UserControllableCollidableMesh {
             headlightRight: HEADLIGHTS[1]
         };
         this.add(this.lights.headlightLeft, this.lights.headlightRight);
+    }
+
+    public dayModeChanged(newMode: DayMode): void {
+        const OPTIONS = newMode.CAR_HEADLIGHT_OPTIONS;
+        const lights = this.getObjectByName('lights') as THREE.Mesh;
+        const breakLights = this.getObjectByName('brake_light') as THREE.Mesh;
+        if (lights && breakLights) {
+            (<THREE.MeshPhongMaterial>lights.material).emissiveIntensity = OPTIONS.intensity * 0.9;
+            (<THREE.MeshPhongMaterial>breakLights.material).emissiveIntensity = OPTIONS.intensity * 0.9;
+        }
     }
 
 }
