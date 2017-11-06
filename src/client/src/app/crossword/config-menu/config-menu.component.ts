@@ -25,7 +25,10 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
-            () => this.shouldShowAvailableGames = true
+            () => {
+                this.shouldShowAvailableGames = true;
+                this.availableGamesComponent.refresh();
+            }
         );
         const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
             () => this.shouldShowAvailableGames = false
