@@ -40,17 +40,6 @@ export class RenderableMap extends PhysicMesh {
         this.PLANE.position.set(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2);
 
         ///////////////////////////////////
-        const point1 = new THREE.Vector2(this.mapPoints[0].x, this.mapPoints[0].y);
-        const point2 = new THREE.Vector2(this.mapPoints[1].x, this.mapPoints[1].y);
-
-        const segmentLength = point1.distanceTo(point2);
-
-        const segment1 = new RacetrackSegment(segmentLength);
-
-        const angle = this.angleBetweenTwoVectors(this.mapPoints[0], this.mapPoints[1]);
-
-        console.log(this.mapPoints[0]);
-        segment1.position.add(new THREE.Vector3(this.mapPoints[0].x + segmentLength / 2, 0, -this.mapPoints[0].y));
 
         // We trace the junctions first (on 0.01 layer)
         for (const i of this.mapPoints) {
@@ -60,6 +49,22 @@ export class RenderableMap extends PhysicMesh {
             this.add(junction);
         }
 
+
+        for (let i = 0; i < this.mapPoints.length - 1; i++) {
+                const point1 = new THREE.Vector2(this.mapPoints[i].x, this.mapPoints[i].y);
+                const point2 = new THREE.Vector2(this.mapPoints[i + 1].x, this.mapPoints[i + 1].y);
+                const segmentLength = point1.distanceTo(point2);
+                const angle = this.angleBetweenTwoVectors(this.mapPoints[i], this.mapPoints[i + 1]);
+                const segment1 = new RacetrackSegment(segmentLength);
+                segment1.rotation.z += angle;
+                const opposite = Math.sin(angle) * segmentLength / 2;
+                const adjacent = Math.cos(angle) * segmentLength / 2;
+                segment1.position.x = this.mapPoints[i].x + opposite;
+                segment1.position.z = this.mapPoints[i].y + adjacent;
+                this.add(segment1);
+        }
+
+/*
         const reference: Vector = new Vector(1.0, 0.0);
         for (let i = 0; i < this.mapPoints.length; i++) {
             const currentPoint = this.mapPoints[i];
@@ -68,17 +73,12 @@ export class RenderableMap extends PhysicMesh {
             const angleOfSegment = undefined;
             // TODO place segment properly
         }
-
+*/
         this.add(this.PLANE);
     }
 
     public angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {
-        let angle = (Math.atan2(nextPoint.y - currentPoint.y, nextPoint.x - currentPoint.x));
-
-        if (angle < 0) {
-            angle += 360;
-        }
-        return angle;
+        return (Math.atan2(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y));
     }
 
 }
