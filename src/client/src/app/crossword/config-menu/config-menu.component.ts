@@ -28,9 +28,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 private waitingService: WaitingService,
                 private gameService: GameService,
-                private gameHttpService: GameHttpService) {
-        this.waitingService.isWaiting.next(true);
-    }
+                private gameHttpService: GameHttpService) { }
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
@@ -74,6 +72,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
     private useConfiguration(): void {
         this.isConfiguringGame = false;
+        this.waitingService.isWaiting.next(true);
         const userChoices = this.menuAutomaton.choices;
         const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
