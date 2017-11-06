@@ -8,7 +8,7 @@ import { WaitingService } from './waiting.service';
 })
 export class WaitingComponent implements OnInit {
 
-    constructor(private waitingService: WaitingService) { }
+    constructor(public waitingService: WaitingService) { }
 
     public ngOnInit(): void {
     }
