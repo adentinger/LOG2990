@@ -31,6 +31,10 @@ export class AvailableGamesComponent {
         }
     }
 
+    public isSelected(index: number): boolean {
+        return this.gamesInternal[index].id === this.chosenGame;
+    }
+
     public async refresh(): Promise<void> {
         this.chosenGame = null;
         this.gamesInternal = []; // Display nothing while we refresh
