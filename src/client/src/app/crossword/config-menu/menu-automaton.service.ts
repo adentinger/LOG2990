@@ -55,6 +55,16 @@ export class MenuAutomatonService {
         return this.states.chooseGame.leave;
     }
 
+    public get choices(): MenuAutomatonChoices {
+        const choices = new MenuAutomatonChoices();
+        this.path.forEach((transition) => {
+            if (transition.state.fieldName !== null && transition.option !== null) {
+                choices[transition.state.fieldName] = transition.option.value;
+            }
+        });
+        return choices;
+    }
+
     private initialize(): void {
         this.createStates();
         this.addStateTransitions();
@@ -127,16 +137,6 @@ export class MenuAutomatonService {
         else {
             throw new Error('Cannot go back: already at the initial configuration menu');
         }
-    }
-
-    public get choices(): MenuAutomatonChoices {
-        const choices = new MenuAutomatonChoices();
-        this.path.forEach((transition) => {
-            if (transition.state.fieldName !== null && transition.option !== null) {
-                choices[transition.state.fieldName] = transition.option.value;
-            }
-        });
-        return choices;
     }
 
 }
