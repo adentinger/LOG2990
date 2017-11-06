@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { GameHttpService } from '../../services/game-http.service';
 import { UserDisplayableGameData } from './user-displayable-game-data';
@@ -12,6 +12,7 @@ import { GameId } from '../../../../../../common/src/communication/game-configs'
 export class AvailableGamesComponent {
 
     private gamesInternal: UserDisplayableGameData[] = [];
+    @Input() public shouldDisplay = true;
     public chosenGame: GameId = null;
 
     constructor(public gameHttpService: GameHttpService) {
