@@ -50,6 +50,10 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
+    public get shouldBeDisplayed(): boolean {
+        return this.isConfiguringGame || this.shouldShowWaitingComponent;
+    }
+
     public get shouldShowWaitingComponent(): boolean {
         return !this.isConfiguringGame && !this.hasGameStarted;
     }
