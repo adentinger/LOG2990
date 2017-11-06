@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MenuAutomatonService } from '../menu-automaton.service';
 import { UserChoiceService } from '../user-choice.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-confirmation',
     templateUrl: './confirmation.component.html',
     styleUrls: ['./confirmation.component.css']
 })
-export class ConfirmationComponent implements OnInit {
+export class ConfirmationComponent {
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                public userChoiceService: UserChoiceService) { }
-
-    public ngOnInit(): void {
+                public userChoiceService: UserChoiceService) {
+        const confirmState = this.menuAutomaton.states.confirm;
+        confirmState.canMoveToNextState = () => this.userChoiceService.playerName !== '';
     }
 
 }

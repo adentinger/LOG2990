@@ -20,7 +20,7 @@ export class UserChoiceService {
     public createOrJoin: CreateOrJoin;
     public difficulty: Difficulty;
     public chosenGame: GameId;
-    public playerName: string;
+    public playerName: string = '';
 
     constructor() { }
 
