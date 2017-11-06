@@ -106,15 +106,17 @@ export class MenuAutomatonService {
             optionOfState => optionOfState === option
         );
         const found = index >= 0;
-        if (found && this.state.canMoveToNextState()) {
-            const oldState = this.state;
-            this.path.push({state: this.state, option: option});
-            this.stateInternal = option.nextState;
-            oldState.leave.next();
-            this.state.arrive.next();
+        if (found) {
+            if (this.state.canMoveToNextState()) {
+                const oldState = this.state;
+                this.path.push({state: this.state, option: option});
+                this.stateInternal = option.nextState;
+                oldState.leave.next();
+                this.state.arrive.next();
 
-            if (this.state === MenuState.none) {
-                this.configEndInternal.next();
+                if (this.state === MenuState.none) {
+                    this.configEndInternal.next();
+                }
             }
         }
         else {
