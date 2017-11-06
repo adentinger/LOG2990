@@ -41,7 +41,7 @@ export class DefinitionFieldComponent {
     public onDefinitionClicked(index: number, direction: Direction): void {
         const SELECTED_WORD: GridWord =
             this.crosswordGridService.getWord(index, direction);
-        this.selectionService.selection.next(SELECTED_WORD);
+        this.selectionService.updateSelectedGridWord(SELECTED_WORD);
     }
 
     public onClickOutside(): void {

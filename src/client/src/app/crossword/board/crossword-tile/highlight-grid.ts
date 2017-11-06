@@ -1,6 +1,7 @@
 import { GridWord } from '../../../../../../common/src/crossword/grid-word';
 import { Grid } from '../../../../../../common/src/grid';
 import { Direction } from '../../../../../../common/src/crossword/crossword-enums';
+import { SelectedGridWord } from '../selected-grid-word';
 
 export enum WhoIsSelecting {
     noOne = 0,
@@ -17,12 +18,12 @@ export class HighlightGrid {
 
     private data: boolean[][] = [];
 
-    constructor(gridWord: GridWord = null) {
+    constructor(selection: SelectedGridWord = {playerSelection: null, opponentSelection: null}) {
         const DATA = [];
         for (let row = 0; row < Grid.DIMENSIONS; ++row) {
             const ROW_DATA = [];
             for (let column = 0; column < Grid.DIMENSIONS; ++column) {
-                ROW_DATA.push(this.shouldBeSelected(row, column, gridWord));
+                ROW_DATA.push(this.shouldBeSelected(row, column, selection.playerSelection));
             }
             DATA.push(ROW_DATA);
         }

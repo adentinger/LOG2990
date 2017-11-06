@@ -8,6 +8,7 @@ import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
 import { Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { SelectedGridWord } from './selected-grid-word';
 
 @Component({
     selector: 'app-board',
@@ -45,7 +46,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         return this.crosswordGridService.getCharAt(row, column);
     }
 
-    private onSelect(selected: GridWord): void {
+    private onSelect(selected: SelectedGridWord): void {
         this.highlightGrid = new HighlightGrid(selected);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
@@ -67,7 +68,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         input = input.replace(/[^a-zA-Z]/g, '');
         input = input.toLowerCase();
 
-        const SELECTED_WORD = this.selectionService.selectionValue;
+        const SELECTED_WORD = this.selectionService.selectionValue.playerSelection;
         if (input.length > SELECTED_WORD.length) {
             input = input.substr(0, SELECTED_WORD.length);
         }
