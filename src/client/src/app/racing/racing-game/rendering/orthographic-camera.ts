@@ -5,7 +5,7 @@ export class OrthographicCamera extends THREE.OrthographicCamera {
 
     private static readonly WIDTH: number = window.innerWidth;
     private static readonly HEIGHT: number = window.innerHeight;
-    private static readonly ORTHO_HEIGHT = 500; // 10;
+    private static readonly ORTHO_HEIGHT = 10;
     private static readonly ASPECT: number = OrthographicCamera.WIDTH / OrthographicCamera.HEIGHT;
     private static readonly NEAR: number = -OrthographicCamera.DISTANCE_TO_TARGET;
     private static readonly FAR: number = 500;

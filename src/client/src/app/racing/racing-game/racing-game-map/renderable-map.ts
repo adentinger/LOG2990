@@ -41,44 +41,58 @@ export class RenderableMap extends PhysicMesh {
 
         ///////////////////////////////////
 
-        // We trace the junctions first (on 0.01 layer)
+        this.placeJunctionsOnMap();
+        this.placeSegmentsOnMap();
+
+        this.add(this.PLANE);
+    }
+
+    private placeJunctionsOnMap() {
         for (const i of this.mapPoints) {
             console.log('point - x=' + i.x + ' y=' + i.y);
             const junction = new RacetrackJunction();
             junction.position.add(new THREE.Vector3(i.x, 0, i.y));
             this.add(junction);
         }
-
-
-        for (let i = 0; i < this.mapPoints.length - 1; i++) {
-                const point1 = new THREE.Vector2(this.mapPoints[i].x, this.mapPoints[i].y);
-                const point2 = new THREE.Vector2(this.mapPoints[i + 1].x, this.mapPoints[i + 1].y);
-                const segmentLength = point1.distanceTo(point2);
-                const angle = this.angleBetweenTwoVectors(this.mapPoints[i], this.mapPoints[i + 1]);
-                const segment1 = new RacetrackSegment(segmentLength);
-                segment1.rotation.z += angle;
-                const opposite = Math.sin(angle) * segmentLength / 2;
-                const adjacent = Math.cos(angle) * segmentLength / 2;
-                segment1.position.x = this.mapPoints[i].x + opposite;
-                segment1.position.z = this.mapPoints[i].y + adjacent;
-                this.add(segment1);
-        }
-
-/*
-        const reference: Vector = new Vector(1.0, 0.0);
-        for (let i = 0; i < this.mapPoints.length; i++) {
-            const currentPoint = this.mapPoints[i];
-            const nextPoint = this.mapPoints[(i + 1) % this.mapPoints.length];
-            const segmentVector: Vector = new Vector(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y);
-            const angleOfSegment = undefined;
-            // TODO place segment properly
-        }
-*/
-        this.add(this.PLANE);
     }
 
-    public angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {
+    private placeSegmentsOnMap() {
+        for (let i = 0; i < this.mapPoints.length; i++) {
+            let nextPoint = i + 1;
+            if (i === this.mapPoints.length - 1) {
+                nextPoint = 0;
+            }
+
+            const point1 = new THREE.Vector2(this.mapPoints[i].x, this.mapPoints[i].y);
+            const point2 = new THREE.Vector2(this.mapPoints[nextPoint].x, this.mapPoints[nextPoint].y);
+            const segmentLength = point1.distanceTo(point2);
+            const angle = this.angleBetweenTwoVectors(this.mapPoints[i], this.mapPoints[nextPoint]);
+            let segment = new RacetrackSegment(segmentLength);
+
+            const xyTranslation = this.getSegmentXandYTranslation(angle, segmentLength);
+            segment = this.translateSegmentInXandYWithExpectedOrientation(segment, angle, xyTranslation[0], xyTranslation[1], i);
+
+            this.add(segment);
+        }
+    }
+
+    private angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {
         return (Math.atan2(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y));
+    }
+
+    private getSegmentXandYTranslation(angle: number, segmentLength: number) {
+        const opposite = Math.sin(angle) * segmentLength / 2;   // sin(radians) = opposite / hypotenuse
+        const adjacent = Math.cos(angle) * segmentLength / 2;   // cos(radians) = adjacent / hypotenuse
+        return [opposite, adjacent]; // x, y
+    }
+
+    private translateSegmentInXandYWithExpectedOrientation(segment: RacetrackSegment, angle: number,
+            xTranslation: number, yTranslation: number, currentIndex: number) {
+        segment.rotation.z += angle;
+        segment.position.x = this.mapPoints[currentIndex].x + xTranslation;
+        segment.position.z = this.mapPoints[currentIndex].y + yTranslation;
+
+        return segment;
     }
 
 }
