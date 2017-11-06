@@ -5,17 +5,11 @@ import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossw
 
 describe('MenuAutomatonChoices', () => {
 
-    beforeEach(() => TestBed.configureTestingModule({
-        providers: [
-            MenuAutomatonChoices
-        ]
-    }));
-
     let menuAutomatonChoices: MenuAutomatonChoices;
 
-    beforeEach(inject([MenuAutomatonChoices], (menuAutomatonChoicesInjected) => {
-        menuAutomatonChoices = menuAutomatonChoicesInjected;
-    }));
+    beforeEach(() => {
+        menuAutomatonChoices = new MenuAutomatonChoices();
+    });
 
     it('should be created', () => {
         expect(menuAutomatonChoices).toBeTruthy();
@@ -45,7 +39,6 @@ describe('MenuAutomatonChoices', () => {
         expect(gameConfiguration.gameMode).toEqual(GameMode.Classic);
         expect(gameConfiguration.playerNumber).toEqual(1);
         expect(gameConfiguration.difficulty).toEqual(Difficulty.hard);
-        expect(gameConfiguration.gameId).toEqual(42);
     });
 
 });

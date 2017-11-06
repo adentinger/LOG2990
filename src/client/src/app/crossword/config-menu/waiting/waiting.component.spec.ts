@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WaitingComponent } from './waiting.component';
+import { WaitingService } from './waiting.service';
+import { PacketManagerClient } from '../../../packet-manager-client';
+import { packetManagerClient } from '../../../packet-manager.service';
 
 describe('WaitingComponent', () => {
     let component: WaitingComponent;
@@ -8,7 +11,11 @@ describe('WaitingComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ WaitingComponent ]
+            declarations: [ WaitingComponent ],
+            providers: [
+                WaitingService,
+                {provide: PacketManagerClient, useValue: packetManagerClient}
+            ]
         })
         .compileComponents();
     }));

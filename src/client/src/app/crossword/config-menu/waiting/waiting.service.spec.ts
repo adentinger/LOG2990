@@ -1,11 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { WaitingService } from './waiting.service';
+import { PacketManagerClient } from '../../../packet-manager-client';
+import { packetManagerClient } from '../../../packet-manager.service';
 
 describe('WaitingService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [WaitingService]
+            providers: [
+                WaitingService,
+                {provide: PacketManagerClient, useValue: packetManagerClient}
+            ]
         });
     });
 
