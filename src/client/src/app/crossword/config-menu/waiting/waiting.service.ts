@@ -30,7 +30,7 @@ export class WaitingService {
     }
 
     public get isWaitingValue(): boolean {
-        return this.isWaitingValue;
+        return this.isWaitingValueInternal;
     }
 
     @PacketHandler(GameStartPacket)
