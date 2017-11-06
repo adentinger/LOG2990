@@ -39,8 +39,6 @@ export class RenderableMap extends PhysicMesh {
         this.PLANE.add(wireframePlane);
         this.PLANE.position.set(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2);
 
-        ///////////////////////////////////
-
         this.placeJunctionsOnMap();
         this.placeSegmentsOnMap();
 
@@ -58,11 +56,7 @@ export class RenderableMap extends PhysicMesh {
 
     private placeSegmentsOnMap() {
         for (let i = 0; i < this.mapPoints.length; i++) {
-            let nextPoint = i + 1;
-            if (i === this.mapPoints.length - 1) {
-                nextPoint = 0;
-            }
-
+            const nextPoint = (i + 1) % this.mapPoints.length;
             const point1 = new THREE.Vector2(this.mapPoints[i].x, this.mapPoints[i].y);
             const point2 = new THREE.Vector2(this.mapPoints[nextPoint].x, this.mapPoints[nextPoint].y);
             const segmentLength = point1.distanceTo(point2);
@@ -87,7 +81,7 @@ export class RenderableMap extends PhysicMesh {
     }
 
     private translateSegmentInXandYWithExpectedOrientation(segment: RacetrackSegment, angle: number,
-            xTranslation: number, yTranslation: number, currentIndex: number) {
+        xTranslation: number, yTranslation: number, currentIndex: number) {
         segment.rotation.z += angle;
         segment.position.x = this.mapPoints[currentIndex].x + xTranslation;
         segment.position.z = this.mapPoints[currentIndex].y + yTranslation;
