@@ -3,7 +3,6 @@ import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { CrosswordGameService } from './crossword-game.service';
 import { TimerService } from './services/timer.service';
-import { ConfigMenuService } from './config-menu/config-menu.service';
 import { GameService } from './services/game.service';
 
 @Component({
@@ -13,7 +12,6 @@ import { GameService } from './services/game.service';
         SimpleTimer,
         DefinitionsService,
         TimerService,
-        ConfigMenuService,
         GameService
     ]
 })
