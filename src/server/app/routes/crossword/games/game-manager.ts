@@ -28,6 +28,9 @@ export class GameManager {
 
     public getGameConfigurations(): CrosswordGameConfigs[] {
         const gameConfigs: CrosswordGameConfigs[] = [];
+        this.games.forEach((game) => {
+            gameConfigs.push(game.configuration);
+        });
         return gameConfigs;
     }
 
