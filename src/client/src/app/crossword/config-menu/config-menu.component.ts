@@ -42,10 +42,6 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
         const chooseGameLeaveSubscription = this.menuAutomaton.states.chooseGame.leave.subscribe(
             () => {
                 this.shouldShowAvailableGames = false;
-                const chosenGame = this.availableGamesComponent.chosenGame;
-                if (chosenGame === null) {
-                    this.menuAutomaton.goBack();
-                }
             }
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
