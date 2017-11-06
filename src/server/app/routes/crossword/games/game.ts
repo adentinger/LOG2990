@@ -71,12 +71,13 @@ export class Game {
     }
 
     public get configuration(): CrosswordGameConfigs {
-        return {
-            difficulty: this.configuration.difficulty,
+        const config = {
+            difficulty: this.configurationInternal.difficulty,
             gameId: this.id,
-            gameMode: this.configuration.gameMode,
+            gameMode: this.configurationInternal.gameMode,
             playerNumber: this.numberOfPlayers
         };
+        return config;
     }
 
     public addPlayer(playerId: string): PlayerNumber {
