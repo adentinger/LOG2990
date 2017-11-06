@@ -19,7 +19,7 @@ export class UserChoiceService {
     public playerNumber: PlayerNumber;
     public createOrJoin: CreateOrJoin;
     public difficulty: Difficulty;
-    public gameId: GameId;
+    public chosenGame: GameId;
     public playerName: string;
 
     constructor() { }
@@ -28,7 +28,6 @@ export class UserChoiceService {
         return {
             gameMode: this.gameMode,
             difficulty: this.difficulty,
-            gameId: this.gameId,
             playerNumber: this.playerNumber
         };
     }

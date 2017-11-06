@@ -5,6 +5,7 @@ import { UserDisplayableGameData } from './user-displayable-game-data';
 import { GameId } from '../../../../../../common/src/communication/game-configs';
 import { Subscription } from 'rxjs/Subscription';
 import { MenuAutomatonService } from '../menu-automaton.service';
+import { UserChoiceService } from '../user-choice.service';
 
 @Component({
     selector: 'app-available-games',
@@ -17,10 +18,10 @@ export class AvailableGamesComponent implements OnDestroy {
     private subscriptions: Subscription[] = [];
 
     @Input() public shouldDisplay = true;
-    public chosenGame: GameId = null;
 
     constructor(public gameHttpService: GameHttpService,
-                private menuAutomaton: MenuAutomatonService) {
+                private menuAutomaton: MenuAutomatonService,
+                private userChoiceService: UserChoiceService) {
         // Refresh the list whenever we move to the 'chooseGame' screen.
         const chooseGameState = this.menuAutomaton.states.chooseGame;
         const chooseGameArriveSubscription =
@@ -30,7 +31,8 @@ export class AvailableGamesComponent implements OnDestroy {
         this.subscriptions.push(chooseGameArriveSubscription);
 
         // We can leave the screen only if we picked a game.
-        chooseGameState.canMoveToNextState = () => this.chosenGame !== null;
+        chooseGameState.canMoveToNextState =
+            () => this.userChoiceService.chosenGame !== null;
     }
 
     public ngOnDestroy(): void {
@@ -43,7 +45,7 @@ export class AvailableGamesComponent implements OnDestroy {
 
     public choose(index: number): void {
         if (index >= 0 && index < this.gamesInternal.length) {
-            this.chosenGame = this.gamesInternal[index].id;
+            this.userChoiceService.chosenGame = this.gamesInternal[index].id;
         }
         else {
             throw new Error(`Choice index ${index} invalid`);
@@ -51,11 +53,11 @@ export class AvailableGamesComponent implements OnDestroy {
     }
 
     public isSelected(index: number): boolean {
-        return this.gamesInternal[index].id === this.chosenGame;
+        return this.gamesInternal[index].id === this.userChoiceService.chosenGame;
     }
 
     public async refresh(): Promise<void> {
-        this.chosenGame = null;
+        this.userChoiceService.chosenGame = null;
         this.gamesInternal = []; // Display nothing while we refresh
         this.gamesInternal = await this.gameHttpService.getGames();
     }
