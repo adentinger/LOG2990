@@ -9,7 +9,7 @@ export class GamesMiddleWare {
 
     @Route('get', '/')
     public getGames(req: express.Request, res: express.Response): void {
-        const configurations = GameManager.getInstance().gamesConfigurations;
+        const configurations = GameManager.getInstance().getGameConfigurations();
         res.json(configurations);
     }
 

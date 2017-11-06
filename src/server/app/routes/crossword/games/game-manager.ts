@@ -26,7 +26,7 @@ export class GameManager {
         registerHandlers(this, this.packetManager);
     }
 
-    public get gamesConfigurations(): CrosswordGameConfigs[] {
+    public getGameConfigurations(): CrosswordGameConfigs[] {
         const gameConfigs: CrosswordGameConfigs[] = [];
         return gameConfigs;
     }
