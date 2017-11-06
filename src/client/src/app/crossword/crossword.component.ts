@@ -4,6 +4,7 @@ import { DefinitionsService } from './definition-field/definitions.service';
 import { CrosswordGameService } from './crossword-game.service';
 import { TimerService } from './services/timer.service';
 import { GameService } from './services/game.service';
+import { GameId, PlayerNumber } from '../../../../common/src/communication/game-configs';
 
 @Component({
     selector: 'app-crossword',
@@ -26,6 +27,10 @@ export class CrosswordComponent implements OnInit {
 
     public isShowWordsOn(): boolean {
         return this.crosswordGameService.getShowWordsState();
+    }
+
+    public joinGame(gameId: GameId): Promise<PlayerNumber> {
+        return new Promise((resolve, reject) => resolve(1));
     }
 
 }
