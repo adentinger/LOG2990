@@ -8,7 +8,7 @@ import { MenuAutomatonService } from '../menu-automaton.service';
 })
 export class ConfirmationComponent implements OnInit {
 
-    constructor() { }
+    constructor(public menuAutomaton: MenuAutomatonService) { }
 
     public ngOnInit(): void {
     }
