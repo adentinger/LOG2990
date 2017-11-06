@@ -22,6 +22,7 @@ const logger = Logger.getLogger('CrosswordGame');
 const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 minute
 
 export class Game {
+
     private static readonly COUNTDOWN_INITAL = COUNTDOWN_DEFAULT_VALUE;
     private static idCounter = 0;
 
@@ -35,8 +36,11 @@ export class Game {
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
     private readonly playerIds: string[] = [];
+    private readonly configurationInternal: CrosswordGameConfigs;
 
     constructor(configs: CrosswordGameConfigs) {
+        this.configurationInternal = configs;
+
         this.id = Game.idCounter++;
         this.numberOfPlayers = configs.playerNumber;
 
@@ -64,6 +68,15 @@ export class Game {
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
+    }
+
+    public get configuration(): CrosswordGameConfigs {
+        return {
+            difficulty: this.configuration.difficulty,
+            gameId: this.id,
+            gameMode: this.configuration.gameMode,
+            playerNumber: this.numberOfPlayers
+        };
     }
 
     public addPlayer(playerId: string): PlayerNumber {
