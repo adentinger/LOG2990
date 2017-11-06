@@ -24,6 +24,8 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     public shouldShowAvailableGames = false;
 
     private subscriptions: Subscription[] = [];
+    @ViewChild(AvailableGamesComponent)
+    private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
                 private waitingService: WaitingService,
@@ -34,12 +36,14 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
             () => {
                 this.shouldShowAvailableGames = true;
+                this.availableGamesComponent.refresh();
             }
         );
         const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
             () => {
                 this.shouldShowAvailableGames = false;
-                if (!this.menuAutomaton.choices.chosenGame) {
+                const chosenGame = this.availableGamesComponent.chosenGame;
+                if (!chosenGame) {
                     this.menuAutomaton.goBack();
                 }
             }
@@ -72,7 +76,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
         const userChoices = this.menuAutomaton.choices;
         const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
-            this.gameService.joinGame(userChoices.chosenGame);
+            this.gameService.joinGame(this.availableGamesComponent.chosenGame);
         }
         else {
             this.gameHttpService.createGame(userChoices.toGameConfiguration())
