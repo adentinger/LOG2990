@@ -27,7 +27,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     private subscriptions: Subscription[] = [];
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                private waitingService: WaitingService,
+                public waitingService: WaitingService,
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private userChoiceService: UserChoiceService) { }

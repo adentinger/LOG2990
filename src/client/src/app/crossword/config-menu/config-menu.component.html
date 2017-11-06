@@ -1,6 +1,6 @@
 <div class="disclaimer" *ngIf="shouldBeDisplayed"></div>
 <div class="outer-menu" *ngIf="shouldBeDisplayed">
-  <div class="menu">
+  <div class="menu" *ngIf="!waitingService.isWaitingValue">
     <!--For development-->
     <button (click)="shoo()" style="float: right;">X</button>
     <!-- -->
