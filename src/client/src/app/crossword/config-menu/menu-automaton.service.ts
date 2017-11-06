@@ -140,7 +140,7 @@ export class MenuAutomatonService {
     }
 
     public canGoBack(): boolean {
-        return false;
+        return this.path.length > 0;
     }
 
 }
