@@ -15,3 +15,7 @@
 .selected {
     background: yellow;
 }
+
+.found {
+    background: gray;
+}
