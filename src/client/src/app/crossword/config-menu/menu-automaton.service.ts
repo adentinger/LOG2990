@@ -139,4 +139,8 @@ export class MenuAutomatonService {
         }
     }
 
+    public canGoBack(): boolean {
+        return false;
+    }
+
 }
