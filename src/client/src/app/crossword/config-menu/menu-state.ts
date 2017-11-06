@@ -16,12 +16,16 @@ export class MenuState {
     private arriveInternal = new Subject<void>();
     private leaveInternal = new Subject<void>();
 
+    public canMoveToNextState: () => boolean;
+
     constructor(name: string = '',
                 fieldName: string = '',
-                options: Option[] = []) {
+                options: Option[] = [],
+                canMoveToNextState = () => true) {
         this.nameInternal = name;
         this.fieldNameInternal = fieldName;
         this.optionsInternal = options.slice();
+        this.canMoveToNextState = canMoveToNextState;
     }
 
     public get name(): string {
