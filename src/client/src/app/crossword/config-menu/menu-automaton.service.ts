@@ -127,7 +127,10 @@ export class MenuAutomatonService {
 
     public goBack(): void {
         if (this.path.length >= 2) {
+            const oldState = this.state;
             this.stateInternal = this.path.pop().state;
+            oldState.leave.next();
+            this.stateInternal.arrive.next();
         }
         else if (this.path.length === 1) {
             this.path.pop();
