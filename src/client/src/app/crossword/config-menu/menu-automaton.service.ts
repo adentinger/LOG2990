@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { MenuState, Option } from './menu-state';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
-import { MenuAutomatonChoices } from './menu-automaton-choices';
+import { MenuAutomatonChoices, CreateOrJoin } from './menu-automaton-choices';
 
 interface States {
     gameMode:     MenuState;
@@ -76,8 +76,8 @@ export class MenuAutomatonService {
             gameMode: new MenuState('Select game mode', 'gameMode'),
             playerNumber: new MenuState('Select number of players', 'playerNumber'),
             difficulty: new MenuState('Select difficulty', 'difficulty'),
-            createOrJoin: new MenuState('Create or join game?', 'createJoin'),
-            chooseGame: new MenuState('Choose game', 'gameId'),
+            createOrJoin: new MenuState('Create or join game?', 'createOrJoin'),
+            chooseGame: new MenuState('Choose game', 'chosenGame'),
             confirm: new MenuState('Confirm choice?', null)
         };
     }
@@ -93,8 +93,8 @@ export class MenuAutomatonService {
         this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.medium});
         this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm, value: Difficulty.hard});
 
-        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty});
-        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame});
+        this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty, value: CreateOrJoin.create});
+        this.states.createOrJoin.addOption({name: 'Join game', nextState: this.states.chooseGame, value: CreateOrJoin.join});
 
         this.states.chooseGame.addOption({name: 'Done', nextState: this.states.confirm});
 
