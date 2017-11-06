@@ -6,6 +6,7 @@ import { AvailableGamesComponent } from './available-games/available-games.compo
 import { GameHttpService } from '../services/game-http.service';
 import { GameId } from '../../../../../common/src/communication/game-configs';
 import { CreateOrJoin } from './menu-automaton-choices';
+import { GameService } from '../game.service';
 
 @Component({
     selector: 'app-config-menu',
@@ -19,14 +20,13 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
 
     public isConfiguringGame = true;
     public shouldShowAvailableGames = false;
-    @Output()
-    public gameId = new EventEmitter<GameId>();
 
     private subscriptions: Subscription[] = [];
     @ViewChild(AvailableGamesComponent)
     private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
+                private gameService: GameService,
                 private gameHttpService: GameHttpService) { }
 
     public ngOnInit(): void {
@@ -43,14 +43,15 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
             () => {
                 this.isConfiguringGame = false;
                 const userChoices = this.menuAutomaton.choices;
-                if (userChoices.createOrJoin === CreateOrJoin.create) {
-                    this.gameHttpService.requestGame(userChoices.toGameConfiguration())
-                        .then((gameId) => {
-                            this.gameId.emit(gameId);
-                        });
+                const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
+                if (isJoiningGame) {
+                    this.gameService.joinGame(userChoices.chosenGame);
                 }
                 else {
-                    this.gameId.emit(userChoices.chosenGame);
+                    this.gameHttpService.requestGame(userChoices.toGameConfiguration())
+                        .then((gameId) => {
+                            this.gameService.joinGame(gameId);
+                        });
                 }
             }
         );
