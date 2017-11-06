@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { UserDisplayableGameData } from '../config-menu/available-games/user-displayable-game-data';
-import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
 
 @Injectable()
 export class GameService {
@@ -24,10 +24,10 @@ export class GameService {
         return promise;
     }
 
-    public requestGame(gameConfig: CrosswordGameConfigs): Promise<PlayerNumber> {
+    public requestGame(gameConfig: CrosswordGameConfigs): Promise<GameId> {
         const url = GameService.BASE_URL;
         const promise =
-            this.http.post<PlayerNumber>(url, gameConfig).toPromise();
+            this.http.post<GameId>(url, gameConfig).toPromise();
         return promise;
     }
 

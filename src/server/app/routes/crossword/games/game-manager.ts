@@ -1,4 +1,4 @@
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
 import { Game } from './game';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
@@ -29,7 +29,7 @@ export class GameManager {
         return gameConfigs;
     }
 
-    public newGame(configs: CrosswordGameConfigs): number {
+    public newGame(configs: CrosswordGameConfigs): GameId {
         const GAME = new Game(configs);
         this.games.set(GAME.id, GAME);
         return GAME.id;

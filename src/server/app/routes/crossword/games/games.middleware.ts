@@ -16,8 +16,8 @@ export class GamesMiddleWare {
     @Route('post', '/')
     public postGame(req: express.Request, res: express.Response): void {
         const configuration: CrosswordGameConfigs = req.body;
-        const playerNumber = GameManager.getInstance().newGame(configuration);
-        res.json(playerNumber);
+        const gameId = GameManager.getInstance().newGame(configuration);
+        res.json(gameId);
     }
 
 }
