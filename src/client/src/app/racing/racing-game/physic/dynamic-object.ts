@@ -26,8 +26,8 @@ export function isDynamicPhysicElement(object: any): object is DynamicPhysicElem
 }
 
 export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhysicElement {
-    public static readonly MIN_SPEED = 0.05; // m/s
-    public static readonly MIN_ANGULAR_SPEED = 0.005 * Math.PI; // rad/s
+    public static readonly MIN_SPEED = 0.1; // m/s
+    public static readonly MIN_ANGULAR_SPEED = 0.01 * Math.PI; // rad/s
 
     public velocity: THREE.Vector3 = new THREE.Vector3();
     public angularVelocity: THREE.Vector3 = new THREE.Vector3();
