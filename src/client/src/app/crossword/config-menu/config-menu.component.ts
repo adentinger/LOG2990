@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnDestroy, ViewChild, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
@@ -18,25 +18,22 @@ import { WaitingService } from './waiting/waiting.service';
         WaitingService
     ]
 })
-export class ConfigMenuComponent implements OnInit, OnDestroy {
+export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
     public isConfiguringGame = true;
     public shouldShowAvailableGames = false;
 
     private subscriptions: Subscription[] = [];
-    @ViewChild(AvailableGamesComponent)
-    private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
                 private waitingService: WaitingService,
                 private gameService: GameService,
                 private gameHttpService: GameHttpService) { }
 
-    public ngOnInit(): void {
+    public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
             () => {
                 this.shouldShowAvailableGames = true;
-                this.availableGamesComponent.refresh();
             }
         );
         const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
