@@ -60,6 +60,12 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
         return !this.isConfiguringGame && this.waitingService.isWaitingValue;
     }
 
+    // "Shoo! Go away! I don't want to see this component anymore!" =>
+    public shoo(): void {
+        this.isConfiguringGame = false;
+        this.waitingService.isWaiting.next(false);
+    }
+
     private useConfiguration(): void {
         this.isConfiguringGame = false;
         const userChoices = this.menuAutomaton.choices;
