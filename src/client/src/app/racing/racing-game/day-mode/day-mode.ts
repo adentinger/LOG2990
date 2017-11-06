@@ -28,12 +28,11 @@ export class DayModeDay implements DayMode {
             keyLight: {
                 color: COLOR,
                 intensity: 1,
-                rotation: new THREE.Euler(0.478, 1.837, 0, 'YXZ')
+                rotation: new THREE.Euler((2 / 5) ** 2 * Math.PI, 1.837, 0, 'YXZ')
             },
             backlight: {
                 color: COLOR,
-                intensity: 0.4,
-                rotation: new THREE.Euler(Math.PI / 8, -3 * Math.PI / 4, 0, 'YXZ')
+                intensity: 0.4
             }
         };
     }
@@ -54,13 +53,12 @@ export class DayModeNight implements DayMode {
         return {
             keyLight: {
                 color: COLOR,
-                intensity: 0.33,
+                intensity: 0.20,
                 rotation: new THREE.Euler(0.374, 2.760, 0, 'YXZ')
             },
             backlight: {
                 color: COLOR,
-                intensity: 0.11,
-                rotation: new THREE.Euler(Math.PI / 8, -Math.PI / 2, 0, 'YXZ')
+                intensity: 0.07
             }
         };
     }

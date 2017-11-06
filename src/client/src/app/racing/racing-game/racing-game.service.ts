@@ -13,6 +13,8 @@ import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 import { RacetrackSegment } from './three-objects/racetrack/racetrack-segment';
 import { RacetrackJunction } from './three-objects/racetrack/racetrack-junction';
+import { BoostBox } from './physic/examples/boost-box';
+import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 
 @Injectable()
 export class RacingGameService {
@@ -27,6 +29,7 @@ export class RacingGameService {
         new Car(new THREE.Color('blue')),
         new Car(new THREE.Color('red'))
     ];
+    private readonly boxes;
 
     private map: RenderableMap;
 
@@ -34,6 +37,10 @@ export class RacingGameService {
         private mapService: MapService,
         eventManager: EventManager) {
         this.renderer = new RacingRenderer(eventManager);
+        this.boxes = [
+            new BoostBox(eventManager).translateZ(-3),
+            new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10)
+        ];
     }
 
     public initialise(container: HTMLDivElement, userInputs: UIInputs): void {
@@ -77,6 +84,7 @@ export class RacingGameService {
     private setMap(map: SerializedMap): void {
         if (this.map) {
             this.cars.forEach(this.map.remove, this.map);
+            this.boxes.forEach(this.map.remove, this.map);
             this.renderer.removeMap(this.map);
         }
 
@@ -85,6 +93,7 @@ export class RacingGameService {
         this.renderer.addMap(this.map);
 
         this.map.add(...this.cars);
+        this.map.add(...this.boxes);
     }
 
     public updateRendererSize(width: number, height: number) {

@@ -2,6 +2,7 @@ import { IPhysicElement, PhysicMesh } from './object';
 import * as THREE from 'three';
 import { PhysicUtils } from './engine';
 import { Seconds } from '../../types';
+import { hasAttributes, hasFunctions } from '../../../../../../common/src/utils';
 
 export interface DynamicPhysicElement extends IPhysicElement {
     velocity: THREE.Vector3; // meters / seconds
@@ -12,9 +13,21 @@ export interface DynamicPhysicElement extends IPhysicElement {
     updateAngularVelocity(deltaTime: Seconds): void;
 }
 
+export function isDynamicPhysicElement(object: any): object is DynamicPhysicElement {
+    return hasAttributes(object, [
+        {name: 'velocity', parent: THREE.Vector3},
+        {name: 'angularVelocity', parent: THREE.Vector3}
+    ]) && hasFunctions(object, [
+        {name: 'updatePosition', parameterCount: 1},
+        {name: 'updateVelocity', parameterCount: 1},
+        {name: 'updateRotation', parameterCount: 1},
+        {name: 'updateAngularVelocity', parameterCount: 1}
+    ]);
+}
+
 export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhysicElement {
-    public static readonly MIN_SPEED = 0.05; // m/s
-    public static readonly MIN_ANGULAR_SPEED = 0.005 * Math.PI; // rad/s
+    public static readonly MIN_SPEED = 0.1; // m/s
+    public static readonly MIN_ANGULAR_SPEED = 0.01 * Math.PI; // rad/s
 
     public velocity: THREE.Vector3 = new THREE.Vector3();
     public angularVelocity: THREE.Vector3 = new THREE.Vector3();

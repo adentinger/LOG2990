@@ -50,4 +50,8 @@ export class Interval {
     public isEmpty(): boolean {
         return this === Interval.EMPTY;
     }
+
+    public getLength(): number {
+        return (this.upper - this.lower);
+    }
 }

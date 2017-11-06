@@ -29,6 +29,8 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     constructor(eventManager: EventManager) {
         super({ antialias: true });
+        this.shadowMap.enabled = false;
+        this.shadowMap.type = THREE.PCFSoftShadowMap;
 
         this.cameras[0] = new PerspectiveCamera(eventManager);
         this.cameras[1] = new OrthographicCamera();
@@ -83,14 +85,19 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.render(this.scene, this.cameras[this.currentCamera]);
 
         this.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
-                         screenSize.width * 0.20, screenSize.height * 0.20);
+            screenSize.width * 0.20, screenSize.height * 0.20);
         this.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
-                        screenSize.width * 0.20, screenSize.height * 0.20);
+            screenSize.width * 0.20, screenSize.height * 0.20);
         this.render(this.scene, this.cameras[+!this.currentCamera]);
     }
 
     public setCamerasTarget(target: THREE.Object3D): void {
-        this.cameras.forEach((camera) => camera.setTarget(target));
+        this.cameras.forEach((camera) => {
+            camera.setTarget(target);
+            if ('audioListener' in target && target['audioListener'] instanceof THREE.AudioListener) {
+                camera.add(target['audioListener']);
+            }
+        });
     }
 
     public updateSize(width: number, height: number) {
@@ -115,6 +122,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
     public updateDayMode(newMode: DayMode): void {
         this.dayModeManager.mode = newMode;
         this.dayModeManager.updateScene(this.scene);
+        this.shadowMap.enabled = newMode === DayMode.DAY;
     }
 
 }

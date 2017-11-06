@@ -6,6 +6,7 @@ import { Point } from '../../../../../common/src/math/point';
 import { Vector } from '../../../../../common/src/math/vector';
 import { Line } from '../../../../../common/src/math/line';
 import { ShoelaceAlgorithm } from '../../../../../common/src/math/shoelace-algorithm';
+import { Interval } from '../../../../../common/src/math/interval';
 
 export const MIN_ANGLE = Math.PI / 4;
 export const MAP_TYPES = ['Amateur', 'Professional'];
@@ -14,7 +15,7 @@ export enum MapError {
     NONE = 0,       // No error
     NOT_CLOSED,     // Map path is not closed
     SMALL_ANGLE,    // An angle is < 45°
-    SEGMENT_LENGTH, // A segment is to small
+    SEGMENT_LENGTH, // A segment is too small
     LINES_CROSS     // Two lines cross
 }
 
@@ -187,4 +188,18 @@ export class Map {
         return SMALL_SEGMENTS;
     }
 
+    public calucateHalfSegment(): Interval[] {
+        const halfSegments = [];
+        let currentLength = 0;
+        for (let i = 0; i < this.path.points.length - 1; i++) {
+            const POINT1 = this.path.points[i];
+            const POINT2 = this.path.points[i + 1];
+            const segmentLength = Vector.fromPoints(POINT1, POINT2).norm();
+            const halfSementLength = (segmentLength / 2) + currentLength;
+            halfSegments.push(new Interval(currentLength, halfSementLength));
+            currentLength += segmentLength;
+        }
+
+        return halfSegments;
+    }
 }

@@ -120,11 +120,35 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
         });
     }
 
-    public potholes(): void {}
+    public potholes(): void {
+        this.mapEditor.addPothole();
+        this.mapRenderer.draw();
+    }
 
-    public puddles(): void {}
+    public puddles(): void {
+        this.mapEditor.addPuddles();
+        this.mapRenderer.draw();
+    }
 
-    public speedBoosts(): void {}
+    public speedBoosts(): void {
+        this.mapEditor.addSpeedBoosts();
+        this.mapRenderer.draw();
+    }
+
+    public randomisePotholes(): void {
+        this.mapEditor.randomisePothole();
+        this.mapRenderer.draw();
+    }
+
+    public randomisePuddles(): void {
+        this.mapEditor.randomisePuddles();
+        this.mapRenderer.draw();
+    }
+
+    public randomiseSpeedBoosts(): void {
+        this.mapEditor.randomiseSpeedBoosts();
+        this.mapRenderer.draw();
+    }
 
     public clicked(event: MouseEvent): void {
         event.preventDefault();

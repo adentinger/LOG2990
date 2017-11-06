@@ -5,6 +5,7 @@ import { Drawable } from './drawable';
 import { MapPath } from './map-path';
 import { Point } from '../../../../../../common/src/math/point';
 import { PointIndex } from '../point-index';
+import { MapItems } from './map-items';
 
 @Injectable()
 export class MapRendererService implements Drawable {
@@ -12,6 +13,7 @@ export class MapRendererService implements Drawable {
     private canvasElement: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private path: MapPath;
+    private mapItems: MapItems;
 
     constructor(private mapEditor: MapEditorService) {
         this.path = new MapPath(this.context, []);
@@ -22,6 +24,7 @@ export class MapRendererService implements Drawable {
             this.canvasElement = canvas;
             this.context = this.canvasElement.getContext('2d');
             this.path = new MapPath(this.context, []);
+            this.mapItems = new MapItems(this.context, this.mapEditor);
         }
         else {
             throw new Error('Cannot change canvas once set.');
@@ -38,6 +41,7 @@ export class MapRendererService implements Drawable {
         this.path.shouldReverse = !this.mapEditor.isMapClockwise;
         this.path.updatePoints(this.mapEditor.points, this.mapEditor.minimumDistanceBetweenPoints);
         this.path.draw();
+        this.mapItems.draw();
     }
 
     public moveCursorTo(coordinates: Point): void {

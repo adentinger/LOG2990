@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapThumbnailComponent } from './map-thumbnail.component';
+import { ItemGenerator } from '../../../admin-screen/map-editor/item-generator';
 
 describe('MapThumbnailComponent', () => {
   let component: MapThumbnailComponent;
@@ -8,7 +9,8 @@ describe('MapThumbnailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapThumbnailComponent ]
+      declarations: [ MapThumbnailComponent ],
+      providers: [ ItemGenerator ]
     })
     .compileComponents();
   }));

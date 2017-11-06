@@ -5,6 +5,7 @@ import { Map } from './map';
 import { Path } from './path';
 import { Point } from '../../../../../common/src/math/point';
 import { Line } from '../../../../../common/src/math/line';
+import { Interval } from '../../../../../common/src/math/interval';
 
 describe('Map', () => {
 
@@ -143,6 +144,23 @@ describe('Map', () => {
             expect(MAP1['computeSmallSegments']().length).toEqual(3);
         });
 
+        it('should calculate halfsegment lengths', () => {
+
+            const interval1 = new Interval(0, 10 / 2);
+            const interval2 = new Interval(10, 10 + Math.pow((2 * Math.pow(10, 2)), 0.5) / 2);
+            const interval3 = new Interval (10 + Math.pow((2 * Math.pow(10, 2)), 0.5), 10 + Math.pow((2 * Math.pow(10, 2)), 0.5) + 5);
+            const halfsegment: Interval[] = [
+                interval1,
+                interval2,
+                interval3
+            ];
+
+            const map1 = mockMaps.functionalMap1();
+
+            const mapIntervals = map1.calucateHalfSegment();
+
+            expect(mapIntervals).toEqual(halfsegment);
+        });
     });
 
 });

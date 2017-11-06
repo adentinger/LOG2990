@@ -10,6 +10,7 @@ import { MapService } from '../racing/services/map.service';
 import { AdminConfigComponent } from './admin-config/admin-config.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminConfigService } from './admin-config.service';
+import { ItemGenerator } from './map-editor/item-generator';
 
 describe('AdminScreenComponent', () => {
   let component: AdminScreenComponent;
@@ -31,7 +32,8 @@ describe('AdminScreenComponent', () => {
           PacketManagerService,
           {provide: PacketManagerClient, useValue: packetManagerClient},
           MapService,
-          AdminConfigService
+          AdminConfigService,
+          ItemGenerator
       ]
     })
     .compileComponents();
