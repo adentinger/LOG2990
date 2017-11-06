@@ -29,7 +29,7 @@ export class HighlightGrid {
         this.data = DATA;
     }
 
-    public isSelected(row: number, column: number, player: WhoIsSelecting): boolean {
+    public isSelected(row: number, column: number): boolean {
         return this.data[row][column];
     }
 

@@ -59,7 +59,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.crosswordGridService.setUserInput(USER_WORD);
     }
 
-    public isHighlighted(row: number, column: number, player: WhoIsSelecting): boolean {
+    public isHighlighted(row: number, column: number): boolean {
         return this.highlightGrid.isSelected(row, column);
     }
 
