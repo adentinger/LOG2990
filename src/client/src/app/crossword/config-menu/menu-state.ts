@@ -8,7 +8,7 @@ export interface Option {
 
 export class MenuState {
 
-    public static readonly none = new MenuState();
+    public static readonly none = new MenuState(null, null, [], null);
 
     private nameInternal: string;
     private fieldNameInternal: string;

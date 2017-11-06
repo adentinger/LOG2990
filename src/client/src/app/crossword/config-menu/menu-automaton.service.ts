@@ -36,7 +36,7 @@ export class MenuAutomatonService {
     private stateInternal: MenuState = null;
     private configEndInternal = new Subject<void>();
 
-    constructor() {
+    constructor(private userChoiceService: UserChoiceService) {
         this.initialize();
     }
 
@@ -64,7 +64,7 @@ export class MenuAutomatonService {
             playerNumber: new MenuState('Select number of players', 'playerNumber'),
             difficulty: new MenuState('Select difficulty', 'difficulty'),
             createOrJoin: new MenuState('Create or join game?', 'createOrJoin'),
-            chooseGame: new MenuState('Choose game', 'chosenGame'),
+            chooseGame: new MenuState('Choose game', null),
             confirm: new MenuState('Confirm choice?', null)
         };
     }
@@ -102,15 +102,7 @@ export class MenuAutomatonService {
         const found = index >= 0;
         if (found) {
             if (this.state.canMoveToNextState()) {
-                const oldState = this.state;
-                this.path.push({state: this.state, option: option});
-                this.stateInternal = option.nextState;
-                oldState.leave.next();
-                this.state.arrive.next();
-
-                if (this.state === MenuState.none) {
-                    this.configEndInternal.next();
-                }
+                this.changeState(option.nextState, option);
             }
         }
         else {
@@ -118,16 +110,28 @@ export class MenuAutomatonService {
         }
     }
 
+    private changeState(newState: MenuState, option: Option): void {
+        const oldState = this.state;
+        this.path.push({state: this.state, option: option});
+        this.stateInternal = option.nextState;
+        if (this.stateInternal.fieldName !== null) {
+            this.userChoiceService[this.stateInternal.fieldName] = option.value;
+        }
+        oldState.leave.next();
+        this.state.arrive.next();
+
+        if (this.state === MenuState.none) {
+            this.configEndInternal.next();
+        }
+    }
+
     public goBack(): void {
-        if (this.path.length >= 2) {
+        if (this.path.length >= 1) {
             const oldState = this.state;
+            this.userChoiceService[this.stateInternal.fieldName] = undefined;
             this.stateInternal = this.path.pop().state;
             oldState.leave.next();
             this.stateInternal.arrive.next();
-        }
-        else if (this.path.length === 1) {
-            this.path.pop();
-            this.moveToInitialState();
         }
         else {
             throw new Error('Cannot go back: already at the initial configuration menu');
