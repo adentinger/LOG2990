@@ -31,7 +31,7 @@ interface Transition {
 @Injectable()
 export class MenuAutomatonService {
 
-    private states: States;
+    private statesInternal: States;
     private path: Transition[];
     private stateInternal: MenuState = null;
     private configEndInternal = new Subject<void>();
@@ -42,6 +42,10 @@ export class MenuAutomatonService {
 
     public get state(): MenuState {
         return this.stateInternal;
+    }
+
+    public get states(): States {
+        return this.statesInternal;
     }
 
     public get configEnd(): Subject<void> {
@@ -73,7 +77,7 @@ export class MenuAutomatonService {
     }
 
     private createStates(): void {
-        this.states = {
+        this.statesInternal = {
             gameMode: new MenuState('Select game mode', 'gameMode'),
             playerNumber: new MenuState('Select number of players', 'playerNumber'),
             difficulty: new MenuState('Select difficulty', 'difficulty'),
