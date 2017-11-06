@@ -1,23 +1,29 @@
 <div class="disclaimer" *ngIf="shouldBeDisplayed"></div>
 <div class="outer-menu" *ngIf="shouldBeDisplayed">
-  <div class="menu" *ngIf="isConfiguringGame">
-    <!--For development-->
-      <button (click)="shoo()" style="float: right;">X</button>
-    <!-- -->
-    <h2 class="text-center">Make a Choice!</h2>
-    <div class="menu-page-container">
-      <div
-        *ngIf="true"
-        class="menu-page"
-        [ngClass]="{'active-page': true}">
-        <h4>{{menuAutomaton.state.name}}</h4>
-        <app-available-games [shouldDisplay]="shouldShowAvailableGames"></app-available-games>
-        <button
-          *ngFor="let option of menuAutomaton.state.options"
-          (click)="menuAutomaton.chooseOption(option)">{{option.name}}</button>
-        <button
-          *ngIf="menuAutomaton.canGoBack()"
-          (click)="menuAutomaton.goBack()">Back</button>
+  <div class="menu" [ngSwitch]="menuAutomaton.state">
+
+    <div *ngSwitchCase="menuAutomaton.states.confirm">
+      <app-confirmation></app-confirmation>
+    </div>
+    <div *ngSwitchDefault>
+      <!--For development-->
+        <button (click)="shoo()" style="float: right;">X</button>
+      <!-- -->
+      <h2 class="text-center">Make a Choice!</h2>
+      <div class="menu-page-container">
+        <div
+          *ngIf="true"
+          class="menu-page"
+          [ngClass]="{'active-page': true}">
+          <h4>{{menuAutomaton.state.name}}</h4>
+          <app-available-games [shouldDisplay]="shouldShowAvailableGames"></app-available-games>
+          <button
+            *ngFor="let option of menuAutomaton.state.options"
+            (click)="menuAutomaton.chooseOption(option)">{{option.name}}</button>
+          <button
+            *ngIf="menuAutomaton.canGoBack()"
+            (click)="menuAutomaton.goBack()">Back</button>
+        </div>
       </div>
     </div>
   </div>
