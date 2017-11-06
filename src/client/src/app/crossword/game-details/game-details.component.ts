@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CrosswordGameService } from '../crossword-game.service';
+import { GameService } from '../game.service';
 import { CrosswordGame } from '../class/crossword-game';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { TimerService } from '../services/timer.service';
@@ -16,7 +16,7 @@ export class GameDetailsComponent implements OnInit {
     public difficulty: string;
     public gameMode: GameMode;
 
-    constructor(private crosswordGameService: CrosswordGameService,
+    constructor(private crosswordGameService: GameService,
                 private timerService: TimerService) { }
 
     public ngOnInit(): void {

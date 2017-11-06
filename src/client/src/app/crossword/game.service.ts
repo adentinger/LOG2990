@@ -7,13 +7,15 @@ import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-jo
 import '../../../../common/src/crossword/packets/crossword-timer.parser';
 
 /**
- * @class CrosswordGameService
- * Has the purpose of sending all packets from the client to the server
+ * @class GameService
+ * Represents the current game. Has the resposibilities of:
+ * 1) Containing the game's data
+ * 2) Sending all socket packets from the client to the server
  * The response from the server usually goes directly to the appropriate
  * service
  */
 @Injectable()
-export class CrosswordGameService {
+export class GameService {
 
     private cheatModeOn = false;
     private showWordsOn = false;

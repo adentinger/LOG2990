@@ -11,7 +11,7 @@ import { GameDetailsComponent } from './game-details/game-details.component';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { ClickOutsideModule } from 'ng-click-outside';
-import { CrosswordGameService } from './crossword-game.service';
+import { GameService } from './game.service';
 import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
 import { CrosswordGridService } from './board/crossword-grid.service';
 import { GameDetailsService } from './game-details/game-details.service';

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
-import { CrosswordGameService } from './crossword-game.service';
+import { GameService } from './game.service';
 import { TimerService } from './services/timer.service';
 import { GameHttpService } from './services/game-http.service';
 import { GameId, PlayerNumber } from '../../../../common/src/communication/game-configs';
@@ -14,14 +14,14 @@ import { GameId, PlayerNumber } from '../../../../common/src/communication/game-
         DefinitionsService,
         TimerService,
         GameHttpService,
-        CrosswordGameService
+        GameService
     ]
 })
 export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
 
-    constructor(private crosswordGameService: CrosswordGameService) { }
+    constructor(private crosswordGameService: GameService) { }
 
     public ngOnInit(): void {
     }

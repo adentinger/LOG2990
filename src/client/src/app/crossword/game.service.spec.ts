@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { CrosswordGameService} from './crossword-game.service';
+import { GameService} from './game.service';
 import { PacketManagerClient } from '../packet-manager-client';
 import { packetManagerClient } from '../packet-manager.service';
 
@@ -8,15 +8,15 @@ describe('CrosswordGridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                CrosswordGameService,
+                GameService,
                 {provide: PacketManagerClient, useValue: packetManagerClient}
             ]
         });
     });
 
-    let crosswordGameService: CrosswordGameService;
+    let crosswordGameService: GameService;
 
-    beforeEach(inject([CrosswordGameService], (injectedCrosswordGameService) => {
+    beforeEach(inject([GameService], (injectedCrosswordGameService) => {
         crosswordGameService = injectedCrosswordGameService;
     }));
 
