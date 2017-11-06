@@ -30,8 +30,4 @@ export class CrosswordComponent implements OnInit {
         return this.crosswordGameService.getShowWordsState();
     }
 
-    public joinGame(gameId: GameId): Promise<PlayerNumber> {
-        return new Promise((resolve, reject) => resolve(1));
-    }
-
 }
