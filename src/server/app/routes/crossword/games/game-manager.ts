@@ -54,10 +54,6 @@ export class GameManager {
     @PacketHandler(GameJoinPacket)
     public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        if (!this.games.has(gameId)) {
-            console.error(`Game ID ${event.value.gameId} invalid. Packet dropped.`);
-            return;
-        }
         const GAME = this.getGameFromId(gameId);
         const PLAYER_ID = event.socketid;
 
@@ -82,15 +78,10 @@ export class GameManager {
         // this.sendGridWord(ANSWER, PLAYER_ID);
     }
 
-    private getGameFromId(id: number): Game {
-        let foundGame: Game = null;
-        this.games.forEach((game) => {
-            if (game.id === id) {
-                foundGame = game;
-            }
-        });
-        if (foundGame !== null) {
-            return foundGame;
+    private getGameFromId(id: GameId): Game {
+        const game = this.games.get(id);
+        if (game) {
+            return game;
         }
         else {
             throw new Error(`Game "${id}" not found`);
