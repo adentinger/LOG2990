@@ -14,7 +14,7 @@ export class AvailableGamesComponent {
     private gamesInternal: UserDisplayableGameData[] = [];
     public chosenGame: GameId = null;
 
-    constructor(public gameService: GameHttpService) {
+    constructor(public gameHttpService: GameHttpService) {
         this.refresh();
     }
 
@@ -34,7 +34,7 @@ export class AvailableGamesComponent {
     public async refresh(): Promise<void> {
         this.chosenGame = null;
         this.gamesInternal = []; // Display nothing while we refresh
-        this.gamesInternal = await this.gameService.getGames();
+        this.gamesInternal = await this.gameHttpService.getGames();
     }
 
 }

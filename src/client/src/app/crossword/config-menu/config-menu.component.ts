@@ -27,7 +27,7 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
     private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                private gameService: GameHttpService) { }
+                private gameHttpService: GameHttpService) { }
 
     public ngOnInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
@@ -44,7 +44,7 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
                 this.isConfiguringGame = false;
                 const userChoices = this.menuAutomaton.choices;
                 if (userChoices.createOrJoin === CreateOrJoin.create) {
-                    this.gameService.requestGame(userChoices.toGameConfiguration())
+                    this.gameHttpService.requestGame(userChoices.toGameConfiguration())
                         .then((gameId) => {
                             this.gameId.emit(gameId);
                         });
