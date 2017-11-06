@@ -54,12 +54,12 @@ describe('MenuAutomatonService', () => {
 
     });
 
-    it('should set up to one callback to be called when the configuration ends', () => {
+    it('should set callbacks to be called when the configuration ends', () => {
         let i = 0;
         let wasCallbackCalled = false;
         const callback = () => wasCallbackCalled = true;
         menuAutomaton.configEnd.subscribe(callback);
-        while (i < 1000) {
+        while (i < 1000 && !wasCallbackCalled) {
             menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
             ++i;
         }
@@ -71,7 +71,7 @@ describe('MenuAutomatonService', () => {
         let wasCallbackCalled = false;
         const callback = () => wasCallbackCalled = true;
         menuAutomaton.configEnd.subscribe(callback);
-        while (i < 1000) {
+        while (i < 1000 && !wasCallbackCalled) {
             menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
             ++i;
         }

@@ -96,7 +96,7 @@ export class MenuAutomatonService {
         }
         this.stateInternal = this.states.gameMode;
         this.states.gameMode.arrive.next();
-        this.path = [{state: this.states.gameMode, option: null}];
+        this.path = [];
     }
 
     public chooseOption(option: Option): void {
@@ -117,8 +117,7 @@ export class MenuAutomatonService {
 
     public goBack(): void {
         if (this.path.length >= 2) {
-            this.path.pop();
-            this.stateInternal = this.path[this.path.length - 1].state;
+            this.stateInternal = this.path.pop().state;
         }
         else if (this.path.length === 1) {
             this.path.pop();

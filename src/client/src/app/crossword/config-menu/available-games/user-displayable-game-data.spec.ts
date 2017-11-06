@@ -21,16 +21,17 @@ describe('UserDisplayableGameData', () => {
         const DATA1 = new UserDisplayableGameData(DEFAULT_ID, GameMode.Classic, DEFAULT_DIFFICULTY);
         expect(DATA1.mode).toMatch(/^classic$/i);
         const DATA2 = new UserDisplayableGameData(DEFAULT_ID, GameMode.Dynamic, DEFAULT_DIFFICULTY);
-        expect(DATA1.mode).toMatch(/^dynamic$/i);
+        expect(DATA2.mode).toMatch(/^dynamic$/i);
+        console.log('DATA2Mode:', DATA2.mode);
     });
 
     it('should deserialize game difficulties', () => {
         const DATA1 = new UserDisplayableGameData(DEFAULT_ID, DEFAULT_MODE, Difficulty.easy);
         expect(DATA1.difficulty).toMatch(/^easy$/i);
         const DATA2 = new UserDisplayableGameData(DEFAULT_ID, DEFAULT_MODE, Difficulty.medium);
-        expect(DATA1.difficulty).toMatch(/^normal$/i);
+        expect(DATA2.difficulty).toMatch(/^normal$/i);
         const DATA3 = new UserDisplayableGameData(DEFAULT_ID, DEFAULT_MODE, Difficulty.hard);
-        expect(DATA1.difficulty).toMatch(/^hard$/i);
+        expect(DATA3.difficulty).toMatch(/^hard$/i);
     });
 
 });

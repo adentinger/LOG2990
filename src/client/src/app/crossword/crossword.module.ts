@@ -36,7 +36,7 @@ import { AvailableGamesComponent } from './config-menu/available-games/available
         CrosswordTileComponent,
         CheatModeComponent,
         ConfigMenuComponent,
-        AvailableGamesComponent,
+        AvailableGamesComponent
     ],
     providers: [
         HttpClient,

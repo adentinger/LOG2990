@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfigMenuComponent } from './config-menu.component';
+import { AvailableGamesComponent } from './available-games/available-games.component';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -8,7 +9,10 @@ describe('ConfigMenuComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-        declarations: [ ConfigMenuComponent ]
+            declarations: [
+                ConfigMenuComponent,
+                AvailableGamesComponent
+            ]
         })
         .compileComponents();
     }));
