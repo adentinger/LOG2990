@@ -50,6 +50,10 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
+    public get shouldShowWaitingComponent(): boolean {
+        return !this.isConfiguringGame && !this.hasGameStarted;
+    }
+
     private useConfiguration(): void {
         this.isConfiguringGame = false;
         const userChoices = this.menuAutomaton.choices;
@@ -63,10 +67,6 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
                     this.gameService.joinGame(gameId);
                 });
         }
-    }
-
-    public get shouldShowWaitingComponent(): boolean {
-        return !this.isConfiguringGame && !this.hasGameStarted;
     }
 
 }
