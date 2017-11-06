@@ -8,9 +8,6 @@ import { WaitingService } from './waiting.service';
 })
 export class WaitingComponent implements OnInit {
 
-    @Output()
-    private waiting;
-
     constructor(private waitingService: WaitingService) { }
 
     public ngOnInit(): void {
