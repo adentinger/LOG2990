@@ -30,11 +30,18 @@ export class RacingGameService {
     private readonly boxes;
 
     private map: RenderableMap;
+    public get lap(): number {
+        return 1;
+    }
+
+    public get maxLap(): number {
+        return 3;
+    }
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         eventManager: EventManager) {
-        this.renderer = new RacingRenderer(eventManager);
+        this.renderer = new RacingRenderer(eventManager, this);
         this.boxes = [
             new BoostBox(eventManager).translateZ(-3),
             new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10)
