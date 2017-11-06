@@ -1,11 +1,13 @@
 import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
 import { Game } from './game';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
-import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
-import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
+
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { PacketManagerServer } from '../../../packet-manager';
+import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 
 export class GameManager {
 
