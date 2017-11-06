@@ -40,26 +40,28 @@ export class ConfigMenuComponent implements OnInit, OnDestroy {
             () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => {
-                this.isConfiguringGame = false;
-                const userChoices = this.menuAutomaton.choices;
-                const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
-                if (isJoiningGame) {
-                    this.gameService.joinGame(userChoices.chosenGame);
-                }
-                else {
-                    this.gameHttpService.requestGame(userChoices.toGameConfiguration())
-                        .then((gameId) => {
-                            this.gameService.joinGame(gameId);
-                        });
-                }
-            }
+            () => this.useConfiguration()
         );
         this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
     }
 
     public ngOnDestroy(): void {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    }
+
+    private useConfiguration(): void {
+        this.isConfiguringGame = false;
+        const userChoices = this.menuAutomaton.choices;
+        const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
+        if (isJoiningGame) {
+            this.gameService.joinGame(userChoices.chosenGame);
+        }
+        else {
+            this.gameHttpService.requestGame(userChoices.toGameConfiguration())
+                .then((gameId) => {
+                    this.gameService.joinGame(gameId);
+                });
+        }
     }
 
 }
