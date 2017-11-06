@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
+import { GameId, CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/communication/game-configs';
+import { CreateOrJoin } from './menu-automaton-choices';
+
 /**
  * @class UserChoiceService
  * @description Has the responsibility of containing the choices of the user.
@@ -7,6 +11,22 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class UserChoiceService {
 
+    public gameMode: GameMode;
+    public playerNumber: PlayerNumber;
+    public createOrJoin: CreateOrJoin;
+    public difficulty: Difficulty;
+    public gameId: GameId;
+    public playerName: string;
+
     constructor() { }
+
+    public toGameConfiguration(): CrosswordGameConfigs {
+        return {
+            gameMode: this.gameMode,
+            difficulty: this.difficulty,
+            gameId: this.gameId,
+            playerNumber: this.playerNumber
+        };
+    }
 
 }
