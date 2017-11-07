@@ -32,6 +32,7 @@ export class Game {
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
+    private readonly gameData: GameData = new GameData();
     private readonly players: Player[] = [];
     private readonly maxPlayers: PlayerNumber;
     private readonly configurationInternal: CrosswordGameConfigs;
@@ -127,9 +128,9 @@ export class Game {
 
     private async initializeData(difficulty: Difficulty): Promise<void> {
         this.wordsInternal =
-            await GameData.getInstance().initializeGrid(difficulty);
+            await this.gameData.initializeGrid(difficulty);
         this.definitionsInternal =
-            await GameData.getInstance().getDefinitionsOf(this.words, difficulty);
+            await this.gameData.getDefinitionsOf(this.words, difficulty);
     }
 
     private start(): void {

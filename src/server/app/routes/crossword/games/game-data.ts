@@ -12,14 +12,6 @@ export interface DefinitionWithIndex {
 
 export class GameData {
 
-    private static readonly instance = new GameData();
-
-    public static getInstance(): GameData {
-        return GameData.instance;
-    }
-
-    private constructor() {}
-
     public async initializeGrid(difficulty: Difficulty): Promise<GridWord[]> {
         const grid = await this.fetchGrid(difficulty);
         const gridWords = this.convertGridToGridWords(grid);
