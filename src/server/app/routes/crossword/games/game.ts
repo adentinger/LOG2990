@@ -57,10 +57,6 @@ export class Game {
         });
 
         registerHandlers(this, this.packetManager);
-
-        if (configs.gameMode === GameMode.Dynamic) {
-            this.startTimer();
-        }
     }
 
     public get words(): GridWord[] {
@@ -145,6 +141,9 @@ export class Game {
             this.players.forEach((player) => {
                 this.packetManager.sendPacket(GameStartPacket, new GameStartPacket(), player.socketId);
             });
+            if (this.configurationInternal.gameMode === GameMode.Dynamic) {
+                this.startTimer();
+            }
         }
         else {
             throw new Error('Cannot start game: Game already started.');
