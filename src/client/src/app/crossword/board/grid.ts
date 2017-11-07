@@ -28,6 +28,20 @@ export class Grid {
     }
 
     public updateWord(word: GridWord): void {
+        const foundWordIndex = this.words.findIndex((existingWord) => {
+            return existingWord.id        === word.id        &&
+                   existingWord.y         === word.y         &&
+                   existingWord.x         === word.x         &&
+                   existingWord.direction === word.direction &&
+                   existingWord.length    === word.length;
+        });
+        if (foundWordIndex >= 0) {
+            this.words[foundWordIndex] = word;
+            this.regenerateEverything();
+        }
+        else {
+            throw new Error(`Word ${word.string} not found`);
+        }
     }
 
     public empty(): void {
