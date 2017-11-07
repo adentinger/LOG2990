@@ -39,15 +39,15 @@ describe('The Game Manager Service', () => {
 
     it('should creates new games which are accessible by their ids', (done) => {
         const idObtained = gameManager.newGame(createMockGameConfigs());
-        const foundGame: Game = gameManager.findGame((game) => game.id === idObtained);
+        const foundGame: Game = gameManager.getGame(idObtained);
         expect(foundGame).to.be.not.null;
         done();
     });
 
     it('should return a game matching a predicate, or null if not found', () => {
         const idObtained = gameManager.newGame(createMockGameConfigs());
-        expect(gameManager.findGame((game) => game.id === idObtained)).to.be.true;
-        expect(gameManager.findGame((game) => game.id === idObtained - 1)).to.be.null;
+        expect(gameManager.getGame(idObtained)).to.be.true;
+        expect(gameManager.getGame(idObtained - 1)).to.be.null;
     });
 
     it('should keep track of the number of game created', (done) => {
@@ -72,7 +72,7 @@ describe('The Game Manager Service', () => {
         const idToDelete = gameIds[randomNumberToDelete];
         gameManager.deleteGame(idToDelete);
         expect(gameManager.getNumberOfActiveGames()).to.equal(nGames - 1);
-        expect(gameManager.findGame((game) => game.id === idToDelete)).to.equal(null);
+        expect(gameManager.getGame(idToDelete)).to.equal(null);
         done();
     });
 });

@@ -54,7 +54,7 @@ export class GameManager {
         return foundGame;
     }
 
-    public getGame(id: number): Game {
+    public getGame(id: GameId): Game {
         if (this.games.has(id)) {
             return this.games.get(id);
         } else {
@@ -74,7 +74,7 @@ export class GameManager {
     // tslint:disable-next-line:no-unused-variable
     private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        const GAME = this.getGameFromId(gameId);
+        const GAME = this.getGame(gameId);
         const playerName = event.value.playerName;
 
         GAME.addPlayer(new Player(playerName, event.socketid));
@@ -91,37 +91,12 @@ export class GameManager {
         const WORD_TRY: GridWord = event.value.wordTry;
         const PLAYER_ID: string = event.socketid;
 
-        const game: Game = this.getGameFromPlayerId(PLAYER_ID);
+        const foundGame: Game = this.findGame((game) => game.isSocketIdInGame(PLAYER_ID));
         const ANSWER: GridWord = WORD_TRY;
-        if (!game.validateUserAnswer(WORD_TRY)) {
+        if (!foundGame.validateUserAnswer(WORD_TRY)) {
             ANSWER.string = '';
         }
         // this.sendGridWord(ANSWER, PLAYER_ID);
-    }
-
-    private getGameFromId(id: GameId): Game {
-        const game = this.games.get(id);
-        if (game) {
-            return game;
-        }
-        else {
-            throw new Error(`Game "${id}" not found`);
-        }
-    }
-
-    private getGameFromPlayerId(playerId: string): Game {
-        let foundGame: Game = null;
-        this.games.forEach((game) => {
-            if (game.isSocketIdInGame(playerId)) {
-                foundGame = game;
-            }
-        });
-        if (foundGame !== null) {
-            return foundGame;
-        }
-        else {
-            throw new Error(`Player "${playerId}" not found in any game`);
-        }
     }
 
 }
