@@ -114,7 +114,7 @@ export class GameInitializer {
                 if (definitions.length > 1) {
                     definitions.shift();
                     const randomDefinition =
-                        definitions[Math.round(Math.random() * definitions.length)];
+                        definitions[Math.floor(Math.random() * definitions.length)];
                     definitionString = randomDefinition;
                 }
                 else {
