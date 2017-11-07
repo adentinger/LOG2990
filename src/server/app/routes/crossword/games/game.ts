@@ -16,6 +16,7 @@ import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../com
 import { Logger } from '../../../../../common/src/logger';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { GameInitializer, DefinitionWithIndex } from './game-initializer';
+import { Player } from './player';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -35,7 +36,7 @@ export class Game {
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
-    private readonly playerIds: string[] = [];
+    private readonly players: Player[] = [];
     private readonly configurationInternal: CrosswordGameConfigs;
 
     constructor(configs: CrosswordGameConfigs) {
@@ -48,10 +49,10 @@ export class Game {
             this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
-            const INDEX = this.playerIds.findIndex((playerId) => playerId === socketId);
+            const INDEX = this.players.findIndex((player) => player.socketId === socketId);
             const FOUND = INDEX >= 0;
             if (FOUND) {
-                this.playerIds[INDEX] = null;
+                this.players[INDEX] = null;
             }
         });
 
@@ -75,23 +76,24 @@ export class Game {
             difficulty: this.configurationInternal.difficulty,
             gameId: this.id,
             gameMode: this.configurationInternal.gameMode,
-            playerNumber: this.numberOfPlayers
+            playerNumber: this.numberOfPlayers,
+            playerName: this.players.length > 0 ? this.players[0].name : ''
         };
         return config;
     }
 
-    public addPlayer(playerId: string): PlayerNumber {
-        if (this.playerIds.length < this.numberOfPlayers) {
-            this.playerIds.push(playerId);
+    public addPlayer(player: Player): PlayerNumber {
+        if (this.players.length < this.numberOfPlayers) {
+            this.players.push(player);
             this.initialized.then(() => {
-                this.clearPlayerGrid(playerId);
-                this.sendGridWords(playerId);
-                this.sendDefinitions(playerId);
+                this.clearPlayerGrid(player.socketId);
+                this.sendGridWords(player.socketId);
+                this.sendDefinitions(player.socketId);
             }).catch((reason) => console.log(reason));
-            if (this.playerIds.length === this.numberOfPlayers) {
+            if (this.players.length === this.numberOfPlayers) {
                 this.start();
             }
-            return this.playerIds.length;
+            return this.players.length;
         }
         else {
             throw new Error('Cannot add a new player: max number reached.');
@@ -126,8 +128,8 @@ export class Game {
         });
     }
 
-    public isPlayerInGame(playerId: string): boolean {
-        return this.playerIds.findIndex((id) => id === playerId) >= 0;
+    public isSocketIdInGame(socketId: string): boolean {
+        return this.players.findIndex((id) => id.socketId === socketId) >= 0;
     }
 
     private async initializeData(difficulty: Difficulty): Promise<void> {
@@ -140,8 +142,8 @@ export class Game {
     private start(): void {
         if (!this.started) {
             this.started = true;
-            this.playerIds.forEach((playerId) => {
-                this.packetManager.sendPacket(GameStartPacket, new GameStartPacket(), playerId);
+            this.players.forEach((player) => {
+                this.packetManager.sendPacket(GameStartPacket, new GameStartPacket(), player.socketId);
             });
         }
         else {
@@ -153,12 +155,12 @@ export class Game {
         const ONE_SECOND = 1000;
         setInterval(() => {
             this.countdown--;
-            this.playerIds.forEach((playerId) => {
-                if (playerId !== null) {
+            this.players.forEach((player) => {
+                if (player !== null) {
                     logger.log('(game #%s) Timer: %d', this.id, this.countdown);
                     this.packetManager.sendPacket(
                         CrosswordTimerPacket,
-                        new CrosswordTimerPacket(this.countdown), playerId
+                        new CrosswordTimerPacket(this.countdown), player.socketId
                     );
                 }
             });

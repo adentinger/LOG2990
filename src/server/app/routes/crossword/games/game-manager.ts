@@ -8,6 +8,7 @@ import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { Player } from './player';
 
 export class GameManager {
 
@@ -60,9 +61,9 @@ export class GameManager {
     public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
         const GAME = this.getGameFromId(gameId);
-        const PLAYER_ID = event.socketid;
+        const playerName = event.value.playerName;
 
-        GAME.addPlayer(PLAYER_ID);
+        GAME.addPlayer(new Player(playerName, event.socketid));
     }
 
     /**
@@ -96,7 +97,7 @@ export class GameManager {
     private getGameFromPlayerId(playerId: string): Game {
         let foundGame: Game = null;
         this.games.forEach((game) => {
-            if (game.isPlayerInGame(playerId)) {
+            if (game.isSocketIdInGame(playerId)) {
                 foundGame = game;
             }
         });
