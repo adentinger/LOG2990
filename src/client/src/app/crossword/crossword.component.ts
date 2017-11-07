@@ -4,7 +4,6 @@ import { DefinitionsService } from './definition-field/definitions.service';
 import { GameService } from './game.service';
 import { TimerService } from './services/timer.service';
 import { GameHttpService } from './services/game-http.service';
-import { GameId, PlayerNumber } from '../../../../common/src/communication/game-configs';
 
 @Component({
     selector: 'app-crossword',

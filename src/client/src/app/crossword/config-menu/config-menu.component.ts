@@ -1,10 +1,8 @@
-import { Component, OnDestroy, ViewChild, EventEmitter, Output, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
-import { AvailableGamesComponent } from './available-games/available-games.component';
 import { GameHttpService } from '../services/game-http.service';
-import { GameId } from '../../../../../common/src/communication/game-configs';
 import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';

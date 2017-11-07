@@ -9,6 +9,9 @@ const SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 export class GameDefinitionParser extends PacketParser<GameDefinitionPacket> {
 
     public serialize(value: GameDefinitionPacket): ArrayBuffer {
+        if (!value.definition.text) {
+            console.log(new Error());
+        }
         const DEFINITION_TEXT_LENGTH = value.definition.text.length;
         const DIRECTION = value.direction;
         const BUFFER: ArrayBuffer = new ArrayBuffer(3 * SIZE_UINT32 + DEFINITION_TEXT_LENGTH * SIZE_UINT16);

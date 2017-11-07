@@ -18,6 +18,8 @@ export class WaitingService {
     private isWaitingInternal = new Subject<boolean>();
     private isWaitingValueInternal = false;
 
+
+    // tslint:disable-next-line:no-unused-variable
     constructor(private packetManager: PacketManagerClient) {
         this.isWaitingInternal.subscribe((value) => {
             this.isWaitingValueInternal = value;

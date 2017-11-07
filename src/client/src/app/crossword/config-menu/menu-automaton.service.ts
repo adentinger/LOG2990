@@ -3,7 +3,6 @@ import { Subject } from 'rxjs/Subject';
 
 import { MenuState, Option } from './menu-state';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 
 interface States {

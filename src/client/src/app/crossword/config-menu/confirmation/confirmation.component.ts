@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { MenuAutomatonService } from '../menu-automaton.service';
 import { UserChoiceService } from '../user-choice.service';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-confirmation',

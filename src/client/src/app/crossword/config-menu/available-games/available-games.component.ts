@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy } from '@angular/core';
 
 import { GameHttpService } from '../../services/game-http.service';
 import { UserDisplayableGameData } from './user-displayable-game-data';
-import { GameId } from '../../../../../../common/src/communication/game-configs';
 import { Subscription } from 'rxjs/Subscription';
 import { MenuAutomatonService } from '../menu-automaton.service';
 import { UserChoiceService } from '../user-choice.service';

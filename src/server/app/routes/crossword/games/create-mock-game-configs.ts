@@ -2,7 +2,7 @@ import { CrosswordGameConfigs, PlayerNumber } from '../../../../../common/src/co
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 export function createMockGameConfigs(): CrosswordGameConfigs {
-    const PLAYER_NAME = 'Chuck Norris\' beard'
+    const PLAYER_NAME = 'Chuck Norris\' beard';
     const gameModes = [GameMode.Classic, GameMode.Dynamic];
     const playerNumbers: PlayerNumber[] = [1, 2];
     const difficulties = [Difficulty.easy, Difficulty.medium, Difficulty.hard];
