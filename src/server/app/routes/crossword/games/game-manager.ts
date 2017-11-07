@@ -43,6 +43,10 @@ export class GameManager {
         return GAME.id;
     }
 
+    public findGame(predicate: (game: Game) => boolean): Game {
+        return null;
+    }
+
     public getGame(id: number): Game {
         if (this.games.has(id)) {
             return this.games.get(id);
