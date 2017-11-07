@@ -20,13 +20,9 @@ export class CrosswordComponent implements OnInit {
 
     public gameIsBeingConfigured = true;
 
-    constructor(private gameService: GameService) { }
+    constructor() { }
 
     public ngOnInit(): void {
-    }
-
-    public isShowWordsOn(): boolean {
-        return this.gameService.getShowWordsState();
     }
 
 }

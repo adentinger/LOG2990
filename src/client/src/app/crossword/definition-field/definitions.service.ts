@@ -10,6 +10,7 @@ import '../../../../../common/src/crossword/packets/game-definition.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { GameService } from '../game.service';
+import { GameHttpService } from '../services/game-http.service';
 
 export interface Answers {
     horizontal: string[];
@@ -34,7 +35,8 @@ export class DefinitionsService {
     private onChangeCallbacks: (() => void)[] = [];
 
     constructor(private packetManager: PacketManagerClient,
-                private gameService: GameService) {
+                private gameService: GameService,
+                private gameHttpService: GameHttpService) {
         this.gameService.onShowWords.subscribe((value) => {
             if (value) {
                 this.fetchAnswers();
@@ -68,8 +70,18 @@ export class DefinitionsService {
     }
 
     private fetchAnswers(): void {
-        this.horizontalAnswers = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
-        this.verticalAnswers = ['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'];
+        this.horizontalAnswers = [];
+        this.verticalAnswers = [];
+        this.gameHttpService.getWords().then((words) => {
+            words.forEach((word) => {
+                if (word.direction === Direction.horizontal) {
+                    this.horizontalAnswers.push(word.string);
+                }
+                else {
+                    this.verticalAnswers.push(word.string);
+                }
+            });
+        });
     }
 
     @PacketHandler(GameDefinitionPacket)

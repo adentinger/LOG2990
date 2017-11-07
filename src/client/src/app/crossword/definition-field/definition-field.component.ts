@@ -6,6 +6,7 @@ import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Definition } from './definition';
+import { GameService } from '../game.service';
 
 @Component({
     selector: 'app-definition-field',
@@ -21,11 +22,14 @@ export class DefinitionFieldComponent {
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    @Input() public cheatMode: boolean;
+    public get cheatMode(): boolean {
+        return this.gameService.getShowWordsState();
+    }
 
     constructor(private definitionService: DefinitionsService,
                 private selectionService: SelectionService,
                 private gridService: GridService,
+                private gameService: GameService,
                 private ngZone: NgZone) {
         this.definitionService.pushOnChangeCallback(() => {
             this.ngZone.run(() => { });
