@@ -21,6 +21,7 @@ describe('The Game Manager Service', () => {
     it('should make available a list of game configurations', () => {
         expect(gameManager.getGameConfigurations()).to.deep.equal([]);
         const CONFIGURATION: CrosswordGameConfigs = {
+            playerName: 'Pascal Lacasse',
             difficulty: Difficulty.easy,
             gameId: undefined,
             gameMode: GameMode.Classic,

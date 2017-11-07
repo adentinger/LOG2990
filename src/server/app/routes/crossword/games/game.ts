@@ -71,7 +71,7 @@ export class Game {
     }
 
     public get configuration(): CrosswordGameConfigs {
-        const config = {
+        const config: CrosswordGameConfigs = {
             difficulty: this.configurationInternal.difficulty,
             gameId: this.id,
             gameMode: this.configurationInternal.gameMode,
