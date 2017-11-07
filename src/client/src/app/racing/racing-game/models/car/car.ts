@@ -52,6 +52,8 @@ export class Car extends UserControllableCollidableMesh {
     protected maxSpeed = 50; // m/s
     protected maxAngularSpeed = Math.PI; // rad/s
 
+    private previousVelocity = new THREE.Vector3();
+
     public waitToLoad: Promise<void>;
     public readonly audioListener = new THREE.AudioListener();
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
@@ -76,7 +78,7 @@ export class Car extends UserControllableCollidableMesh {
         Car.AUDIO_LOADER.load(Car.CAR_ENGINE_SOUND_URL,
             (buffer: THREE.AudioBuffer) => {
                 this.audio.setBuffer(buffer);
-            }, () => {}, Car.logger.error);
+            }, () => { }, Car.logger.error);
     }
 
     private static loadCarPart(name: string): Promise<THREE.Mesh> {
@@ -131,10 +133,10 @@ export class Car extends UserControllableCollidableMesh {
     private async addCarParts(color: THREE.Color): Promise<void> {
         this.add(... await Car.CAR_PARTS.then((parts) =>
             parts.map((mesh) => mesh.clone())
-            .map((mesh) => {
-                mesh.material = (mesh.material as THREE.Material).clone();
-                return mesh;
-            })
+                .map((mesh) => {
+                    mesh.material = (mesh.material as THREE.Material).clone();
+                    return mesh;
+                })
         ));
 
         this.add(... await Car.CAR_COLORED_PARTS.then((parts) =>
@@ -161,18 +163,30 @@ export class Car extends UserControllableCollidableMesh {
 
         if (this.isStopped && this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = false;
-            if (this.breakLightMeshs) {
-                (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-                    0.5 * this.dayModeOptions.intensity;
-            }
+            // if (this.breakLightMeshs) {
+            //     (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
+            //         0.5 * this.dayModeOptions.intensity;
+            // }
         }
         if (!this.isStopped && this.velocity.length() <= UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = true;
-            if (this.breakLightMeshs) {
+            // if (this.breakLightMeshs) {
+            //     (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
+            //         0.5 + 0.5 * this.dayModeOptions.intensity;
+            // }
+        }
+        if (this.breakLightMeshs) {
+            if (this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED &&
+                this.velocity.length() > this.previousVelocity.length()) {
+                (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
+                    0.5 * this.dayModeOptions.intensity;
+            }
+            else {
                 (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
                     0.5 + 0.5 * this.dayModeOptions.intensity;
             }
         }
+        this.previousVelocity.copy(this.velocity);
     }
 
     private addLights(): void {

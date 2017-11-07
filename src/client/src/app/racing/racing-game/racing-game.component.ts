@@ -19,6 +19,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @ViewChild('gameContainer')
     public racingGameContainer: ElementRef;
+    @ViewChild('hud')
+    private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
 
@@ -31,7 +33,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
-                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.uiInputs);
+                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });

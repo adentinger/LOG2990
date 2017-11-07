@@ -9,8 +9,6 @@ export class HeadUpDisplay {
 
     private static readonly CLEAR_COLOR = new THREE.Color('black');
 
-    private canvasContainer: HTMLDivElement;
-
     private context: CanvasRenderingContext2D = null;
     private domElementInternal: HTMLCanvasElement = null;
     public get domElement(): HTMLCanvasElement {
@@ -21,26 +19,14 @@ export class HeadUpDisplay {
         return `${size}px ${HeadUpDisplay.FONT_FAMILLY}`;
     }
 
-    constructor() {
-        this.domElementInternal = document.createElement('canvas');
+    public initialize(canvas: HTMLCanvasElement): void {
+        this.domElementInternal = canvas;
         this.context = this.domElement.getContext('2d', { alpha: true });
     }
 
-    public initialize(container: HTMLDivElement): void {
-        this.canvasContainer = container;
-        this.canvasContainer.appendChild(this.domElement);
-        const angularAttribute = Array.from(this.canvasContainer.attributes).find((attribute) => {
-            return attribute.name.startsWith('_ngcontent');
-        });
-        this.domElementInternal.setAttribute(angularAttribute.name, '');
-    }
-
     public finalize(): void {
-        this.canvasContainer.removeChild(this.domElement);
-        const angularAttribute = Array.from(this.canvasContainer.attributes).find((attribute) => {
-            return attribute.name.startsWith('_ngcontent');
-        });
-        this.domElementInternal.removeAttribute(angularAttribute.name);
+        delete this.domElementInternal;
+        delete this.context;
     }
 
     public render(game: RacingGameService): void {

@@ -13,10 +13,11 @@ import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 import { BoostBox } from './physic/examples/boost-box';
 import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
+import { Seconds } from '../types';
 
 @Injectable()
 export class RacingGameService {
-    private static readonly CONTROLLABLE_CAR_IDX = 2;
+    public static readonly CONTROLLABLE_CAR_IDX = 2;
     private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional1();
 
     public readonly renderer: RacingRenderer;
@@ -31,11 +32,28 @@ export class RacingGameService {
 
     private map: RenderableMap;
     public get lap(): number {
+        // Mocked
         return 1;
     }
 
     public get maxLap(): number {
+        // Mocked
         return 3;
+    }
+
+    public get positions(): Car[] {
+        // Mocked
+        return this.cars;
+    }
+
+    public get lapTimes(): number[] {
+        // Mocked
+        return [].fill(0, 0, this.maxLap);
+    }
+
+    public get totalTime(): Seconds {
+        // Mocked
+        return 0;
     }
 
     public get dayMode(): DayMode {
@@ -52,8 +70,8 @@ export class RacingGameService {
         ];
     }
 
-    public initialise(container: HTMLDivElement, userInputs: UIInputs): void {
-        this.renderer.initialize(container);
+    public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
+        this.renderer.initialize(container, hudCanvas);
 
         const userCar = this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
         userCar.setUIInput(userInputs);
@@ -76,7 +94,10 @@ export class RacingGameService {
     public finalize() {
         this.physicEngine.stop();
         this.renderer.stopRendering();
-        this.cars.forEach(car => car.stopSounds());
+        this.cars.forEach(car => {
+            car.stopSounds();
+            car.removeUIInput();
+        });
 
         this.renderer.finalize();
     }

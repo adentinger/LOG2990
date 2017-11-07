@@ -58,6 +58,14 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         this.userInputs = userInputService;
     }
 
+    public removeUIInput(): void {
+        delete this.userInputs;
+    }
+
+    public hasUIInput(): boolean {
+        return this.userInputs != null;
+    }
+
     private applyUserInputs(deltaTime: Seconds) {
         if (this.userInputs != null) {
             const angularAccelerationDirection = this.getAngularAccelerationDirection();

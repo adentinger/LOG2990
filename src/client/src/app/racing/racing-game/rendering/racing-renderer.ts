@@ -42,10 +42,10 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.cameras[0].add(this.skybox);
     }
 
-    public initialize(container: HTMLDivElement) {
+    public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement) {
         this.canvasContainer = container;
         this.canvasContainer.appendChild(this.domElement);
-        this.hud.initialize(container);
+        this.hud.initialize(hudCanvas);
 
         this.scene.add(this.lighting);
         this.scene.add(RacingRenderer.AXIS_HELPER);
