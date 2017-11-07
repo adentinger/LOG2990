@@ -16,10 +16,8 @@ export class GameData {
     private definitionsInternal: DefinitionWithIndex[] = [];
 
     public async initialize(difficulty: Difficulty): Promise<void> {
-        this.wordsInternal =
-            await this.initializeGrid(difficulty);
-        this.definitionsInternal =
-            await this.getDefinitionsOf(this.words, difficulty);
+        await this.initializeWords(difficulty);
+        await this.initializeDefinitions(difficulty);
     }
 
     public get words(): GridWord[] {
@@ -30,19 +28,18 @@ export class GameData {
         return this.definitionsInternal.slice();
     }
 
-    public async initializeGrid(difficulty: Difficulty): Promise<GridWord[]> {
+    private async initializeWords(difficulty: Difficulty): Promise<void> {
         const grid = await this.fetchGrid(difficulty);
-        const gridWords = this.convertGridToGridWords(grid);
-        return gridWords;
+        this.wordsInternal = this.convertGridToGridWords(grid);
     }
 
-    public async getDefinitionsOf(gridWords: GridWord[], difficulty: Difficulty): Promise<DefinitionWithIndex[]> {
+    private async initializeDefinitions(difficulty: Difficulty): Promise<void> {
         const DEFINITIONS: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
-        for (let i = 0; i < gridWords.length; ++i) {
-            const word = gridWords[i];
+        for (let i = 0; i < this.wordsInternal.length; ++i) {
+            const word = this.wordsInternal[i];
 
             let index;
             if (word.direction === Direction.horizontal) {
@@ -61,7 +58,7 @@ export class GameData {
             DEFINITIONS.push(DEFINITION_WITH_INDEX);
         }
 
-        return DEFINITIONS;
+        this.definitionsInternal = DEFINITIONS;
     }
 
     private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
