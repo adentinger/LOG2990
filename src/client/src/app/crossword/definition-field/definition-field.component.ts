@@ -16,6 +16,8 @@ export class DefinitionFieldComponent {
 
     public readonly HORIZONTAL = Direction.horizontal;
     public readonly VERTICAL = Direction.vertical;
+    public verticalCollapsed = true;
+    public acrossCollapsed = true;
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
@@ -59,4 +61,13 @@ export class DefinitionFieldComponent {
     }
 
     public checkDefinitionStatus(index: number, direction: Direction) { }
+
+    public isCollapsedAcross(): void {
+        this.acrossCollapsed = !this.acrossCollapsed;
+    }
+
+    public isCollapsedVertical(): void {
+        this.verticalCollapsed = !this.verticalCollapsed;
+    }
+
 }
