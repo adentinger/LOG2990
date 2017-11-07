@@ -52,7 +52,7 @@ export class Game {
             const INDEX = this.players.findIndex((player) => player.socketId === socketId);
             const FOUND = INDEX >= 0;
             if (FOUND) {
-                this.players[INDEX] = null;
+                this.players.splice(INDEX, 1);
             }
         });
 
