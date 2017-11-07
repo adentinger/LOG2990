@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, Input, NgZone } from '@angular/core';
 
 import { DefinitionsService, Definitions, Answers } from './definitions.service';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
@@ -24,9 +24,9 @@ export class DefinitionFieldComponent {
     @Input() public cheatMode: boolean;
 
     constructor(private definitionService: DefinitionsService,
-        private selectionService: SelectionService,
-        private gridService: GridService,
-        private ngZone: NgZone) {
+                private selectionService: SelectionService,
+                private gridService: GridService,
+                private ngZone: NgZone) {
         this.definitionService.pushOnChangeCallback(() => {
             this.ngZone.run(() => { });
         });
@@ -40,10 +40,18 @@ export class DefinitionFieldComponent {
         return this.definitionService.answers;
     }
 
+    public isDefinitionClickable(index: number, direction: Direction): boolean {
+        const isWordFound =
+            this.gridService.getWord(index, direction).owner === Owner.none;
+        return isWordFound;
+    }
+
     public onDefinitionClicked(index: number, direction: Direction): void {
-        const SELECTED_WORD: GridWord =
-            this.gridService.getWord(index, direction);
-        this.selectionService.selection.next(SELECTED_WORD);
+        if (this.isDefinitionClickable(index, direction)) {
+            const SELECTED_WORD: GridWord =
+                this.gridService.getWord(index, direction);
+            this.selectionService.selection.next(SELECTED_WORD);
+        }
     }
 
     public onClickOutside(): void {
