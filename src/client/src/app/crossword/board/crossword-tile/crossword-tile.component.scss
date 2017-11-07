@@ -1,5 +1,4 @@
 $crossword-item-size: 50px;
-$crossword-dimension: 10;
 
 $color-valid-item: #76C84B;
 $color-focus-item: #EDFF71;
@@ -26,7 +25,7 @@ $color-focus-item: #EDFF71;
 }
 
 .highlighted {
-	border: 2px solid #002FFF; //lightblue
+	border: 2px solid #002FFF;
 }
 
 .black-square {
