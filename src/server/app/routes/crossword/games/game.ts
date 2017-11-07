@@ -78,6 +78,10 @@ export class Game {
         return config;
     }
 
+    public get currentNumberOfPlayers(): number {
+        return this.players.length;
+    }
+
     public addPlayer(player: Player): PlayerNumber {
         if (this.players.length < this.maxPlayers) {
             this.players.push(player);
