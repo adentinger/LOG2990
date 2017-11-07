@@ -12,13 +12,13 @@ const KEY_LEFT = 'a';
 const FRONT = new THREE.Vector3(0, 0, -1);
 
 const POWER_STEERING_FACTOR = 0.6;
-const MIN_SPEED = 0.001;
 
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
+    public static readonly MIN_SPEED = 0.001;
     protected userInputs: UIInputs;
 
-    protected friction: Newtons = 10;
-    protected acceleration = 30; // m/s^2
+    protected friction: Newtons = 15;
+    protected acceleration = 25; // m/s^2
     protected maxSpeed = 20; // m/s
 
     protected angularFriction: number = 2 * Math.PI; // rad/s^2
@@ -69,7 +69,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
 
             let speed = this.velocity.length();
-            speed = speed === 0 ? MIN_SPEED : this.velocity.length();
+            speed = speed === 0 ? UserControllableCollidableMesh.MIN_SPEED : this.velocity.length();
             const powerSteering = POWER_STEERING_FACTOR / speed;
             const rotationRestriction = this.velocity.dot(this.front) * powerSteering;
             this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * deltaTime) +
@@ -77,7 +77,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
 
             const accelerationDirection = this.getAccelerationDirection();
             const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
-            const acceleration = accelerationDirection.multiplyScalar(this.acceleration)
+            const acceleration = accelerationDirection.multiplyScalar(this.acceleration + this.friction)
                 .multiplyScalar(accelerationFactor);
             this.velocity.addScaledVector(acceleration, deltaTime);
         }

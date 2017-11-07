@@ -20,7 +20,7 @@ export class RacingGameService {
     private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional1();
 
     public readonly renderer: RacingRenderer;
-    private dayMode: DayMode = DayMode.DAY;
+    private dayModeInternal: DayMode = DayMode.DAY;
     private cars: Car[] = [
         new Car(new THREE.Color('green')),
         new Car(new THREE.Color('yellow')),
@@ -36,6 +36,10 @@ export class RacingGameService {
 
     public get maxLap(): number {
         return 3;
+    }
+
+    public get dayMode(): DayMode {
+        return this.dayModeInternal;
     }
 
     constructor(private physicEngine: PhysicEngine,
@@ -60,16 +64,19 @@ export class RacingGameService {
         this.cars.forEach((car) => {
             car.position.copy(position);
             position.add(POSITION_INCREMENT);
+            car.rotation.set(0, 0, 0);
         });
+        this.reloadSounds();
 
         this.physicEngine.start();
         this.renderer.startRendering();
-        this.renderer.updateDayMode(this.dayMode);
+        this.renderer.updateDayMode(this.dayModeInternal);
     }
 
     public finalize() {
         this.physicEngine.stop();
         this.renderer.stopRendering();
+        this.cars.forEach(car => car.stopSounds());
 
         this.renderer.finalize();
     }
@@ -99,15 +106,22 @@ export class RacingGameService {
         this.renderer.updateSize(width, height);
     }
 
+    public reloadSounds() {
+        this.cars.forEach(car => {
+            car.stopSounds();
+            car.startSounds();
+        });
+    }
+
     public changeDayMode(): void {
         let newMode: DayMode;
-        switch (this.dayMode) {
+        switch (this.dayModeInternal) {
             case DayMode.DAY: newMode = DayMode.NIGHT; break;
             case DayMode.NIGHT: newMode = DayMode.DAY; break;
             default: break;
         }
-        this.dayMode = newMode;
-        this.renderer.updateDayMode(this.dayMode);
+        this.dayModeInternal = newMode;
+        this.renderer.updateDayMode(this.dayModeInternal);
     }
 
 }

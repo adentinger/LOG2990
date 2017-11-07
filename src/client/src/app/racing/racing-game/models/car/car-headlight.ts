@@ -19,7 +19,7 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
 
     private static generalOptions: GeneralOptions = {
         color: 0xfbf2b5,
-        distance: 50,
+        distance: 75,
         angle: Math.PI / 4,
         exponent: 0.6,
         decay: 5,
@@ -34,7 +34,7 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
             CarHeadlight.generalOptions.exponent,
             CarHeadlight.generalOptions.decay
         );
-        this.castShadow = true;
+        this.castShadow = false;
         this.shadow.mapSize.width = 1024;
         this.shadow.mapSize.height = 1024;
         this.shadow.bias = -0.0039;
