@@ -64,7 +64,7 @@ export class LexiconCaller {
 
     public getDefinitions(word: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            resolve(['CHUCK NORRIS IS SO COOL']);
+            resolve(['CHUCK NORRIS IS SO COOL', 'CHUCK NORRIS SOLVES GRIDS IN HIS SLEEP']);
         });
     }
 }
