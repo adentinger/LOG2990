@@ -46,7 +46,7 @@ describe('The Game Manager Service', () => {
 
     it('should return a game matching a predicate, or null if not found', () => {
         const idObtained = gameManager.newGame(createMockGameConfigs());
-        expect(gameManager.getGame(idObtained)).to.be.true;
+        expect(gameManager.getGame(idObtained)).to.not.be.null;
         expect(gameManager.getGame(idObtained - 1)).to.be.null;
     });
 
