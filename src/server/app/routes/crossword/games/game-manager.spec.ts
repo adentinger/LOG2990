@@ -39,8 +39,8 @@ describe('The Game Manager Service', () => {
 
     it('should creates new games which are accessible by their ids', (done) => {
         const idObtained = gameManager.newGame(createMockGameConfigs());
-        const game: Game = gameManager.getGame(idObtained);
-        expect(game).to.be.not.null;
+        const foundGame: Game = gameManager.findGame((game) => game.id === idObtained);
+        expect(foundGame).to.be.not.null;
         done();
     });
 
@@ -72,7 +72,7 @@ describe('The Game Manager Service', () => {
         const idToDelete = gameIds[randomNumberToDelete];
         gameManager.deleteGame(idToDelete);
         expect(gameManager.getNumberOfActiveGames()).to.equal(nGames - 1);
-        expect(gameManager.getGame(idToDelete)).to.equal(null);
+        expect(gameManager.findGame((game) => game.id === idToDelete)).to.equal(null);
         done();
     });
 });
