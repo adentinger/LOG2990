@@ -88,6 +88,7 @@ export class Car extends UserControllableCollidableMesh {
                     CAR_PART.name = name;
                     geometry.computeVertexNormals();
                     geometry['computeMorphNormals']();
+                    (materials[0] as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
                     (materials[0] as THREE.MeshPhongMaterial).shininess = Car.SHININESS;
                     (materials[0] as THREE.MeshPhongMaterial).emissiveIntensity = 0;
                     CAR_PART.receiveShadow = true;
