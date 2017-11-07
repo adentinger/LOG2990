@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
-import { CrosswordGridService } from './crossword-grid.service';
+import { GridService } from './grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
 
@@ -23,10 +23,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     private highlightGrid = new HighlightGrid();
     private selectionSubscription: Subscription;
 
-    constructor(private crosswordGridService: CrosswordGridService,
+    constructor(private gridService: GridService,
                 private selectionService: SelectionService,
                 private ngZone: NgZone) {
-        this.crosswordGridService.
+        this.gridService.
             addOnChangeCallback(() => this.ngZone.run(() => {}));
     }
 
@@ -42,7 +42,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public getGridCharAt(row: number, column: number) {
-        return this.crosswordGridService.getCharAt(row, column);
+        return this.gridService.getCharAt(row, column);
     }
 
     private onSelect(selected: GridWord): void {
@@ -56,7 +56,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     public onInputChange(inputValue: string) {
         const USER_WORD = this.makeWordFromInput(inputValue);
         this.inputBuffer.nativeElement.value = USER_WORD.string;
-        this.crosswordGridService.setUserInput(USER_WORD);
+        this.gridService.setUserInput(USER_WORD);
     }
 
     public isHighlighted(row: number, column: number): boolean {

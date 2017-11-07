@@ -3,7 +3,7 @@ import { GameService } from '../game.service';
 import { CrosswordGame } from '../class/crossword-game';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { TimerService } from '../services/timer.service';
-import { CrosswordGridService } from '../board/crossword-grid.service';
+import { GridService } from '../board/grid.service';
 
 @Component({
     selector: 'app-game-details',
@@ -19,7 +19,7 @@ export class GameDetailsComponent implements OnInit {
 
     constructor(private crosswordGameService: GameService,
                 private timerService: TimerService,
-                private crosswordGridService: CrosswordGridService) { }
+                private gridService: GridService) { }
 
     public ngOnInit(): void {
         this.crosswordGame = this.crosswordGameService.getCurrentGame();
@@ -33,11 +33,11 @@ export class GameDetailsComponent implements OnInit {
     }
 
     public get playerWordsFound() {
-        return this.crosswordGridService.getPlayerWordsFoundCount();
+        return this.gridService.getPlayerWordsFoundCount();
     }
 
     public get opponentWordsFound() {
-        return this.crosswordGridService.getOpponentWordsFoundCount();
+        return this.gridService.getOpponentWordsFoundCount();
     }
 
 }

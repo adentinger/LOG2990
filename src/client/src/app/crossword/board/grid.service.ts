@@ -14,7 +14,7 @@ import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
 
 @Injectable()
-export class CrosswordGridService {
+export class GridService {
 
     private readonly GRID = new Grid();
     private callbacks: (() => void)[] = [];

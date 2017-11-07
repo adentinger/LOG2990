@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, Input, NgZone } from '@angular/core';
 
 import { DefinitionsService, Definitions, Answers } from './definitions.service';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
-import { CrosswordGridService } from '../board/crossword-grid.service';
+import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Definition } from './definition';
@@ -23,7 +23,7 @@ export class DefinitionFieldComponent {
 
     constructor(private definitionService: DefinitionsService,
         private selectionService: SelectionService,
-        private crosswordGridService: CrosswordGridService,
+        private gridService: GridService,
         private ngZone: NgZone) {
         this.definitionService.pushOnChangeCallback(() => {
             this.ngZone.run(() => { });
@@ -40,7 +40,7 @@ export class DefinitionFieldComponent {
 
     public onDefinitionClicked(index: number, direction: Direction): void {
         const SELECTED_WORD: GridWord =
-            this.crosswordGridService.getWord(index, direction);
+            this.gridService.getWord(index, direction);
         this.selectionService.selection.next(SELECTED_WORD);
     }
 
@@ -55,7 +55,7 @@ export class DefinitionFieldComponent {
     }
 
     public checkIfFound(index: number, direction: Direction): boolean {
-        return this.crosswordGridService.checkIfWordIsFound(index, direction);
+        return this.gridService.checkIfWordIsFound(index, direction);
     }
 
     public checkDefinitionStatus(index: number, direction: Direction) { }

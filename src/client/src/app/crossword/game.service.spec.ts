@@ -4,7 +4,7 @@ import { GameService} from './game.service';
 import { PacketManagerClient } from '../packet-manager-client';
 import { packetManagerClient } from '../packet-manager.service';
 
-describe('CrosswordGridService', () => {
+describe('gridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [

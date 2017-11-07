@@ -6,7 +6,7 @@ import { packetManagerClient } from '../../packet-manager.service';
 import { GameService } from '../game.service';
 import { GameDetailsService } from './game-details.service';
 import { TimerService } from '../services/timer.service';
-import { CrosswordGridService } from '../board/crossword-grid.service';
+import { GridService } from '../board/grid.service';
 
 describe('GameDetailsComponent', () => {
     let component: GameDetailsComponent;
@@ -20,7 +20,7 @@ describe('GameDetailsComponent', () => {
                 GameService,
                 GameDetailsService,
                 TimerService,
-                CrosswordGridService
+                GridService
             ]
         })
             .compileComponents();
