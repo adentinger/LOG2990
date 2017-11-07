@@ -34,16 +34,20 @@
   <div *ngSwitchCase='true' id="word-box" (clickOutside)='onClickOutside()'>
 
     <h3 class='title'>Across Words</h3>
-    <div *ngFor='let answer of answers; let i = index;'>
-      <div [class.selected]='checkIfSelected(i + 1, HORIZONTAL)' (click)='onDefinitionClicked(i + 1, HORIZONTAL)'>
-        <p>{{i+1}}. {{answer}}</p>
+    <div *ngFor='let answer of answers.horizontal; let i = index;'>
+      <div [class.selected]='checkIfSelected(i, HORIZONTAL)'
+        [class.found]='checkIfFound(i, HORIZONTAL)'
+        (click)='onDefinitionClicked(i, HORIZONTAL)'>
+        <p class='definition'>{{i+1}}. {{answer}}</p>
       </div>
     </div>
 
     <h3 class='title'>Vertical Words</h3>
-    <div *ngFor='let answer of answers; let j = index;'>
-      <div [class.selected]='checkIfSelected(j + 1, VERTICAL)' (click)='onDefinitionClicked(j + 1, VERTICAL)'>
-        <p>{{j+1}}. {{answer}}</p>
+    <div *ngFor='let answer of answers.vertical; let j = index;'>
+      <div [class.selected]='checkIfSelected(j, VERTICAL)'
+        [class.found]='checkIfFound(j, VERTICAL)'
+        (click)='onDefinitionClicked(j, VERTICAL)'>
+        <p class='definition'>{{j+1}}. {{answer}}</p>
       </div>
     </div>
   </div>
