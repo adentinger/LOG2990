@@ -84,17 +84,4 @@ describe('MenuAutomatonService', () => {
         expect(menuAutomaton.canGoBack()).toBe(false);
     });
 
-    it('should yield a game configuration', () => {
-        let i = 0;
-        let wasCallbackCalled = false;
-        const callback = () => wasCallbackCalled = true;
-        menuAutomaton.configEnd.subscribe(callback);
-        while (i < 1000 && !wasCallbackCalled) {
-            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
-            ++i;
-        }
-        const configuration = menuAutomaton.choices; // should not throw
-        expect(configuration).toBeTruthy();
-    });
-
 });
