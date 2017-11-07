@@ -27,6 +27,9 @@ export class Grid {
         this.regenerateEverything();
     }
 
+    public updateWord(word: GridWord): void {
+    }
+
     public empty(): void {
         this.words = [];
         this.userInputInternal = Grid.NO_USER_INPUT;
