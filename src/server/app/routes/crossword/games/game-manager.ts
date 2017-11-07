@@ -44,7 +44,14 @@ export class GameManager {
     }
 
     public findGame(predicate: (game: Game) => boolean): Game {
-        return null;
+        let foundGame = null;
+        this.games.forEach((game) => {
+            if (predicate(game)) {
+                foundGame = game;
+                return;
+            }
+        });
+        return foundGame;
     }
 
     public getGame(id: number): Game {
