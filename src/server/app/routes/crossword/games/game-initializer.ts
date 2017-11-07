@@ -102,10 +102,33 @@ export class GameInitializer {
 
     private async getDefinitionOfWord(word: GridWord, difficulty: Difficulty): Promise<Definition> {
         const definitions = await LexiconCaller.getInstance().getDefinitions(word.string);
+
+        let definitionString: string;
+        switch (difficulty) {
+            case Difficulty.easy: {
+                definitionString = definitions[0];
+                break;
+            }
+            case Difficulty.medium: // fallthrough
+            case Difficulty.hard: {
+                if (definitions.length > 1) {
+                    definitions.shift();
+                    const randomDefinition =
+                        definitions[Math.round(Math.random() * definitions.length)];
+                    definitionString = randomDefinition;
+                }
+                else {
+                    definitionString = definitions[0];
+                }
+                break;
+            }
+        }
+
         const definition = new Definition(
-            definitions[0],
+            definitionString,
             word.direction
         );
+
         return definition;
     }
 

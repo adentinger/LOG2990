@@ -10,6 +10,7 @@ import '../../../../../common/src/crossword/packets/game-start.parser';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DefinitionWithIndex } from './game-initializer';
+import { Player } from './player';
 
 export class CommunicationHandler {
 
@@ -23,9 +24,9 @@ export class CommunicationHandler {
         this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
     }
 
-    public sendGameStart(playerIds: string[]) {
-        playerIds.forEach((playerId) => {
-            this.packetManager.sendPacket(GameStartPacket, new GameStartPacket(), playerId);
+    public sendGameStart(players: Player[]) {
+        players.forEach((player) => {
+            this.packetManager.sendPacket(GameStartPacket, new GameStartPacket(), player.socketId);
         });
     }
 

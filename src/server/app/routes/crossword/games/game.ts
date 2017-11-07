@@ -10,9 +10,10 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
-import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
+import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { GameInitializer, DefinitionWithIndex } from './game-initializer';
 import { CommunicationHandler } from './communication-handler';
+import { Player } from './player';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -24,7 +25,6 @@ export class Game {
     private static idCounter = 0;
 
     public readonly id: GameId;
-    public readonly numberOfPlayers: PlayerNumber;
     public countdown = Game.COUNTDOWN_INITAL;
 
     private readonly initialized: Promise<void>;
@@ -32,7 +32,8 @@ export class Game {
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
-    private readonly playerIds: string[] = [];
+    private readonly players: Player[] = [];
+    private readonly maxPlayers: PlayerNumber;
     private readonly configurationInternal: CrosswordGameConfigs;
     private communicationHandler: CommunicationHandler;
 
@@ -41,24 +42,20 @@ export class Game {
         this.configurationInternal = configs;
 
         this.id = Game.idCounter++;
-        this.numberOfPlayers = configs.playerNumber;
+        this.maxPlayers = configs.playerNumber;
 
         this.initialized =
             this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
-            const INDEX = this.playerIds.findIndex((playerId) => playerId === socketId);
+            const INDEX = this.players.findIndex((player) => player.socketId === socketId);
             const FOUND = INDEX >= 0;
             if (FOUND) {
-                this.playerIds[INDEX] = null;
+                this.players.splice(INDEX, 1);
             }
         });
 
         registerHandlers(this, this.packetManager);
-
-        if (configs.gameMode === GameMode.Dynamic) {
-            this.startTimer();
-        }
     }
 
     public get words(): GridWord[] {
@@ -70,27 +67,32 @@ export class Game {
     }
 
     public get configuration(): CrosswordGameConfigs {
-        const config = {
+        const config: CrosswordGameConfigs = {
             difficulty: this.configurationInternal.difficulty,
             gameId: this.id,
             gameMode: this.configurationInternal.gameMode,
-            playerNumber: this.numberOfPlayers
+            playerNumber: this.maxPlayers,
+            playerName: this.players.length > 0 ? this.players[0].name : ''
         };
         return config;
     }
 
-    public addPlayer(playerId: string): PlayerNumber {
-        if (this.playerIds.length < this.numberOfPlayers) {
-            this.playerIds.push(playerId);
+    public get currentNumberOfPlayers(): number {
+        return this.players.length;
+    }
+
+    public addPlayer(player: Player): PlayerNumber {
+        if (this.players.length < this.maxPlayers) {
+            this.players.push(player);
             this.initialized.then(() => {
-                this.communicationHandler.clearPlayerGrid(playerId);
-                this.communicationHandler.sendGridWords(playerId, this.words);
-                this.communicationHandler.sendDefinitions(playerId, this.definitions);
+                this.communicationHandler.clearPlayerGrid(player.socketId);
+                this.communicationHandler.sendGridWords(player.socketId, this.words);
+                this.communicationHandler.sendDefinitions(player.socketId, this.definitions);
             }).catch((reason) => console.log(reason));
-            if (this.playerIds.length === this.numberOfPlayers) {
+            if (this.players.length === this.maxPlayers) {
                 this.start();
             }
-            return this.playerIds.length;
+            return this.players.length;
         }
         else {
             throw new Error('Cannot add a new player: max number reached.');
@@ -98,7 +100,8 @@ export class Game {
     }
 
     public isPlayerInGame(playerId: string): boolean {
-        return this.playerIds.findIndex((id) => id === playerId) >= 0;
+        // return this.playerIds.findIndex((id) => id === playerId) >= 0;
+        return this.players.findIndex((player) => player.socketId === playerId) >= 0;
     }
 
     public validateUserAnswer(wordTry: GridWord): boolean {
@@ -118,6 +121,10 @@ export class Game {
         return FOUND;
     }
 
+    public isSocketIdInGame(socketId: string): boolean {
+        return this.players.findIndex((id) => id.socketId === socketId) >= 0;
+    }
+
     private async initializeData(difficulty: Difficulty): Promise<void> {
         this.wordsInternal =
             await GameInitializer.getInstance().initializeGrid(difficulty);
@@ -128,7 +135,12 @@ export class Game {
     private start(): void {
         if (!this.started) {
             this.started = true;
-            this.communicationHandler.sendGameStart(this.playerIds);
+            this.players.forEach((player) => {
+                this.communicationHandler.sendGameStart(this.players);
+            });
+            if (this.configurationInternal.gameMode === GameMode.Dynamic) {
+                this.startTimer();
+            }
         }
         else {
             throw new Error('Cannot start game: Game already started.');
@@ -139,12 +151,12 @@ export class Game {
         const ONE_SECOND = 1000;
         setInterval(() => {
             this.countdown--;
-            this.playerIds.forEach((playerId) => {
-                if (playerId !== null) {
+            this.players.forEach((player) => {
+                if (player !== null) {
                     logger.log('(game #%s) Timer: %d', this.id, this.countdown);
                     this.packetManager.sendPacket(
                         CrosswordTimerPacket,
-                        new CrosswordTimerPacket(this.countdown), playerId
+                        new CrosswordTimerPacket(this.countdown), player.socketId
                     );
                 }
             });

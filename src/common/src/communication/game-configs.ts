@@ -7,5 +7,6 @@ export interface CrosswordGameConfigs {
     gameMode: GameMode;
     playerNumber: PlayerNumber;
     difficulty: Difficulty;
+    playerName?: string;
     gameId?: GameId;
 }
