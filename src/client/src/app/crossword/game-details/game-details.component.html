@@ -1,8 +1,12 @@
-  <ul class="list-group">
-    <li class="list-group-item">Player: {{player1}}</li>
-    <li class="list-group-item">Game Mode: {{gameMode}}</li>
-    <li class="list-group-item">Difficulty: {{difficulty}}</li>
-    <li class="list-group-item">Player Words Found: {{playerWordsFound}}</li>
-    <li class="list-group-item">Player2 Words Found: {{opponentWordsFound}}</li>
-    <li class="list-group-item">Game Time: {{timerValue | date:'mm:ss'}}</li>
-  </ul>
+<div class='game-details'>
+  <div class='game-info'>
+    <ul class='list-game-item'> Word Found : {{playerWordsFound}}</ul>
+    <ul class='list-game-item'> Opponent: {{opponentWordsFound}}</ul>
+  </div>
+  <div class='general-details'>
+    <ul class='list-group-item'>Player: {{player1}}</ul>
+    <ul class='list-group-item'>Game Mode: {{gameMode}}</ul>
+    <ul class='list-group-item'>Difficulty: {{difficulty}}</ul>
+    <ul class='list-group-item'>Game Time: {{timerValue | date:'mm:ss'}}</ul>
+  </div>
+</div>

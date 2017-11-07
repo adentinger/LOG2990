@@ -77,7 +77,6 @@ export class CrosswordGridService {
     }
 
     public getPlayerWordsFoundCount() {
-        console.log("HI");
         return this.GRID.getPlayerWordsFoundCount();
     }
 
