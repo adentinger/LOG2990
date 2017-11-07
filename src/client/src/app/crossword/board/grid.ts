@@ -29,13 +29,13 @@ export class Grid {
 
     public updateWord(word: GridWord): void {
         const foundWordIndex = this.words.findIndex((existingWord) => {
-            return existingWord.id        === word.id        &&
-                   existingWord.y         === word.y         &&
+            return existingWord.y         === word.y         &&
                    existingWord.x         === word.x         &&
                    existingWord.direction === word.direction &&
                    existingWord.length    === word.length;
         });
         if (foundWordIndex >= 0) {
+            word.id = this.words[foundWordIndex].id;
             this.words[foundWordIndex] = word;
             this.regenerateEverything();
         }
