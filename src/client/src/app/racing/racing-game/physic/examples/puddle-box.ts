@@ -10,7 +10,7 @@ export enum SlipDirection {
 }
 
 export class PuddleBox extends CollidableMesh {
-    private static readonly SLIP_FACTOR = Math.PI;
+    private static readonly SLIP_FACTOR = Math.PI * 2;
 
     public readonly mass = 0;
 

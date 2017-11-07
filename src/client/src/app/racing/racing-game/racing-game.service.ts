@@ -13,6 +13,9 @@ import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 import { BoostBox } from './physic/examples/boost-box';
 import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
+import { Puddle } from './models/obstacles/puddle';
+import { Pothole } from './models/obstacles/pothole';
+import { SpeedBooster } from './models/obstacles/speed-booster';
 
 @Injectable()
 export class RacingGameService {
@@ -37,7 +40,10 @@ export class RacingGameService {
         this.renderer = new RacingRenderer(eventManager);
         this.boxes = [
             new BoostBox(eventManager).translateZ(-3),
-            new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10)
+            new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10),
+            // new Pothole(eventManager).translateX(-10),
+            // new Puddle(eventManager, 1).translateX(-15),
+            new SpeedBooster(eventManager).translateX(-20),
         ];
     }
 

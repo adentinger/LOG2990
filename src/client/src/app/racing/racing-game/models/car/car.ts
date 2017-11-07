@@ -5,6 +5,7 @@ import { UserControllableCollidableMesh } from '../../physic/user-controllable-c
 import { CarHeadlight } from './car-headlight';
 import { Kilograms, Seconds } from '../../../types';
 import { DayMode } from '../../day-mode/day-mode';
+import { PhysicUtils } from "../../physic/engine";
 
 export interface CarLights {
     headlightLeft: THREE.Light;
@@ -50,11 +51,15 @@ export class Car extends UserControllableCollidableMesh {
     protected maxAngularSpeed = Math.PI; // rad/s
 
     public waitToLoad: Promise<void>;
+    public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
 
     constructor(carColor: THREE.Color) {
         super();
         this.addLights();
         this.waitToLoad = this.addCarParts(carColor);
+        this.waitToLoad.then(() => {
+            this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
+        });
         this.boundingBox = new THREE.Box3().setFromObject(this);
     }
 
