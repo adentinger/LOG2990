@@ -23,7 +23,7 @@
 }
 
 .list-game-item {
-    border-top-width: 10px;
+    border-top-width: 4px;
     border-style: ridge ridge ridge ridge;
     width: 175px;
     margin: 1px;
