@@ -17,15 +17,15 @@ export class GameDetailsComponent implements OnInit {
     public difficulty: string;
     public gameMode: GameMode;
 
-    constructor(private crosswordGameService: GameService,
+    constructor(private gameService: GameService,
                 private timerService: TimerService,
                 private gridService: GridService) { }
 
     public ngOnInit(): void {
-        this.crosswordGame = this.crosswordGameService.getCurrentGame();
-        this.player1 = this.crosswordGameService.getCurrentGame().player1;
-        this.difficulty = this.crosswordGameService.getCurrentGame().difficulty;
-        this.gameMode = this.crosswordGameService.getCurrentGame().gameMode;
+        this.crosswordGame = this.gameService.getCurrentGame();
+        this.player1 = this.gameService.getCurrentGame().player1;
+        this.difficulty = this.gameService.getCurrentGame().difficulty;
+        this.gameMode = this.gameService.getCurrentGame().gameMode;
     }
 
     public get timerValue() {

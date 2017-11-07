@@ -14,33 +14,33 @@ describe('gridService', () => {
         });
     });
 
-    let crosswordGameService: GameService;
+    let gameService: GameService;
 
-    beforeEach(inject([GameService], (injectedCrosswordGameService) => {
-        crosswordGameService = injectedCrosswordGameService;
+    beforeEach(inject([GameService], (injectedgameService) => {
+        gameService = injectedgameService;
     }));
 
     it('should be created', () => {
-        expect(crosswordGameService).toBeTruthy();
+        expect(gameService).toBeTruthy();
     });
 
     it('the service should return something', () => {
-        expect(crosswordGameService.getCurrentGame()).toBeDefined();
+        expect(gameService.getCurrentGame()).toBeDefined();
     });
 
     it('the game should have a property "player1"', () => {
-        expect(crosswordGameService.getCurrentGame().player1).toBeDefined();
+        expect(gameService.getCurrentGame().player1).toBeDefined();
     });
 
     it('the game should have a property "player2"', () => {
-        expect(crosswordGameService.getCurrentGame().player2).toBeDefined();
+        expect(gameService.getCurrentGame().player2).toBeDefined();
     });
 
     it('the game should have a property "difficulty"', () => {
-        expect(crosswordGameService.getCurrentGame().difficulty).toBeDefined();
+        expect(gameService.getCurrentGame().difficulty).toBeDefined();
     });
 
     it('the game should have a property "gameMode"', () => {
-        expect(crosswordGameService.getCurrentGame().gameMode).toBeDefined();
+        expect(gameService.getCurrentGame().gameMode).toBeDefined();
     });
 });
