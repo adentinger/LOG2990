@@ -73,12 +73,18 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
         this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
-            this.gameService.joinGame(this.userChoiceService.chosenGame);
+            this.gameService.joinGame(
+                this.userChoiceService.chosenGame,
+                this.userChoiceService.playerName
+            );
         }
         else {
             this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
                 .then((gameId) => {
-                    this.gameService.joinGame(gameId);
+                    this.gameService.joinGame(
+                        gameId,
+                        this.userChoiceService.playerName
+                    );
                 });
         }
     }
