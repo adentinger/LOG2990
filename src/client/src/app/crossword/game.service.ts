@@ -6,6 +6,7 @@ import { PacketManagerClient } from '../packet-manager-client';
 
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import '../../../../common/src/crossword/packets/game-join.parser';
+import { Subject } from 'rxjs/Subject';
 
 /**
  * @class GameService
@@ -20,6 +21,7 @@ export class GameService {
 
     private cheatModeOn = false;
     private showWordsOn = false;
+    private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
     private gameId: number = null;
@@ -54,12 +56,12 @@ export class GameService {
         return this.cheatModeOn;
     }
 
-    public setShowWordsOnOff(): void {
-        this.showWordsOn = !this.showWordsOn;
-    }
-
     public getShowWordsState(): boolean {
         return this.showWordsOn;
+    }
+
+    public get onShowWords(): Subject<boolean> {
+        return this.onShowWordsInternal;
     }
 
     public setTimerOnOff(): void {

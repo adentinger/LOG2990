@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 import { GameService } from '../game.service';
 import { TimerService } from '../services/timer.service';
@@ -8,15 +8,12 @@ import { TimerService } from '../services/timer.service';
     templateUrl: './cheat-mode.component.html',
     styleUrls: ['./cheat-mode.component.css']
 })
-export class CheatModeComponent implements OnInit {
+export class CheatModeComponent {
 
     @ViewChild('timerInput') private timerInput: ElementRef;
 
     constructor(private gameService: GameService,
                 private timerService: TimerService) { }
-
-    public ngOnInit() {
-    }
 
     public onCheatModeToggle(): void {
         this.gameService.setCheatModeOnOff();
@@ -36,7 +33,7 @@ export class CheatModeComponent implements OnInit {
     }
 
     public onShowWordsToggle(): void {
-        this.gameService.setShowWordsOnOff();
+        this.gameService.onShowWords.next(!this.gameService.getShowWordsState());
     }
 
     public isShowWordsOn(): boolean {
