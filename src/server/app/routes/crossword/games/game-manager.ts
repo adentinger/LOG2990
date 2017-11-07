@@ -92,11 +92,7 @@ export class GameManager {
         const PLAYER_ID: string = event.socketid;
 
         const foundGame: Game = this.findGame((game) => game.isSocketIdInGame(PLAYER_ID));
-        const ANSWER: GridWord = WORD_TRY;
-        if (!foundGame.validateUserAnswer(WORD_TRY)) {
-            ANSWER.string = '';
-        }
-        // this.sendGridWord(ANSWER, PLAYER_ID);
+        foundGame.validateUserAnswer(WORD_TRY, event.socketid);
     }
 
 }

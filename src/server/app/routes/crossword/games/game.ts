@@ -1,5 +1,7 @@
 import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
 import '../../../../../common/src/crossword/packets/crossword-timer.parser';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
@@ -99,21 +101,22 @@ export class Game {
         return this.players.findIndex((player) => player.socketId === playerId) >= 0;
     }
 
-    public validateUserAnswer(wordTry: GridWord): boolean {
-        const ID = wordTry.id;
+    public validateUserAnswer(wordTry: GridWord, socketId: string): void {
         const DIRECTION = wordTry.direction;
         const STRING = wordTry.string;
 
         const FOUND = this.dataInternal.words.findIndex(
             (word) => {
-                return word.id === ID &&
-                    word.direction === DIRECTION &&
-                    word.string === STRING;
+                return word.direction === DIRECTION &&
+                       word.string === STRING;
             }) >= 0;
         if (FOUND) {
-            this.countdown = COUNTDOWN_DEFAULT_VALUE;
+            this.packetManager.sendPacket(
+                WordTryPacket,
+                new WordTryPacket(wordTry),
+                socketId
+            );
         }
-        return FOUND;
     }
 
     public isSocketIdInGame(socketId: string): boolean {
