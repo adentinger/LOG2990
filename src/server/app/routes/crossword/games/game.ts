@@ -28,7 +28,6 @@ export class Game {
     private static idCounter = 0;
 
     public readonly id: GameId;
-    public readonly numberOfPlayers: PlayerNumber;
     public countdown = Game.COUNTDOWN_INITAL;
 
     private readonly initialized: Promise<void>;
@@ -37,13 +36,14 @@ export class Game {
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
     private readonly players: Player[] = [];
+    private readonly maxPlayers: PlayerNumber;
     private readonly configurationInternal: CrosswordGameConfigs;
 
     constructor(configs: CrosswordGameConfigs) {
         this.configurationInternal = configs;
 
         this.id = Game.idCounter++;
-        this.numberOfPlayers = configs.playerNumber;
+        this.maxPlayers = configs.playerNumber;
 
         this.initialized =
             this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
@@ -76,21 +76,21 @@ export class Game {
             difficulty: this.configurationInternal.difficulty,
             gameId: this.id,
             gameMode: this.configurationInternal.gameMode,
-            playerNumber: this.numberOfPlayers,
+            playerNumber: this.maxPlayers,
             playerName: this.players.length > 0 ? this.players[0].name : ''
         };
         return config;
     }
 
     public addPlayer(player: Player): PlayerNumber {
-        if (this.players.length < this.numberOfPlayers) {
+        if (this.players.length < this.maxPlayers) {
             this.players.push(player);
             this.initialized.then(() => {
                 this.clearPlayerGrid(player.socketId);
                 this.sendGridWords(player.socketId);
                 this.sendDefinitions(player.socketId);
             }).catch((reason) => console.log(reason));
-            if (this.players.length === this.numberOfPlayers) {
+            if (this.players.length === this.maxPlayers) {
                 this.start();
             }
             return this.players.length;
