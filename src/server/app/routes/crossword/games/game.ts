@@ -97,7 +97,6 @@ export class Game {
     }
 
     public isPlayerInGame(playerId: string): boolean {
-        // return this.playerIds.findIndex((id) => id === playerId) >= 0;
         return this.players.findIndex((player) => player.socketId === playerId) >= 0;
     }
 
