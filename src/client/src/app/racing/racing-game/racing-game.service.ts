@@ -20,7 +20,7 @@ export class RacingGameService {
     private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional1();
 
     public readonly renderer: RacingRenderer;
-    private dayMode: DayMode = DayMode.DAY;
+    private dayModeInternal: DayMode = DayMode.DAY;
     private cars: Car[] = [
         new Car(new THREE.Color('green')),
         new Car(new THREE.Color('yellow')),
@@ -30,6 +30,10 @@ export class RacingGameService {
     private readonly boxes;
 
     private map: RenderableMap;
+
+    public get dayMode(): DayMode {
+        return this.dayModeInternal;
+    }
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
@@ -51,18 +55,20 @@ export class RacingGameService {
         const position = new THREE.Vector3();
         const POSITION_INCREMENT = new THREE.Vector3(2, 0, 0);
         this.cars.forEach((car) => {
+            car.startSounds();
             car.position.copy(position);
             position.add(POSITION_INCREMENT);
         });
 
         this.physicEngine.start();
         this.renderer.startRendering();
-        this.renderer.updateDayMode(this.dayMode);
+        this.renderer.updateDayMode(this.dayModeInternal);
     }
 
     public finalize() {
         this.physicEngine.stop();
         this.renderer.stopRendering();
+        this.cars.forEach(car => car.stopSounds());
 
         this.renderer.finalize();
     }
@@ -94,13 +100,13 @@ export class RacingGameService {
 
     public changeDayMode(): void {
         let newMode: DayMode;
-        switch (this.dayMode) {
+        switch (this.dayModeInternal) {
             case DayMode.DAY: newMode = DayMode.NIGHT; break;
             case DayMode.NIGHT: newMode = DayMode.DAY; break;
             default: break;
         }
-        this.dayMode = newMode;
-        this.renderer.updateDayMode(this.dayMode);
+        this.dayModeInternal = newMode;
+        this.renderer.updateDayMode(this.dayModeInternal);
     }
 
 }

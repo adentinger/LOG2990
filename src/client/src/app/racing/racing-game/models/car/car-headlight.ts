@@ -34,7 +34,7 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
             CarHeadlight.generalOptions.exponent,
             CarHeadlight.generalOptions.decay
         );
-        this.castShadow = true;
+        this.castShadow = false;
         this.shadow.mapSize.width = 1024;
         this.shadow.mapSize.height = 1024;
         this.shadow.bias = -0.0039;

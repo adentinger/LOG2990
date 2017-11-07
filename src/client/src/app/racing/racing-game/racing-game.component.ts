@@ -11,8 +11,7 @@ import { EventManager } from '../../event-manager.service';
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
-    styleUrls: ['./racing-game.component.css'],
-    providers: [RacingGameService, PhysicEngine]
+    styleUrls: ['./racing-game.component.css']
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
