@@ -63,13 +63,15 @@ export class CrosswordGridService {
     }
 
     @PacketHandler(GridWordPacket)
-    public updateGridWord(event: PacketEvent<GridWordPacket>): void {
+    // tslint:disable-next-line:no-unused-variable
+    private updateGridWord(event: PacketEvent<GridWordPacket>): void {
         this.GRID.addWord(event.value.gridword);
         this.onChange();
     }
 
     @PacketHandler(ClearGridPacket)
-    public clearGrid(): void {
+    // tslint:disable-next-line:no-unused-variable
+    private clearGrid(): void {
         this.GRID.empty();
         this.onChange();
     }

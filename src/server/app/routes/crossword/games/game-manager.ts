@@ -58,7 +58,8 @@ export class GameManager {
     }
 
     @PacketHandler(GameJoinPacket)
-    public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
+    // tslint:disable-next-line:no-unused-variable
+    private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
         const GAME = this.getGameFromId(gameId);
         const playerName = event.value.playerName;
@@ -72,7 +73,8 @@ export class GameManager {
      * @param event
      */
     @PacketHandler(WordTryPacket)
-    public wordTryHandler(event: PacketEvent<WordTryPacket>) {
+    // tslint:disable-next-line:no-unused-variable
+    private wordTryHandler(event: PacketEvent<WordTryPacket>) {
         const WORD_TRY: GridWord = event.value.wordTry;
         const PLAYER_ID: string = event.socketid;
 

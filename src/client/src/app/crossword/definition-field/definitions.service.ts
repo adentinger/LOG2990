@@ -64,7 +64,8 @@ export class DefinitionsService {
     }
 
     @PacketHandler(GameDefinitionPacket)
-    public gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
+    // tslint:disable-next-line:no-unused-variable
+    private gameDefinitionHandler(event: PacketEvent<GameDefinitionPacket>) {
         const definitionIndex = event.value.index;
         const serializedDefinition = event.value.definition;
         const direction = event.value.direction;
