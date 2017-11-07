@@ -9,6 +9,7 @@ import { GameDefinitionPacket } from '../../../../../common/src/crossword/packet
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
+import { GameService } from '../game.service';
 
 export interface Answers {
     horizontal: string[];
@@ -32,11 +33,14 @@ export class DefinitionsService {
     private verticalAnswers: string[] = [];
     private onChangeCallbacks: (() => void)[] = [];
 
-    constructor(private packetManager: PacketManagerClient) {
-
+    constructor(private packetManager: PacketManagerClient,
+                private gameService: GameService) {
+        this.gameService.onShowWords.subscribe((value) => {
+            if (value) {
+                this.fetchAnswers();
+            }
+        });
         registerHandlers(this, this.packetManager);
-        this.horizontalAnswers = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
-        this.verticalAnswers = ['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'];
     }
 
     public get answers(): Answers {
@@ -61,6 +65,11 @@ export class DefinitionsService {
         this.onChangeCallbacks.forEach((callback) => {
             callback();
         });
+    }
+
+    private fetchAnswers(): void {
+        this.horizontalAnswers = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+        this.verticalAnswers = ['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'];
     }
 
     @PacketHandler(GameDefinitionPacket)
