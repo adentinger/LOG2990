@@ -105,11 +105,11 @@ export class GameInitializer {
 
         let definitionString: string;
         switch (difficulty) {
-            case Difficulty.easy: // fallthrough
-            case Difficulty.medium: {
+            case Difficulty.easy: {
                 definitionString = definitions[0];
                 break;
             }
+            case Difficulty.medium: // fallthrough
             case Difficulty.hard: {
                 if (definitions.length > 1) {
                     definitions.shift();
