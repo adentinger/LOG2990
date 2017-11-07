@@ -59,6 +59,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         if (this.uiInputs.isKeyPressed('n')) {
             this.racingGame.changeDayMode();
         }
+        if (this.uiInputs.isKeyPressed('e')) {
+            this.racingGame.reloadSounds();
+        }
 
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||

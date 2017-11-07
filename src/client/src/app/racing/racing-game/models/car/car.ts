@@ -56,7 +56,6 @@ export class Car extends UserControllableCollidableMesh {
     public readonly audioListener = new THREE.AudioListener();
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
     public readonly audioContext = new AudioContext();
-    public isPlaying = false;
 
     protected breakLightMeshs: THREE.Mesh;
     protected isStopped = false;
@@ -70,13 +69,13 @@ export class Car extends UserControllableCollidableMesh {
         });
         this.boundingBox = new THREE.Box3().setFromObject(this);
         this.add(this.audio);
+        this.audio.autoplay = true;
         this.audio.setLoop(true);
         this.audio.setVolume(10);
         this.audio.setPlaybackRate(0.1);
         Car.AUDIO_LOADER.load(Car.CAR_ENGINE_SOUND_URL,
             (buffer: THREE.AudioBuffer) => {
                 this.audio.setBuffer(buffer);
-                this.startSounds();
             }, () => {}, Car.logger.error);
     }
 
@@ -196,18 +195,11 @@ export class Car extends UserControllableCollidableMesh {
     }
 
     public startSounds() {
-        if (!this.isPlaying) {
-            this.audio.autoplay = true;
-            this.audio.play();
-            this.isPlaying = true;
-        }
+        this.audio.setVolume(10);
     }
 
     public stopSounds() {
-        if (this.isPlaying) {
-            this.audio.stop();
-            this.isPlaying = false;
-        }
+        this.audio.setVolume(0);
     }
 
     public dayModeChanged(newMode: DayMode): void {

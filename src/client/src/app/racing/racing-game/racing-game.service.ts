@@ -55,10 +55,11 @@ export class RacingGameService {
         const position = new THREE.Vector3();
         const POSITION_INCREMENT = new THREE.Vector3(2, 0, 0);
         this.cars.forEach((car) => {
-            car.startSounds();
             car.position.copy(position);
             position.add(POSITION_INCREMENT);
+            car.rotation.set(0, 0, 0);
         });
+        this.reloadSounds();
 
         this.physicEngine.start();
         this.renderer.startRendering();
@@ -96,6 +97,13 @@ export class RacingGameService {
 
     public updateRendererSize(width: number, height: number) {
         this.renderer.updateSize(width, height);
+    }
+
+    public reloadSounds() {
+        this.cars.forEach(car => {
+            car.stopSounds();
+            car.startSounds();
+        });
     }
 
     public changeDayMode(): void {
