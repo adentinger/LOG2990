@@ -1,8 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { UserChoiceService } from './user-choice.service';
+import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
-import { CreateOrJoin } from './menu-automaton-choices';
 
 describe('UserChoiceService', () => {
     beforeEach(() => {
