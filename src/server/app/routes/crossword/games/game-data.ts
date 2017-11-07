@@ -10,12 +10,12 @@ export interface DefinitionWithIndex {
     index: number;
 }
 
-export class GameInitializer {
+export class GameData {
 
-    private static readonly instance = new GameInitializer();
+    private static readonly instance = new GameData();
 
-    public static getInstance(): GameInitializer {
-        return GameInitializer.instance;
+    public static getInstance(): GameData {
+        return GameData.instance;
     }
 
     private constructor() {}

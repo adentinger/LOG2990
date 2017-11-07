@@ -11,7 +11,7 @@ import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
-import { GameInitializer, DefinitionWithIndex } from './game-initializer';
+import { GameData, DefinitionWithIndex } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
 
@@ -127,9 +127,9 @@ export class Game {
 
     private async initializeData(difficulty: Difficulty): Promise<void> {
         this.wordsInternal =
-            await GameInitializer.getInstance().initializeGrid(difficulty);
+            await GameData.getInstance().initializeGrid(difficulty);
         this.definitionsInternal =
-            await GameInitializer.getInstance().getDefinitionsOf(this.words, difficulty);
+            await GameData.getInstance().getDefinitionsOf(this.words, difficulty);
     }
 
     private start(): void {

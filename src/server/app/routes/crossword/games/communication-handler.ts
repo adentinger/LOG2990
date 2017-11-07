@@ -9,7 +9,7 @@ import { GameStartPacket } from '../../../../../common/src/crossword/packets/gam
 import '../../../../../common/src/crossword/packets/game-start.parser';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { DefinitionWithIndex } from './game-initializer';
+import { DefinitionWithIndex } from './game-data';
 import { Player } from './player';
 
 export class CommunicationHandler {
