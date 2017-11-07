@@ -44,6 +44,12 @@ describe('The Game Manager Service', () => {
         done();
     });
 
+    it('should return a game matching a predicate, or null if not found', () => {
+        const idObtained = gameManager.newGame(createMockGameConfigs());
+        expect(gameManager.findGame((game) => game.id === idObtained)).to.be.true;
+        expect(gameManager.findGame((game) => game.id === idObtained - 1)).to.be.null;
+    });
+
     it('should keep track of the number of game created', (done) => {
         const MAX_N = 8;
         const nGames = Math.floor(Math.random() * MAX_N);
