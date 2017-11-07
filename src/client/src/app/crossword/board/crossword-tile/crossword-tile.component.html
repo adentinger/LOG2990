@@ -1,2 +1,10 @@
-<input #caseInput type='text' class='crossword-board-item' [disabled]='true' [class.highlighted]='this.highlighted' [class.black-square]='tileChar==="0"'
-  [value]='tileChar' maxlength='1' />
+<input #caseInput type='text' 
+  class='crossword-board-item' 
+  [disabled]='true' 
+  [ngClass]='{opponentHighlighted: this.highlighted === opponent  }'
+  [class.black-square]='tileChar==="0"' 
+  [value]='tileChar' 
+  maxlength='1'
+/>
+
+<!-- [ngClass]='{noneHighlighted: this.highlighted === noOne, playerHighlighted: this.highlighted === player, opponentHighlighted: this.highlighted === opponent, bothHighlighted: this.highlighted === both}' -->

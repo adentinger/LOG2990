@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
+import { WhoIsSelecting } from './highlight-grid';
 
 @Component({
     selector: 'app-tile',
@@ -11,7 +12,7 @@ export class CrosswordTileComponent {
     @Input() public readonly tileRow: number;
     @Input() public readonly tileColumn: number;
 
-    @Input() public highlighted: boolean;
+    @Input() public highlighted: WhoIsSelecting;
 
     @Input() get tileChar() {
         return this.tileValue;
