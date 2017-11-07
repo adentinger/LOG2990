@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { UserDisplayableGameData } from '../config-menu/available-games/user-displayable-game-data';
 import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Direction, Owner } from '../../../../../common/crossword/crossword-enums';
 
 @Injectable()
 export class GameHttpService {
@@ -34,6 +36,18 @@ export class GameHttpService {
         const promise =
             this.http.post<GameId>(url, gameConfig).toPromise();
         return promise;
+    }
+
+    public getWords(): Promise<GridWord[]> {
+        return new Promise((resolve, reject) => {
+            resolve([
+                new GridWord(1, 0, 0, 1, Direction.horizontal, Owner.none, 'a'),
+                new GridWord(2, 0, 2, 1, Direction.horizontal, Owner.none, 'b'),
+                new GridWord(1, 0, 3, 1, Direction.vertical, Owner.none, 'c'),
+                new GridWord(3, 0, 4, 1, Direction.horizontal, Owner.none, 'd'),
+                new GridWord(2, 0, 5, 1, Direction.vertical, Owner.none, 'e'),
+            ]);
+        });
     }
 
 }
