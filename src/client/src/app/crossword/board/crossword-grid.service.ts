@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { mockHorizontalGridWords, mockVerticalGridWords } from '../mocks/grid-mock';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { registerHandlers, PacketHandler, PacketEvent } from '../../../../../common/src/index';
@@ -48,6 +48,10 @@ export class CrosswordGridService {
 
     public addOnChangeCallback(callback: () => void): void {
         this.callbacks.push(callback);
+    }
+
+    public checkIfWordIsFound(wordId: number, wordDirection: Direction): boolean {
+        return this.GRID.getWord(wordId, wordDirection).owner !== Owner.none;
     }
 
     private sendWordToServer(word: GridWord): void {
