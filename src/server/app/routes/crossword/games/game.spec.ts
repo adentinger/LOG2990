@@ -18,7 +18,7 @@ describe('The Crossword Game', () => {
     });
 
     it('should contain grid words', (done) => {
-        expect(gameToTest.words).to.be.not.null;
+        expect(gameToTest.data.words).to.be.not.null;
         done();
     });
 

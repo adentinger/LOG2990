@@ -12,18 +12,18 @@ export class CheatModeComponent implements OnInit {
 
     @ViewChild('timerInput') private timerInput: ElementRef;
 
-    constructor(private crosswordGameService: GameService,
+    constructor(private gameService: GameService,
                 private timerService: TimerService) { }
 
     public ngOnInit() {
     }
 
     public onCheatModeToggle(): void {
-        this.crosswordGameService.setCheatModeOnOff();
+        this.gameService.setCheatModeOnOff();
     }
 
     public isCheatModeOn(): boolean {
-        return this.crosswordGameService.getCheatModeState();
+        return this.gameService.getCheatModeState();
     }
 
     public getCheatModeStateText(): string {
@@ -36,11 +36,11 @@ export class CheatModeComponent implements OnInit {
     }
 
     public onShowWordsToggle(): void {
-        this.crosswordGameService.setShowWordsOnOff();
+        this.gameService.setShowWordsOnOff();
     }
 
     public isShowWordsOn(): boolean {
-        return this.crosswordGameService.getShowWordsState();
+        return this.gameService.getShowWordsState();
     }
 
     public getShowWordsStateText(): string {
@@ -53,11 +53,11 @@ export class CheatModeComponent implements OnInit {
     }
 
     public onTimerRunningToggle(): void {
-        this.crosswordGameService.setTimerOnOff();
+        this.gameService.setTimerOnOff();
     }
 
     public isTimerBeingSet(): boolean {
-        return this.crosswordGameService.getTimerState();
+        return this.gameService.getTimerState();
     }
 
     public getTimerStateText(): string {

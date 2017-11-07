@@ -12,7 +12,7 @@ import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { CrosswordTileComponent } from './board/crossword-tile/crossword-tile.component';
-import { CrosswordGridService } from './board/crossword-grid.service';
+import { GridService } from './board/grid.service';
 import { GameDetailsService } from './game-details/game-details.service';
 import { SelectionService } from './selection.service';
 import { CheatModeComponent } from './cheat-mode/cheat-mode.component';
@@ -45,7 +45,7 @@ import { ConfirmationComponent } from './config-menu/confirmation/confirmation.c
         HttpClient,
         SimpleTimer,
         DefinitionsService,
-        CrosswordGridService,
+        GridService,
         GameDetailsService,
         SelectionService
     ],

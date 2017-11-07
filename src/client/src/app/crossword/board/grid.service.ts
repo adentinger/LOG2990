@@ -14,7 +14,7 @@ import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
 
 @Injectable()
-export class CrosswordGridService {
+export class GridService {
 
     private readonly GRID = new Grid();
     private callbacks: (() => void)[] = [];
@@ -74,6 +74,12 @@ export class CrosswordGridService {
     private clearGrid(): void {
         this.GRID.empty();
         this.onChange();
+    }
+
+    @PacketHandler(WordTryPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private wordWasFound(event: PacketEvent<WordTryPacket>): void {
+        this.GRID.updateWord(event.value.wordTry);
     }
 
     public getPlayerWordsFoundCount() {

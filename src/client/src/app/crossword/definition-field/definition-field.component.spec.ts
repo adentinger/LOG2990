@@ -5,7 +5,7 @@ import { GameService } from '../game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { DefinitionsService } from './definitions.service';
-import { CrosswordGridService } from '../board/crossword-grid.service';
+import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
 
 describe('DefinitionFieldComponent', () => {
@@ -19,7 +19,7 @@ describe('DefinitionFieldComponent', () => {
                 GameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
                 DefinitionsService,
-                CrosswordGridService,
+                GridService,
                 SelectionService
             ]
         })

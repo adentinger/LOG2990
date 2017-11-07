@@ -1,5 +1,7 @@
 import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
 import '../../../../../common/src/crossword/packets/crossword-timer.parser';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
@@ -10,8 +12,8 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
-import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
-import { GameInitializer, DefinitionWithIndex } from './game-initializer';
+import { GameMode, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
 
@@ -30,8 +32,7 @@ export class Game {
     private readonly initialized: Promise<void>;
     private started = false;
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
-    private wordsInternal: GridWord[] = [];
-    private definitionsInternal: DefinitionWithIndex[] = [];
+    private readonly dataInternal: GameData = new GameData();
     private readonly players: Player[] = [];
     private readonly maxPlayers: PlayerNumber;
     private readonly configurationInternal: CrosswordGameConfigs;
@@ -45,7 +46,7 @@ export class Game {
         this.maxPlayers = configs.playerNumber;
 
         this.initialized =
-            this.initializeData(configs.difficulty).catch((reason) => console.log(reason));
+            this.data.initialize(configs.difficulty).catch((reason) => console.log(reason));
 
         this.packetManager.registerDisconnectHandler((socketId: string) => {
             const INDEX = this.players.findIndex((player) => player.socketId === socketId);
@@ -58,12 +59,8 @@ export class Game {
         registerHandlers(this, this.packetManager);
     }
 
-    public get words(): GridWord[] {
-        return this.wordsInternal.slice();
-    }
-
-    public get definitions(): DefinitionWithIndex[] {
-        return this.definitionsInternal.slice();
+    public get data(): GameData {
+        return this.dataInternal;
     }
 
     public get configuration(): CrosswordGameConfigs {
@@ -86,8 +83,8 @@ export class Game {
             this.players.push(player);
             this.initialized.then(() => {
                 this.communicationHandler.clearPlayerGrid(player.socketId);
-                this.communicationHandler.sendGridWords(player.socketId, this.words);
-                this.communicationHandler.sendDefinitions(player.socketId, this.definitions);
+                this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.words);
+                this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
             }).catch((reason) => console.log(reason));
             if (this.players.length === this.maxPlayers) {
                 this.start();
@@ -100,36 +97,53 @@ export class Game {
     }
 
     public isPlayerInGame(playerId: string): boolean {
-        // return this.playerIds.findIndex((id) => id === playerId) >= 0;
         return this.players.findIndex((player) => player.socketId === playerId) >= 0;
     }
 
-    public validateUserAnswer(wordTry: GridWord): boolean {
-        const ID = wordTry.id;
+    public validateUserAnswer(wordTry: GridWord, socketId: string): void {
         const DIRECTION = wordTry.direction;
         const STRING = wordTry.string;
 
-        const FOUND = this.words.findIndex(
+        const FOUND = this.dataInternal.words.findIndex(
             (word) => {
-                return word.id === ID &&
-                    word.direction === DIRECTION &&
-                    word.string === STRING;
+                return word.direction === DIRECTION &&
+                       word.string === STRING;
             }) >= 0;
         if (FOUND) {
-            this.countdown = COUNTDOWN_DEFAULT_VALUE;
+            this.sendWordFound(wordTry, socketId);
         }
-        return FOUND;
+    }
+
+    private sendWordFound(foundWord: GridWord, finderId: string): void {
+        foundWord.owner = Owner.player1;
+        const finderPacket = new WordTryPacket(foundWord);
+        this.packetManager.sendPacket(
+            WordTryPacket,
+            finderPacket,
+            finderId
+        );
+        if (this.maxPlayers > 1) {
+            const opponentPacket = new WordTryPacket(new GridWord(
+                foundWord.id,
+                foundWord.y,
+                foundWord.x,
+                foundWord.length,
+                foundWord.direction,
+                Owner.player2,
+                foundWord.string
+            ));
+            const opponent =
+                this.players.find((player) => player.socketId !== finderId);
+            this.packetManager.sendPacket(
+                WordTryPacket,
+                opponentPacket,
+                opponent.socketId
+            );
+        }
     }
 
     public isSocketIdInGame(socketId: string): boolean {
         return this.players.findIndex((id) => id.socketId === socketId) >= 0;
-    }
-
-    private async initializeData(difficulty: Difficulty): Promise<void> {
-        this.wordsInternal =
-            await GameInitializer.getInstance().initializeGrid(difficulty);
-        this.definitionsInternal =
-            await GameInitializer.getInstance().getDefinitionsOf(this.words, difficulty);
     }
 
     private start(): void {
