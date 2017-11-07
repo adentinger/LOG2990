@@ -1,12 +1,37 @@
-<div class='game-details'>
-  <div class='game-info'>
-    <ul class='list-game-item'> Word Found : {{playerWordsFound}}</ul>
-    <ul class='list-game-item'> Opponent: {{opponentWordsFound}}</ul>
-  </div>
-  <div class='general-details'>
-    <ul class='list-group-item'>Player: {{player1}}</ul>
-    <ul class='list-group-item'>Game Mode: {{gameMode}}</ul>
-    <ul class='list-group-item'>Difficulty: {{difficulty}}</ul>
-    <ul class='list-group-item'>Game Time: {{timerValue | date:'mm:ss'}}</ul>
-  </div>
+<div class='table-wrap'>  
+  <table>
+    <thead>
+        <tr>
+            <th>Players</th>
+            <th>Words Found</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{player1}}</td>
+            <td>{{playerWordsFound}}</td>
+        </tr>
+        <tr>
+            <td>Opponent</td>
+            <td>{{opponentWordsFound}}</td>
+        </tr>
+    </tbody>
+  </table>
+  <table>
+      <tbody>
+        <tr [ngSwitch]='gameMode'>
+            <th class='category'>Game Mode</th>
+            <td *ngSwitchCase='0'>Classic</td>
+            <td *ngSwitchCase='1'>Dynamic</td>
+        </tr>
+        <tr>
+            <th class='category'>Difficulty</th>
+            <td>{{difficulty}}</td>
+        </tr>
+        <tr>
+            <th class='category'>Game Time</th>
+            <td>{{timerValue | date:'mm:ss'}}</td>
+        </tr>
+    </tbody>
+  </table>
 </div>
