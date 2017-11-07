@@ -138,4 +138,24 @@ export class Grid {
         return DATA;
     }
 
+    public getPlayerWordsFoundCount(): number {
+        let wordsFoundCount = 0;
+        for (let i = 0; i < this.words.length; i++) {
+            if (this.words[i].owner === Owner.player1) {
+                wordsFoundCount++;
+            }
+        }
+        return wordsFoundCount;
+    }
+
+    public getOpponentWordsFoundCount(): number {
+        let wordsFoundCount = 0;
+        for (let i = 0; i < this.words.length; i++) {
+            if (this.words[i].owner === Owner.player2) {
+                wordsFoundCount++;
+            }
+        }
+        return wordsFoundCount;
+    }
+
 }

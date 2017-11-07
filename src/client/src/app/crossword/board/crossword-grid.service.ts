@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output } from '@angular/core';
 
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
@@ -74,6 +74,14 @@ export class CrosswordGridService {
     private clearGrid(): void {
         this.GRID.empty();
         this.onChange();
+    }
+
+    public getPlayerWordsFoundCount() {
+        return this.GRID.getPlayerWordsFoundCount();
+    }
+
+    public getOpponentWordsFoundCount() {
+        return this.GRID.getOpponentWordsFoundCount();
     }
 
 }
