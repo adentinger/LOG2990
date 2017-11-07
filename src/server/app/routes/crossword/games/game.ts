@@ -12,7 +12,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
-import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { GameMode, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
@@ -110,10 +110,34 @@ export class Game {
                        word.string === STRING;
             }) >= 0;
         if (FOUND) {
+            this.sendWordFound(wordTry, socketId);
+        }
+    }
+
+    private sendWordFound(foundWord: GridWord, finderId: string): void {
+        foundWord.owner = Owner.player1;
+        const finderPacket = new WordTryPacket(foundWord);
+        this.packetManager.sendPacket(
+            WordTryPacket,
+            finderPacket,
+            finderId
+        );
+        if (this.maxPlayers > 1) {
+            const opponentPacket = new WordTryPacket(new GridWord(
+                foundWord.id,
+                foundWord.y,
+                foundWord.x,
+                foundWord.length,
+                foundWord.direction,
+                Owner.player2,
+                foundWord.string
+            ));
+            const opponent =
+                this.players.find((player) => player.socketId !== finderId);
             this.packetManager.sendPacket(
                 WordTryPacket,
-                new WordTryPacket(wordTry),
-                socketId
+                opponentPacket,
+                opponent.socketId
             );
         }
     }
