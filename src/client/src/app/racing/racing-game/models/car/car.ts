@@ -163,17 +163,9 @@ export class Car extends UserControllableCollidableMesh {
 
         if (this.isStopped && this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = false;
-            // if (this.breakLightMeshs) {
-            //     (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-            //         0.5 * this.dayModeOptions.intensity;
-            // }
         }
         if (!this.isStopped && this.velocity.length() <= UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = true;
-            // if (this.breakLightMeshs) {
-            //     (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-            //         0.5 + 0.5 * this.dayModeOptions.intensity;
-            // }
         }
         if (this.breakLightMeshs) {
             if (this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED &&
