@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
 import { Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { SelectedGridWord } from './selected-grid-word';
+import { Logger } from '../../../../../common/src/logger';
 
 @Component({
     selector: 'app-board',
@@ -18,6 +19,8 @@ import { SelectedGridWord } from './selected-grid-word';
 export class BoardComponent implements OnInit, OnDestroy {
 
     public readonly DIMENSIONS = Array(Grid.DIMENSIONS);
+
+    public readonly logger = Logger.getLogger('BoardComponent');
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 

@@ -41,7 +41,6 @@ describe('Item generator', () => {
 
         itemGenerator.generatePositions(map2, true);
         for (let i = 0; i < itemGenerator.positions.length; i++) {
-            console.log(itemGenerator.positions[i]);
             for (let j = i + 1; j < itemGenerator.positions.length; j++) {
                 expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
             }

@@ -13,6 +13,7 @@ export class CrosswordTileComponent {
     @Input() public readonly tileColumn: number;
 
     @Input() public highlighted: WhoIsSelecting;
+    public WhoIsSelecting = WhoIsSelecting;
 
     @Input() get tileChar() {
         return this.tileValue;

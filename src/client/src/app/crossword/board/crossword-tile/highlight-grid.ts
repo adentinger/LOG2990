@@ -37,10 +37,7 @@ export class HighlightGrid {
     private shouldBeSelected(row: number, column: number, word: SelectedGridWord): WhoIsSelecting {
 
         if (word.playerSelection === null && word.opponentSelection === null) {
-            return 0;
-        }
-        else if (word.playerSelection !== null && word.opponentSelection === word.playerSelection) {
-            return this.isHighlighted(row, column, word.playerSelection, WhoIsSelecting.both);
+            return WhoIsSelecting.noOne;
         }
         else if (word.playerSelection !== null && word.opponentSelection === null) {
             return this.isHighlighted(row, column, word.playerSelection, WhoIsSelecting.player);
@@ -48,11 +45,15 @@ export class HighlightGrid {
         else if (word.playerSelection === null && word.opponentSelection !== null) {
             return this.isHighlighted(row, column, word.opponentSelection, WhoIsSelecting.opponent);
         }
+        else if (word.playerSelection !== null && word.playerSelection !== null && word.opponentSelection.id === word.playerSelection.id) {
+            return this.isHighlighted(row, column, word.playerSelection, WhoIsSelecting.both);
+        }
 
     }
 
     private isHighlighted(row: number, column: number, word: GridWord, type: WhoIsSelecting): WhoIsSelecting {
-        let shouldBeSelected: WhoIsSelecting;
+        let shouldBeSelected: WhoIsSelecting = WhoIsSelecting.noOne;
+
         if (word.direction === Direction.horizontal &&
             row === word.y &&
             column >= word.x &&
