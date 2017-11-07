@@ -8,6 +8,7 @@ import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { GameService } from '../game.service';
 import { GameHttpService } from '../services/game-http.service';
+import { UserChoiceService } from './user-choice.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -21,7 +22,8 @@ describe('ConfigMenuComponent', () => {
             declarations: [
                 ConfigMenuComponent,
                 AvailableGamesComponent,
-                WaitingComponent
+                WaitingComponent,
+                UserChoiceService
             ],
             providers: [
                 GameService,

@@ -18,7 +18,12 @@ export class GameHttpService {
                 .then((configs) => {
                     const twoPlayerGames = configs.filter((config) => config.playerNumber === 2);
                     return twoPlayerGames.map(
-                        (config) => new UserDisplayableGameData(config.gameId, config.gameMode, config.difficulty)
+                        (config) => new UserDisplayableGameData(
+                            config.playerName,
+                            config.gameId,
+                            config.gameMode,
+                            config.difficulty
+                        )
                     );
                 });
         return promise;

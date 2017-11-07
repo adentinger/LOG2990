@@ -8,6 +8,7 @@ import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { Player } from './player';
 
 export class GameManager {
 
@@ -29,7 +30,9 @@ export class GameManager {
     public getGameConfigurations(): CrosswordGameConfigs[] {
         const gameConfigs: CrosswordGameConfigs[] = [];
         this.games.forEach((game) => {
-            gameConfigs.push(game.configuration);
+            if (game.currentNumberOfPlayers < game.configuration.playerNumber) {
+                gameConfigs.push(game.configuration);
+            }
         });
         return gameConfigs;
     }
@@ -57,12 +60,13 @@ export class GameManager {
     }
 
     @PacketHandler(GameJoinPacket)
-    public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
+    // tslint:disable-next-line:no-unused-variable
+    private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
         const GAME = this.getGameFromId(gameId);
-        const PLAYER_ID = event.socketid;
+        const playerName = event.value.playerName;
 
-        GAME.addPlayer(PLAYER_ID);
+        GAME.addPlayer(new Player(playerName, event.socketid));
     }
 
     /**
@@ -71,7 +75,8 @@ export class GameManager {
      * @param event
      */
     @PacketHandler(WordTryPacket)
-    public wordTryHandler(event: PacketEvent<WordTryPacket>) {
+    // tslint:disable-next-line:no-unused-variable
+    private wordTryHandler(event: PacketEvent<WordTryPacket>) {
         const WORD_TRY: GridWord = event.value.wordTry;
         const PLAYER_ID: string = event.socketid;
 
@@ -96,7 +101,7 @@ export class GameManager {
     private getGameFromPlayerId(playerId: string): Game {
         let foundGame: Game = null;
         this.games.forEach((game) => {
-            if (game.isPlayerInGame(playerId)) {
+            if (game.isSocketIdInGame(playerId)) {
                 foundGame = game;
             }
         });

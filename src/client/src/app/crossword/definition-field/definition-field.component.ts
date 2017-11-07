@@ -22,11 +22,11 @@ export class DefinitionFieldComponent {
     @Input() public cheatMode: boolean;
 
     constructor(private definitionService: DefinitionsService,
-                private selectionService: SelectionService,
-                private crosswordGridService: CrosswordGridService,
-                private ngZone: NgZone) {
+        private selectionService: SelectionService,
+        private crosswordGridService: CrosswordGridService,
+        private ngZone: NgZone) {
         this.definitionService.pushOnChangeCallback(() => {
-            this.ngZone.run(() => {});
+            this.ngZone.run(() => { });
         });
     }
 
@@ -54,4 +54,9 @@ export class DefinitionFieldComponent {
         );
     }
 
+    public checkIfFound(index: number, direction: Direction): boolean {
+        return this.crosswordGridService.checkIfWordIsFound(index, direction);
+    }
+
+    public checkDefinitionStatus(index: number, direction: Direction) { }
 }

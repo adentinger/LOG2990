@@ -34,8 +34,8 @@ export class WaitingService {
     }
 
     @PacketHandler(GameStartPacket)
+    // tslint:disable-next-line:no-unused-variable
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
-        console.log('GAME IS STARTING');
         this.isWaitingInternal.next(false);
     }
 

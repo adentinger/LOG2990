@@ -2,23 +2,29 @@
 <div [ngSwitch]='cheatMode'>
 
   <div *ngSwitchCase='false' id="definition-box" (clickOutside)='onClickOutside()'>
+
     <h3>Across Words</h3>
     <div *ngFor='let definition of definitions.horizontal; let i = index;'>
-      <div [class.selected]='checkIfSelected(i + 1, HORIZONTAL)' (click)='onDefinitionClicked(i + 1, HORIZONTAL)'>
+      <div [class.selected]='checkIfSelected(i + 1, HORIZONTAL)' 
+        [class.found]='checkIfFound(i + 1, HORIZONTAL)' 
+        (click)='onDefinitionClicked(i + 1, HORIZONTAL)'>
         <p>{{i+1}}. {{definition.text}}</p>
       </div>
     </div>
 
     <h3>Vertical Words</h3>
     <div *ngFor='let definition of definitions.vertical; let j = index;'>
-      <div [class.selected]='checkIfSelected(j + 1, VERTICAL)' (click)='onDefinitionClicked(j + 1, VERTICAL)'>
+      <div [class.selected]='checkIfSelected(j + 1, VERTICAL)' 
+        [class.found]='checkIfFound(j + 1, VERTICAL)'
+        (click)='onDefinitionClicked(j + 1, VERTICAL)'>
         <p>{{j+1}}. {{definition.text}}</p>
       </div>
     </div>
-  
+
   </div>
 
   <div *ngSwitchCase='true' id="word-box" (clickOutside)='onClickOutside()'>
+
     <h3>Across Words</h3>
     <div *ngFor='let answer of answers; let i = index;'>
       <div [class.selected]='checkIfSelected(i + 1, HORIZONTAL)' (click)='onDefinitionClicked(i + 1, HORIZONTAL)'>

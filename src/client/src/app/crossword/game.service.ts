@@ -23,6 +23,7 @@ export class GameService {
     private changeTimerValueOn = false;
 
     private gameId: number = null;
+    private playerName = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
 
@@ -32,12 +33,16 @@ export class GameService {
         return this.crosswordGame;
     }
 
-    public joinGame(id: number): void {
+    public joinGame(id: number, playerName): void {
         if (!this.gameId) {
             this.gameId = id;
+            this.playerName = playerName;
             // use packetmanager to join this game
             console.log('setting id to', id);
-            this.packetManager.sendPacket(GameJoinPacket, new GameJoinPacket(this.gameId));
+            this.packetManager.sendPacket(
+                GameJoinPacket,
+                new GameJoinPacket(this.gameId, this.playerName)
+            );
         }
     }
 

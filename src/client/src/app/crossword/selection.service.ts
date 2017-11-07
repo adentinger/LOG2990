@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { GridWord } from '../../../../common/src/crossword/grid-word';
 import { Definition } from './definition-field/definition';
+import { CrosswordGridService } from './board/crossword-grid.service';
 
 @Injectable()
 export class SelectionService {
@@ -12,7 +13,7 @@ export class SelectionService {
     private selectionValueInternal: GridWord;
     private selectionSubject = new Subject<GridWord>();
 
-    constructor() {
+    constructor(private gridService: CrosswordGridService) {
         this.selectionValueInternal = null;
         this.selectionSubject.subscribe((word) => {
             this.selectionValueInternal = word;
@@ -33,8 +34,7 @@ export class SelectionService {
 
     public isDefinitionSelected(definition: Definition): boolean {
         return this.selectionValue != null &&
-               definition.index === this.selectionValue.id &&
-               definition.direction === this.selectionValue.direction;
+            definition.index === this.selectionValue.id &&
+            definition.direction === this.selectionValue.direction;
     }
-
 }
