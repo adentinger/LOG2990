@@ -80,6 +80,7 @@ export class GridService {
     // tslint:disable-next-line:no-unused-variable
     private wordWasFound(event: PacketEvent<WordTryPacket>): void {
         this.GRID.updateWord(event.value.wordTry);
+        this.onChange();
     }
 
     public getPlayerWordsFoundCount() {
