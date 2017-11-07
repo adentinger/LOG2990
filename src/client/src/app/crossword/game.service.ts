@@ -29,7 +29,11 @@ export class GameService {
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
 
-    public constructor(private packetManager: PacketManagerClient) { }
+    public constructor(private packetManager: PacketManagerClient) {
+        this.onShowWordsInternal.subscribe((value) => {
+            this.showWordsOn = value;
+        });
+    }
 
     public getCurrentGame(): CrosswordGame {
         return this.crosswordGame;
