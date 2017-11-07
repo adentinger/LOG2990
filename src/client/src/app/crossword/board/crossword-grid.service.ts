@@ -76,6 +76,12 @@ export class CrosswordGridService {
         this.onChange();
     }
 
+    @PacketHandler(WordTryPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private wordWasFound(event: PacketEvent<WordTryPacket>): void {
+        console.log('FOUND WORD:', event.value.wordTry);
+    }
+
     public getPlayerWordsFoundCount() {
         return this.GRID.getPlayerWordsFoundCount();
     }
