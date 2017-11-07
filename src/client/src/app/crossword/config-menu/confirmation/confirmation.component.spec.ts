@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 
 import { ConfirmationComponent } from './confirmation.component';
+import { MenuAutomatonService } from '../menu-automaton.service';
+import { UserChoiceService } from '../user-choice.service';
 
 describe('ConfirmationComponent', () => {
     let component: ConfirmationComponent;
@@ -8,7 +11,16 @@ describe('ConfirmationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ ConfirmationComponent ]
+            imports: [
+                FormsModule
+            ],
+            declarations: [
+                ConfirmationComponent
+            ],
+            providers: [
+                MenuAutomatonService,
+                UserChoiceService
+            ]
         })
         .compileComponents();
     }));

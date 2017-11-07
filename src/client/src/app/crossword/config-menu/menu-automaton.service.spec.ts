@@ -1,12 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { MenuAutomatonService } from './menu-automaton.service';
+import { UserChoiceService } from './user-choice.service';
 
 describe('MenuAutomatonService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-        providers: [MenuAutomatonService]
+            providers: [
+                MenuAutomatonService,
+                UserChoiceService
+            ]
         });
     });
 

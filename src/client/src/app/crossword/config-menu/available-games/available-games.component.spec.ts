@@ -3,6 +3,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AvailableGamesComponent } from './available-games.component';
 import { GameHttpService } from '../../services/game-http.service';
+import { MenuAutomatonService } from '../menu-automaton.service';
+import { UserChoiceService } from '../user-choice.service';
 
 describe('AvailableGamesComponent', () => {
     let component: AvailableGamesComponent;
@@ -17,7 +19,9 @@ describe('AvailableGamesComponent', () => {
                 HttpClientModule
             ],
             providers: [
-                GameHttpService
+                GameHttpService,
+                MenuAutomatonService,
+                UserChoiceService
             ]
         })
         .compileComponents();
