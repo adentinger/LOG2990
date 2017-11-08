@@ -13,6 +13,7 @@ import { ClearGridPacket } from '../../../../../common/src/crossword/packets/cle
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
 import { SelectionService } from '../selection.service';
+import { GameService, GameState } from '../game.service';
 
 @Injectable()
 export class GridService {
@@ -21,7 +22,8 @@ export class GridService {
     private callbacks: (() => void)[] = [];
 
     constructor(private packetManager: PacketManagerClient,
-                private selectionService: SelectionService) {
+                private selectionService: SelectionService,
+                private gameService: GameService) {
         registerHandlers(this, packetManager);
 
         // This mock is meant to stay as an initial view
@@ -94,14 +96,11 @@ export class GridService {
             this.selectionService.selection.next(SelectionService.NO_SELECTION);
         }
         if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.GRID.numberOfWords) {
-            let message: string;
-            if (this.getPlayerWordsFoundCount() > this.getOpponentWordsFoundCount()) {
-                message = 'Congratulations ; you win!';
-            }
-            else {
-                message = 'Congratulations ; you (almost) won!';
-            }
-            alert(message);
+            this.gameService.state = GameState.finished;
+            this.gameService.finishGame(
+                this.getPlayerWordsFoundCount(),
+                this.getOpponentWordsFoundCount()
+            );
         }
         this.onChange();
     }

@@ -15,7 +15,8 @@ describe('GridService', () => {
                 GridService, GameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
                 DefinitionsService,
-                SelectionService
+                SelectionService,
+                GameService
             ]
         });
     });

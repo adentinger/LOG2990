@@ -26,7 +26,7 @@ export enum GameState {
 @Injectable()
 export class GameService {
 
-    private stateInternal = GameState.configuring;
+    public state = GameState.configuring;
 
     private cheatModeOn = false;
     private isShowWordsOnInternal = false;
@@ -37,14 +37,6 @@ export class GameService {
     private playerName = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
-
-    public get state(): GameState {
-        return this.stateInternal;
-    }
-
-    public set state(state: GameState) {
-        this.stateInternal = state;
-    }
 
     public constructor(private packetManager: PacketManagerClient) {
         this.onShowWordsInternal.subscribe((value) => {
@@ -65,6 +57,17 @@ export class GameService {
                 new GameJoinPacket(this.gameIdInternal, this.playerName)
             );
         }
+    }
+
+    public finishGame(wordsFound: number, opponentWordsFound: number): void {
+        let message: string;
+        if (wordsFound > opponentWordsFound) {
+            message = 'Congratulations ; you win!';
+        }
+        else {
+            message = 'Congratulations ; you (almost) won!';
+        }
+        alert(message);
     }
 
     public get gameId(): GameId {

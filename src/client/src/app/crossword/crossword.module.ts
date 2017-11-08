@@ -20,6 +20,7 @@ import { ConfigMenuComponent } from './config-menu/config-menu.component';
 import { AvailableGamesComponent } from './config-menu/available-games/available-games.component';
 import { WaitingComponent } from './config-menu/waiting/waiting.component';
 import { ConfirmationComponent } from './config-menu/confirmation/confirmation.component';
+import { GameService } from './game.service';
 
 @NgModule({
     imports: [
@@ -47,7 +48,8 @@ import { ConfirmationComponent } from './config-menu/confirmation/confirmation.c
         DefinitionsService,
         GridService,
         GameDetailsService,
-        SelectionService
+        SelectionService,
+        GameService
     ],
     exports: [
         CrosswordComponent

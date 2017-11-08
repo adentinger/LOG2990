@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
-import { GameService } from './game.service';
 import { TimerService } from './services/timer.service';
 import { GameHttpService } from './services/game-http.service';
 
@@ -12,8 +11,7 @@ import { GameHttpService } from './services/game-http.service';
         SimpleTimer,
         DefinitionsService,
         TimerService,
-        GameHttpService,
-        GameService
+        GameHttpService
     ]
 })
 export class CrosswordComponent implements OnInit {
