@@ -4,7 +4,6 @@ import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
 import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
-import { PhysicEngine } from './physic/engine';
 
 import { EventManager } from '../../event-manager.service';
 

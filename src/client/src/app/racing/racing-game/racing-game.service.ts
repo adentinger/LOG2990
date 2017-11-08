@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Location } from '@angular/common';
 import * as THREE from 'three';
 
 import { RacingRenderer } from './rendering/racing-renderer';
@@ -12,14 +11,11 @@ import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
-import { RacetrackSegment } from './models/racetrack/racetrack-segment';
-import { RacetrackJunction } from './models/racetrack/racetrack-junction';
 import { BoostBox } from './physic/examples/boost-box';
 import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 import { Seconds } from '../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { GameInfo } from './game-info';
 
 @Injectable()
 export class RacingGameService {

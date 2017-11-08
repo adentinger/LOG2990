@@ -47,7 +47,7 @@ export class Car extends UserControllableCollidableMesh {
     public readonly mass: Kilograms = 100;
 
     private lights: CarLights;
-    private boundingBox: THREE.Box3;
+    public readonly boundingBox: THREE.Box3;
 
     protected maxSpeed = 50; // m/s
     protected maxAngularSpeed = Math.PI; // rad/s
@@ -57,7 +57,6 @@ export class Car extends UserControllableCollidableMesh {
     public waitToLoad: Promise<void>;
     public readonly audioListener = new THREE.AudioListener();
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
-    public readonly audioContext = new AudioContext();
 
     protected breakLightMeshs: THREE.Mesh;
     protected isStopped = false;

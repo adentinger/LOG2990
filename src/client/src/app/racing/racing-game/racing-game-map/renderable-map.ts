@@ -9,7 +9,6 @@ import { RacingGamePlane } from './racing-game-plane';
 import { RacetrackSegment } from '../models/racetrack/racetrack-segment';
 import { RacetrackJunction } from '../models/racetrack/racetrack-junction';
 import { Track } from '../../track';
-import { Vector } from '../../../../../../common/src/math/vector';
 import { Car } from '../models/car/car';
 import { Radians } from '../../types';
 

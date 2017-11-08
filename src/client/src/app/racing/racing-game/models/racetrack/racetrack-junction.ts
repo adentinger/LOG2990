@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { CollidableMesh } from '../../physic/collidable';
 import { Track } from '../../../track';
 
 export class RacetrackJunction extends THREE.Mesh {
@@ -7,10 +6,10 @@ export class RacetrackJunction extends THREE.Mesh {
     private static TEXTURE_LOADER = new THREE.TextureLoader();
     private static ASPHALT_TEXTURE_PROMISE: Promise<THREE.Texture> = RacetrackJunction.loadTexture(RacetrackJunction.ASPHALT_URL);
 
-    public static mass = 0;
-
     private static readonly RADIUS = Track.SEGMENT_WIDTH / 2;
     private static readonly SEGMENTS = 50;
+
+    public mass = 0;
 
     public readonly waitToLoad: Promise<void> = RacetrackJunction.ASPHALT_TEXTURE_PROMISE.then(() => {});
 

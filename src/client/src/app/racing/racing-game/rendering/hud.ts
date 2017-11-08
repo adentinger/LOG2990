@@ -10,9 +10,7 @@ export interface Time {
 }
 
 export class HUD {
-    private static readonly FONT_SIZE = '48px';
     private static readonly FONT_FAMILLY = 'system-ui';
-    private static readonly FONT = [HUD.FONT_SIZE, HUD.FONT_FAMILLY].join(' ');
     private static readonly TEXT_COLOR = '#ffd700';
 
     private static readonly TEXT_HEIGTH = 0.05; // height (proportion of the screen height), normalized between 0 and 1
@@ -24,8 +22,6 @@ export class HUD {
     private static readonly GAME_TIME_POSITION = HUD.LAP_TIME_POSITION.clone().add(HUD.INCREMENT);
     private static readonly RACE_PLACE_POSITION =
         new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
-
-    private static readonly CLEAR_COLOR = new THREE.Color('black');
 
     private context: CanvasRenderingContext2D = null;
     private domElementInternal: HTMLCanvasElement = null;

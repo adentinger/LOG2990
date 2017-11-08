@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { CollidableMesh } from '../../physic/collidable';
 import { Track } from '../../../track';
 
 export class RacetrackSegment extends THREE.Mesh {
