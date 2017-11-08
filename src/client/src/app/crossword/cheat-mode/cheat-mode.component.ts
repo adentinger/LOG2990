@@ -33,11 +33,11 @@ export class CheatModeComponent {
     }
 
     public onShowWordsToggle(): void {
-        this.gameService.onShowWords.next(!this.gameService.getShowWordsState());
+        this.gameService.onShowWords.next(!this.gameService.isShowWordsOn());
     }
 
     public isShowWordsOn(): boolean {
-        return this.gameService.getShowWordsState();
+        return this.gameService.isShowWordsOn();
     }
 
     public getShowWordsStateText(): string {

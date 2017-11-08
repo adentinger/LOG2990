@@ -20,7 +20,7 @@ import { Subject } from 'rxjs/Subject';
 export class GameService {
 
     private cheatModeOn = false;
-    private showWordsOn = false;
+    private isShowWordsOnInternal = false;
     private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
@@ -31,7 +31,7 @@ export class GameService {
 
     public constructor(private packetManager: PacketManagerClient) {
         this.onShowWordsInternal.subscribe((value) => {
-            this.showWordsOn = value;
+            this.isShowWordsOnInternal = value;
         });
     }
 
@@ -60,8 +60,8 @@ export class GameService {
         return this.cheatModeOn;
     }
 
-    public getShowWordsState(): boolean {
-        return this.showWordsOn;
+    public isShowWordsOn(): boolean {
+        return this.isShowWordsOnInternal;
     }
 
     public get onShowWords(): Subject<boolean> {

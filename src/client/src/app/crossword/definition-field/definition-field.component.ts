@@ -23,7 +23,7 @@ export class DefinitionFieldComponent {
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
     public get cheatMode(): boolean {
-        return this.gameService.getShowWordsState();
+        return this.gameService.isShowWordsOn();
     }
 
     constructor(private definitionService: DefinitionsService,
