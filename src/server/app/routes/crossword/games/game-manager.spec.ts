@@ -3,8 +3,6 @@ import { expect } from 'chai';
 import { GameManager } from './game-manager';
 import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
-import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 
 describe('The Game Manager Service', () => {
     it('should be created', (done) => {

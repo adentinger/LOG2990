@@ -24,7 +24,6 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    private foundWords: GridWord[];
     private highlightGrid = new HighlightGrid();
     private selectionSubscription: Subscription;
 
