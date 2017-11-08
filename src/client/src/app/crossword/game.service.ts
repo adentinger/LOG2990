@@ -34,9 +34,13 @@ export class GameService {
     private changeTimerValueOn = false;
 
     private gameIdInternal: number = null;
-    private playerName = '';
+    private playerNameInternal = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
+
+    public get playerName(): string {
+        return this.playerNameInternal;
+    }
 
     public constructor(private packetManager: PacketManagerClient) {
         this.onShowWordsInternal.subscribe((value) => {
@@ -51,10 +55,10 @@ export class GameService {
     public joinGame(id: number, playerName): void {
         if (!this.gameIdInternal) {
             this.gameIdInternal = id;
-            this.playerName = playerName;
+            this.playerNameInternal = playerName;
             this.packetManager.sendPacket(
                 GameJoinPacket,
-                new GameJoinPacket(this.gameIdInternal, this.playerName)
+                new GameJoinPacket(this.gameIdInternal, this.playerNameInternal)
             );
         }
     }
