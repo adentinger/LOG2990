@@ -7,12 +7,13 @@ import { DayMode, DayModeManager } from '../day-mode/day-mode-manager';
 import { EventManager } from '../../../event-manager.service';
 import { Lighting } from '../models/lighting/lighting';
 import { RenderableMap } from '../racing-game-map/renderable-map';
-import { HeadUpDisplay } from './hud';
+import { HUD } from './hud';
 import { RacingGameService } from '../racing-game.service';
 
 export type CameraId = 0 | 1;
 
 export class RacingRenderer extends THREE.WebGLRenderer {
+    public static readonly DEFAULT_DAYMODE = DayMode.DAY;
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
 
     private canvasContainer: HTMLDivElement;
@@ -27,9 +28,13 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     private readonly dayModeManager = new DayModeManager();
 
-    private readonly hud = new HeadUpDisplay();
+    private readonly hud = new HUD();
 
     public currentCamera: CameraId = 0;
+
+    public get dayMode(): DayMode {
+        return this.dayModeManager.mode;
+    }
 
     constructor(eventManager: EventManager, private game: RacingGameService) {
         super({ antialias: true });
@@ -53,7 +58,10 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     public finalize() {
         this.hud.finalize();
-        this.canvasContainer.removeChild(this.domElement);
+        this.stopRendering();
+        if (this.canvasContainer) {
+            this.canvasContainer.removeChild(this.domElement);
+        }
 
         // Remove all children to be ready for the next game.
         this.scene.children.forEach(this.scene.remove, this.scene);
@@ -67,9 +75,9 @@ export class RacingRenderer extends THREE.WebGLRenderer {
     }
 
     public stopRendering(): void {
-        if (this.animationRequestId !== 0) {
+        if (this.animationRequestId !== -1) {
             cancelAnimationFrame(this.animationRequestId);
-            this.animationRequestId = 0;
+            this.animationRequestId = -1;
         }
         this.isRendering = false;
     }
@@ -128,6 +136,16 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     public removeMap(map: RenderableMap) {
         this.scene.remove(map);
+    }
+
+    public toggleDayMode(): void {
+        let newMode: DayMode;
+        switch (this.dayMode) {
+            case DayMode.DAY: newMode = DayMode.NIGHT; break;
+            case DayMode.NIGHT: newMode = DayMode.DAY; break;
+            default: break;
+        }
+        this.updateDayMode(newMode);
     }
 
     public updateDayMode(newMode: DayMode): void {

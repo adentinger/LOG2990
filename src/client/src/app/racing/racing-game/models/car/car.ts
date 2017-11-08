@@ -167,7 +167,7 @@ export class Car extends UserControllableCollidableMesh {
         if (!this.isStopped && this.velocity.length() <= UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = true;
         }
-        if (this.breakLightMeshs) {
+        if (this.breakLightMeshs && this.dayModeOptions) {
             if (this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED &&
                 this.velocity.length() > this.previousVelocity.length()) {
                 (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =

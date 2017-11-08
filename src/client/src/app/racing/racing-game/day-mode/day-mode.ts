@@ -10,8 +10,8 @@ import { LightingOptions } from '../models/lighting/lighting';
  * Implementation of the State pattern.
  */
 export interface DayMode {
-    CAR_HEADLIGHT_OPTIONS: CarHeadlightDayModeOptions;
-    LIGHTING_OPTIONS: LightingOptions;
+    readonly CAR_HEADLIGHT_OPTIONS: CarHeadlightDayModeOptions;
+    readonly LIGHTING_OPTIONS: LightingOptions;
     nextMode(): DayMode;
 }
 

@@ -59,7 +59,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
         }
         if (this.uiInputs.isKeyPressed('n')) {
-            this.racingGame.changeDayMode();
+            this.racingGame.toggleDayMode();
         }
         if (this.uiInputs.isKeyPressed('e')) {
             this.racingGame.reloadSounds();

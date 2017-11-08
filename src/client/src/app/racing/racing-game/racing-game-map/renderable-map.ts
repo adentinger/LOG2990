@@ -15,7 +15,8 @@ export class RenderableMap extends PhysicMesh {
     public mapPuddles: SerializedPuddle[];
     public mapSpeedBoosts: SerializedSpeedBoost[];
 
-    public PLANE: RacingGamePlane;
+    private readonly plane: RacingGamePlane;
+    public readonly waitToLoad: Promise<void>;
 
     constructor(map: SerializedMap) {
         super();
@@ -26,14 +27,15 @@ export class RenderableMap extends PhysicMesh {
         this.mapPuddles = map.puddles;
         this.mapSpeedBoosts = map.speedBoosts;
 
-        this.PLANE = new RacingGamePlane();
+        this.plane = new RacingGamePlane();
         const wireframePlane = new RacingGamePlane();
         (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
         (<THREE.MeshBasicMaterial>wireframePlane.material).map = null;
         (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color( 0xffffff );
         wireframePlane.rotation.set(0, 0, 0);
-        this.PLANE.add(wireframePlane);
+        this.plane.add(wireframePlane);
+        this.waitToLoad = Promise.all([this.plane.waitToLoad]).then(() => {});
 
-        this.add(this.PLANE);
+        this.add(this.plane);
     }
 }
