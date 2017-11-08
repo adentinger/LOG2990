@@ -7,6 +7,7 @@ import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { SelectionService } from '../selection.service';
 
 describe('GridService', () => {
     beforeEach(() => {
@@ -14,7 +15,8 @@ describe('GridService', () => {
             providers: [
                 GridService, GameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
-                DefinitionsService
+                DefinitionsService,
+                SelectionService
             ]
         });
     });

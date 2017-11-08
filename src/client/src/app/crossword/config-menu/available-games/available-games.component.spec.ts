@@ -5,6 +5,11 @@ import { AvailableGamesComponent } from './available-games.component';
 import { GameHttpService } from '../../services/game-http.service';
 import { MenuAutomatonService } from '../menu-automaton.service';
 import { UserChoiceService } from '../user-choice.service';
+import { SelectionService } from '../../selection.service';
+import { GridService } from '../../board/grid.service';
+import { GameService } from '../../game.service';
+import { packetManagerClient } from '../../../packet-manager.service';
+import { PacketManagerClient } from '../../../packet-manager-client';
 
 describe('AvailableGamesComponent', () => {
     let component: AvailableGamesComponent;
@@ -21,7 +26,11 @@ describe('AvailableGamesComponent', () => {
             providers: [
                 GameHttpService,
                 MenuAutomatonService,
-                UserChoiceService
+                UserChoiceService,
+                GridService,
+                GameService,
+                SelectionService,
+                {provide: PacketManagerClient, useValue: packetManagerClient},
             ]
         })
         .compileComponents();

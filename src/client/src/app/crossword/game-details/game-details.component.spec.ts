@@ -7,6 +7,7 @@ import { GameService } from '../game.service';
 import { GameDetailsService } from './game-details.service';
 import { TimerService } from '../services/timer.service';
 import { GridService } from '../board/grid.service';
+import { SelectionService } from '../selection.service';
 
 describe('GameDetailsComponent', () => {
     let component: GameDetailsComponent;
@@ -20,7 +21,8 @@ describe('GameDetailsComponent', () => {
                 GameService,
                 GameDetailsService,
                 TimerService,
-                GridService
+                GridService,
+                SelectionService
             ]
         })
             .compileComponents();
