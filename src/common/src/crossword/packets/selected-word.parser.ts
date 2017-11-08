@@ -2,7 +2,7 @@ import { Parser, PacketParser, SIZE_UINT32 } from '../../index';
 import { SelectedWord } from '../selected-word';
 
 @Parser(SelectedWord)
-export class CrosswordSelectedWordParser extends PacketParser<SelectedWord> {
+export class SelectedWordParser extends PacketParser<SelectedWord> {
 
     public serialize(value: SelectedWord): ArrayBuffer {
         const BUFFER = new ArrayBuffer(2 * SIZE_UINT32);
