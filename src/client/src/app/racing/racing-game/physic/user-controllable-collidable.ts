@@ -11,16 +11,19 @@ const KEY_LEFT = 'a';
 
 const FRONT = new THREE.Vector3(0, 0, -1);
 
+const POWER_STEERING_FACTOR = 0.6;
+
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
+    public static readonly MIN_SPEED = 0.001;
     protected userInputs: UIInputs;
 
-    protected friction: Newtons = 10;
-    protected acceleration = 30; // m/s^2
-    protected maxSpeed = 10; // m/s
+    protected friction: Newtons = 15;
+    protected acceleration = 25; // m/s^2
+    protected maxSpeed = 20; // m/s
 
     protected angularFriction: number = 2 * Math.PI; // rad/s^2
     protected angularAcceleration = 4 * Math.PI; // rad/s^2
-    protected maxAngularSpeed = Math.PI / 2; // rad/s
+    protected maxAngularSpeed = 3 * Math.PI / 4; // rad/s
 
     protected get front(): THREE.Vector3 {
         return FRONT.clone().applyEuler(this.rotation);
@@ -55,6 +58,14 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         this.userInputs = userInputService;
     }
 
+    public removeUIInput(): void {
+        delete this.userInputs;
+    }
+
+    public hasUIInput(): boolean {
+        return this.userInputs != null;
+    }
+
     private applyUserInputs(deltaTime: Seconds) {
         if (this.userInputs != null) {
             const angularAccelerationDirection = this.getAngularAccelerationDirection();
@@ -64,13 +75,17 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
             const angularAcceleration = angularAccelerationDirection.multiplyScalar(this.angularAcceleration)
                 .multiplyScalar(angularAccelerationFactor);
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
-            const rotationRestriction = this.velocity.dot(this.front.clone().setY(0)) / this.maxSpeed;
-            this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * this.maxAngularSpeed * deltaTime) +
+
+            let speed = this.velocity.length();
+            speed = speed === 0 ? UserControllableCollidableMesh.MIN_SPEED : this.velocity.length();
+            const powerSteering = POWER_STEERING_FACTOR / speed;
+            const rotationRestriction = this.velocity.dot(this.front) * powerSteering;
+            this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * deltaTime) +
                 2 * Math.PI) % (2 * Math.PI);
 
             const accelerationDirection = this.getAccelerationDirection();
             const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
-            const acceleration = accelerationDirection.multiplyScalar(this.acceleration)
+            const acceleration = accelerationDirection.multiplyScalar(this.acceleration + this.friction)
                 .multiplyScalar(accelerationFactor);
             this.velocity.addScaledVector(acceleration, deltaTime);
         }

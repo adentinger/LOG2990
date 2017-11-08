@@ -11,8 +11,7 @@ import { EventManager } from '../../event-manager.service';
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
-    styleUrls: ['./racing-game.component.css'],
-    providers: [RacingGameService, PhysicEngine]
+    styleUrls: ['./racing-game.component.css']
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
@@ -20,6 +19,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @ViewChild('gameContainer')
     public racingGameContainer: ElementRef;
+    @ViewChild('hud')
+    private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
 
@@ -32,7 +33,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
-                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.uiInputs);
+                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });
@@ -59,6 +60,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
         if (this.uiInputs.isKeyPressed('n')) {
             this.racingGame.changeDayMode();
+        }
+        if (this.uiInputs.isKeyPressed('e')) {
+            this.racingGame.reloadSounds();
         }
 
         const areAllowedKeyCombinationsPressed =
