@@ -6,6 +6,7 @@ import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-jo
 import '../../../../common/src/crossword/packets/game-join.parser';
 import { Subject } from 'rxjs/Subject';
 import { GameId } from '../../../../common/src/communication/game-configs';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
 
 export enum GameState {
     configuring,
@@ -47,6 +48,7 @@ export class GameService {
         this.onShowWordsInternal.subscribe((value) => {
             this.isShowWordsOnInternal = value;
         });
+        registerHandlers(this, packetManager);
     }
 
     public joinGame(id: number, playerName: string): void {
@@ -97,6 +99,11 @@ export class GameService {
 
     public getTimerState(): boolean {
         return this.changeTimerValueOn;
+    }
+
+    @PacketHandler(GameJoinPacket)
+    private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
+        console.log(`OPPONENT ${event.value.playerName} joined`);
     }
 
 }
