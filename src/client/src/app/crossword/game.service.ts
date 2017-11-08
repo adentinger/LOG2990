@@ -43,8 +43,6 @@ export class GameService {
         if (!this.gameId) {
             this.gameId = id;
             this.playerName = playerName;
-            // use packetmanager to join this game
-            console.log('setting id to', id);
             this.packetManager.sendPacket(
                 GameJoinPacket,
                 new GameJoinPacket(this.gameId, this.playerName)
