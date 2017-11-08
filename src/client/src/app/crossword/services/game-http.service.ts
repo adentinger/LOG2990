@@ -5,13 +5,15 @@ import { UserDisplayableGameData } from '../config-menu/available-games/user-dis
 import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/crossword/crossword-enums';
+import { GameService } from '../game.service';
 
 @Injectable()
 export class GameHttpService {
 
     private static readonly BASE_URL = 'http://localhost:3000/crossword/games';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+                private gameService: GameService) { }
 
     public getGames(): Promise<UserDisplayableGameData[]> {
         const url = GameHttpService.BASE_URL;
@@ -39,15 +41,11 @@ export class GameHttpService {
     }
 
     public getWords(): Promise<GridWord[]> {
-        return new Promise((resolve, reject) => {
-            resolve([
-                new GridWord(1, 0, 0, 1, Direction.horizontal, Owner.none, 'a'),
-                new GridWord(2, 0, 2, 1, Direction.horizontal, Owner.none, 'b'),
-                new GridWord(1, 0, 3, 1, Direction.vertical, Owner.none, 'c'),
-                new GridWord(3, 0, 4, 1, Direction.horizontal, Owner.none, 'd'),
-                new GridWord(2, 0, 5, 1, Direction.vertical, Owner.none, 'e'),
-            ]);
-        });
+        const url = GameHttpService.BASE_URL + '/' + this.gameService.gameId + '/words';
+        console.log(url);
+        const promise = this.http.get<GridWord[]>(url).toPromise();
+        promise.then((words) => console.log(words));
+        return promise;
     }
 
 }
