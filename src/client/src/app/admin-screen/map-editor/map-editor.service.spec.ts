@@ -24,9 +24,7 @@ describe('MapEditorService', () => {
     });
 
     let service: MapEditorService;
-    let converter: RacingUnitConversionService;
     let mockMaps: MockMaps;
-    let mockSerializedMaps: MockSerializedMaps;
 
     beforeEach(inject([MapEditorService, RacingUnitConversionService, MockMaps, MockSerializedMaps],
                       (injectedService: MapEditorService,
@@ -36,9 +34,7 @@ describe('MapEditorService', () => {
         service = injectedService;
         service.mapWidth = 500;
         service.mapHeight = 300;
-        converter = converterService;
         mockMaps = mockMapFactory;
-        mockSerializedMaps = mockSerializedMapFactory;
     }));
 
     it('should be created', () => {

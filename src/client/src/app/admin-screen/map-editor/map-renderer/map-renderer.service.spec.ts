@@ -29,14 +29,6 @@ describe('MapRendererService', () => {
         });
     });
 
-    let mapRenderer: MapRendererService;
-    let mapEditor: MapEditorService;
-    beforeEach(inject([MapRendererService, MapEditorService],
-                      (renderer: MapRendererService, editor: MapEditorService) => {
-        mapRenderer = renderer;
-        mapEditor = editor;
-    }));
-
     it('should be created', inject([MapRendererService], (service: MapRendererService) => {
         expect(service).toBeTruthy();
     }));
