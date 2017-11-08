@@ -52,7 +52,7 @@ export class GameService {
         return this.crosswordGame;
     }
 
-    public joinGame(id: number, playerName): void {
+    public joinGame(id: number, playerName: string): void {
         if (!this.gameIdInternal) {
             this.gameIdInternal = id;
             this.playerNameInternal = playerName;
