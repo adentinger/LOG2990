@@ -34,8 +34,8 @@ export class GameService {
     private changeTimerValueOn = false;
 
     private gameIdInternal: number = null;
-    private playerNameInternal = '';
-    private opponentNameInternal = '';
+    private playerNameInternal = 'Dylan Farvacque';
+    private opponentNameInternal = 'CHUCK NORRIS';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
 
