@@ -10,7 +10,7 @@ import { MapService } from '../racing/services/map.service';
 import { AdminConfigComponent } from './admin-config/admin-config.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminConfigService } from './admin-config.service';
-import { ItemGenerator } from './map-editor/item-generator';
+import { ItemGenerator } from './map-editor/items/item-generator';
 
 describe('AdminScreenComponent', () => {
   let component: AdminScreenComponent;

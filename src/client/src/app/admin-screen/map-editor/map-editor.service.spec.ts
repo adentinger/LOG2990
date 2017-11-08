@@ -7,7 +7,7 @@ import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serial
 import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from '../../../../../common/src/math/point';
-import { ItemGenerator } from './item-generator';
+import { ItemGenerator } from './items/item-generator';
 
 describe('MapEditorService', () => {
     beforeEach(() => {

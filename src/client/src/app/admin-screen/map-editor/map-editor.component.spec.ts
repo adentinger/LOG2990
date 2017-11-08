@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 
 import { MapEditorComponent } from './map-editor.component';
 import { MapService } from '../../racing/services/map.service';
-import { ItemGenerator } from './item-generator';
+import { ItemGenerator } from './items/item-generator';
 
 describe('MapEditorComponent', () => {
     let component: MapEditorComponent;

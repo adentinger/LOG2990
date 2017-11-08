@@ -1,10 +1,10 @@
-import { Map } from './map';
+import { Map } from '../map';
 import { Item } from './item';
-import { Constructor } from '../../../../../common/src/utils';
-import { Interval } from '../../../../../common/src/math/interval';
-import { Point } from '../../../../../common/src/math/point';
-import { Vector } from '../../../../../common/src/math/vector';
-import { SpeedBoost } from './speed-boost';
+import { Constructor } from '../../../../../../common/src/utils';
+import { Interval } from '../../../../../../common/src/math/interval';
+import { Point } from '../../../../../../common/src/math/point';
+import { Vector } from '../../../../../../common/src/math/vector';
+import { SpeedBoost } from '../speed-boost';
 
 export class ItemGenerator {
 
@@ -117,7 +117,6 @@ export class ItemGenerator {
     public itemCoordinates(map: Map, item: Item): Point {
         let point: Point;
         let lastMapCoordinates: Point;
-        let nextMapCoordinates: Point;
         let vector: Vector;
         const POINTS = map.path.points.slice();
         let length = 0;
@@ -126,7 +125,6 @@ export class ItemGenerator {
             vector = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
             if ((length + vector.norm()) > item.position) {
                 lastMapCoordinates = POINTS[i];
-                nextMapCoordinates = POINTS[i + 1];
                 break;
             }
             else {

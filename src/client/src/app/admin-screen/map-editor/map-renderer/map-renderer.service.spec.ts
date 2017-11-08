@@ -4,7 +4,7 @@ import { MapRendererService } from './map-renderer.service';
 import { MapEditorService } from '../map-editor.service';
 import { MapConverterService } from '../map-converter.service';
 import { RacingUnitConversionService } from '../racing-unit-conversion.service';
-import { ItemGenerator } from '../item-generator';
+import { ItemGenerator } from '../items/item-generator';
 
 class CanvasFactory {
     constructor() {}
