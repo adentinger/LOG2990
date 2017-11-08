@@ -35,11 +35,16 @@ export class GameService {
 
     private gameIdInternal: number = null;
     private playerNameInternal = '';
+    private opponentNameInternal = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
 
     public get playerName(): string {
         return this.playerNameInternal;
+    }
+
+    public get opponentName(): string {
+        return this.opponentNameInternal;
     }
 
     public constructor(private packetManager: PacketManagerClient) {
