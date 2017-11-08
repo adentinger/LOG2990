@@ -24,6 +24,20 @@ export class GameData {
         return this.wordsInternal.slice();
     }
 
+    public get emptyWords(): GridWord[] {
+        return this.wordsInternal.map((word) => {
+            return new GridWord(
+                word.id,
+                word.y,
+                word.x,
+                word.length,
+                word.direction,
+                Owner.none,
+                ''
+            );
+        });
+    }
+
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
     }
