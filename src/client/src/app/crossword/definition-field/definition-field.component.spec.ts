@@ -16,7 +16,6 @@ describe('DefinitionFieldComponent', () => {
         TestBed.configureTestingModule({
             declarations: [DefinitionFieldComponent],
             providers: [
-                GameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
                 DefinitionsService,
                 GridService,
