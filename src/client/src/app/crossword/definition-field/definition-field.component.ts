@@ -6,7 +6,7 @@ import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Definition } from './definition';
-import { GameService } from '../game.service';
+import { GameService, GameState } from '../game.service';
 
 @Component({
     selector: 'app-definition-field',
@@ -59,7 +59,9 @@ export class DefinitionFieldComponent {
     }
 
     public onClickOutside(): void {
-        this.selectionService.selection.next(SelectionService.NO_SELECTION);
+        if (this.gameService.state >= GameState.started) {
+            this.selectionService.selection.next(SelectionService.NO_SELECTION);
+        }
     }
 
     public checkIfSelected(index: number, direction: Direction): boolean {

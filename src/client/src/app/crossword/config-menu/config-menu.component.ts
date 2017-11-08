@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { MenuAutomatonService } from './menu-automaton.service';
 import { GameHttpService } from '../services/game-http.service';
 import { UserChoiceService, CreateOrJoin } from './user-choice.service';
-import { GameService } from '../game.service';
+import { GameService, GameState } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';
 
 @Component({
@@ -19,7 +19,6 @@ import { WaitingService } from './waiting/waiting.service';
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
-    public isConfiguringGame = true;
     public shouldShowAvailableGames = false;
 
     private subscriptions: Subscription[] = [];
@@ -57,14 +56,14 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public get shouldBeDisplayed(): boolean {
-        return this.isConfiguringGame || this.waitingService.isWaitingValue;
+        return this.gameService.state === GameState.configuring || this.waitingService.isWaitingValue;
     }
 
     private useConfiguration(): void {
-        this.isConfiguringGame = false;
         this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
+            this.gameService.state = GameState.started;
             this.gameService.joinGame(
                 this.userChoiceService.chosenGame,
                 this.userChoiceService.playerName
@@ -73,6 +72,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
         else {
             this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
                 .then((gameId) => {
+                    this.gameService.state = GameState.started;
                     this.gameService.joinGame(
                         gameId,
                         this.userChoiceService.playerName
