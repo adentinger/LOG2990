@@ -103,7 +103,7 @@ export class GameService {
 
     @PacketHandler(GameJoinPacket)
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
-        console.log(`OPPONENT ${event.value.playerName} joined`);
+        this.opponentNameInternal = event.value.playerName;
     }
 
 }
