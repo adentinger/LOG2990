@@ -33,4 +33,21 @@ describe('Physic utils', () => {
         expect(dimensionsMesured.z >= 0);
     });
 
+    it('return bigger dimension values for bigger objects. Yeah you read that right', () => {
+        const dummyObject1 = new THREE.Object3D();
+        const dummyObject2 = new THREE.Object3D();
+
+        const scaleUp = new THREE.Matrix4();
+        scaleUp.scale(new THREE.Vector3(3, 3, 3));
+        const scaleWayUp = new THREE.Matrix4();
+        scaleUp.scale(new THREE.Vector3(8, 9, 7));
+
+        dummyObject1.applyMatrix(scaleUp);
+        dummyObject2.applyMatrix(scaleWayUp);
+        const dimensionsObject1: THREE.Vector3 = PhysicUtils.getObjectDimensions(dummyObject1);
+        const dimensionsObject2: THREE.Vector3 = PhysicUtils.getObjectDimensions(dummyObject2);
+        expect(dimensionsObject1.x < dimensionsObject2.x);
+        expect(dimensionsObject1.y < dimensionsObject2.y);
+        expect(dimensionsObject1.z < dimensionsObject2.z);
+    });
 });
