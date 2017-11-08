@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input, NgZone } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 
 import { DefinitionsService, Definitions, Answers } from './definitions.service';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
