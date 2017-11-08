@@ -9,6 +9,12 @@ import '../../../../common/src/crossword/packets/game-join.parser';
 import { Subject } from 'rxjs/Subject';
 import { GameId } from '../../../../common/src/communication/game-configs';
 
+export enum GameState {
+    configuring,
+    started,
+    finished
+}
+
 /**
  * @class GameService
  * Represents the current game. Has the resposibilities of:
@@ -19,6 +25,8 @@ import { GameId } from '../../../../common/src/communication/game-configs';
  */
 @Injectable()
 export class GameService {
+
+    public state = GameState.configuring;
 
     private cheatModeOn = false;
     private isShowWordsOnInternal = false;
