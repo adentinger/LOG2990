@@ -13,6 +13,7 @@ import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
 import { GameMode, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
@@ -94,6 +95,10 @@ export class Game {
         else {
             throw new Error('Cannot add a new player: max number reached.');
         }
+    }
+
+    public matchesFilter(filter: GameFilter): boolean {
+        return false;
     }
 
     public isPlayerInGame(playerId: string): boolean {
