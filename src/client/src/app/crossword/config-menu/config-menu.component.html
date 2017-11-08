@@ -1,9 +1,6 @@
 <div class="disclaimer" *ngIf="shouldBeDisplayed"></div>
 <div class="outer-menu" *ngIf="shouldBeDisplayed">
   <div class="menu" *ngIf="!waitingService.isWaitingValue">
-    <!--For development-->
-    <button (click)="shoo()" style="float: right;">X</button>
-    <!-- -->
     <h2 class="text-center">Make a Choice!</h2>
     <div class="menu-page-container" [ngSwitch]="menuAutomaton.state">
       <div
