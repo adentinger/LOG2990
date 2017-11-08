@@ -8,25 +8,24 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{player1}}</td>
+            <td>{{gameService.playerName}}</td>
             <td>{{playerWordsFound}}</td>
         </tr>
         <tr>
-            <td>Opponent</td>
+            <td>{{gameService.opponentName}}</td>
             <td>{{opponentWordsFound}}</td>
         </tr>
     </tbody>
   </table>
   <table>
       <tbody>
-        <tr [ngSwitch]='gameMode'>
+        <tr>
             <th class='category'>Game Mode</th>
-            <td *ngSwitchCase='0'>Classic</td>
-            <td *ngSwitchCase='1'>Dynamic</td>
+            <td>{{modeName}}</td>
         </tr>
         <tr>
             <th class='category'>Difficulty</th>
-            <td>{{difficulty}}</td>
+            <td>{{difficultyName}}</td>
         </tr>
         <tr>
             <th class='category'>Game Time</th>

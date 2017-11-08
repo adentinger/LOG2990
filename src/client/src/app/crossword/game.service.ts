@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { CrosswordGame } from './class/crossword-game';
-import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
 
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
@@ -37,8 +35,6 @@ export class GameService {
     private playerNameInternal = 'Dylan Farvacque';
     private opponentNameInternal = 'CHUCK NORRIS';
 
-    private crosswordGame: CrosswordGame = mockCrosswordGame();
-
     public get playerName(): string {
         return this.playerNameInternal;
     }
@@ -51,10 +47,6 @@ export class GameService {
         this.onShowWordsInternal.subscribe((value) => {
             this.isShowWordsOnInternal = value;
         });
-    }
-
-    public getCurrentGame(): CrosswordGame {
-        return this.crosswordGame;
     }
 
     public joinGame(id: number, playerName: string): void {

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
-import { CrosswordGame } from '../class/crossword-game';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { TimerService } from '../services/timer.service';
 import { GridService } from '../board/grid.service';
@@ -12,20 +11,19 @@ import { GridService } from '../board/grid.service';
 })
 export class GameDetailsComponent implements OnInit {
 
-    public crosswordGame: CrosswordGame;
-    public player1: string;
-    public difficulty: string;
-    public gameMode: GameMode;
-
-    constructor(private gameService: GameService,
+    constructor(public gameService: GameService,
                 private timerService: TimerService,
                 private gridService: GridService) { }
 
     public ngOnInit(): void {
-        this.crosswordGame = this.gameService.getCurrentGame();
-        this.player1 = this.gameService.getCurrentGame().player1;
-        this.difficulty = this.gameService.getCurrentGame().difficulty;
-        this.gameMode = this.gameService.getCurrentGame().gameMode;
+    }
+
+    public get modeName(): string {
+        return 'Classic';
+    }
+
+    public get difficultyName(): string {
+        return 'Hard';
     }
 
     public get timerValue() {
