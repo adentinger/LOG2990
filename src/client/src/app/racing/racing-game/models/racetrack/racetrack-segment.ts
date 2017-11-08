@@ -23,7 +23,7 @@ export class RacetrackSegment extends THREE.Mesh {
 
     constructor(segmentLength: number) {
         super(new THREE.PlaneBufferGeometry(Track.SEGMENT_WIDTH, segmentLength));
-        this.material = new THREE.MeshPhongMaterial({side: THREE.FrontSide, shininess: 0.5});
+        this.material = new THREE.MeshPhongMaterial({side: THREE.FrontSide, shininess: 100});
         RacetrackSegment.ASPHALT_TEXTURE_PROMISE.then((texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(6, segmentLength);

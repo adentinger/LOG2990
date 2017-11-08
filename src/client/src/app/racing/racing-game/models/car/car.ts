@@ -170,11 +170,11 @@ export class Car extends UserControllableCollidableMesh {
             if (this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED &&
                 this.velocity.length() > this.previousVelocity.length()) {
                 (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-                    0.5 * this.dayModeOptions.intensity;
+                    0.5 * Math.min(this.dayModeOptions.intensity, 1);
             }
             else {
                 (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-                    0.5 + 0.5 * this.dayModeOptions.intensity;
+                    0.5 + 0.5 * Math.min(this.dayModeOptions.intensity, 1);
             }
         }
         this.previousVelocity.copy(this.velocity);
@@ -182,7 +182,7 @@ export class Car extends UserControllableCollidableMesh {
 
     private addLights(): void {
         const HEADLIGHTS = [];
-        const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, -1);
+        const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, -0.25, -1);
         Car.HEADLIGHT_POSITIONS.forEach((headlightPosition) => {
             const HEADLIGHT = new CarHeadlight();
             HEADLIGHT.position.copy(headlightPosition);

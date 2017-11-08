@@ -25,7 +25,7 @@ export class RacetrackJunction extends THREE.Mesh {
 
     constructor() {
         super(new THREE.CircleGeometry(RacetrackJunction.RADIUS, RacetrackJunction.SEGMENTS));
-        this.material = new THREE.MeshPhongMaterial({side: THREE.FrontSide, shininess: 0.5});
+        this.material = new THREE.MeshPhongMaterial({side: THREE.FrontSide, shininess: 100});
         RacetrackJunction.ASPHALT_TEXTURE_PROMISE.then((texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(6, 6);

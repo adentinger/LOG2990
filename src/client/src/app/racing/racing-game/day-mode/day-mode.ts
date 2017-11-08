@@ -45,7 +45,7 @@ export class DayModeDay implements DayMode {
 
 export class DayModeNight implements DayMode {
     public get CAR_HEADLIGHT_OPTIONS(): CarHeadlightDayModeOptions {
-        return { intensity: 1 };
+        return { intensity: 2.5 };
     }
 
     public get LIGHTING_OPTIONS(): LightingOptions {
@@ -58,7 +58,7 @@ export class DayModeNight implements DayMode {
             },
             backlight: {
                 color: COLOR,
-                intensity: 0.07
+                intensity: 0.1
             }
         };
     }
