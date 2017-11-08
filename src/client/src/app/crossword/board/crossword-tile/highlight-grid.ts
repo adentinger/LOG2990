@@ -12,7 +12,7 @@ export enum WhoIsSelecting {
 }
 
 /**
- * Class which can tell whether a certain tile is selected.
+ * Class which can tell whether a certain tile is selected or should be filled.
  */
 export class HighlightGrid {
 
@@ -27,18 +27,12 @@ export class HighlightGrid {
             const rowFound = [];
             for (let column = 0; column < Grid.DIMENSIONS; ++column) {
                 ROW_DATA.push(this.shouldBeSelected(row, column, selection));
-                for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
-                    if (this.isFilled(row, column, words[wordIndex]) !== WhoIsSelecting.noOne) {
-                        rowFound.push(this.isFilled(row, column, words[wordIndex]));
-                    }
-                }
             }
             DATA.push(ROW_DATA);
             found.push(rowFound);
         }
         this.data = DATA;
-        this.wordsFound = found;
-        console.log(this.wordsFound);
+        this.wordsFound = this.tileUsed(words);
     }
 
     public isSelected(row: number, column: number): WhoIsSelecting {
@@ -84,17 +78,49 @@ export class HighlightGrid {
         return shouldBeSelected;
     }
 
-    private isFilled(row: number, column: number, word: GridWord): WhoIsSelecting {
-        let wordBelongsTo: WhoIsSelecting = WhoIsSelecting.noOne;
+    private tileUsed(words: GridWord[]): WhoIsSelecting[][] {
+        const wordBelongsTo: WhoIsSelecting[][] = [];
 
-        if (word.owner === Owner.player1) {
-            wordBelongsTo = this.isHighlighted(row, column, word, WhoIsSelecting.player);
-        }
-        else if (word.owner === Owner.player2) {
-            wordBelongsTo = this.isHighlighted(row, column, word, WhoIsSelecting.opponent);
+        const populate: WhoIsSelecting[] = [];
+
+        for (let i = 0; i < Grid.DIMENSIONS; i++) {
+            populate.push(WhoIsSelecting.noOne);
         }
 
+        for (let row = 0; row < Grid.DIMENSIONS; row++) {
+            wordBelongsTo.push(populate.slice());
+            for (let column = 0; column < Grid.DIMENSIONS; column++) {
+                for (let word = 0; word < words.length; word++) {
+                    if (((words[word].owner === Owner.player1
+                        && wordBelongsTo[row][column] === WhoIsSelecting.opponent) ||
+                        (words[word].owner === Owner.player2
+                        && wordBelongsTo[row][column] === WhoIsSelecting.player))
+                        && (this.isFilled(row, column, words[word]))) {
+                        wordBelongsTo[row][column] = WhoIsSelecting.both;
+                    }
+                    else if (words[word].owner === Owner.player1 && this.isFilled(row, column, words[word])) {
+                        wordBelongsTo[row][column] = WhoIsSelecting.player;
+                    }
+                    else if (words[word].owner === Owner.player2 && this.isFilled(row, column, words[word])) {
+                        wordBelongsTo[row][column] = WhoIsSelecting.opponent;
+                    }
+                }
+            }
+        }
         return wordBelongsTo;
     }
 
+    private isFilled(row: number, column: number, word: GridWord): Boolean {
+
+        if (word.direction === Direction.horizontal) {
+            return (row === word.y &&
+                column >= word.x &&
+                column - word.x < word.length);
+        }
+        else {
+            return (column === word.x &&
+                row >= word.y &&
+                row - word.y < word.length);
+        }
+    }
 }
