@@ -35,7 +35,7 @@ export class Puddle extends CollidableMesh {
             this.scale.setScalar(scale) ;
         });
         const texture = Puddle.PUDDLE_TEXTURE;
-        this.material = new THREE.MeshBasicMaterial({ map: texture });
+        this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0 });
         this.rotation.x = Puddle.ORIENTATION_ON_MAP;
         this.position.y = Puddle.TRACK_HEIGHT;
         eventManager.registerClass(this);

@@ -10,8 +10,8 @@ import { LightingOptions } from '../models/lighting/lighting';
  * Implementation of the State pattern.
  */
 export interface DayMode {
-    CAR_HEADLIGHT_OPTIONS: CarHeadlightDayModeOptions;
-    LIGHTING_OPTIONS: LightingOptions;
+    readonly CAR_HEADLIGHT_OPTIONS: CarHeadlightDayModeOptions;
+    readonly LIGHTING_OPTIONS: LightingOptions;
     nextMode(): DayMode;
 }
 
@@ -53,7 +53,7 @@ export class DayModeNight implements DayMode {
         return {
             keyLight: {
                 color: COLOR,
-                intensity: 0.33,
+                intensity: 0.20,
                 rotation: new THREE.Euler(0.374, 2.760, 0, 'YXZ')
             },
             backlight: {

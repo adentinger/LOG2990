@@ -33,7 +33,7 @@ export class SpeedBooster extends CollidableMesh {
             const scale = this.car.dimensions.x;
             this.scale.setScalar(scale);
          });
-        this.material = new THREE.MeshBasicMaterial({ map: texture });
+        this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0.2, emissiveIntensity: 0.5, emissive: 0xffffff });
         this.rotation.x = SpeedBooster.ORIENTATION_ON_MAP;
         this.position.y = SpeedBooster.TRACK_HEIGHT;
         eventManager.registerClass(this);

@@ -1,4 +1,4 @@
-import { Item } from './item';
+import { Item } from './items/item';
 
 export class SpeedBoost implements Item {
 

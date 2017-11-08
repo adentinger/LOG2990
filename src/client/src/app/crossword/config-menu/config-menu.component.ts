@@ -1,56 +1,88 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import { ConfigMenuService, MENU_CONFIG_URL } from './config-menu.service';
-import { ConfigMenuState } from './config-menu-state';
-import { ConfigMenuOption, FetchedPendingGame } from './config-menu-option';
+import { MenuAutomatonService } from './menu-automaton.service';
+import { AvailableGamesComponent } from './available-games/available-games.component';
+import { GameHttpService } from '../services/game-http.service';
+import { CreateOrJoin } from './menu-automaton-choices';
+import { GameService } from '../game.service';
+import { WaitingService } from './waiting/waiting.service';
 
 @Component({
     selector: 'app-config-menu',
     templateUrl: './config-menu.component.html',
     styleUrls: ['./config-menu.component.css'],
     providers: [
-        ConfigMenuService,
-        { provide: MENU_CONFIG_URL, useValue: '/assets/crossword/config-menu-pages.json' }
+        MenuAutomatonService,
+        WaitingService
     ]
 })
-export class ConfigMenuComponent implements OnInit {
+export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
-    get currentState(): ConfigMenuState {
-        return this.configMenuService.getCurrentState();
+    public isConfiguringGame = true;
+    public shouldShowAvailableGames = false;
+
+    private subscriptions: Subscription[] = [];
+    @ViewChild(AvailableGamesComponent)
+    private availableGamesComponent: AvailableGamesComponent;
+
+    constructor(public menuAutomaton: MenuAutomatonService,
+                private waitingService: WaitingService,
+                private gameService: GameService,
+                private gameHttpService: GameHttpService) { }
+
+    public ngAfterViewInit(): void {
+        const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
+            () => {
+                this.shouldShowAvailableGames = true;
+                this.availableGamesComponent.refresh();
+            }
+        );
+        const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
+            () => {
+                this.shouldShowAvailableGames = false;
+                const chosenGame = this.availableGamesComponent.chosenGame;
+                if (chosenGame === null) {
+                    this.menuAutomaton.goBack();
+                }
+            }
+        );
+        const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
+            () => {
+                this.useConfiguration();
+            }
+        );
+        this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
     }
 
-    get currentOptions(): string[] {
-        if (Array.isArray(this.currentState.options)) {
-            return this.currentState.options.map((value: ConfigMenuOption) => value.name);
-        } else {
-            return this.currentState.options.fetchedOptions.map((option: FetchedPendingGame) =>
-                FetchedPendingGame.prototype.toString.apply(option));
+    public ngOnDestroy(): void {
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    }
+
+    public get shouldBeDisplayed(): boolean {
+        return this.isConfiguringGame || this.waitingService.isWaitingValue;
+    }
+
+    // "Shoo! Go away! I don't want to see this component anymore!" =>
+    public shoo(): void {
+        this.isConfiguringGame = false;
+        this.waitingService.isWaiting.next(false);
+    }
+
+    private useConfiguration(): void {
+        this.isConfiguringGame = false;
+        this.waitingService.isWaiting.next(true);
+        const userChoices = this.menuAutomaton.choices;
+        const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
+        if (isJoiningGame) {
+            this.gameService.joinGame(this.availableGamesComponent.chosenGame);
         }
-    }
-
-    get isConfiguringGame(): boolean {
-        return this.configMenuService.isConfiguringGame;
-    }
-
-    set isConfiguringGame(flag: boolean) {
-        this.configMenuService.isConfiguringGame = flag;
-    }
-
-    public getObjectEntries(object: any): [any, any][] {
-        return Object.entries(object);
-    }
-
-    constructor(private configMenuService: ConfigMenuService) { }
-
-    public selectOption(id: number) {
-        this.configMenuService.selectOption(id);
-    }
-
-    public ngOnInit() {
-    }
-
-    public stateBack() {
-        this.configMenuService.goBackState();
+        else {
+            this.gameHttpService.createGame(userChoices.toGameConfiguration())
+                .then((gameId) => {
+                    this.gameService.joinGame(gameId);
+                });
+        }
     }
 
 }

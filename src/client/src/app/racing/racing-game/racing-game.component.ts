@@ -4,15 +4,13 @@ import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
 import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
-import { PhysicEngine } from './physic/engine';
 
 import { EventManager } from '../../event-manager.service';
 
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
-    styleUrls: ['./racing-game.component.css'],
-    providers: [RacingGameService, PhysicEngine]
+    styleUrls: ['./racing-game.component.css']
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
@@ -20,6 +18,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     @ViewChild('gameContainer')
     public racingGameContainer: ElementRef;
+    @ViewChild('hud')
+    private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
 
@@ -32,7 +32,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
-                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.uiInputs);
+                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });
@@ -58,7 +58,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
         }
         if (this.uiInputs.isKeyPressed('n')) {
-            this.racingGame.changeDayMode();
+            this.racingGame.toggleDayMode();
+        }
+        if (this.uiInputs.isKeyPressed('e')) {
+            this.racingGame.reloadSounds();
         }
 
         const areAllowedKeyCombinationsPressed =

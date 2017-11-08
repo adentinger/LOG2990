@@ -1,33 +1,19 @@
-import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
-import { CrosswordGame } from './crossword-game';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
-import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
-import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
-import { PacketManagerServer } from '../../../packet-manager';
-
-import { Definition } from '../../../../../common/src/crossword/definition';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
-
-
+import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
+import { Game } from './game';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
-import '../../../../../common/src/crossword/packets/grid-word.parser';
-import '../../../../../common/src/crossword/packets/game-join.parser';
-import '../../../../../common/src/crossword/packets/game-definition.parser';
-import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 
-const ID_LENGTH = 8;
+import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { PacketManagerServer } from '../../../packet-manager';
+import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
+import '../../../../../common/src/crossword/packets/game-join.parser';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try.parser';
 
 export class GameManager {
 
-    // private crosswordGridGenerator:
     private static instance: GameManager;
-    private games: Map<string, CrosswordGame> = new Map();
+    private games: Map<number, Game> = new Map();
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
-
-    private constructor() {
-        registerHandlers(this, this.packetManager);
-    }
 
     public static getInstance() {
         if (!GameManager.instance) {
@@ -36,18 +22,25 @@ export class GameManager {
         return GameManager.instance;
     }
 
-    public newGame(configs: CrosswordGameConfigs): string {
-        let newId: string;
-        do {
-            newId = this.generateRandomString(ID_LENGTH);
-        } while (this.games.has(newId));
-
-        // TODO initialize game
-        this.games.set(newId, new CrosswordGame(configs));
-        return newId;
+    private constructor() {
+        registerHandlers(this, this.packetManager);
     }
 
-    public getGame(id: string): CrosswordGame {
+    public getGameConfigurations(): CrosswordGameConfigs[] {
+        const gameConfigs: CrosswordGameConfigs[] = [];
+        this.games.forEach((game) => {
+            gameConfigs.push(game.configuration);
+        });
+        return gameConfigs;
+    }
+
+    public newGame(configs: CrosswordGameConfigs): GameId {
+        const GAME = new Game(configs);
+        this.games.set(GAME.id, GAME);
+        return GAME.id;
+    }
+
+    public getGame(id: number): Game {
         if (this.games.has(id)) {
             return this.games.get(id);
         } else {
@@ -59,36 +52,17 @@ export class GameManager {
         return this.games.size;
     }
 
-    public deleteGame(id: string): boolean {
+    public deleteGame(id: number): boolean {
         return this.games.delete(id);
     }
 
-    private generateRandomString(length: number): string {
-        let text = '';
-        const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
-
-        for (let i = 0; i < length; i++) {
-            text += charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-        return text;
-    }
-
     @PacketHandler(GameJoinPacket)
-    public gameJoinHandler(event: PacketEvent<GameJoinPacket>) {
-        const gameToJoin = event.value.gameId;
-        const playerSocketId = event.socketid;
+    public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
+        const gameId = event.value.gameId;
+        const GAME = this.getGameFromId(gameId);
+        const PLAYER_ID = event.socketid;
 
-        this.addPlayerToGame(event.socketid, gameToJoin);
-
-        // send all gridWords
-        const gridWord = new GridWord(7, 1, 1, 2, 0, 0, 'abc');
-        this.sendGridWord(
-            gridWord,
-            playerSocketId);
-
-        // send all definitions
-        this.sendAllDefinitions(gameToJoin, playerSocketId);
-
+        GAME.addPlayer(PLAYER_ID);
     }
 
     /**
@@ -98,61 +72,40 @@ export class GameManager {
      */
     @PacketHandler(WordTryPacket)
     public wordTryHandler(event: PacketEvent<WordTryPacket>) {
-        const wordTry: GridWord = event.value.wordTry;
-        const socketId: string = event.socketid;
-        console.log(wordTry);
+        const WORD_TRY: GridWord = event.value.wordTry;
+        const PLAYER_ID: string = event.socketid;
 
-        const game: CrosswordGame = this.getGameFromSocketId(event.socketid);
-
-        const ANSWER: GridWord = wordTry;
-        if (!game.validateUserAnswer(wordTry)) {
+        const game: Game = this.getGameFromPlayerId(PLAYER_ID);
+        const ANSWER: GridWord = WORD_TRY;
+        if (!game.validateUserAnswer(WORD_TRY)) {
             ANSWER.string = '';
         }
-        this.sendGridWord(ANSWER, socketId);
+        // this.sendGridWord(ANSWER, PLAYER_ID);
     }
 
-    /**
-     * Returns a game given the socketId of one of its player
-     * @param socketId : Id of a player
-     */
-    private getGameFromSocketId(socketId: string): CrosswordGame {
-        for (const GAME of this.games) {
-            if (socketId === GAME[1].player1Id ||
-                socketId === GAME[1].player2Id) {
-                // console.log('found a game: ' + JSON.stringify(game[1]));
-                return GAME[1];
+    private getGameFromId(id: GameId): Game {
+        const game = this.games.get(id);
+        if (game) {
+            return game;
+        }
+        else {
+            throw new Error(`Game "${id}" not found`);
+        }
+    }
+
+    private getGameFromPlayerId(playerId: string): Game {
+        let foundGame: Game = null;
+        this.games.forEach((game) => {
+            if (game.isPlayerInGame(playerId)) {
+                foundGame = game;
             }
+        });
+        if (foundGame !== null) {
+            return foundGame;
         }
-        return null;
-    }
-
-    private sendAllDefinitions(gameId: string, socketId: string): void {
-        const horizontalDefinitions: Map<number, Definition> = this.games.get(gameId).horizontalDefinitions;
-        const verticalDefinitions: Map<number, Definition> = this.games.get(gameId).verticalDefinitions;
-
-        for (let i = 0; i < horizontalDefinitions.size; i++) {
-            this.sendDefinition(i, Direction.horizontal, horizontalDefinitions.get(i), socketId);
-        }
-        for (let i = 0; i < verticalDefinitions.size; i++) {
-            this.sendDefinition(i, Direction.vertical, verticalDefinitions.get(i), socketId);
+        else {
+            throw new Error(`Player "${playerId}" not found in any game`);
         }
     }
 
-    private addPlayerToGame(playerId: string, gameId: string): void {
-        this.games.get(gameId).player1Id = playerId;
-    }
-
-    private sendDefinition(index: number, direction: Direction, definition: Definition, socketId: string) {
-        this.packetManager.sendPacket(
-            GameDefinitionPacket,
-            new GameDefinitionPacket(index, direction, definition),
-            socketId);
-    }
-
-    private sendGridWord(gridWord: GridWord, socketId: string) {
-        this.packetManager.sendPacket(
-            GridWordPacket,
-            new GridWordPacket(gridWord),
-            socketId);
-    }
 }

@@ -7,7 +7,7 @@ import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serial
 import { MapConverterService } from './map-converter.service';
 import { RacingUnitConversionService } from './racing-unit-conversion.service';
 import { Point } from '../../../../../common/src/math/point';
-import { ItemGenerator } from './item-generator';
+import { ItemGenerator } from './items/item-generator';
 
 describe('MapEditorService', () => {
     beforeEach(() => {
@@ -24,9 +24,7 @@ describe('MapEditorService', () => {
     });
 
     let service: MapEditorService;
-    let converter: RacingUnitConversionService;
     let mockMaps: MockMaps;
-    let mockSerializedMaps: MockSerializedMaps;
 
     beforeEach(inject([MapEditorService, RacingUnitConversionService, MockMaps, MockSerializedMaps],
                       (injectedService: MapEditorService,
@@ -36,9 +34,7 @@ describe('MapEditorService', () => {
         service = injectedService;
         service.mapWidth = 500;
         service.mapHeight = 300;
-        converter = converterService;
         mockMaps = mockMapFactory;
-        mockSerializedMaps = mockSerializedMapFactory;
     }));
 
     it('should be created', () => {

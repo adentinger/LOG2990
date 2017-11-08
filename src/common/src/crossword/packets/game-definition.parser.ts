@@ -5,13 +5,9 @@ import { Definition } from '../definition';
 
 const SIZE_UINT16 = 2, SIZE_UINT32 = 4;
 
-/**
- * @class GameJoinParser
- * format:
- *     |index|direction|text_length|text...|
- */
 @Parser(GameDefinitionPacket)
-export class GameJoinParser extends PacketParser<GameDefinitionPacket> {
+export class GameDefinitionParser extends PacketParser<GameDefinitionPacket> {
+
     public serialize(value: GameDefinitionPacket): ArrayBuffer {
         const DEFINITION_TEXT_LENGTH = value.definition.text.length;
         const DIRECTION = value.direction;
@@ -40,4 +36,5 @@ export class GameJoinParser extends PacketParser<GameDefinitionPacket> {
         }
         return new GameDefinitionPacket(INDEX, DIRECTION, new Definition(buffer, DIRECTION));
     }
+
 }

@@ -8,6 +8,7 @@ import { MapService } from '../services/map.service';
 import { HttpModule } from '@angular/http';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
+import { PhysicEngine } from './physic/engine';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -24,7 +25,8 @@ describe('RacingGameComponent', () => {
                 {provide: APP_BASE_HREF, useValue: '/'},
                 RacingGameService,
                 MapService,
-                EventManager
+                EventManager,
+                PhysicEngine
             ]
         })
             .compileComponents();
