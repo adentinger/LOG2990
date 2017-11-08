@@ -1,5 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { MenuAutomatonChoices, CreateOrJoin } from './menu-automaton-choices';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 
