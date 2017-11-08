@@ -7,6 +7,7 @@ import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import '../../../../common/src/crossword/packets/game-join.parser';
 import { Subject } from 'rxjs/Subject';
+import { GameId } from '../../../../common/src/communication/game-configs';
 
 /**
  * @class GameService
@@ -24,7 +25,7 @@ export class GameService {
     private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private gameId: number = null;
+    private gameIdInternal: number = null;
     private playerName = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
@@ -40,14 +41,18 @@ export class GameService {
     }
 
     public joinGame(id: number, playerName): void {
-        if (!this.gameId) {
-            this.gameId = id;
+        if (!this.gameIdInternal) {
+            this.gameIdInternal = id;
             this.playerName = playerName;
             this.packetManager.sendPacket(
                 GameJoinPacket,
-                new GameJoinPacket(this.gameId, this.playerName)
+                new GameJoinPacket(this.gameIdInternal, this.playerName)
             );
         }
+    }
+
+    public get gameId(): GameId {
+        return this.gameIdInternal;
     }
 
     public setCheatModeOnOff(): void {
