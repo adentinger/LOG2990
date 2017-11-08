@@ -58,9 +58,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public onInputChange(inputValue: string) {
-        const USER_WORD = this.makeWordFromInput(inputValue);
-        this.inputBuffer.nativeElement.value = USER_WORD.string;
-        this.gridService.setUserInput(USER_WORD);
+        if (this.selectionService.selectionValue.playerSelection !== null) {
+            const USER_WORD = this.makeWordFromInput(inputValue);
+            this.inputBuffer.nativeElement.value = USER_WORD.string;
+            this.gridService.setUserInput(USER_WORD);
+        }
     }
 
     public isHighlighted(row: number, column: number): WhoIsSelecting {
