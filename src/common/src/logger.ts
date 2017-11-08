@@ -1,4 +1,4 @@
-import { getCallers } from './utils';
+import { context, getCallers } from './utils';
 
 export enum Level {
     ALL,
@@ -11,8 +11,6 @@ export enum Level {
 }
 
 const DEFAULT_NAME = '<Anonymous>';
-
-const context: any = typeof global === 'object' ? global : window;
 
 const SYSTEM_LEVEL = 'process' in context ?
     typeof context['process'].env['LOG_LEVEL'] === 'string' && context['process'].env['LOG_LEVEL'].toUpperCase() in Level ?

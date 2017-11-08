@@ -10,6 +10,13 @@ export function isJson(pseudoJson: string): boolean {
     }
 }
 
+namespace NodeJS {
+    export declare type Global = object;
+}
+
+declare const global: NodeJS.Global;
+export const context: any = typeof global === 'object' ? global : window;
+
 export interface Constructor<T = any> {
     new(...argv: any[]): T;
 }
@@ -38,19 +45,25 @@ export function fromArrayBuffer(data: ArrayBuffer): string {
     return String.fromCharCode.apply(null, new Uint16Array(data));
 }
 
-const CALL_STACK_REGEX = /\s*at\s(.+)\s\(.+:\d+:\d+\)/;
+const DEFAULT_NAME = '<Anonymous>';
+const CALL_STACK_REGEX = /(?:\s*at\s(.+?)\s(?:\(.+:\d+:\d+\)|.+:\d+:\d+)|\s*(.+)@\(?.+:\d+:\d+\)?)/m;
 
 export function getCallers(): string[] {
     const error = new Error();
     try {
+        let matches: RegExpMatchArray;
         const callers = error.stack.match(new RegExp(CALL_STACK_REGEX, 'g'))
-            .map((value) => value.match(CALL_STACK_REGEX)[1]);
+            .map((value) => (matches = value.match(CALL_STACK_REGEX)) && (
+                matches[1] || matches[2]
+            ) || DEFAULT_NAME);
         callers.shift();
         return callers;
     } catch (e) {
         return null;
     }
 }
+
+context['getCallers'] = getCallers;
 
 export function warn(logger: { warn: (message: any) => void }): (error: any) => never;
 export function warn<T>(logger: { warn: (message: any) => void }, returnValue: T): (error: any) => T;
