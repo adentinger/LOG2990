@@ -3,8 +3,6 @@ import * as express from 'express';
 import { MiddleWare, Route } from '../../middle-ware';
 import { GameManager } from './game-manager';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 
 @MiddleWare('/crossword/games')
 export class GamesMiddleWare {
