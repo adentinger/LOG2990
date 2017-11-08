@@ -5,6 +5,8 @@ import { UserDisplayableGameData } from './user-displayable-game-data';
 import { Subscription } from 'rxjs/Subscription';
 import { MenuAutomatonService } from '../menu-automaton.service';
 import { UserChoiceService } from '../user-choice.service';
+import { GameFilter } from '../../../../../../common/src/crossword/game-filter';
+import { GameMode } from '../../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-available-games',
@@ -58,7 +60,10 @@ export class AvailableGamesComponent implements OnDestroy {
     public async refresh(): Promise<void> {
         this.userChoiceService.chosenGame = null;
         this.gamesInternal = []; // Display nothing while we refresh
-        this.gamesInternal = await this.gameHttpService.getGames();
+        this.gamesInternal =
+            await this.gameHttpService.getGames(
+                new GameFilter(this.userChoiceService.gameMode, 2)
+            );
     }
 
 }

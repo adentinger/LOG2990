@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserDisplayableGameData } from '../config-menu/available-games/user-displayable-game-data';
 import { CrosswordGameConfigs, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameService } from '../game.service';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class GameHttpService {
     constructor(private http: HttpClient,
                 private gameService: GameService) { }
 
-    public getGames(): Promise<UserDisplayableGameData[]> {
+    public getGames(filter: GameFilter): Promise<UserDisplayableGameData[]> {
         const url = GameHttpService.BASE_URL;
         const promise =
             this.http.get<CrosswordGameConfigs[]>(url).toPromise()
