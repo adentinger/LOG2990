@@ -23,11 +23,18 @@ export class RacingGamePlane extends PhysicMesh {
     constructor() {
         super();
         this.geometry = new THREE.PlaneGeometry(Track.WIDTH_MAX, Track.HEIGHT_MAX);
-        RacingGamePlane.GRASS_TEXTURE_PROMISE.then((texture) => {
+        Promise.all([
+            RacingGamePlane.GRASS_TEXTURE_PROMISE
+        ]).then(([texture]) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.offset.set(0, 0);
             texture.repeat.set(Track.WIDTH_MAX, Track.HEIGHT_MAX);
-            this.material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide, shininess: 0 });
+            this.material = new THREE.MeshPhongMaterial({
+                map: texture,
+                side: THREE.FrontSide,
+                shininess: 1,
+                specular: 100
+            });
         });
         this.rotateX(-Math.PI / 2);
         this.receiveShadow = true;

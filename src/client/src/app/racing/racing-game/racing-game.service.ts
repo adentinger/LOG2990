@@ -18,7 +18,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class RacingGameService {
-    public static readonly CONTROLLABLE_CAR_IDX = 1;
+    public static readonly CONTROLLABLE_CAR_IDX = 2;
 
     public readonly renderer: RacingRenderer;
     private readonly cars: Car[] = [
