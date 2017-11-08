@@ -26,7 +26,7 @@ export enum GameState {
 @Injectable()
 export class GameService {
 
-    public state = GameState.configuring;
+    private stateInternal = GameState.configuring;
 
     private cheatModeOn = false;
     private isShowWordsOnInternal = false;
@@ -37,6 +37,14 @@ export class GameService {
     private playerName = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
+
+    public get state(): GameState {
+        return this.stateInternal;
+    }
+
+    public set state(state: GameState) {
+        this.stateInternal = state;
+    }
 
     public constructor(private packetManager: PacketManagerClient) {
         this.onShowWordsInternal.subscribe((value) => {
