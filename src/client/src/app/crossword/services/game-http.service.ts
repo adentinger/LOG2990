@@ -16,7 +16,9 @@ export class GameHttpService {
                 private gameService: GameService) { }
 
     public getGames(filter: GameFilter): Promise<UserDisplayableGameData[]> {
-        const url = GameHttpService.BASE_URL;
+        const url = GameHttpService.BASE_URL +
+                    '/mode/' + filter.mode +
+                    '/players/' + filter.playerNumber;
         const promise =
             this.http.get<CrosswordGameConfigs[]>(url).toPromise()
                 .then((configs) => {

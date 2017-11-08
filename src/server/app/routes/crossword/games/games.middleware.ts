@@ -9,11 +9,14 @@ import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 @MiddleWare('/crossword/games')
 export class GamesMiddleWare {
 
-    @Route('get', '/')
+    @Route('get', '/mode/:mode/players/:players')
     public getGames(req: express.Request, res: express.Response): void {
+        const gameMode = Math.round(req.params.mode);
+        const numberOfPlayers = Math.round(req.params.players);
+        const filter = new GameFilter(gameMode, numberOfPlayers);
         const configurations =
             GameManager.getInstance()
-            .filterGames(new GameFilter(GameMode.Classic, 2))
+            .filterGames(filter)
             .map((game) => game.configuration);
         res.json(configurations);
     }
