@@ -53,7 +53,7 @@ export class DayModeNight implements DayMode {
         return {
             keyLight: {
                 color: COLOR,
-                intensity: 0.33,
+                intensity: 0.20,
                 rotation: new THREE.Euler(0.374, 2.760, 0, 'YXZ')
             },
             backlight: {

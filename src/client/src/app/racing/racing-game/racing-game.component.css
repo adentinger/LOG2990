@@ -1,3 +1,9 @@
+#viewSpace {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+}
+
 #viewSpace > canvas {
     position: absolute;
     top: 0px;

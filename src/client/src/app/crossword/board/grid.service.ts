@@ -84,8 +84,8 @@ export class GridService {
         const word = event.value.wordTry;
         this.GRID.updateWord(word);
         const isWordSelected =
-            this.selectionService.selectionValue.id === word.id &&
-            this.selectionService.selectionValue.direction === word.direction;
+            this.selectionService.selectionValue.playerSelection.id === word.id &&
+            this.selectionService.selectionValue.playerSelection.direction === word.direction;
         if (isWordSelected) {
             this.selectionService.selection.next(SelectionService.NO_SELECTION);
         }

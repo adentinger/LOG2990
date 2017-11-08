@@ -4,10 +4,12 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
 
 import '../../../../../common/src/crossword/packets/word-try.parser';
-import { HighlightGrid } from './crossword-tile/highlight-grid';
+import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
 import { Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { SelectedGridWord } from './selected-grid-word';
+import { Logger } from '../../../../../common/src/logger';
 
 @Component({
     selector: 'app-board',
@@ -17,6 +19,8 @@ import { Owner } from '../../../../../common/src/crossword/crossword-enums';
 export class BoardComponent implements OnInit, OnDestroy {
 
     public readonly DIMENSIONS = Array(Grid.DIMENSIONS);
+
+    public readonly logger = Logger.getLogger('BoardComponent');
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
@@ -45,7 +49,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         return this.gridService.getCharAt(row, column);
     }
 
-    private onSelect(selected: GridWord): void {
+    private onSelect(selected: SelectedGridWord): void {
         this.highlightGrid = new HighlightGrid(selected);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
@@ -59,7 +63,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.gridService.setUserInput(USER_WORD);
     }
 
-    public isHighlighted(row: number, column: number): boolean {
+    public isHighlighted(row: number, column: number): WhoIsSelecting {
         return this.highlightGrid.isSelected(row, column);
     }
 
@@ -67,7 +71,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         input = input.replace(/[^a-zA-Z]/g, '');
         input = input.toLowerCase();
 
-        const SELECTED_WORD = this.selectionService.selectionValue;
+        const SELECTED_WORD = this.selectionService.selectionValue.playerSelection;
         if (input.length > SELECTED_WORD.length) {
             input = input.substr(0, SELECTED_WORD.length);
         }

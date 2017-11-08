@@ -54,7 +54,7 @@ export class DefinitionFieldComponent {
         if (this.isDefinitionClickable(index, direction)) {
             const SELECTED_WORD: GridWord =
                 this.gridService.getWord(index, direction);
-            this.selectionService.selection.next(SELECTED_WORD);
+            this.selectionService.updateSelectedGridWord(SELECTED_WORD);
         }
     }
 

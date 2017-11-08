@@ -103,7 +103,6 @@ export class PhysicUtils {
         };
 
         this.eventManager.fireEvent(COLLISION_EVENT, { name: COLLISION_EVENT, data: collision });
-
         return collision;
     }
 
