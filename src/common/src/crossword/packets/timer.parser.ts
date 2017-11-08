@@ -1,11 +1,11 @@
 import { PacketParser } from '../../communication/packet-api';
 import { Parser, SIZE_UINT32 } from '../../communication/packet-api/packet-handler';
-import { CrosswordTimerPacket } from './crossword-timer.packet';
+import { TimerPacket } from './timer.packet';
 
-@Parser(CrosswordTimerPacket)
-export class CrosswordTimerParser extends PacketParser<CrosswordTimerPacket> {
+@Parser(TimerPacket)
+export class TimerParser extends PacketParser<TimerPacket> {
 
-    public serialize(value: CrosswordTimerPacket): ArrayBuffer {
+    public serialize(value: TimerPacket): ArrayBuffer {
         const BUFFER: ArrayBuffer = new ArrayBuffer(1 * SIZE_UINT32);
         const DATA = new DataView(BUFFER);
 
@@ -14,12 +14,12 @@ export class CrosswordTimerParser extends PacketParser<CrosswordTimerPacket> {
         return BUFFER;
     }
 
-    public parse(data: ArrayBuffer): CrosswordTimerPacket {
+    public parse(data: ArrayBuffer): TimerPacket {
         const VIEW = new DataView(data);
 
         const countdown = VIEW.getInt32(0);
 
-        return new CrosswordTimerPacket(countdown);
+        return new TimerPacket(countdown);
     }
 
 }

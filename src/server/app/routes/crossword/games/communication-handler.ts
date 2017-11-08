@@ -1,4 +1,4 @@
-import '../../../../../common/src/crossword/packets/crossword-timer.parser';
+import '../../../../../common/src/crossword/packets/timer.parser';
 import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';

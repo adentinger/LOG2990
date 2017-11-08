@@ -1,5 +1,5 @@
-import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
-import '../../../../../common/src/crossword/packets/crossword-timer.parser';
+import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
+import '../../../../../common/src/crossword/packets/timer.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
@@ -169,17 +169,17 @@ export class Game {
                 if (player !== null) {
                     logger.log('(game #%s) Timer: %d', this.id, this.countdown);
                     this.packetManager.sendPacket(
-                        CrosswordTimerPacket,
-                        new CrosswordTimerPacket(this.countdown), player.socketId
+                        TimerPacket,
+                        new TimerPacket(this.countdown), player.socketId
                     );
                 }
             });
         }, ONE_SECOND);
     };
 
-    @PacketHandler(CrosswordTimerPacket)
+    @PacketHandler(TimerPacket)
     // tslint:disable-next-line:no-unused-variable
-    private getCheatModeTimerValue(event: PacketEvent<CrosswordTimerPacket>) {
+    private getCheatModeTimerValue(event: PacketEvent<TimerPacket>) {
         this.countdown = event.value.countdown;
     }
 }
