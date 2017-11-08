@@ -8,6 +8,7 @@ import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { Car } from '../car/car';
 
 export class SpeedBooster extends CollidableMesh {
+    private static readonly TEXTURE_URL = '/assets/racing/textures/speed-boost.png';
     private static readonly RADIUS: Meters = 1;
     private static readonly SEGMENTS: number = 4;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
@@ -18,7 +19,7 @@ export class SpeedBooster extends CollidableMesh {
     private static readonly BOOST_INTERVAL = 1000; // ms
     private static readonly TRACK_HEIGHT: Meters = 0.001;
     private static readonly FREQUENCY_SCALING_FACTOR = 1000; // ms / s
-    private static readonly SPEEDBOOSTER_TEXTURE = THREE.ImageUtils.loadTexture('/assets/racing/speed-boost.png');
+    private static readonly SPEEDBOOSTER_TEXTURE = THREE.ImageUtils.loadTexture(SpeedBooster.TEXTURE_URL);
 
     public readonly mass = 0;
     private readonly car: Car;

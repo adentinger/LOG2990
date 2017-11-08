@@ -7,12 +7,15 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
     public static readonly DEFAULT_POSITION = new THREE.Vector3(0, 2, 5);
     public static readonly LOOK_AT_POSITION = new THREE.Vector3(0, 1.3, -3);
 
+    public static readonly CAMERA_NAME = 'racing-camera';
+
     private static readonly WIDTH: number = window.innerWidth;
     private static readonly HEIGHT: number = window.innerHeight;
     private static readonly ASPECT: number = PerspectiveCamera.WIDTH / PerspectiveCamera.HEIGHT;
     private static readonly NEAR: number = 0.05;
     private static readonly FAR: number = 300;
     private static readonly VIEW_ANGLE: number = 45;
+
 
     private target: THREE.Object3D;
     public readonly name: string;
@@ -26,7 +29,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
         );
         this.setupPerspectiveView();
         eventManager.registerClass(this);
-        this.name = 'racing-camera';
+        this.name = PerspectiveCamera.CAMERA_NAME;
     }
 
     public setTarget(object: THREE.Object3D) {
