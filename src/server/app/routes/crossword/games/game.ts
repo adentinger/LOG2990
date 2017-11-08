@@ -50,14 +50,6 @@ export class Game {
         this.initialized =
             this.data.initialize(configs.difficulty).catch((reason) => console.log(reason));
 
-        this.packetManager.registerDisconnectHandler((socketId: string) => {
-            const INDEX = this.players.findIndex((player) => player.socketId === socketId);
-            const FOUND = INDEX >= 0;
-            if (FOUND) {
-                this.players.splice(INDEX, 1);
-            }
-        });
-
         registerHandlers(this, this.packetManager);
     }
 
@@ -103,13 +95,21 @@ export class Game {
         }
     }
 
+    public deletePlayerBySocketid(socketId: string): void {
+        const index =
+            this.players.findIndex((existingPlayer) => existingPlayer.socketId === socketId);
+        const found = index >= 0;
+        if (found) {
+            this.players.splice(index, 1);
+        }
+        else {
+            throw new Error(`Cannot delete player with socket ID ${socketId}: no such player.`);
+        }
+    }
+
     public matchesFilter(filter: GameFilter): boolean {
         return this.configurationInternal.gameMode === filter.mode &&
                this.maxPlayers === filter.playerNumber;
-    }
-
-    public isPlayerInGame(playerId: string): boolean {
-        return this.players.findIndex((player) => player.socketId === playerId) >= 0;
     }
 
     public validateUserAnswer(wordTry: GridWord, socketId: string): void {

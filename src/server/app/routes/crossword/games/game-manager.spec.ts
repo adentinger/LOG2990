@@ -45,19 +45,4 @@ describe('The Game Manager Service', () => {
         done();
     });
 
-    it('should be able to delete a specific game among others', (done) => {
-        const MAX_N = 8;
-
-        const nGames = Math.floor(Math.random() * MAX_N) + 1;
-        const gameIds: number[] = [];
-        for (let i = 0; i < nGames; i++) {
-            gameIds.push(gameManager.newGame(createMockGameConfigs()));
-        }
-        const randomNumberToDelete = Math.floor(Math.random() * gameIds.length);
-        const idToDelete = gameIds[randomNumberToDelete];
-        gameManager.deleteGame(idToDelete);
-        expect(gameManager.getNumberOfActiveGames()).to.equal(nGames - 1);
-        expect(gameManager.getGame(idToDelete)).to.equal(null);
-        done();
-    });
 });

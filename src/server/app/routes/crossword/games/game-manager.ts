@@ -26,6 +26,9 @@ export class GameManager {
 
     private constructor() {
         registerHandlers(this, this.packetManager);
+        this.packetManager.registerDisconnectHandler((socketId: string) => {
+            this.handleDisconnect(socketId);
+        });
     }
 
     public filterPendingGames(filter: GameFilter): Game[] {
@@ -44,6 +47,17 @@ export class GameManager {
         const GAME = new Game(configs);
         this.games.set(GAME.id, GAME);
         return GAME.id;
+    }
+
+    private handleDisconnect(socketId: string): void {
+        this.games.forEach((game, id) => {
+            if (game.isSocketIdInGame(socketId)) {
+                game.deletePlayerBySocketid(socketId);
+                if (game.currentNumberOfPlayers <= 0) {
+                    return this.games.delete(id);
+                }
+            }
+        });
     }
 
     public findGame(predicate: (game: Game) => boolean): Game {
@@ -67,10 +81,6 @@ export class GameManager {
 
     public getNumberOfActiveGames(): number {
         return this.games.size;
-    }
-
-    public deleteGame(id: number): boolean {
-        return this.games.delete(id);
     }
 
     @PacketHandler(GameJoinPacket)
