@@ -2,7 +2,6 @@ import { Grid } from '../grid-generator/grid';
 import { GridBankEasy } from './grid-bank-easy';
 import { GridBankNormal } from './grid-bank-normal';
 import { GridBankHard } from './grid-bank-hard';
-// import { Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 
 export class GridBanks {
 
@@ -21,6 +20,9 @@ export class GridBanks {
         this.gridBankNormal = new GridBankNormal();
         this.gridBankHard = new GridBankHard();
         this.fillup();
+
+        const FILLUP_INTERVAL = 10000;
+        setInterval(() => this.fillup(), FILLUP_INTERVAL);
     }
 
     public async fillup(): Promise<void> {
@@ -29,21 +31,22 @@ export class GridBanks {
         await this.gridBankHard.fillup();
     }
 
-    // public getGrid(difficulty: Difficulty) {
-    //     const functions = [this.gridBankEasy, this.gridBankNormal, this.gridBankHard];
-    //     return functions[difficulty];
-    // }
-
     public getEasyGrid(): Promise<Grid> {
-        return this.gridBankEasy.getGrid();
+        const PROMISE = this.gridBankEasy.getGrid();
+        this.fillup();
+        return PROMISE;
     }
 
     public getNormalGrid(): Promise<Grid> {
-        return this.gridBankNormal.getGrid();
+        const PROMISE = this.gridBankNormal.getGrid();
+        this.fillup();
+        return PROMISE;
     }
 
     public getHardGrid(): Promise<Grid> {
-        return this.gridBankHard.getGrid();
+        const PROMISE = this.gridBankHard.getGrid();
+        this.fillup();
+        return PROMISE;
     }
 
 }
