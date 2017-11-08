@@ -33,6 +33,10 @@ export class GridService {
         });
     }
 
+    public get words(): GridWord[] {
+        return this.GRID.words;
+    }
+
     public getCharAt(row: number, column: number): string {
         return this.GRID.getCharAt(row, column);
     }

@@ -24,6 +24,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
+    private foundWords: GridWord[];
     private highlightGrid = new HighlightGrid();
     private selectionSubscription: Subscription;
 
@@ -50,7 +51,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     private onSelect(selected: SelectedGridWord): void {
-        this.highlightGrid = new HighlightGrid(selected);
+        this.highlightGrid = new HighlightGrid(selected, this.gridService.words);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
@@ -67,6 +68,10 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     public isHighlighted(row: number, column: number): WhoIsSelecting {
         return this.highlightGrid.isSelected(row, column);
+    }
+
+    public isFilled(row: number, column: number): WhoIsSelecting {
+        return this.highlightGrid.hasBeenFound(row, column);
     }
 
     private makeWordFromInput(input: string): GridWord {
