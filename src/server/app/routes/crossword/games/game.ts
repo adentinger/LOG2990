@@ -17,6 +17,7 @@ import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
+import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
 
 const logger = Logger.getLogger('CrosswordGame');
 
@@ -81,12 +82,17 @@ export class Game {
 
     public addPlayer(player: Player): PlayerNumber {
         if (this.players.length < this.maxPlayers) {
+            this.notifyArrival(player);
+
+            // Actually add player
             this.players.push(player);
             this.initialized.then(() => {
                 this.communicationHandler.clearPlayerGrid(player.socketId);
                 this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.emptyWords);
                 this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
             }).catch((reason) => console.log(reason));
+
+            // Start game if max players reached.
             if (this.players.length === this.maxPlayers) {
                 this.start();
             }
@@ -118,6 +124,21 @@ export class Game {
         if (FOUND) {
             this.sendWordFound(wordTry, socketId);
         }
+    }
+
+    private notifyArrival(player: Player): void {
+        this.players.forEach((existingPlayer) => {
+            this.packetManager.sendPacket(
+                GameJoinPacket,
+                new GameJoinPacket(this.id, player.name),
+                existingPlayer.socketId
+            );
+            this.packetManager.sendPacket(
+                GameJoinPacket,
+                new GameJoinPacket(this.id, existingPlayer.name),
+                player.socketId
+            );
+        });
     }
 
     private sendWordFound(foundWord: GridWord, finderId: string): void {
