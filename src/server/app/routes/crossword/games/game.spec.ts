@@ -3,6 +3,7 @@ import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from './player';
+import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
@@ -57,6 +58,32 @@ describe('The Crossword Game', () => {
             GAME2PLAYERS.addPlayer(PLAYER2);
             expect(() => GAME2PLAYERS.addPlayer(new Player('PASCAL LACASSE', '123c'))).to.throw;
         });
+    });
+
+    describe('matchesFilter', () => {
+
+        it('should return that a game matches a filter if it does', () => {
+            const FILTER = new GameFilter(GameMode.Classic, 2);
+            const game = new Game({
+                difficulty: Difficulty.easy,
+                gameMode: GameMode.Classic,
+                playerNumber: 2
+            });
+            expect(game.matchesFilter(FILTER)).to.be.true;
+        });
+
+        it('should return that a game does not match a filter when it does not', () => {
+            const game = new Game({
+                difficulty: Difficulty.easy,
+                gameMode: GameMode.Classic,
+                playerNumber: 2
+            });
+            const FILTER1 = new GameFilter(GameMode.Classic, 1);
+            const FILTER2 = new GameFilter(GameMode.Dynamic, 2);
+            expect(game.matchesFilter(FILTER1)).to.be.false;
+            expect(game.matchesFilter(FILTER2)).to.be.false;
+        });
+
     });
 
     it('should tell whether a certain player is in the game', () => {
