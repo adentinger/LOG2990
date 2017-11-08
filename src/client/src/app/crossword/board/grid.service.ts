@@ -89,6 +89,16 @@ export class GridService {
         if (isWordSelected) {
             this.selectionService.selection.next(SelectionService.NO_SELECTION);
         }
+        if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.GRID.numberOfWords) {
+            let message: string;
+            if (this.getPlayerWordsFoundCount() > this.getOpponentWordsFoundCount()) {
+                message = 'Congratulations ; you win!';
+            }
+            else {
+                message = 'Congratulations ; you (almost) won!';
+            }
+            alert(message);
+        }
         this.onChange();
     }
 

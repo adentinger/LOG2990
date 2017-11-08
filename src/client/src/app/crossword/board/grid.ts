@@ -16,6 +16,10 @@ export class Grid {
 
     private words: GridWord[] = [];
 
+    public get numberOfWords(): number {
+        return this.words.length;
+    }
+
     constructor(words: GridWord[] = []) {
         this.words = words.slice();
         this.userInputInternal = Grid.NO_USER_INPUT;
