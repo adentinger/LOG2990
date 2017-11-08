@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { RacingGameService } from '../racing-game.service';
 import { Seconds } from '../../types';
+import { GameInfo } from '../game-info';
 
 export interface Time {
     milliseconds: number;
@@ -60,7 +60,7 @@ export class HUD {
         this.domElementInternal.setAttribute('height', height.toString());
     }
 
-    public render(game: RacingGameService): void {
+    public render(game: GameInfo): void {
         const width = this.domElement.width, height = this.domElement.height;
 
         this.context.clearRect(0, 0, width, height);
@@ -73,7 +73,7 @@ export class HUD {
         this.drawRacePosition(this.context, game);
     }
 
-    private drawLapCount(context: CanvasRenderingContext2D, game: RacingGameService): void {
+    private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
         const height = context.canvas.height, width = context.canvas.width;
 
         const size = new THREE.Vector2(width, height);
@@ -83,7 +83,7 @@ export class HUD {
             textPosition.x, textPosition.y);
     }
 
-    private drawLapTime(context: CanvasRenderingContext2D, game: RacingGameService): void {
+    private drawLapTime(context: CanvasRenderingContext2D, game: GameInfo): void {
         const height = context.canvas.height, width = context.canvas.width;
 
         const size = new THREE.Vector2(width, height);
@@ -95,7 +95,7 @@ export class HUD {
             textPosition.x, textPosition.y);
     }
 
-    private drawGameTime(context: CanvasRenderingContext2D, game: RacingGameService): void {
+    private drawGameTime(context: CanvasRenderingContext2D, game: GameInfo): void {
         const height = context.canvas.height, width = context.canvas.width;
 
         const size = new THREE.Vector2(width, height);
@@ -107,14 +107,13 @@ export class HUD {
             textPosition.x, textPosition.y);
     }
 
-    private drawRacePosition(context: CanvasRenderingContext2D, game: RacingGameService): void {
+    private drawRacePosition(context: CanvasRenderingContext2D, game: GameInfo): void {
         const height = context.canvas.height, width = context.canvas.width;
 
         const size = new THREE.Vector2(width, height);
         const textPosition = HUD.RACE_PLACE_POSITION.clone().multiply(size);
 
-        const gameCars = game.getCars();
-        const position = game.positions.findIndex((car) => car === gameCars[RacingGameService.CONTROLLABLE_CAR_IDX]) + 1;
+        const position = game.positions.findIndex((car) => car === game.controlledCar) + 1;
         const suffix = position > 3 ? 'th' : ( position === 3 ? 'rd' : (position === 1 ? 'nd' : 'st'));
 
         const text = `${position}${suffix}`;
@@ -139,7 +138,7 @@ export class HUD {
     private formatTime(time: Time): string {
         return (time.hours > 0 ? HUD.getFormatedNumber(time.hours, 2) + 'h ' : '') +
             HUD.getFormatedNumber(time.minutes, 2) + '\' ' +
-            HUD.getFormatedNumber(time.seconds, 2) + '"' +
-            HUD.getFormatedNumber(time.milliseconds / 10, 2);
+            HUD.getFormatedNumber(time.seconds, 2) + '.' +
+            HUD.getFormatedNumber(time.milliseconds / 10, 2) + '"';
     }
 }

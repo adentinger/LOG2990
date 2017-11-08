@@ -12,16 +12,19 @@ import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
 import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
+import { RacetrackSegment } from './models/racetrack/racetrack-segment';
+import { RacetrackJunction } from './models/racetrack/racetrack-junction';
 import { BoostBox } from './physic/examples/boost-box';
 import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 import { Seconds } from '../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { GameInfo } from './game-info';
 
 @Injectable()
 export class RacingGameService {
-    public static readonly CONTROLLABLE_CAR_IDX = 2;
-    private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional1();
+    public static readonly CONTROLLABLE_CAR_IDX = 1;
+    private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional2();
 
     public readonly renderer: RacingRenderer;
     private readonly cars: Car[] = [
@@ -39,6 +42,11 @@ export class RacingGameService {
     private lapTimesInternal = new Array(this.maxLap).fill(0);
 
     private map: RenderableMap;
+
+    public get controlledCar(): Car {
+        return this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
+    }
+
     public get lap(): number {
         // Mocked
         return 1;
@@ -54,7 +62,7 @@ export class RacingGameService {
         return this.cars;
     }
 
-    public get lapTimes(): number[] {
+    public get lapTimes(): Seconds[] {
         this.lapTimesInternal[this.lap - 1] = Date.now() / 1000 - this.startTime;
         return this.lapTimesInternal;
     }
@@ -85,14 +93,6 @@ export class RacingGameService {
         const userCar = this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
         userCar.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCar);
-
-        const position = new THREE.Vector3();
-        const POSITION_INCREMENT = new THREE.Vector3(2, 0, 0);
-        this.cars.forEach((car) => {
-            car.position.copy(position);
-            position.add(POSITION_INCREMENT);
-            car.rotation.set(0, 0, 0);
-        });
         this.reloadSounds();
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
@@ -140,7 +140,7 @@ export class RacingGameService {
         this.physicEngine.initialize(this.map);
         this.renderer.addMap(this.map);
 
-        this.map.add(...this.cars);
+        this.map.addCars(...this.cars);
         this.map.add(...this.boxes);
         return Promise.all([this.map.waitToLoad]).then(() => {});
     }

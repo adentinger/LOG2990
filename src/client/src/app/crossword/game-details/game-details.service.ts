@@ -6,6 +6,7 @@ import '../../../../../common/src/crossword/packets/crossword-timer.parser';
 
 @Injectable()
 export class GameDetailsService {
+
     public countdown = 0;
 
     // tslint:disable-next-line:no-unused-variable

@@ -40,7 +40,7 @@ elif [ $1 = "test" ]; then
 elif [ $1 = "update" ]; then
     cd ./common/
     npm install
-	cd ./server/
+	cd ../server/
 	npm install&
 	cd ../client/
 	npm install&

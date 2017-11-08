@@ -1,0 +1,10 @@
+<div *ngIf="shouldDisplay">
+  <h3>Available games:</h3>
+  <table>
+    <tr><th>ID</th><th>Mode</th><th>Difficulty</th></tr>
+    <ng-container *ngFor="let game of games; let i = index">
+      <tr [ngClass]="{selected: isSelected(i)}"
+        (click)="choose(i)"><td>{{game.id}}</td><td>{{game.mode}}</td><td>{{game.difficulty}}</td></tr>
+    </ng-container>
+  </table>
+</div>

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BoardComponent } from './board.component';
 import { CrosswordTileComponent } from './crossword-tile/crossword-tile.component';
-import { CrosswordGameService } from '../crossword-game.service';
+import { GameService } from '../game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { CrosswordGridService } from './crossword-grid.service';
@@ -17,7 +17,7 @@ describe('BoardComponent', () => {
         TestBed.configureTestingModule({
             declarations: [BoardComponent, CrosswordTileComponent],
             providers: [
-                CrosswordGameService,
+                GameService,
                 {provide: PacketManagerClient, useValue: packetManagerClient},
                 DefinitionsService,
                 CrosswordGridService,

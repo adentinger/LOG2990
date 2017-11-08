@@ -2,9 +2,9 @@ import { PacketParser } from '../../communication/packet-api';
 import { Parser, SIZE_UINT32 } from '../../communication/packet-api/packet-handler';
 import { CrosswordTimerPacket } from './crossword-timer.packet';
 
-
 @Parser(CrosswordTimerPacket)
-export class GameJoinParser extends PacketParser<CrosswordTimerPacket> {
+export class CrosswordTimerParser extends PacketParser<CrosswordTimerPacket> {
+
     public serialize(value: CrosswordTimerPacket): ArrayBuffer {
         const BUFFER: ArrayBuffer = new ArrayBuffer(1 * SIZE_UINT32);
         const DATA = new DataView(BUFFER);
@@ -21,4 +21,5 @@ export class GameJoinParser extends PacketParser<CrosswordTimerPacket> {
 
         return new CrosswordTimerPacket(countdown);
     }
+
 }

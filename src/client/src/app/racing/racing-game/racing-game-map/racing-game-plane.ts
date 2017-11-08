@@ -4,7 +4,7 @@ import { PhysicMesh } from '../physic/object';
 
 export class RacingGamePlane extends PhysicMesh {
     private static readonly GRASS_URL = '/assets/racing/textures/grass.png';
-    private static readonly textureLoader = new THREE.TextureLoader();
+    private static readonly TEXTURE_LOADER = new THREE.TextureLoader();
     private static readonly GRASS_TEXTURE_PROMISE = RacingGamePlane.loadTexture(RacingGamePlane.GRASS_URL);
 
     public readonly velocity = new THREE.Vector3();
@@ -12,7 +12,7 @@ export class RacingGamePlane extends PhysicMesh {
 
     private static loadTexture(url: string): Promise<THREE.Texture> {
         return new Promise<THREE.Texture>((resolve, reject) => {
-            const texture = RacingGamePlane.textureLoader.load(RacingGamePlane.GRASS_URL,
+            const texture = RacingGamePlane.TEXTURE_LOADER.load(url,
                 () => resolve(texture),
                 () => {},
                 reject

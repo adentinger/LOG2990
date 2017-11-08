@@ -1,13 +1,15 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { CrosswordGridService } from './crossword-grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
 
 import '../../../../../common/src/crossword/packets/word-try.parser';
-import { HighlightGrid } from './crossword-tile/highlight-grid';
+import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
 import { Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { SelectedGridWord } from './selected-grid-word';
+import { Logger } from '../../../../../common/src/logger';
 
 @Component({
     selector: 'app-board',
@@ -18,13 +20,18 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     public readonly DIMENSIONS = Array(Grid.DIMENSIONS);
 
+    public readonly logger = Logger.getLogger('BoardComponent');
+
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
     private highlightGrid = new HighlightGrid();
     private selectionSubscription: Subscription;
 
     constructor(private crosswordGridService: CrosswordGridService,
-                private selectionService: SelectionService) {
+                private selectionService: SelectionService,
+                private ngZone: NgZone) {
+        this.crosswordGridService.
+            addOnChangeCallback(() => this.ngZone.run(() => {}));
     }
 
     public ngOnInit(): void {
@@ -42,7 +49,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         return this.crosswordGridService.getCharAt(row, column);
     }
 
-    private onSelect(selected: GridWord): void {
+    private onSelect(selected: SelectedGridWord): void {
         this.highlightGrid = new HighlightGrid(selected);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
@@ -56,7 +63,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.crosswordGridService.setUserInput(USER_WORD);
     }
 
-    public isHighlighted(row: number, column: number): boolean {
+    public isHighlighted(row: number, column: number): WhoIsSelecting {
         return this.highlightGrid.isSelected(row, column);
     }
 
@@ -64,7 +71,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         input = input.replace(/[^a-zA-Z]/g, '');
         input = input.toLowerCase();
 
-        const SELECTED_WORD = this.selectionService.selectionValue;
+        const SELECTED_WORD = this.selectionService.selectionValue.playerSelection;
         if (input.length > SELECTED_WORD.length) {
             input = input.substr(0, SELECTED_WORD.length);
         }
