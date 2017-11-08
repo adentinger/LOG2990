@@ -15,6 +15,7 @@ import { RacetrackSegment } from './three-objects/racetrack/racetrack-segment';
 import { RacetrackJunction } from './three-objects/racetrack/racetrack-junction';
 import { BoostBox } from './physic/examples/boost-box';
 import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
+import { Seconds } from '../types';
 
 @Injectable()
 export class RacingGameService {
@@ -22,7 +23,7 @@ export class RacingGameService {
     private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional2();
 
     public readonly renderer: RacingRenderer;
-    private dayMode: DayMode = DayMode.DAY;
+    private dayModeInternal: DayMode = DayMode.DAY;
     private cars: Car[] = [
         new Car(new THREE.Color('green')),
         new Car(new THREE.Color('yellow')),
@@ -32,32 +33,64 @@ export class RacingGameService {
     private readonly boxes;
 
     private map: RenderableMap;
+    public get lap(): number {
+        // Mocked
+        return 1;
+    }
+
+    public get maxLap(): number {
+        // Mocked
+        return 3;
+    }
+
+    public get positions(): Car[] {
+        // Mocked
+        return this.cars;
+    }
+
+    public get lapTimes(): number[] {
+        // Mocked
+        return [].fill(0, 0, this.maxLap);
+    }
+
+    public get totalTime(): Seconds {
+        // Mocked
+        return 0;
+    }
+
+    public get dayMode(): DayMode {
+        return this.dayModeInternal;
+    }
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         eventManager: EventManager) {
-        this.renderer = new RacingRenderer(eventManager);
+        this.renderer = new RacingRenderer(eventManager, this);
         this.boxes = [
             new BoostBox(eventManager).translateZ(-3),
             new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10)
         ];
     }
 
-    public initialise(container: HTMLDivElement, userInputs: UIInputs): void {
-        this.renderer.initialize(container);
+    public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
+        this.renderer.initialize(container, hudCanvas);
 
         const userCar = this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
         userCar.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCar);
-
+        this.reloadSounds();
         this.physicEngine.start();
         this.renderer.startRendering();
-        this.renderer.updateDayMode(this.dayMode);
+        this.renderer.updateDayMode(this.dayModeInternal);
     }
 
     public finalize() {
         this.physicEngine.stop();
         this.renderer.stopRendering();
+        this.cars.forEach(car => {
+            car.stopSounds();
+            car.removeUIInput();
+        });
 
         this.renderer.finalize();
     }
@@ -87,15 +120,22 @@ export class RacingGameService {
         this.renderer.updateSize(width, height);
     }
 
+    public reloadSounds() {
+        this.cars.forEach(car => {
+            car.stopSounds();
+            car.startSounds();
+        });
+    }
+
     public changeDayMode(): void {
         let newMode: DayMode;
-        switch (this.dayMode) {
+        switch (this.dayModeInternal) {
             case DayMode.DAY: newMode = DayMode.NIGHT; break;
             case DayMode.NIGHT: newMode = DayMode.DAY; break;
             default: break;
         }
-        this.dayMode = newMode;
-        this.renderer.updateDayMode(this.dayMode);
+        this.dayModeInternal = newMode;
+        this.renderer.updateDayMode(this.dayModeInternal);
     }
 
 }

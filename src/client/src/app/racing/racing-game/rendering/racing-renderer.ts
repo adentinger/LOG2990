@@ -7,6 +7,8 @@ import { DayMode, DayModeManager } from '../day-mode/day-mode-manager';
 import { EventManager } from '../../../event-manager.service';
 import { Lighting } from '../models/lighting/lighting';
 import { RenderableMap } from '../racing-game-map/renderable-map';
+import { HeadUpDisplay } from './hud';
+import { RacingGameService } from '../racing-game.service';
 
 export type CameraId = 0 | 1;
 
@@ -23,11 +25,13 @@ export class RacingRenderer extends THREE.WebGLRenderer {
     private animationRequestId = -1;
     private isRendering = false;
 
-    public currentCamera: CameraId = 0;
-
     private readonly dayModeManager = new DayModeManager();
 
-    constructor(eventManager: EventManager) {
+    private readonly hud = new HeadUpDisplay();
+
+    public currentCamera: CameraId = 0;
+
+    constructor(eventManager: EventManager, private game: RacingGameService) {
         super({ antialias: true });
         this.shadowMap.enabled = false;
         this.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -38,15 +42,17 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.cameras[0].add(this.skybox);
     }
 
-    public initialize(container: HTMLDivElement) {
+    public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement) {
         this.canvasContainer = container;
         this.canvasContainer.appendChild(this.domElement);
+        this.hud.initialize(hudCanvas);
 
         this.scene.add(this.lighting);
         this.scene.add(RacingRenderer.AXIS_HELPER);
     }
 
     public finalize() {
+        this.hud.finalize();
         this.canvasContainer.removeChild(this.domElement);
 
         // Remove all children to be ready for the next game.
@@ -80,6 +86,8 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.setScissorTest(true);
         this.cameras[1].updatePosition();
 
+        this.clear(true, true, true);
+
         this.setViewport(0, 0, screenSize.width, screenSize.height);
         this.setScissor(0, 0, screenSize.width, screenSize.height);
         this.render(this.scene, this.cameras[this.currentCamera]);
@@ -89,6 +97,8 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
             screenSize.width * 0.20, screenSize.height * 0.20);
         this.render(this.scene, this.cameras[+!this.currentCamera]);
+
+        this.hud.render(this.game);
     }
 
     public setCamerasTarget(target: THREE.Object3D): void {
@@ -102,6 +112,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     public updateSize(width: number, height: number) {
         this.setSize(width, height);
+        this.hud.setSize(width, height);
 
         this.cameras[0].aspect = width / height;
         this.cameras[0].updateProjectionMatrix();

@@ -47,10 +47,8 @@ export class RenderableMap extends PhysicMesh {
         this.add(this.PLANE);
     }
 
-
     public addCars(...cars: Car[]) {
         // Place cars on starting line
-
         const angleOfFirstSegment: Radians = -new THREE.Vector2(this.mapPoints[1].x - this.mapPoints[0].x,
             this.mapPoints[1].y - this.mapPoints[0].y).angle() - Math.PI / 2;
 
@@ -71,7 +69,6 @@ export class RenderableMap extends PhysicMesh {
 
     private placeJunctionsOnMap() {
         for (const i of this.mapPoints) {
-            console.log('point - x=' + i.x + ' y=' + i.y);
             const junction = new RacetrackJunction();
             junction.position.add(new THREE.Vector3(i.x, 0, i.y));
             this.add(junction);
@@ -111,5 +108,4 @@ export class RenderableMap extends PhysicMesh {
 
         return segment;
     }
-
 }

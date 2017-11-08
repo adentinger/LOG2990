@@ -12,9 +12,9 @@ const KEY_LEFT = 'a';
 const FRONT = new THREE.Vector3(0, 0, -1);
 
 const POWER_STEERING_FACTOR = 0.6;
-const MIN_SPEED = 0.001;
 
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
+    public static readonly MIN_SPEED = 0.001;
     protected userInputs: UIInputs;
 
     protected friction: Newtons = 15;
@@ -58,6 +58,14 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         this.userInputs = userInputService;
     }
 
+    public removeUIInput(): void {
+        delete this.userInputs;
+    }
+
+    public hasUIInput(): boolean {
+        return this.userInputs != null;
+    }
+
     private applyUserInputs(deltaTime: Seconds) {
         if (this.userInputs != null) {
             const angularAccelerationDirection = this.getAngularAccelerationDirection();
@@ -69,7 +77,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
 
             let speed = this.velocity.length();
-            speed = speed === 0 ? MIN_SPEED : this.velocity.length();
+            speed = speed === 0 ? UserControllableCollidableMesh.MIN_SPEED : this.velocity.length();
             const powerSteering = POWER_STEERING_FACTOR / speed;
             const rotationRestriction = this.velocity.dot(this.front) * powerSteering;
             this.rotation.y = (this.rotation.y + (rotationRestriction * this.angularVelocity.y * deltaTime) +
