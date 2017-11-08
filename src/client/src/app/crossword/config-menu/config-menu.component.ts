@@ -13,8 +13,7 @@ import { WaitingService } from './waiting/waiting.service';
     styleUrls: ['./config-menu.component.css'],
     providers: [
         MenuAutomatonService,
-        WaitingService,
-        UserChoiceService
+        WaitingService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {

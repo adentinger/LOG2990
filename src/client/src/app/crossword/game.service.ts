@@ -7,6 +7,7 @@ import '../../../../common/src/crossword/packets/game-join.parser';
 import { Subject } from 'rxjs/Subject';
 import { GameId } from '../../../../common/src/communication/game-configs';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
+import { UserChoiceService } from './config-menu/user-choice.service';
 
 export enum GameState {
     configuring,
@@ -44,7 +45,8 @@ export class GameService {
         return this.opponentNameInternal;
     }
 
-    public constructor(private packetManager: PacketManagerClient) {
+    constructor(private packetManager: PacketManagerClient,
+                private userChoiceService: UserChoiceService) {
         this.onShowWordsInternal.subscribe((value) => {
             this.isShowWordsOnInternal = value;
         });

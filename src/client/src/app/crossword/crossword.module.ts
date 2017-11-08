@@ -21,6 +21,7 @@ import { AvailableGamesComponent } from './config-menu/available-games/available
 import { WaitingComponent } from './config-menu/waiting/waiting.component';
 import { ConfirmationComponent } from './config-menu/confirmation/confirmation.component';
 import { GameService } from './game.service';
+import { UserChoiceService } from './config-menu/user-choice.service';
 
 @NgModule({
     imports: [
@@ -49,7 +50,8 @@ import { GameService } from './game.service';
         GridService,
         GameDetailsService,
         SelectionService,
-        GameService
+        GameService,
+        UserChoiceService
     ],
     exports: [
         CrosswordComponent
