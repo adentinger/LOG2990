@@ -3,6 +3,9 @@ $crossword-item-size: 50px;
 $color-valid-item: #76C84B;
 $color-focus-item: #EDFF71;
 
+$color-player: rgba(0, 47, 255, 0.5);
+$color-opponent: rgba(255, 0, 0, 0.5);
+
 .crossword-board-item {
 	background: transparent;
 	position: relative;
@@ -25,42 +28,42 @@ $color-focus-item: #EDFF71;
 }
 
 .playerFilled {
-	background-color: rgb(0, 47, 255);
+	background-color: $color-player;
 }
 
 .opponentFilled {
-	background-color: rgb(255, 0, 0);
+	background-color: $color-opponent;
 }
 
 .bothFilled {
 	background: repeating-linear-gradient(
 		45deg,
-		rgb(255, 0, 0),
-		rgb(255, 0, 0) 10px,
-		rgb(0, 47, 255) 10px,
-		rgb(0, 47, 255) 20px
+		$color-opponent,
+		$color-opponent 10px,
+		$color-player 10px,
+		$color-player 20px
 	  );
 }
 
 .playerHighlighted {
-	border: 2px solid rgb(0, 47, 255); //lightblue
+	border: 2px solid $color-player; //lightblue
 }
 
 .opponentHighlighted {
-	border: 2px solid rgb(255, 0, 0); //red
+	border: 2px solid $color-opponent; //red
 }
 
 .bothHighlighted {
-	border: repeating-linear-gradient(
+	border: 2px solid repeating-linear-gradient(
 		45deg,
-		rgb(255, 0, 0),
-		rgb(255, 0, 0) 10px,
-		rgb(0, 47, 255) 10px,
-		rgb(0, 47, 255) 20px
-	  );
+		$color-opponent,
+		$color-opponent 10px,
+		$color-player 10px,
+		$color-player 20px
+	);
 }
 
 .black-square {
-	background: black;
+	background: rgba(0, 0, 0, 0.8);
 	color: transparent;
 }
