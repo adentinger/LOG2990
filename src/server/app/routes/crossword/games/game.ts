@@ -98,7 +98,8 @@ export class Game {
     }
 
     public matchesFilter(filter: GameFilter): boolean {
-        return false;
+        return this.configurationInternal.gameMode === filter.mode &&
+               this.maxPlayers === filter.playerNumber;
     }
 
     public isPlayerInGame(playerId: string): boolean {
