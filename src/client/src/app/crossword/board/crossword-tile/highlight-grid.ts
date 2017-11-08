@@ -1,6 +1,6 @@
 import { GridWord } from '../../../../../../common/src/crossword/grid-word';
 import { Grid } from '../../../../../../common/src/grid';
-import { Direction } from '../../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../../common/src/crossword/crossword-enums';
 import { SelectedGridWord } from '../selected-grid-word';
 
 export enum WhoIsSelecting {
@@ -17,21 +17,36 @@ export enum WhoIsSelecting {
 export class HighlightGrid {
 
     private data: WhoIsSelecting[][] = [];
+    private wordsFound: WhoIsSelecting[][] = [];
 
-    constructor(selection: SelectedGridWord = { playerSelection: null, opponentSelection: null }) {
+    constructor(selection: SelectedGridWord = { playerSelection: null, opponentSelection: null }, words: GridWord[] = []) {
         const DATA = [];
+        const found = [];
         for (let row = 0; row < Grid.DIMENSIONS; ++row) {
             const ROW_DATA = [];
+            const rowFound = [];
             for (let column = 0; column < Grid.DIMENSIONS; ++column) {
                 ROW_DATA.push(this.shouldBeSelected(row, column, selection));
+                for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
+                    if (this.isFilled(row, column, words[wordIndex]) !== WhoIsSelecting.noOne) {
+                        rowFound.push(this.isFilled(row, column, words[wordIndex]));
+                    }
+                }
             }
             DATA.push(ROW_DATA);
+            found.push(rowFound);
         }
         this.data = DATA;
+        this.wordsFound = found;
+        console.log(this.wordsFound);
     }
 
     public isSelected(row: number, column: number): WhoIsSelecting {
         return this.data[row][column];
+    }
+
+    public hasBeenFound(row: number, column: number): WhoIsSelecting {
+        return this.wordsFound[row][column];
     }
 
     private shouldBeSelected(row: number, column: number, word: SelectedGridWord): WhoIsSelecting {
@@ -68,4 +83,18 @@ export class HighlightGrid {
         }
         return shouldBeSelected;
     }
+
+    private isFilled(row: number, column: number, word: GridWord): WhoIsSelecting {
+        let wordBelongsTo: WhoIsSelecting = WhoIsSelecting.noOne;
+
+        if (word.owner === Owner.player1) {
+            wordBelongsTo = this.isHighlighted(row, column, word, WhoIsSelecting.player);
+        }
+        else if (word.owner === Owner.player2) {
+            wordBelongsTo = this.isHighlighted(row, column, word, WhoIsSelecting.opponent);
+        }
+
+        return wordBelongsTo;
+    }
+
 }

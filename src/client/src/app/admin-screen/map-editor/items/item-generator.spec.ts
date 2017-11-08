@@ -1,9 +1,9 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { ItemGenerator } from './item-generator';
-import { MockMaps } from './mock-maps';
-import { Pothole } from './pothole';
-import { SpeedBoost } from './speed-boost';
-import { Point } from '../../../../../common/src/math/point';
+import { MockMaps } from '../mock-maps';
+import { Pothole } from '../pothole';
+import { SpeedBoost } from '../speed-boost';
+import { Point } from '../../../../../../common/src/math/point';
 
 describe('Item generator', () => {
 

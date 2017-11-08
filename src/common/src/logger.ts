@@ -1,4 +1,4 @@
-import { getCallers } from './utils';
+import { context, getCallers } from './utils';
 
 export enum Level {
     ALL,
@@ -12,13 +12,9 @@ export enum Level {
 
 const DEFAULT_NAME = '<Anonymous>';
 
-// declare const process: { env: any };
-declare var global: any;
-eval.call(null, 'var global = global || this || window;');
-
-const SYSTEM_LEVEL = 'process' in global ?
-    typeof global['process'].env['LOG_LEVEL'] === 'string' && global['process'].env['LOG_LEVEL'].toUpperCase() in Level ?
-        Level[global['process'].env['LOG_LEVEL'].toUpperCase()] : Level.IMPORTANT
+const SYSTEM_LEVEL = 'process' in context ?
+    typeof context['process'].env['LOG_LEVEL'] === 'string' && context['process'].env['LOG_LEVEL'].toUpperCase() in Level ?
+        Level[context['process'].env['LOG_LEVEL'].toUpperCase()] : Level.IMPORTANT
     : Level.ALL;
 
 export class Logger {
@@ -115,4 +111,4 @@ export namespace Logger {
     }
 }
 
-Logger.getLogger().log('Current platform: %s', 'process' in global ? global['process'].platform : 'browser');
+Logger.getLogger().log('Current platform: %s', 'process' in context ? context['process'].platform : 'browser');

@@ -2,7 +2,7 @@ import { Drawable } from './drawable';
 import { Point } from '../../../../../../common/src/math/point';
 import { Pothole } from '../pothole';
 import { NormalPothole } from './normal-pothole';
-import { ItemGenerator } from '../item-generator';
+import { ItemGenerator } from '../items/item-generator';
 import { MapEditorService } from '../map-editor.service';
 import { SpeedBoost } from '../speed-boost';
 import { NormalSpeedBoost } from './normal-speed-boost';

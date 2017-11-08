@@ -6,10 +6,9 @@ import { SerializedPuddle } from '../../../../../../common/src/racing/serialized
 import { SerializedSpeedBoost } from '../../../../../../common/src/racing/serialized-speed-boost';
 import { PhysicMesh } from '../physic/object';
 import { RacingGamePlane } from './racing-game-plane';
-import { RacetrackSegment } from '../three-objects/racetrack/racetrack-segment';
-import { RacetrackJunction } from '../three-objects/racetrack/racetrack-junction';
+import { RacetrackSegment } from '../models/racetrack/racetrack-segment';
+import { RacetrackJunction } from '../models/racetrack/racetrack-junction';
 import { Track } from '../../track';
-import { Vector } from '../../../../../../common/src/math/vector';
 import { Car } from '../models/car/car';
 import { Radians } from '../../types';
 
@@ -21,7 +20,8 @@ export class RenderableMap extends PhysicMesh {
     public mapPuddles: SerializedPuddle[];
     public mapSpeedBoosts: SerializedSpeedBoost[];
 
-    public PLANE: RacingGamePlane;
+    private readonly plane: RacingGamePlane;
+    public readonly waitToLoad: Promise<void>;
 
     constructor(map: SerializedMap) {
         super();
@@ -32,19 +32,14 @@ export class RenderableMap extends PhysicMesh {
         this.mapPuddles = map.puddles;
         this.mapSpeedBoosts = map.speedBoosts;
 
-        this.PLANE = new RacingGamePlane();
-        const wireframePlane = new RacingGamePlane();
-        (<THREE.MeshBasicMaterial>wireframePlane.material).wireframe = true;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).map = null;
-        (<THREE.MeshBasicMaterial>wireframePlane.material).color = new THREE.Color(0xffffff);
-        wireframePlane.rotation.set(0, 0, 0);
-        this.PLANE.add(wireframePlane);
-        this.PLANE.position.set(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2);
+        this.plane = new RacingGamePlane();
+        this.plane.position.set(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2);
+        this.add(this.plane);
 
-        this.placeJunctionsOnMap();
-        this.placeSegmentsOnMap();
+        const waitForJunctions = this.placeJunctionsOnMap();
+        const waitForSegments = this.placeSegmentsOnMap();
 
-        this.add(this.PLANE);
+        this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
     }
 
     public addCars(...cars: Car[]) {
@@ -67,15 +62,19 @@ export class RenderableMap extends PhysicMesh {
         this.add(...cars);
     }
 
-    private placeJunctionsOnMap() {
+    private placeJunctionsOnMap(): Promise<void> {
+        const waitforJunctions: Promise<void>[] = [];
         for (const i of this.mapPoints) {
             const junction = new RacetrackJunction();
             junction.position.add(new THREE.Vector3(i.x, 0, i.y));
             this.add(junction);
+            waitforJunctions.push(junction.waitToLoad);
         }
+        return Promise.all(waitforJunctions).then(() => {});
     }
 
-    private placeSegmentsOnMap() {
+    private placeSegmentsOnMap(): Promise<void> {
+        const waitForSegments: Promise<void>[] = [];
         for (let i = 0; i < this.mapPoints.length; i++) {
             const nextPoint = (i + 1) % this.mapPoints.length;
             const point1 = new THREE.Vector2(this.mapPoints[i].x, this.mapPoints[i].y);
@@ -87,7 +86,9 @@ export class RenderableMap extends PhysicMesh {
             const xyTranslation = this.getSegmentXandYTranslation(angle, segmentLength);
             segment = this.translateSegmentInXandYWithExpectedOrientation(segment, angle, xyTranslation.x, xyTranslation.y, i);
             this.add(segment);
+            waitForSegments.push(segment.waitToLoad);
         }
+        return Promise.all(waitForSegments).then(() => {});
     }
 
     private angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {

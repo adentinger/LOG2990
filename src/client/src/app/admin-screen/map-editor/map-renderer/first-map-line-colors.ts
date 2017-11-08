@@ -6,8 +6,8 @@ const LINE_EXTENTION_COLOR = '#888';
 
 export class FirstMapLineColors extends AbstractMapLineColors {
 
-    private line1: string;
-    private line2: string;
+    public readonly line1: string;
+    public readonly line2: string;
 
     constructor() {
         super(LINE_EXTENTION_COLOR);

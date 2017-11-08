@@ -1,7 +1,7 @@
 <input #caseInput type='text' 
   class='crossword-board-item' 
   disabled
-  [ngClass]='{noneHighlighted: this.highlighted === WhoIsSelecting.noOne, playerHighlighted: this.highlighted === WhoIsSelecting.player, opponentHighlighted: this.highlighted === WhoIsSelecting.opponent, bothHighlighted: this.highlighted === WhoIsSelecting.both}'
+  [ngClass]='{playerHighlighted: this.highlighted === WhoIsSelecting.player, opponentHighlighted: this.highlighted === WhoIsSelecting.opponent, bothHighlighted: this.highlighted === WhoIsSelecting.both, playerFilled: this.filled === WhoIsSelecting.player, opponentFilled: this.filled === WhoIsSelecting.opponent}'
   [class.black-square]='tileChar==="0"' 
   [value]='tileChar' 
   maxlength='1'

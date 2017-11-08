@@ -14,14 +14,18 @@ export class Grid {
     private data: string[][];
     private userInputInternal: GridWord;
 
-    private words: GridWord[] = [];
+    private wordsInternal: GridWord[] = [];
 
     public get numberOfWords(): number {
-        return this.words.length;
+        return this.wordsInternal.length;
+    }
+
+    public get words(): GridWord[] {
+        return this.wordsInternal;
     }
 
     constructor(words: GridWord[] = []) {
-        this.words = words.slice();
+        this.wordsInternal = words.slice();
         this.userInputInternal = Grid.NO_USER_INPUT;
         this.regenerateEverything();
     }
@@ -49,7 +53,7 @@ export class Grid {
     }
 
     public empty(): void {
-        this.words = [];
+        this.wordsInternal = [];
         this.userInputInternal = Grid.NO_USER_INPUT;
         this.regenerateEverything();
     }

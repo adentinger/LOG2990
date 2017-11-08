@@ -10,7 +10,7 @@ import { PointIndex } from './point-index';
 import { Track } from '../../racing/track';
 import { Pothole } from './pothole';
 import { Puddle } from './puddle';
-import { ItemGenerator } from './item-generator';
+import { ItemGenerator } from './items/item-generator';
 import { SpeedBoost } from './speed-boost';
 
 @Injectable()

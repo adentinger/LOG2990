@@ -47,7 +47,7 @@ export class Car extends UserControllableCollidableMesh {
     public readonly mass: Kilograms = 100;
 
     private lights: CarLights;
-    private boundingBox: THREE.Box3;
+    public readonly boundingBox: THREE.Box3;
 
     protected maxSpeed = 50; // m/s
     protected maxAngularSpeed = Math.PI; // rad/s
@@ -57,7 +57,6 @@ export class Car extends UserControllableCollidableMesh {
     public waitToLoad: Promise<void>;
     public readonly audioListener = new THREE.AudioListener();
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
-    public readonly audioContext = new AudioContext();
 
     protected breakLightMeshs: THREE.Mesh;
     protected isStopped = false;
@@ -163,19 +162,11 @@ export class Car extends UserControllableCollidableMesh {
 
         if (this.isStopped && this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = false;
-            // if (this.breakLightMeshs) {
-            //     (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-            //         0.5 * this.dayModeOptions.intensity;
-            // }
         }
         if (!this.isStopped && this.velocity.length() <= UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = true;
-            // if (this.breakLightMeshs) {
-            //     (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-            //         0.5 + 0.5 * this.dayModeOptions.intensity;
-            // }
         }
-        if (this.breakLightMeshs) {
+        if (this.breakLightMeshs && this.dayModeOptions) {
             if (this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED &&
                 this.velocity.length() > this.previousVelocity.length()) {
                 (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
