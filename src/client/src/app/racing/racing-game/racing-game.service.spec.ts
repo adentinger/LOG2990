@@ -30,7 +30,8 @@ describe('RacingGameService', () => {
         userInputs: UIInputs) => {
         service = injectedService;
         const CONTAINER = document.createElement('div') as HTMLDivElement;
-        service.initialise(CONTAINER, userInputs);
+        const HUD_CANVAS = document.createElement('canvas') as HTMLCanvasElement;
+        service.initialise(CONTAINER, HUD_CANVAS, userInputs);
     }));
 
     it('should be created', () => {
