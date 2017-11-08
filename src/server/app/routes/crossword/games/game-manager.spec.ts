@@ -18,19 +18,6 @@ describe('The Game Manager Service', () => {
         gameManager['games'].clear();
     });
 
-    it('should make available a list of game configurations', () => {
-        expect(gameManager.getGameConfigurations()).to.deep.equal([]);
-        const CONFIGURATION: CrosswordGameConfigs = {
-            playerName: 'Pascal Lacasse',
-            difficulty: Difficulty.easy,
-            gameId: undefined,
-            gameMode: GameMode.Classic,
-            playerNumber: 1
-        };
-        gameManager.newGame(CONFIGURATION);
-        expect(gameManager.getGameConfigurations()).to.deep.equal(CONFIGURATION);
-    });
-
     it('should return an id upon game creation', (done) => {
         const idObtained = gameManager.newGame(createMockGameConfigs());
         expect(idObtained).to.be.not.null;
