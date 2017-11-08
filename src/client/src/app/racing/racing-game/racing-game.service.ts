@@ -41,9 +41,9 @@ export class RacingGameService {
         this.boxes = [
             new BoostBox(eventManager).translateZ(-3),
             new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10),
-            // new Pothole(eventManager).translateX(-10),
-            // new Puddle(eventManager, 1).translateX(-15),
-            new SpeedBooster(eventManager).translateX(-20),
+            new Pothole(eventManager).translateX(-10),
+            new Puddle(eventManager, 1).translateX(-15),
+            new SpeedBooster(eventManager).translateX(-20)
         ];
     }
 
