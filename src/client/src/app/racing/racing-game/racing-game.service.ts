@@ -10,7 +10,6 @@ import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
-import { MockSerializedMaps } from '../../../../../common/src/racing/mock-serialized-maps';
 import { BoostBox } from './physic/examples/boost-box';
 import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 import { Seconds } from '../types';
@@ -20,7 +19,6 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class RacingGameService {
     public static readonly CONTROLLABLE_CAR_IDX = 1;
-    private static readonly DEFAULT_MAP_DEV = new MockSerializedMaps().functional2();
 
     public readonly renderer: RacingRenderer;
     private readonly cars: Car[] = [
@@ -121,8 +119,7 @@ export class RacingGameService {
 
     public loadMap(mapName: string): Promise<void> {
         return this.mapService.getByName(mapName)
-            .then(map => this.setMap(map))
-            .catch(() => this.setMap(RacingGameService.DEFAULT_MAP_DEV));
+            .then(map => this.setMap(map));
     }
 
     private setMap(map: SerializedMap): Promise<void> {
