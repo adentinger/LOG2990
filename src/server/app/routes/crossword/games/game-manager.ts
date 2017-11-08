@@ -28,10 +28,12 @@ export class GameManager {
         registerHandlers(this, this.packetManager);
     }
 
-    public filterGames(filter: GameFilter): Game[] {
+    public filterPendingGames(filter: GameFilter): Game[] {
         const matchingGames: Game[] = [];
         this.games.forEach((game) => {
-            if (game.matchesFilter(filter)) {
+            const isGameFull =
+                game.currentNumberOfPlayers >= game.configuration.playerNumber;
+            if (!isGameFull && game.matchesFilter(filter)) {
                 matchingGames.push(game);
             }
         });

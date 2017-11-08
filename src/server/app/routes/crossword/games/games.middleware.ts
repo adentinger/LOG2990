@@ -4,7 +4,6 @@ import { MiddleWare, Route } from '../../middle-ware';
 import { GameManager } from './game-manager';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
-import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 @MiddleWare('/crossword/games')
 export class GamesMiddleWare {
@@ -16,7 +15,7 @@ export class GamesMiddleWare {
         const filter = new GameFilter(gameMode, numberOfPlayers);
         const configurations =
             GameManager.getInstance()
-            .filterGames(filter)
+            .filterPendingGames(filter)
             .map((game) => game.configuration);
         res.json(configurations);
     }
