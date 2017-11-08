@@ -18,13 +18,11 @@ import { GameHttpService } from './services/game-http.service';
 })
 export class CrosswordComponent implements OnInit {
 
-    constructor(private crosswordGameService: GameService) { }
+    public gameIsBeingConfigured = true;
+
+    constructor() { }
 
     public ngOnInit(): void {
-    }
-
-    public isShowWordsOn(): boolean {
-        return this.crosswordGameService.getShowWordsState();
     }
 
 }

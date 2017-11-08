@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from './player';
 
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
@@ -17,7 +18,7 @@ describe('The Crossword Game', () => {
     });
 
     it('should contain grid words', (done) => {
-        expect(gameToTest.words).to.be.not.null;
+        expect(gameToTest.data.words).to.be.not.null;
         done();
     });
 
@@ -28,12 +29,12 @@ describe('The Crossword Game', () => {
                 gameMode: GameMode.Classic,
                 playerNumber: 2
             });
-            const PLAYER1 = 'asdf123';
-            const PLAYER2 = 'qwertyuiop';
+            const PLAYER1 = new Player('asdf123', '123a');
+            const PLAYER2 = new Player('qwertyuiop', '123b');
             GAME.addPlayer(PLAYER1);
             GAME.addPlayer(PLAYER2);
-            expect(GAME.isPlayerInGame(PLAYER1)).to.be.true;
-            expect(GAME.isPlayerInGame(PLAYER2)).to.be.true;
+            expect(GAME.isSocketIdInGame(PLAYER1.socketId)).to.be.true;
+            expect(GAME.isSocketIdInGame(PLAYER2.socketId)).to.be.true;
         });
 
         it('should not add more players to the game than the max number of players', () => {
@@ -47,14 +48,14 @@ describe('The Crossword Game', () => {
                 gameMode: GameMode.Classic,
                 playerNumber: 2
             });
-            const PLAYER1 = 'TAM ARAR';
-            const PLAYER2 = 'ERIC CHAO';
+            const PLAYER1 = new Player('TAM ARAR', '123a');
+            const PLAYER2 = new Player('ERIC CHAO', '123a');
             GAME1PLAYER.addPlayer(PLAYER1);
             expect(() => GAME1PLAYER.addPlayer(PLAYER2)).to.throw;
 
             GAME2PLAYERS.addPlayer(PLAYER1);
             GAME2PLAYERS.addPlayer(PLAYER2);
-            expect(() => GAME2PLAYERS.addPlayer('PASCAL LACASSE')).to.throw;
+            expect(() => GAME2PLAYERS.addPlayer(new Player('PASCAL LACASSE', '123c'))).to.throw;
         });
     });
 
@@ -64,12 +65,12 @@ describe('The Crossword Game', () => {
             gameMode: GameMode.Classic,
             playerNumber: 2
         });
-        const PLAYER1 = 'ADAM CÔTÉ';
-        const PLAYER2 = 'EMIR BELHADDAD';
+        const PLAYER1 = new Player('ADAM CÔTÉ', '123a');
+        const PLAYER2 = new Player('EMIR BELHADDAD', '123b');
         GAME.addPlayer(PLAYER1);
         GAME.addPlayer(PLAYER2);
-        expect(GAME.isPlayerInGame(PLAYER1)).to.be.true;
-        expect(GAME.isPlayerInGame(PLAYER2)).to.be.true;
-        expect(GAME.isPlayerInGame('CHUCK NORRIS')).to.be.false;
+        expect(GAME.isSocketIdInGame(PLAYER1.socketId)).to.be.true;
+        expect(GAME.isSocketIdInGame(PLAYER2.socketId)).to.be.true;
+        expect(GAME.isSocketIdInGame('CHUCK NORRIS')).to.be.false;
     });
 });

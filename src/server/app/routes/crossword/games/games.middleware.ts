@@ -20,4 +20,12 @@ export class GamesMiddleWare {
         res.json(gameId);
     }
 
+    @Route('get', '/:id/words')
+    public getWords(req: express.Request, res: express.Response): void {
+        const gameId = req.params.id;
+        const foundGame =
+            GameManager.getInstance().getGame(Math.floor(gameId));
+        res.json(foundGame.data.words);
+    }
+
 }

@@ -1,3 +1,4 @@
+$crossword-dimension: 10;
 $crossword-item-size: 50px;
 
 $color-valid-item: #76C84B;
@@ -5,6 +6,7 @@ $color-focus-item: #EDFF71;
 
 #crossword-board-container {
 	margin: 10px;
+	padding-top: 15px;
 	height: 100%;
 	text-align: center;
 	vertical-align: center;

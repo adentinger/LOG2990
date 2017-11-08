@@ -6,6 +6,14 @@ import { PacketManagerClient } from '../packet-manager-client';
 
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import '../../../../common/src/crossword/packets/game-join.parser';
+import { Subject } from 'rxjs/Subject';
+import { GameId } from '../../../../common/src/communication/game-configs';
+
+export enum GameState {
+    configuring,
+    started,
+    finished
+}
 
 /**
  * @class GameService
@@ -18,27 +26,41 @@ import '../../../../common/src/crossword/packets/game-join.parser';
 @Injectable()
 export class GameService {
 
+    public state = GameState.configuring;
+
     private cheatModeOn = false;
-    private showWordsOn = false;
+    private isShowWordsOnInternal = false;
+    private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private gameId: number = null;
+    private gameIdInternal: number = null;
+    private playerName = '';
 
     private crosswordGame: CrosswordGame = mockCrosswordGame();
 
-    public constructor(private packetManager: PacketManagerClient) { }
+    public constructor(private packetManager: PacketManagerClient) {
+        this.onShowWordsInternal.subscribe((value) => {
+            this.isShowWordsOnInternal = value;
+        });
+    }
 
     public getCurrentGame(): CrosswordGame {
         return this.crosswordGame;
     }
 
-    public joinGame(id: number): void {
-        if (!this.gameId) {
-            this.gameId = id;
-            // use packetmanager to join this game
-            console.log('setting id to', id);
-            this.packetManager.sendPacket(GameJoinPacket, new GameJoinPacket(this.gameId));
+    public joinGame(id: number, playerName): void {
+        if (!this.gameIdInternal) {
+            this.gameIdInternal = id;
+            this.playerName = playerName;
+            this.packetManager.sendPacket(
+                GameJoinPacket,
+                new GameJoinPacket(this.gameIdInternal, this.playerName)
+            );
         }
+    }
+
+    public get gameId(): GameId {
+        return this.gameIdInternal;
     }
 
     public setCheatModeOnOff(): void {
@@ -49,12 +71,12 @@ export class GameService {
         return this.cheatModeOn;
     }
 
-    public setShowWordsOnOff(): void {
-        this.showWordsOn = !this.showWordsOn;
+    public isShowWordsOn(): boolean {
+        return this.isShowWordsOnInternal;
     }
 
-    public getShowWordsState(): boolean {
-        return this.showWordsOn;
+    public get onShowWords(): Subject<boolean> {
+        return this.onShowWordsInternal;
     }
 
     public setTimerOnOff(): void {

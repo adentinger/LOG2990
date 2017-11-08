@@ -8,6 +8,7 @@ import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { Player } from './player';
 
 export class GameManager {
 
@@ -29,7 +30,9 @@ export class GameManager {
     public getGameConfigurations(): CrosswordGameConfigs[] {
         const gameConfigs: CrosswordGameConfigs[] = [];
         this.games.forEach((game) => {
-            gameConfigs.push(game.configuration);
+            if (game.currentNumberOfPlayers < game.configuration.playerNumber) {
+                gameConfigs.push(game.configuration);
+            }
         });
         return gameConfigs;
     }
@@ -40,7 +43,18 @@ export class GameManager {
         return GAME.id;
     }
 
-    public getGame(id: number): Game {
+    public findGame(predicate: (game: Game) => boolean): Game {
+        let foundGame = null;
+        this.games.forEach((game) => {
+            if (predicate(game)) {
+                foundGame = game;
+                return;
+            }
+        });
+        return foundGame;
+    }
+
+    public getGame(id: GameId): Game {
         if (this.games.has(id)) {
             return this.games.get(id);
         } else {
@@ -57,12 +71,13 @@ export class GameManager {
     }
 
     @PacketHandler(GameJoinPacket)
-    public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
+    // tslint:disable-next-line:no-unused-variable
+    private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        const GAME = this.getGameFromId(gameId);
-        const PLAYER_ID = event.socketid;
+        const GAME = this.getGame(gameId);
+        const playerName = event.value.playerName;
 
-        GAME.addPlayer(PLAYER_ID);
+        GAME.addPlayer(new Player(playerName, event.socketid));
     }
 
     /**
@@ -71,41 +86,13 @@ export class GameManager {
      * @param event
      */
     @PacketHandler(WordTryPacket)
-    public wordTryHandler(event: PacketEvent<WordTryPacket>) {
+    // tslint:disable-next-line:no-unused-variable
+    private wordTryHandler(event: PacketEvent<WordTryPacket>) {
         const WORD_TRY: GridWord = event.value.wordTry;
         const PLAYER_ID: string = event.socketid;
 
-        const game: Game = this.getGameFromPlayerId(PLAYER_ID);
-        const ANSWER: GridWord = WORD_TRY;
-        if (!game.validateUserAnswer(WORD_TRY)) {
-            ANSWER.string = '';
-        }
-        // this.sendGridWord(ANSWER, PLAYER_ID);
-    }
-
-    private getGameFromId(id: GameId): Game {
-        const game = this.games.get(id);
-        if (game) {
-            return game;
-        }
-        else {
-            throw new Error(`Game "${id}" not found`);
-        }
-    }
-
-    private getGameFromPlayerId(playerId: string): Game {
-        let foundGame: Game = null;
-        this.games.forEach((game) => {
-            if (game.isPlayerInGame(playerId)) {
-                foundGame = game;
-            }
-        });
-        if (foundGame !== null) {
-            return foundGame;
-        }
-        else {
-            throw new Error(`Player "${playerId}" not found in any game`);
-        }
+        const foundGame: Game = this.findGame((game) => game.isSocketIdInGame(PLAYER_ID));
+        foundGame.validateUserAnswer(WORD_TRY, event.socketid);
     }
 
 }

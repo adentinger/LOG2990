@@ -16,6 +16,10 @@ export class Grid {
 
     private words: GridWord[] = [];
 
+    public get numberOfWords(): number {
+        return this.words.length;
+    }
+
     constructor(words: GridWord[] = []) {
         this.words = words.slice();
         this.userInputInternal = Grid.NO_USER_INPUT;
@@ -25,6 +29,23 @@ export class Grid {
     public addWord(word: GridWord): void {
         this.words.push(word);
         this.regenerateEverything();
+    }
+
+    public updateWord(word: GridWord): void {
+        const foundWordIndex = this.words.findIndex((existingWord) => {
+            return existingWord.y         === word.y         &&
+                   existingWord.x         === word.x         &&
+                   existingWord.direction === word.direction &&
+                   existingWord.length    === word.length;
+        });
+        if (foundWordIndex >= 0) {
+            word.id = this.words[foundWordIndex].id;
+            this.words[foundWordIndex] = word;
+            this.regenerateEverything();
+        }
+        else {
+            throw new Error(`Word ${word.string} not found`);
+        }
     }
 
     public empty(): void {
@@ -136,6 +157,26 @@ export class Grid {
             DATA.push(data.slice());
         });
         return DATA;
+    }
+
+    public getPlayerWordsFoundCount(): number {
+        let wordsFoundCount = 0;
+        for (let i = 0; i < this.words.length; i++) {
+            if (this.words[i].owner === Owner.player1) {
+                wordsFoundCount++;
+            }
+        }
+        return wordsFoundCount;
+    }
+
+    public getOpponentWordsFoundCount(): number {
+        let wordsFoundCount = 0;
+        for (let i = 0; i < this.words.length; i++) {
+            if (this.words[i].owner === Owner.player2) {
+                wordsFoundCount++;
+            }
+        }
+        return wordsFoundCount;
     }
 
 }

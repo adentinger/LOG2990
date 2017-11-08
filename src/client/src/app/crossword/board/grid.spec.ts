@@ -181,4 +181,23 @@ describe('Grid', () => {
         );
     });
 
+    it('should update words', () => {
+        const WORDS = horizontalWords();
+        const STRING = WORDS[1].string;
+        WORDS[1].string = '';
+
+        const GRID = new Grid(WORDS);
+        const UPDATE = new GridWord(
+            WORDS[1].id,
+            WORDS[1].y,
+            WORDS[1].x,
+            WORDS[1].length,
+            WORDS[1].direction,
+            WORDS[1].owner,
+            STRING
+        );
+        GRID.updateWord(UPDATE);
+        gridCompare(GRID, expectedHorizontal());
+    });
+
 });

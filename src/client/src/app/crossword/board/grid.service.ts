@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { mockHorizontalGridWords, mockVerticalGridWords } from '../mocks/grid-mock';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { registerHandlers, PacketHandler, PacketEvent } from '../../../../../common/src/index';
@@ -12,14 +12,16 @@ import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
+import { SelectionService } from '../selection.service';
 
 @Injectable()
-export class CrosswordGridService {
+export class GridService {
 
     private readonly GRID = new Grid();
     private callbacks: (() => void)[] = [];
 
-    constructor(private packetManager: PacketManagerClient) {
+    constructor(private packetManager: PacketManagerClient,
+                private selectionService: SelectionService) {
         registerHandlers(this, packetManager);
 
         // This mock is meant to stay as an initial view
@@ -50,6 +52,10 @@ export class CrosswordGridService {
         this.callbacks.push(callback);
     }
 
+    public checkIfWordIsFound(wordId: number, wordDirection: Direction): boolean {
+        return this.GRID.getWord(wordId, wordDirection).owner !== Owner.none;
+    }
+
     private sendWordToServer(word: GridWord): void {
         this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(word));
     }
@@ -59,15 +65,49 @@ export class CrosswordGridService {
     }
 
     @PacketHandler(GridWordPacket)
-    public updateGridWord(event: PacketEvent<GridWordPacket>): void {
+    // tslint:disable-next-line:no-unused-variable
+    private updateGridWord(event: PacketEvent<GridWordPacket>): void {
         this.GRID.addWord(event.value.gridword);
         this.onChange();
     }
 
     @PacketHandler(ClearGridPacket)
-    public clearGrid(): void {
+    // tslint:disable-next-line:no-unused-variable
+    private clearGrid(): void {
         this.GRID.empty();
         this.onChange();
+    }
+
+    @PacketHandler(WordTryPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private wordWasFound(event: PacketEvent<WordTryPacket>): void {
+        const word = event.value.wordTry;
+        this.GRID.updateWord(word);
+        const isWordSelected =
+            this.selectionService.selectionValue.playerSelection.id === word.id &&
+            this.selectionService.selectionValue.playerSelection.direction === word.direction;
+        if (isWordSelected) {
+            this.selectionService.selection.next(SelectionService.NO_SELECTION);
+        }
+        if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.GRID.numberOfWords) {
+            let message: string;
+            if (this.getPlayerWordsFoundCount() > this.getOpponentWordsFoundCount()) {
+                message = 'Congratulations ; you win!';
+            }
+            else {
+                message = 'Congratulations ; you (almost) won!';
+            }
+            alert(message);
+        }
+        this.onChange();
+    }
+
+    public getPlayerWordsFoundCount() {
+        return this.GRID.getPlayerWordsFoundCount();
+    }
+
+    public getOpponentWordsFoundCount() {
+        return this.GRID.getOpponentWordsFoundCount();
     }
 
 }

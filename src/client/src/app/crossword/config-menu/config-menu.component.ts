@@ -1,11 +1,10 @@
-import { Component, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
-import { AvailableGamesComponent } from './available-games/available-games.component';
 import { GameHttpService } from '../services/game-http.service';
-import { CreateOrJoin } from './menu-automaton-choices';
-import { GameService } from '../game.service';
+import { UserChoiceService, CreateOrJoin } from './user-choice.service';
+import { GameService, GameState } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';
 
 @Component({
@@ -14,45 +13,42 @@ import { WaitingService } from './waiting/waiting.service';
     styleUrls: ['./config-menu.component.css'],
     providers: [
         MenuAutomatonService,
-        WaitingService
+        WaitingService,
+        UserChoiceService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
-    public isConfiguringGame = true;
     public shouldShowAvailableGames = false;
 
     private subscriptions: Subscription[] = [];
-    @ViewChild(AvailableGamesComponent)
-    private availableGamesComponent: AvailableGamesComponent;
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                private waitingService: WaitingService,
+                public waitingService: WaitingService,
                 private gameService: GameService,
-                private gameHttpService: GameHttpService) { }
+                private gameHttpService: GameHttpService,
+                private userChoiceService: UserChoiceService,
+                private ngZone: NgZone) { }
 
     public ngAfterViewInit(): void {
-        const chooseGameArriveSubscription = this.menuAutomaton.chooseGameArrive.subscribe(
-            () => {
-                this.shouldShowAvailableGames = true;
-                this.availableGamesComponent.refresh();
-            }
+        const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
+            () => this.shouldShowAvailableGames = true
         );
-        const chooseGameLeaveSubscription = this.menuAutomaton.chooseGameLeave.subscribe(
-            () => {
-                this.shouldShowAvailableGames = false;
-                const chosenGame = this.availableGamesComponent.chosenGame;
-                if (chosenGame === null) {
-                    this.menuAutomaton.goBack();
-                }
-            }
+        const chooseGameLeaveSubscription = this.menuAutomaton.states.chooseGame.leave.subscribe(
+            () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => {
-                this.useConfiguration();
-            }
+            () => this.useConfiguration()
         );
-        this.subscriptions.push(chooseGameArriveSubscription, chooseGameLeaveSubscription, configEndSubscription);
+        const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
+            () => this.ngZone.run(() => {})
+        );
+        this.subscriptions.push(
+            chooseGameArriveSubscription,
+            chooseGameLeaveSubscription,
+            configEndSubscription,
+            stopDisplayingSubscription
+        );
     }
 
     public ngOnDestroy(): void {
@@ -60,27 +56,27 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public get shouldBeDisplayed(): boolean {
-        return this.isConfiguringGame || this.waitingService.isWaitingValue;
-    }
-
-    // "Shoo! Go away! I don't want to see this component anymore!" =>
-    public shoo(): void {
-        this.isConfiguringGame = false;
-        this.waitingService.isWaiting.next(false);
+        return this.gameService.state === GameState.configuring || this.waitingService.isWaitingValue;
     }
 
     private useConfiguration(): void {
-        this.isConfiguringGame = false;
         this.waitingService.isWaiting.next(true);
-        const userChoices = this.menuAutomaton.choices;
-        const isJoiningGame = userChoices.createOrJoin === CreateOrJoin.join;
+        const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
-            this.gameService.joinGame(this.availableGamesComponent.chosenGame);
+            this.gameService.state = GameState.started;
+            this.gameService.joinGame(
+                this.userChoiceService.chosenGame,
+                this.userChoiceService.playerName
+            );
         }
         else {
-            this.gameHttpService.createGame(userChoices.toGameConfiguration())
+            this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
                 .then((gameId) => {
-                    this.gameService.joinGame(gameId);
+                    this.gameService.state = GameState.started;
+                    this.gameService.joinGame(
+                        gameId,
+                        this.userChoiceService.playerName
+                    );
                 });
         }
     }

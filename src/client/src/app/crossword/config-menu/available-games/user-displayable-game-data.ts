@@ -8,14 +8,20 @@ import { GameMode, Difficulty } from '../../../../../../common/src/crossword/cro
  */
 export class UserDisplayableGameData {
 
+    private playerNameInternal: string;
     private idInternal: GameId;
     private modeInternal: string;
     private difficultyInternal: string;
 
-    constructor(gameId: GameId, gameMode: GameMode, difficulty: Difficulty) {
+    constructor(playerName: string, gameId: GameId, gameMode: GameMode, difficulty: Difficulty) {
+        this.playerNameInternal = playerName;
         this.idInternal = gameId;
         this.modeInternal = this.deserializeGameMode(gameMode);
         this.difficultyInternal = this.deserializeDifficulty(difficulty);
+    }
+
+    public get playerName(): string {
+        return this.playerNameInternal;
     }
 
     public get id(): GameId {
