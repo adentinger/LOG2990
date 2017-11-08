@@ -12,6 +12,7 @@ import '../../../../../common/src/crossword/packets/grid-word.parser';
 import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
+import { SelectionService } from '../selection.service';
 
 @Injectable()
 export class GridService {
@@ -19,7 +20,8 @@ export class GridService {
     private readonly GRID = new Grid();
     private callbacks: (() => void)[] = [];
 
-    constructor(private packetManager: PacketManagerClient) {
+    constructor(private packetManager: PacketManagerClient,
+                private selectionService: SelectionService) {
         registerHandlers(this, packetManager);
 
         // This mock is meant to stay as an initial view
@@ -79,7 +81,14 @@ export class GridService {
     @PacketHandler(WordTryPacket)
     // tslint:disable-next-line:no-unused-variable
     private wordWasFound(event: PacketEvent<WordTryPacket>): void {
-        this.GRID.updateWord(event.value.wordTry);
+        const word = event.value.wordTry;
+        this.GRID.updateWord(word);
+        const isWordSelected =
+            this.selectionService.selectionValue.id === word.id &&
+            this.selectionService.selectionValue.direction === word.direction;
+        if (isWordSelected) {
+            this.selectionService.selection.next(SelectionService.NO_SELECTION);
+        }
         this.onChange();
     }
 
