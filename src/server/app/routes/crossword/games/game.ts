@@ -83,7 +83,7 @@ export class Game {
             this.players.push(player);
             this.initialized.then(() => {
                 this.communicationHandler.clearPlayerGrid(player.socketId);
-                this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.words);
+                this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.emptyWords);
                 this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
             }).catch((reason) => console.log(reason));
             if (this.players.length === this.maxPlayers) {
