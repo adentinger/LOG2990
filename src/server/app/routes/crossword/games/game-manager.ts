@@ -9,6 +9,7 @@ import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import { Player } from './player';
+import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 
 export class GameManager {
 
@@ -27,14 +28,14 @@ export class GameManager {
         registerHandlers(this, this.packetManager);
     }
 
-    public getGameConfigurations(): CrosswordGameConfigs[] {
-        const gameConfigs: CrosswordGameConfigs[] = [];
+    public filterGames(filter: GameFilter): Game[] {
+        const matchingGames: Game[] = [];
         this.games.forEach((game) => {
-            if (game.currentNumberOfPlayers < game.configuration.playerNumber) {
-                gameConfigs.push(game.configuration);
+            if (game.matchesFilter(filter)) {
+                matchingGames.push(game);
             }
         });
-        return gameConfigs;
+        return matchingGames;
     }
 
     public newGame(configs: CrosswordGameConfigs): GameId {
