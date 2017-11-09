@@ -178,7 +178,7 @@ export class Game {
             (existingPlayer) => existingPlayer.socketId !== player.socketId
         );
         opponents.forEach((opponent) => {
-            this.communicationHandler.updateOpponentSelectionOf(opponent, id, direction)
+            this.communicationHandler.updateOpponentSelectionOf(opponent, id, direction);
         });
     }
 
