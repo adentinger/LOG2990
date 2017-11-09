@@ -18,6 +18,9 @@ import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.p
 import '../../../../../common/src/crossword/packets/timer.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try-result.parser';
+import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
+import '../../../../../common/src/crossword/packets/game-join.parser';
+import { GameId } from '../../../../../common/src/communication/game-configs';
 
 export class CommunicationHandler {
 
@@ -101,6 +104,19 @@ export class CommunicationHandler {
         this.packetManager.sendPacket(
             TimerPacket,
             new TimerPacket(countdown), player.socketId
+        );
+    }
+
+    public notifyArrival(gameId: GameId, existingPlayer: Player, newPlayer: Player): void {
+        this.packetManager.sendPacket(
+            GameJoinPacket,
+            new GameJoinPacket(gameId, newPlayer.name),
+            existingPlayer.socketId
+        );
+        this.packetManager.sendPacket(
+            GameJoinPacket,
+            new GameJoinPacket(gameId, existingPlayer.name),
+            newPlayer.socketId
         );
     }
 
