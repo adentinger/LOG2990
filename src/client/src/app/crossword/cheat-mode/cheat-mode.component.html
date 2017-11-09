@@ -2,7 +2,7 @@
   <br>
   <button (click)='onCheatModeToggle()'>{{getCheatModeStateText()}}</button>
   <button *ngIf='isCheatModeOn()' (click)='onShowWordsToggle()'>{{getShowWordsStateText()}}</button>
-  <button *ngIf='isCheatModeOn()' (click)='onTimerRunningToggle()'>{{getTimerStateText()}}</button>
+  <button *ngIf='isCheatModeOn() && haveTimer()' (click)='onTimerRunningToggle()'>{{getTimerStateText()}}</button>
   <input
     #timerInput
     *ngIf='isTimerBeingSet() && isCheatModeOn()'

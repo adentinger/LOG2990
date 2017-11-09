@@ -145,6 +145,10 @@ export class GameData {
             }
         }
 
+        const regex = new RegExp(`(^|\\W)${word.string}(s?(?:\\W|$))`, 'gmi');
+        const replacement = '_'.repeat(word.string.length);
+        definitionString = definitionString.replace(regex, `$1${replacement}$2`);
+
         const definition = new Definition(
             definitionString,
             word.direction
