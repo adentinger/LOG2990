@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
-import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { TimerService } from '../services/timer.service';
 import { GridService } from '../board/grid.service';
 

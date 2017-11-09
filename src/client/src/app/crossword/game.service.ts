@@ -104,6 +104,7 @@ export class GameService {
     }
 
     @PacketHandler(GameJoinPacket)
+    // tslint:disable-next-line:no-unused-variable
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
         this.opponentNameInternal = event.value.playerName;
     }

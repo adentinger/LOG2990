@@ -4,7 +4,6 @@ import { DefinitionsService, Definitions, Answers } from './definitions.service'
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Definition } from './definition';
 import { GameService, GameState } from '../game.service';
 

@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { MenuAutomatonService } from '../menu-automaton.service';
 import { UserChoiceService } from '../user-choice.service';
 import { GameFilter } from '../../../../../../common/src/crossword/game-filter';
-import { GameMode } from '../../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-available-games',

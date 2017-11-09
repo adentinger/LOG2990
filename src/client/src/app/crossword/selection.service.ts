@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { GridWord } from '../../../../common/src/crossword/grid-word';
 import { Definition } from './definition-field/definition';
 import { SelectedGridWord, WordByIdAndDirection } from './board/selected-grid-word';
 import { PacketManagerClient } from '../packet-manager-client';
 import { SelectedWordPacket } from '../../../../common/src/crossword/packets/selected-word.packet';
 import '../../../../common/src/crossword/packets/selected-word.parser';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
-import { GridService } from './board/grid.service';
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
 
 @Injectable()
@@ -53,6 +51,7 @@ export class SelectionService {
     }
 
     @PacketHandler(SelectedWordPacket)
+    // tslint:disable-next-line:no-unused-variable
     private opponentSelected(event: PacketEvent<SelectedWordPacket>): void {
         this.serverSubscription.unsubscribe();
         this.selectionSubject.next({
