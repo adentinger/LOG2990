@@ -18,11 +18,11 @@ export interface CarHeadlightDayModeOptions {
 export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
 
     private static generalOptions: GeneralOptions = {
-        color: 0xfbf2b5,
-        distance: 75,
+        color: 0xf0f0ff,
+        distance: 100,
         angle: Math.PI / 4,
         exponent: 0.6,
-        decay: 5,
+        decay: 1,
     };
 
     public constructor() {

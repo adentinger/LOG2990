@@ -10,7 +10,6 @@ export interface Collidable extends IPhysicElement {
 export abstract class CollidableMesh extends PhysicMesh implements Collidable {
     public geometry: THREE.Geometry;
     public mass: Kilograms = Infinity; // Immovable by default
-    protected arrow: THREE.ArrowHelper = new THREE.ArrowHelper(new THREE.Vector3(), this.position);
 }
 
 export function isCollidable(object: IPhysicElement): object is Collidable {

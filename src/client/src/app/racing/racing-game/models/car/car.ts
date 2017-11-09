@@ -8,8 +8,8 @@ import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
 
 export interface CarLights {
-    headlightLeft: THREE.Light;
-    headlightRight: THREE.Light;
+    lightLeft: THREE.Light;
+    lightRight: THREE.Light;
 }
 
 export class Car extends UserControllableCollidableMesh {
@@ -41,12 +41,17 @@ export class Car extends UserControllableCollidableMesh {
         new THREE.Vector3(-0.56077, 0.63412, -1.7),
         new THREE.Vector3(0.56077, 0.63412, -1.7)
     ];
+    private static readonly BREAKLIGHT_POSITIONS: THREE.Vector3[] = [
+        new THREE.Vector3(-0.50077, 0.63412, 1.8),
+        new THREE.Vector3(0.50077, 0.63412, 1.8)
+    ];
 
     private static readonly SHININESS = 1000;
 
     public readonly mass: Kilograms = 100;
 
-    private lights: CarLights;
+    protected lights: CarLights;
+    protected breakLights: CarLights;
     public readonly boundingBox: THREE.Box3;
 
     protected maxSpeed = 50; // m/s
@@ -158,7 +163,9 @@ export class Car extends UserControllableCollidableMesh {
 
     public update(utils: PhysicUtils, deltaTime: Seconds) {
         super.update(utils, deltaTime);
-        this.audio.setPlaybackRate(2 * (this.velocity.length()) / this.maxSpeed + 0.4);
+        const MIN_RATE = 0.4, PITCH_FACTOR = 2;
+        const playbackRate = PITCH_FACTOR * (this.velocity.length() / this.maxSpeed) + MIN_RATE;
+        this.audio.setPlaybackRate(playbackRate);
 
         if (this.isStopped && this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = false;
@@ -167,22 +174,24 @@ export class Car extends UserControllableCollidableMesh {
             this.isStopped = true;
         }
         if (this.breakLightMeshs && this.dayModeOptions) {
+            let breakLightsIntensity: number;
             if (this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED &&
                 this.velocity.length() > this.previousVelocity.length()) {
-                (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-                    0.5 * this.dayModeOptions.intensity;
+                breakLightsIntensity = 0.5 * Math.min(this.dayModeOptions.intensity, 1);
             }
             else {
-                (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity =
-                    0.5 + 0.5 * this.dayModeOptions.intensity;
+                breakLightsIntensity = 1;
             }
+            (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity = breakLightsIntensity;
+            this.breakLights.lightLeft.intensity = this.breakLights.lightRight.intensity = breakLightsIntensity;
         }
         this.previousVelocity.copy(this.velocity);
     }
 
     private addLights(): void {
-        const HEADLIGHTS = [];
-        const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, -1);
+        const HEADLIGHTS = [], BREAKLIGHTS = [];
+        const HEADLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, -0.25, -1);
+        const BREAKLIGHT_FRONT_DIRECTION = new THREE.Vector3(0, 0, 1);
         Car.HEADLIGHT_POSITIONS.forEach((headlightPosition) => {
             const HEADLIGHT = new CarHeadlight();
             HEADLIGHT.position.copy(headlightPosition);
@@ -192,12 +201,25 @@ export class Car extends UserControllableCollidableMesh {
             this.add(HEADLIGHT.target);
             HEADLIGHTS.push(HEADLIGHT);
         });
+        Car.BREAKLIGHT_POSITIONS.forEach(breaklightPosition => {
+            const breaklight = new THREE.SpotLight(new THREE.Color('red'), 0.2, 100, 4 * Math.PI / 9, 1, 100);
+            breaklight.position.copy(breaklightPosition);
+            breaklight.target.position.copy(
+                breaklightPosition.clone().add(BREAKLIGHT_FRONT_DIRECTION)
+            );
+            this.add(breaklight.target);
+            BREAKLIGHTS.push(breaklight);
+        });
 
         this.lights = {
-            headlightLeft: HEADLIGHTS[0],
-            headlightRight: HEADLIGHTS[1]
+            lightLeft: HEADLIGHTS[0],
+            lightRight: HEADLIGHTS[1]
         };
-        this.add(this.lights.headlightLeft, this.lights.headlightRight);
+        this.breakLights = {
+            lightLeft: BREAKLIGHTS[0],
+            lightRight: BREAKLIGHTS[1]
+        };
+        this.add(...HEADLIGHTS, ...BREAKLIGHTS);
     }
 
     public startSounds() {
