@@ -1,6 +1,5 @@
 import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 import '../../../../../common/src/crossword/packets/timer.parser';
-import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
 import '../../../../../common/src/crossword/packets/grid-word.parser';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
