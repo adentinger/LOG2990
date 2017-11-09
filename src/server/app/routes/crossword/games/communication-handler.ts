@@ -11,6 +11,8 @@ import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DefinitionWithIndex } from './game-data';
 import { Player } from './player';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
 
 export class CommunicationHandler {
 
@@ -52,5 +54,15 @@ export class CommunicationHandler {
                 socketId
             );
         });
+    }
+
+    public updateOpponentSelectionOf(player: Player,
+                                     selectionId: number,
+                                     selectionDirection: Direction): void {
+        this.packetManager.sendPacket(
+            SelectedWordPacket,
+            new SelectedWordPacket(selectionDirection, selectionId),
+            player.socketId
+        );
     }
 }
