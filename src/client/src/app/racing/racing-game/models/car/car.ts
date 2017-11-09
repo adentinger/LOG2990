@@ -60,6 +60,7 @@ export class Car extends UserControllableCollidableMesh {
     private previousVelocity = new THREE.Vector3();
 
     public waitToLoad: Promise<void>;
+    public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
     public readonly audioListener = new THREE.AudioListener();
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
 
@@ -70,8 +71,10 @@ export class Car extends UserControllableCollidableMesh {
     constructor(carColor: THREE.Color) {
         super();
         this.addLights();
-        this.waitToLoad = this.addCarParts(carColor).then(() => {
+        this.waitToLoad = this.addCarParts(carColor);
+        this.waitToLoad.then(() => {
             this.breakLightMeshs = this.getObjectByName('brake_light') as THREE.Mesh;
+            this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
         });
         this.boundingBox = new THREE.Box3().setFromObject(this);
         this.add(this.audio);

@@ -27,7 +27,6 @@ export class MapConverterService {
                                   0);
             this.serializePoints(map, SERIALIZED_MAP);
             this.serializeItems(map, SERIALIZED_MAP);
-
             SERIALIZED_MAP.bestTimes = [];
             return SERIALIZED_MAP;
         }
@@ -62,12 +61,12 @@ export class MapConverterService {
                     new SerializedPothole(
                         this.converter.lengthToGameUnits(pothole.position)));
         serializedMap.puddles =
-            map.potholes.map(
+            map.puddles.map(
                 (puddle: Puddle) =>
                     new SerializedPuddle(
                         this.converter.lengthToGameUnits(puddle.position)));
         serializedMap.speedBoosts =
-            map.potholes.map(
+            map.speedBoosts.map(
                 (speedBoost: SpeedBoost) =>
                     new SerializedSpeedBoost(
                         this.converter.lengthToGameUnits(speedBoost.position)));
@@ -128,5 +127,4 @@ export class MapConverterService {
     private get minimumDistanceBetweenPoints(): number {
         return this.converter.lengthFromGameUnits(2 * Track.SEGMENT_WIDTH);
     }
-
 }

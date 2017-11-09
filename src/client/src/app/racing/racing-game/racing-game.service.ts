@@ -10,6 +10,14 @@ import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
+<<<<<<< HEAD
+=======
+import { BoostBox } from './physic/examples/boost-box';
+import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
+import { Puddle } from './models/obstacles/puddle';
+import { Pothole } from './models/obstacles/pothole';
+import { SpeedBooster } from './models/obstacles/speed-booster';
+>>>>>>> feature/obstacles
 import { Seconds } from '../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -68,7 +76,7 @@ export class RacingGameService {
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
-        eventManager: EventManager) {
+        private eventManager: EventManager) {
         this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
@@ -121,7 +129,7 @@ export class RacingGameService {
             this.renderer.removeMap(this.map);
         }
 
-        this.map = new RenderableMap(map);
+        this.map = new RenderableMap(map, this.eventManager);
         this.physicEngine.initialize(this.map);
         this.renderer.addMap(this.map);
 
