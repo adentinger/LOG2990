@@ -5,17 +5,19 @@ import { GameHttpService } from './game-http.service';
 import { GameService } from '../game.service';
 import { packetManagerClient } from '../../packet-manager.service';
 import { PacketManagerClient } from '../../packet-manager-client';
+import { UserChoiceService } from '../config-menu/user-choice.service';
 
 describe('GameHttpService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [
+                HttpClientModule
+            ],
             providers: [
                 GameHttpService,
                 GameService,
-                { provide: PacketManagerClient, useValue: packetManagerClient }
-            ],
-            imports: [
-                HttpClientModule
+                { provide: PacketManagerClient, useValue: packetManagerClient },
+                UserChoiceService
             ]
         });
     });

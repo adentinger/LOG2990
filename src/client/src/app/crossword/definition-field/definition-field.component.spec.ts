@@ -9,6 +9,7 @@ import { DefinitionsService } from './definitions.service';
 import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
 import { GameHttpService } from '../services/game-http.service';
+import { UserChoiceService } from '../config-menu/user-choice.service';
 
 describe('DefinitionFieldComponent', () => {
     let component: DefinitionFieldComponent;
@@ -26,7 +27,8 @@ describe('DefinitionFieldComponent', () => {
                 GridService,
                 SelectionService,
                 GameService,
-                GameHttpService
+                GameHttpService,
+                UserChoiceService
             ]
         })
             .compileComponents();

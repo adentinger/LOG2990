@@ -5,6 +5,7 @@ import { GameService } from '../game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { TimerService } from '../services/timer.service';
 import { packetManagerClient } from '../../packet-manager.service';
+import { UserChoiceService } from '../config-menu/user-choice.service';
 
 describe('CheatModeComponent', () => {
     let component: CheatModeComponent;
@@ -18,7 +19,8 @@ describe('CheatModeComponent', () => {
             providers: [
                 GameService,
                 TimerService,
-                {provide: PacketManagerClient, useValue: packetManagerClient}
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                UserChoiceService
             ]
         })
         .compileComponents();
