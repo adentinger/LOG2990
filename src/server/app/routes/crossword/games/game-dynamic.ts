@@ -1,6 +1,8 @@
 import { Game } from './game';
-import { PacketHandler, PacketEvent } from '../../../../../common/src/index';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
 import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
+import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
+import { PacketManagerServer } from '../../../packet-manager';
 
 export class GameDynamic extends Game {
 
@@ -8,6 +10,11 @@ export class GameDynamic extends Game {
 
     public countdown = GameDynamic.COUNTDOWN_INITAL;
     protected timerInterval: NodeJS.Timer = null;
+
+    constructor(configs: CrosswordGameConfigs) {
+        super(configs);
+        registerHandlers(this, PacketManagerServer.getInstance());
+    }
 
     public deletePlayerBySocketid(socketId: string): void {
         const index =

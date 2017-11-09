@@ -4,7 +4,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { PacketManagerServer } from '../../../packet-manager';
-import { GameJoinPacket, WordGuessPacket } from '../../../../../common/src/crossword/packets';
+import { GameJoinPacket, WordGuessPacket, SelectedWordPacket } from '../../../../../common/src/crossword/packets';
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
@@ -117,6 +117,19 @@ export class GameManager {
         const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
         if (foundGame != null) {
             foundGame.validateUserAnswer(wordGuess, event.socketid);
+        }
+    }
+
+    @PacketHandler(SelectedWordPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private selectedWordHandler(event: PacketEvent<SelectedWordPacket>): void {
+        const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
+        if (foundGame != null) {
+            const foundPlayer =
+                foundGame.findPlayer(player => player.socketId === event.socketid);
+            if (foundPlayer != null) {
+                foundGame.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
+            }
         }
     }
 

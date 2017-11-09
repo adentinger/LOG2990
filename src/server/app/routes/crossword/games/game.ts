@@ -5,8 +5,6 @@ import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
-import { PacketHandler, PacketEvent } from '../../../../../common/src/communication';
-import { SelectedWordPacket } from '../../../../../common/src/crossword/packets';
 import { Logger, warn } from '../../../../../common/src';
 
 const logger = Logger.getLogger('Crossword Game');
@@ -140,18 +138,6 @@ export abstract class Game {
         this.players.forEach((player) => {
             this.communicationHandler.sendGameStart(this.players);
         });
-    }
-
-    @PacketHandler(SelectedWordPacket)
-    // tslint:disable-next-line:no-unused-variable
-    private selectedWordHandler(event: PacketEvent<SelectedWordPacket>): void {
-        if (this.isSocketIdInGame(event.socketid)) {
-            const foundPlayer =
-                this.findPlayer(player => player.socketId === event.socketid);
-            if (foundPlayer != null) {
-                this.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
-            }
-        }
     }
 
 }
