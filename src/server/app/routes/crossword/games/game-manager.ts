@@ -12,6 +12,7 @@ import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/
 import '../../../../../common/src/crossword/packets/selected-word.parser';
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
+import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 
 export class GameManager {
 
@@ -117,6 +118,18 @@ export class GameManager {
         const foundPlayer =
             foundGame.findPlayer(player => player.socketId === event.socketid);
         foundGame.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
+    }
+
+    @PacketHandler(TimerPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private getCheatModeTimerValue(event: PacketEvent<TimerPacket>) {
+        const foundGame = this.findGame(game => game.isSocketIdInGame(event.socketid));
+        if (foundGame !== null) {
+            // TODO update timer.
+        }
+        else {
+            throw new Error(`No game with socket ID ${event.socketid} found`);
+        }
     }
 
 }

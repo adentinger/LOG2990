@@ -178,9 +178,4 @@ export class Game {
         }, ONE_SECOND);
     };
 
-    @PacketHandler(TimerPacket)
-    // tslint:disable-next-line:no-unused-variable
-    private getCheatModeTimerValue(event: PacketEvent<TimerPacket>) {
-        this.countdown = event.value.countdown;
-    }
 }
