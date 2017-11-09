@@ -30,12 +30,11 @@ export class GameData {
     }
 
     public difficultyAsString(): string {
-        console.log(this);
         switch (this.difficulty) {
             case Difficulty.easy: return 'Easy';
             case Difficulty.medium: return 'Normal';
             case Difficulty.hard: return 'Hard';
-            default: console.log(this.difficulty, Difficulty.hard, this.numberOfPlayers); return '???';
+            default: return '???';
         }
     }
 
