@@ -11,7 +11,6 @@ import { CrosswordGameConfigs, PlayerNumber, GameId } from '../../../../../commo
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
-import { Logger } from '../../../../../common/src/logger';
 import { GameMode, Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
@@ -19,9 +18,7 @@ import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
 import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
 
-const logger = Logger.getLogger('CrosswordGame');
-
-const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 minute
+const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 hour
 
 export class Game {
 
@@ -39,6 +36,7 @@ export class Game {
     private readonly maxPlayers: PlayerNumber;
     private readonly configurationInternal: CrosswordGameConfigs;
     private communicationHandler: CommunicationHandler;
+    private timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
         this.communicationHandler = new CommunicationHandler();
@@ -101,6 +99,10 @@ export class Game {
         const found = index >= 0;
         if (found) {
             this.players.splice(index, 1);
+            if (this.timerInterval !== null) {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+            }
         }
         else {
             throw new Error(`Cannot delete player with socket ID ${socketId}: no such player.`);
@@ -203,16 +205,10 @@ export class Game {
 
     private startTimer() {
         const ONE_SECOND = 1000;
-        setInterval(() => {
+        this.timerInterval = setInterval(() => {
             this.countdown--;
             this.players.forEach((player) => {
-                if (player !== null) {
-                    logger.log('(game #%s) Timer: %d', this.id, this.countdown);
-                    this.packetManager.sendPacket(
-                        TimerPacket,
-                        new TimerPacket(this.countdown), player.socketId
-                    );
-                }
+                this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
             });
         }, ONE_SECOND);
     };
