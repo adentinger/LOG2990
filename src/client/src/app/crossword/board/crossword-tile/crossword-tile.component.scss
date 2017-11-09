@@ -3,10 +3,14 @@ $crossword-item-size: 50px;
 $color-valid-item: #76C84B;
 $color-focus-item: #EDFF71;
 
-$color-player: rgba(0, 47, 255, 0.5);
-$color-opponent: rgba(255, 0, 0, 0.5);
+$color-player-border: rgba(0, 47, 255, 0.7);
+$color-opponent-border: rgba(255, 0, 0, 0.7);
 
-$padding-size: 3px;
+$color-player-background: rgba(0, 47, 255, 0.5);
+$color-opponent-background: rgba(255, 0, 0, 0.5);
+
+$padding-size: 4px;
+$stripe-repeat: 11.75px;
 
 .crossword-board-item {
 	background: transparent;
@@ -30,32 +34,32 @@ $padding-size: 3px;
 }
 
 .playerFilled {
-	background-color: $color-player;
+	background-color: $color-player-background;
 }
 
 .opponentFilled {
-	background-color: $color-opponent;
+	background-color: $color-opponent-background;
 }
 
 .bothFilled {
 	background: repeating-linear-gradient(
 		45deg,
-		$color-opponent,
-		$color-opponent 6px,
-		$color-player 6px,
-		$color-player 12px
+		$color-opponent-background,
+		$color-opponent-background $stripe-repeat / 2,
+		$color-player-background $stripe-repeat / 2,
+		$color-player-background $stripe-repeat
 	  );
 }
 
 .playerHighlighted {
-	background: linear-gradient(white, white), $color-player;
+	background: linear-gradient(white, white), $color-player-border;
 	padding: $padding-size;
 	background-origin: content-box, padding-box;
 	background-clip: content-box, padding-box;
 }
 
 .opponentHighlighted {
-	background: linear-gradient(white, white), $color-opponent;
+	background: linear-gradient(white, white), $color-opponent-border;
 	padding: $padding-size;
 	background-origin: content-box, padding-box;
 	background-clip: content-box, padding-box;
@@ -64,10 +68,10 @@ $padding-size: 3px;
 .bothHighlighted {
 	background: linear-gradient(white, white), repeating-linear-gradient(
 		-45deg,
-		$color-opponent,
-		$color-opponent 6px,
-		$color-player 6px,
-		$color-player 12px
+		$color-opponent-border,
+		$color-opponent-border $stripe-repeat / 2,
+		$color-player-border $stripe-repeat / 2,
+		$color-player-border $stripe-repeat
 	);
 	padding: $padding-size;
 	background-origin: content-box, padding-box;
