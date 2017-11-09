@@ -1,30 +1,28 @@
 import { CrosswordGameConfigs, PlayerNumber, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { GameMode, Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
+import { PacketHandler, PacketEvent } from '../../../../../common/src/communication';
+import { SelectedWordPacket } from '../../../../../common/src/crossword/packets';
 
-const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 hour
+export abstract class Game {
 
-export class Game {
-
-    private static readonly COUNTDOWN_INITAL = COUNTDOWN_DEFAULT_VALUE;
     private static idCounter = 0;
 
     public readonly id: GameId;
-    public countdown = Game.COUNTDOWN_INITAL;
 
-    private readonly initialized: Promise<void>;
-    private started = false;
+    protected readonly initialized: Promise<void>;
+    protected started = false;
 
-    private readonly dataInternal: GameData = new GameData();
-    private readonly players: Player[] = [];
-    private readonly maxPlayers: PlayerNumber;
-    private readonly configurationInternal: CrosswordGameConfigs;
-    private communicationHandler: CommunicationHandler;
-    private timerInterval: NodeJS.Timer = null;
+    protected readonly dataInternal: GameData = new GameData();
+    protected readonly players: Player[] = [];
+    protected readonly maxPlayers: PlayerNumber;
+    protected readonly configurationInternal: CrosswordGameConfigs;
+    protected communicationHandler: CommunicationHandler;
+    protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
         this.communicationHandler = new CommunicationHandler();
@@ -72,11 +70,8 @@ export class Game {
             if (this.players.length === this.maxPlayers) {
                 this.start();
             }
-            return this.players.length;
         }
-        else {
-            throw new Error('Cannot add a new player: max number reached.');
-        }
+        return this.players.length;
     }
 
     public deletePlayerBySocketid(socketId: string): void {
@@ -105,30 +100,30 @@ export class Game {
 
     public matchesFilter(filter: GameFilter): boolean {
         return this.configurationInternal.gameMode === filter.mode &&
-               this.maxPlayers === filter.playerNumber;
+            this.maxPlayers === filter.playerNumber;
     }
 
-    public validateUserAnswer(wordTry: GridWord, socketId: string): void {
-        const DIRECTION = wordTry.direction;
-        const STRING = wordTry.string;
+    public validateUserAnswer(wordGuess: GridWord, socketId: string): void {
+        const DIRECTION = wordGuess.direction;
+        const STRING = wordGuess.string;
 
         const FOUND = this.dataInternal.words.findIndex(
             (word) => {
                 return word.direction === DIRECTION &&
-                       word.string === STRING;
+                    word.string === STRING;
             }) >= 0;
         if (FOUND) {
-            this.sendWordFound(wordTry, socketId);
+            this.sendWordFound(wordGuess, socketId);
         }
     }
 
-    private notifyArrival(player: Player): void {
+    protected notifyArrival(player: Player): void {
         this.players.forEach((existingPlayer) => {
             this.communicationHandler.notifyArrival(this.id, existingPlayer, player);
         });
     }
 
-    private sendWordFound(foundWord: GridWord, finderId: string): void {
+    protected sendWordFound(foundWord: GridWord, finderId: string): void {
         foundWord.owner = Owner.player1;
         const finderPlayer =
             this.players.find(player => player.socketId === finderId);
@@ -150,29 +145,25 @@ export class Game {
         return this.players.findIndex((id) => id.socketId === socketId) >= 0;
     }
 
-    private start(): void {
+    protected start(): void {
         if (!this.started) {
             this.started = true;
             this.players.forEach((player) => {
                 this.communicationHandler.sendGameStart(this.players);
             });
-            if (this.configurationInternal.gameMode === GameMode.Dynamic) {
-                this.startTimer();
-            }
-        }
-        else {
-            throw new Error('Cannot start game: Game already started.');
         }
     }
 
-    private startTimer() {
-        const ONE_SECOND = 1000;
-        this.timerInterval = setInterval(() => {
-            this.countdown--;
-            this.players.forEach((player) => {
-                this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
-            });
-        }, ONE_SECOND);
-    };
+    @PacketHandler(SelectedWordPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private selectedWordHandler(event: PacketEvent<SelectedWordPacket>): void {
+        if (this.isSocketIdInGame(event.socketid)) {
+            const foundPlayer =
+                this.findPlayer(player => player.socketId === event.socketid);
+            if (foundPlayer != null) {
+                this.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
+            }
+        }
+    }
 
 }

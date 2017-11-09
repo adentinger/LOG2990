@@ -5,17 +5,19 @@ import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossw
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 
+class MockGame extends Game {}
+
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
         const mockConfig = createMockGameConfigs();
-        const game = new Game(mockConfig);
+        const game = new MockGame(mockConfig);
         expect(game).to.be.not.null;
         done();
     });
 
     let gameToTest: Game;
     beforeEach(() => {
-        gameToTest = new Game(createMockGameConfigs());
+        gameToTest = new MockGame(createMockGameConfigs());
     });
 
     it('should contain grid words', (done) => {
@@ -25,7 +27,7 @@ describe('The Crossword Game', () => {
 
     describe('addPlayer', () => {
         it('should players to the game', () => {
-            const GAME = new Game({
+            const GAME = new MockGame({
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
@@ -39,12 +41,12 @@ describe('The Crossword Game', () => {
         });
 
         it('should not add more players to the game than the max number of players', () => {
-            const GAME1PLAYER = new Game({
+            const GAME1PLAYER = new MockGame({
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 1
             });
-            const GAME2PLAYERS = new Game({
+            const GAME2PLAYERS = new MockGame({
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
@@ -64,7 +66,7 @@ describe('The Crossword Game', () => {
 
         it('should return that a game matches a filter if it does', () => {
             const FILTER = new GameFilter(GameMode.Classic, 2);
-            const game = new Game({
+            const game = new MockGame({
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
@@ -73,7 +75,7 @@ describe('The Crossword Game', () => {
         });
 
         it('should return that a game does not match a filter when it does not', () => {
-            const game = new Game({
+            const game = new MockGame({
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
@@ -87,7 +89,7 @@ describe('The Crossword Game', () => {
     });
 
     it('should tell whether a certain player is in the game', () => {
-        const GAME = new Game({
+        const GAME = new MockGame({
             difficulty: Difficulty.easy,
             gameMode: GameMode.Classic,
             playerNumber: 2

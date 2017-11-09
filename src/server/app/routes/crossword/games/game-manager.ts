@@ -4,15 +4,11 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { PacketManagerServer } from '../../../packet-manager';
-import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
-import '../../../../../common/src/crossword/packets/game-join.parser';
-import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
-import '../../../../../common/src/crossword/packets/word-try.parser';
-import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
-import '../../../../../common/src/crossword/packets/selected-word.parser';
+import { GameJoinPacket, WordGuessPacket } from '../../../../../common/src/crossword/packets';
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
-import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
+import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
+import { GameClassic } from './game-classic';
 
 export class GameManager {
 
@@ -47,9 +43,20 @@ export class GameManager {
     }
 
     public newGame(configs: CrosswordGameConfigs): GameId {
-        const GAME = new Game(configs);
-        this.games.set(GAME.id, GAME);
-        return GAME.id;
+        let game: Game;
+        switch (configs.gameMode) {
+            default: // fallthrough
+            case GameMode.Classic: {
+                game = new GameClassic(configs);
+                break;
+            }
+            case GameMode.Dynamic: {
+                game = new GameClassic(configs);
+                break;
+            }
+        }
+        this.games.set(game.id, game);
+        return game.id;
     }
 
     private handleDisconnect(socketId: string): void {
@@ -90,10 +97,10 @@ export class GameManager {
     // tslint:disable-next-line:no-unused-variable
     private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        const GAME = this.getGame(gameId);
+        const game = this.getGame(gameId);
         const playerName = event.value.playerName;
 
-        GAME.addPlayer(new Player(playerName, event.socketid));
+        game.addPlayer(new Player(playerName, event.socketid));
     }
 
     /**
@@ -101,36 +108,13 @@ export class GameManager {
      * a filled string indicates a succesfull attempt
      * @param event
      */
-    @PacketHandler(WordTryPacket)
+    @PacketHandler(WordGuessPacket)
     // tslint:disable-next-line:no-unused-variable
-    private wordTryHandler(event: PacketEvent<WordTryPacket>) {
-        const WORD_TRY: GridWord = event.value.wordTry;
+    private wordGuessHandler(event: PacketEvent<WordGuessPacket>) {
+        const wordGuess: GridWord = event.value.wordGuess;
 
         const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
-        foundGame.validateUserAnswer(WORD_TRY, event.socketid);
-    }
-
-    @PacketHandler(SelectedWordPacket)
-    // tslint:disable-next-line:no-unused-variable
-    private selectedWordHandler(event: PacketEvent<SelectedWordPacket>): void {
-        const foundGame =
-            this.findGame((game) => game.isSocketIdInGame(event.socketid));
-        const foundPlayer =
-            foundGame.findPlayer(player => player.socketId === event.socketid);
-        foundGame.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
-    }
-
-    @PacketHandler(TimerPacket)
-    // tslint:disable-next-line:no-unused-variable
-    private getCheatModeTimerValue(event: PacketEvent<TimerPacket>) {
-        const foundGame = this.findGame(game => game.isSocketIdInGame(event.socketid));
-        if (foundGame !== null) {
-            console.log('setting countdown for game', foundGame.id, 'to', event.value.countdown);
-            foundGame.countdown = event.value.countdown;
-        }
-        else {
-            throw new Error(`No game with socket ID ${event.socketid} found`);
-        }
+        foundGame.validateUserAnswer(wordGuess, event.socketid);
     }
 
 }
