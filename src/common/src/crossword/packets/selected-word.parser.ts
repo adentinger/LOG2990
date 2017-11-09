@@ -17,7 +17,7 @@ export class SelectedWordParser extends PacketParser<SelectedWordPacket> {
         const VIEW = new DataView(data);
         WORD.direction = VIEW.getInt32(0 * SIZE_UINT32);
         WORD.id        = VIEW.getInt32(1 * SIZE_UINT32);
-        return null;
+        return WORD;
     }
 
 }
