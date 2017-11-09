@@ -39,9 +39,9 @@ $color-opponent: rgba(255, 0, 0, 0.5);
 	background: repeating-linear-gradient(
 		45deg,
 		$color-opponent,
-		$color-opponent 10px,
-		$color-player 10px,
-		$color-player 20px
+		$color-opponent 6px,
+		$color-player 6px,
+		$color-player 12px
 	  );
 }
 
@@ -55,11 +55,11 @@ $color-opponent: rgba(255, 0, 0, 0.5);
 
 .bothHighlighted {
 	border: 2px solid repeating-linear-gradient(
-		45deg,
+		-45deg,
 		$color-opponent,
-		$color-opponent 10px,
-		$color-player 10px,
-		$color-player 20px
+		$color-opponent 6px,
+		$color-player 6px,
+		$color-player 12px
 	);
 }
 
