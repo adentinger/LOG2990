@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/Subject';
 import { GameId } from '../../../../common/src/communication/game-configs';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
 import { UserChoiceService } from './config-menu/user-choice.service';
+import { GameData } from './game-data';
 
 export enum GameState {
     configuring,
@@ -33,16 +34,10 @@ export class GameService {
     private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private gameIdInternal: number = null;
-    private playerNameInternal = 'Dylan Farvacque';
-    private opponentNameInternal = 'CHUCK NORRIS';
+    private dataInternal = new GameData();
 
-    public get playerName(): string {
-        return this.playerNameInternal;
-    }
-
-    public get opponentName(): string {
-        return this.opponentNameInternal;
+    public get data(): GameData {
+        return this.dataInternal.clone();
     }
 
     constructor(private packetManager: PacketManagerClient,
@@ -54,12 +49,12 @@ export class GameService {
     }
 
     public joinGame(id: number, playerName: string): void {
-        if (!this.gameIdInternal) {
-            this.gameIdInternal = id;
-            this.playerNameInternal = playerName;
+        if (!this.dataInternal.id) {
+            this.dataInternal.id = id;
+            this.dataInternal.playerName = playerName;
             this.packetManager.sendPacket(
                 GameJoinPacket,
-                new GameJoinPacket(this.gameIdInternal, this.playerNameInternal)
+                new GameJoinPacket(this.dataInternal.id, this.dataInternal.playerName)
             );
         }
     }
@@ -73,10 +68,6 @@ export class GameService {
             message = 'Congratulations ; you (almost) won!';
         }
         alert(message);
-    }
-
-    public get gameId(): GameId {
-        return this.gameIdInternal;
     }
 
     public setCheatModeOnOff(): void {
@@ -106,7 +97,7 @@ export class GameService {
     @PacketHandler(GameJoinPacket)
     // tslint:disable-next-line:no-unused-variable
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
-        this.opponentNameInternal = event.value.playerName;
+        this.dataInternal.opponentName = event.value.playerName;
     }
 
 }

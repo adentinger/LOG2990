@@ -44,7 +44,7 @@ export class GameHttpService {
     }
 
     public getWords(): Promise<GridWord[]> {
-        const url = GameHttpService.BASE_URL + '/' + this.gameService.gameId + '/words';
+        const url = GameHttpService.BASE_URL + '/' + this.gameService.data.id + '/words';
         const promise = this.http.get<GridWord[]>(url).toPromise();
         return promise;
     }
