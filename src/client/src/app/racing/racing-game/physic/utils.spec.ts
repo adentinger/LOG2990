@@ -4,8 +4,6 @@ import { CollidableMesh } from './collidable';
 
 import * as THREE from 'three';
 import { EventManager } from '../../../event-manager.service';
-import { PhysicMesh } from './object';
-import { Kilograms } from '../../types';
 
 let eventManager: EventManager;
 let physicUtils: PhysicUtils;

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
-import { Meters } from '../../../types';
+// import { Meters } from '../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
@@ -14,7 +14,6 @@ export class Pothole extends CollidableMesh {
     private static readonly RADIUS: number = 0.5;
     private static readonly SEGMENTS: number = 40;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
-    private static readonly SLIP_FACTOR = Math.PI;
     private static readonly FREQUENCY_SCALING_FACTOR = 1000; // ms / s
     private static readonly ROTATION_FREQUENCY = 3; // Hz
     private static readonly POTHOLE_TEXTURE = THREE.ImageUtils.loadTexture(Pothole.TEXTURE_URL);
@@ -52,6 +51,7 @@ export class Pothole extends CollidableMesh {
     }
 
     @EventManager.Listener(COLLISION_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
         if (collision.source === this && isDynamicCollidable(collision.target)) {
@@ -67,6 +67,7 @@ export class Pothole extends CollidableMesh {
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private onCameraAvailable(event: EventManager.Event<void>) {
         this.targetsToMakeNormal.forEach((target) => {
             const camera = target.getObjectByName(PerspectiveCamera.CAMERA_NAME) as THREE.Camera;

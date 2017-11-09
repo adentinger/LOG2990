@@ -43,6 +43,7 @@ export class Puddle extends CollidableMesh {
     }
 
     @EventManager.Listener(COLLISION_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
         if (collision.source === this && isDynamicCollidable(collision.target)) {

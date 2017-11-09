@@ -4,7 +4,6 @@ import { Meters } from '../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
-import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { Car } from '../car/car';
 
 export class SpeedBooster extends CollidableMesh {
@@ -13,12 +12,10 @@ export class SpeedBooster extends CollidableMesh {
     private static readonly SEGMENTS: number = 4;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
 
-    private static readonly BOOST_FACTOR = 1.09;
     private static readonly BOOST_SPEED = 70; // m/s
     private static readonly BOOST_PERIOD = 100; // ms
     private static readonly BOOST_INTERVAL = 1000; // ms
     private static readonly TRACK_HEIGHT: Meters = 0.001;
-    private static readonly FREQUENCY_SCALING_FACTOR = 1000; // ms / s
     private static readonly SPEEDBOOSTER_TEXTURE = THREE.ImageUtils.loadTexture(SpeedBooster.TEXTURE_URL);
 
     public readonly mass = 0;
@@ -40,6 +37,7 @@ export class SpeedBooster extends CollidableMesh {
     }
 
     @EventManager.Listener(COLLISION_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
         if (collision.source === this && isDynamicCollidable(collision.target)) {
