@@ -59,8 +59,9 @@ export class BoardComponent implements OnInit, OnDestroy {
         // Don't focus on invisible input if we didn't select anything.
         if (selected.player.id !== SelectionService.NO_SELECTION.id) {
             this.inputBuffer.nativeElement.focus();
-            this.inputBuffer.nativeElement.value = '';
         }
+        this.inputBuffer.nativeElement.value = '';
+        this.onInputChange('');
     }
 
     public onInputChange(inputValue: string) {
