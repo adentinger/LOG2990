@@ -49,37 +49,24 @@ export class HighlightGrid {
 
     private shouldBeSelected(row: number, column: number, selection: Selection): WhoIsSelecting {
 
-        if (selection.player === null && selection.opponent === null) {
-            return WhoIsSelecting.noOne;
-        }
-        else if (selection.player !== null && selection.opponent === null) {
-            return this.isHighlighted(row, column, selection.player, WhoIsSelecting.player);
-        }
-        else if (selection.player === null && selection.opponent !== null) {
-            return this.isHighlighted(row, column, selection.opponent, WhoIsSelecting.opponent);
-        }
-        else if (selection.player !== null && selection.player !== null && selection.opponent.id === selection.player.id) {
-            return this.isHighlighted(row, column, selection.player, WhoIsSelecting.both);
-        }
+        const isSelectedByPlayer   = this.doesTileBelongToWord(row, column, selection.player);
+        const isSelectedByOpponent = this.doesTileBelongToWord(row, column, selection.opponent);
 
-    }
-
-    private isHighlighted(row: number, column: number, word: GridWord, type: WhoIsSelecting): WhoIsSelecting {
-        let shouldBeSelected: WhoIsSelecting = WhoIsSelecting.noOne;
-
-        if (word.direction === Direction.horizontal &&
-            row === word.y &&
-            column >= word.x &&
-            column - word.x < word.length) {
-            shouldBeSelected = type;
+        let whoIsSelecting;
+        if (isSelectedByPlayer && isSelectedByOpponent) {
+            whoIsSelecting = WhoIsSelecting.both;
         }
-        else if (word.direction === Direction.vertical &&
-            column === word.x &&
-            row >= word.y &&
-            row - word.y < word.length) {
-            shouldBeSelected = type;
+        else if (isSelectedByPlayer) {
+            whoIsSelecting = WhoIsSelecting.player;
         }
-        return shouldBeSelected;
+        else if (isSelectedByOpponent) {
+            whoIsSelecting = WhoIsSelecting.opponent;
+        }
+        else {
+            whoIsSelecting = WhoIsSelecting.noOne;
+        }
+        return whoIsSelecting;
+
     }
 
     private tileUsed(words: GridWord[]): WhoIsSelecting[][] {
@@ -115,15 +102,18 @@ export class HighlightGrid {
     }
 
     private doesTileBelongToWord(row: number, column: number, word: GridWord): boolean {
-        if (word.direction === Direction.horizontal) {
-            return (row === word.y &&
-                column >= word.x &&
-                column - word.x < word.length);
+        if (word !== null) {
+            if (word.direction === Direction.horizontal) {
+                return (row === word.y &&
+                    column >= word.x &&
+                    column - word.x < word.length);
+            }
+            else {
+                return (column === word.x &&
+                    row >= word.y &&
+                    row - word.y < word.length);
+            }
         }
-        else {
-            return (column === word.x &&
-                row >= word.y &&
-                row - word.y < word.length);
-        }
+        return false;
     }
 }
