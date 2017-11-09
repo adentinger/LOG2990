@@ -37,7 +37,6 @@ export class TimerService {
     @PacketHandler(TimerPacket)
     // tslint:disable-next-line:no-unused-variable
     private timeChanged(event: PacketEvent<TimerPacket>) {
-        console.log(event.value);
         this.serverTimerSubscription.unsubscribe();
         this.timer.next(event.value.countdown);
         this.serverTimerSubscription =

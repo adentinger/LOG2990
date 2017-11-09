@@ -3,8 +3,14 @@ $crossword-item-size: 50px;
 $color-valid-item: #76C84B;
 $color-focus-item: #EDFF71;
 
-$color-player: rgba(0, 47, 255, 0.5);
-$color-opponent: rgba(255, 0, 0, 0.5);
+$color-player-border: rgba(0, 47, 255, 0.7);
+$color-opponent-border: rgba(255, 0, 0, 0.7);
+
+$color-player-background: rgba(0, 47, 255, 0.5);
+$color-opponent-background: rgba(255, 0, 0, 0.5);
+
+$padding-size: 4px;
+$stripe-repeat: 11.75px;
 
 .crossword-board-item {
 	background: transparent;
@@ -28,42 +34,50 @@ $color-opponent: rgba(255, 0, 0, 0.5);
 }
 
 .playerFilled {
-	background-color: $color-player;
+	background-color: $color-player-background;
 }
 
 .opponentFilled {
-	background-color: $color-opponent;
+	background-color: $color-opponent-background;
 }
 
 .bothFilled {
 	background: repeating-linear-gradient(
 		45deg,
-		$color-opponent,
-		$color-opponent 6px,
-		$color-player 6px,
-		$color-player 12px
+		$color-opponent-background,
+		$color-opponent-background $stripe-repeat / 2,
+		$color-player-background $stripe-repeat / 2,
+		$color-player-background $stripe-repeat
 	  );
 }
 
 .playerHighlighted {
-	border: 2px solid $color-player; //lightblue
+	background: linear-gradient(white, white), $color-player-border;
+	padding: $padding-size;
+	background-origin: content-box, padding-box;
+	background-clip: content-box, padding-box;
 }
 
 .opponentHighlighted {
-	border: 2px solid $color-opponent; //red
+	background: linear-gradient(white, white), $color-opponent-border;
+	padding: $padding-size;
+	background-origin: content-box, padding-box;
+	background-clip: content-box, padding-box;
 }
 
 .bothHighlighted {
-	border: 2px solid repeating-linear-gradient(
+	background: linear-gradient(white, white), repeating-linear-gradient(
 		-45deg,
-		$color-opponent,
-		$color-opponent 6px,
-		$color-player 6px,
-		$color-player 12px
+		$color-opponent-border,
+		$color-opponent-border $stripe-repeat / 2,
+		$color-player-border $stripe-repeat / 2,
+		$color-player-border $stripe-repeat
 	);
+	padding: $padding-size;
+	background-origin: content-box, padding-box;
+	background-clip: content-box, padding-box;
 }
 
 .black-square {
 	background: rgba(0, 0, 0, 0.8);
-	color: transparent;
 }

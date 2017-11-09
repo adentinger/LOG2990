@@ -112,11 +112,13 @@ describe('HighlightGrid', () => {
         const ROW_MIN = 2;
         const ROW_MAX = 5;
         const COLUMN = 3;
-        const FOUND_WORD: GridWord[] = [new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical, Owner.player1, 'allo')];
-        const FILLED_GRID = new HighlightGrid({
-            player: new GridWord(0, 10, 10, 1, Direction.horizontal),
-            opponent: FOUND_WORD
-        });
+        const FOUND_WORDS: GridWord[] = [
+            new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical, Owner.player1, 'allo')
+        ];
+        const FILLED_GRID = new HighlightGrid(
+            {player: null, opponent: null},
+            FOUND_WORDS
+        );
 
         const SHOULD_BE_FILLED = (row: number, col: number) => {
             if (col === COLUMN && row >= ROW_MIN && row <= ROW_MAX) {
@@ -143,12 +145,13 @@ describe('HighlightGrid', () => {
 
         const FOUND_WORDS: GridWord[] = [
             new GridWord(0, ROW_MIN_WORD1, COLUMN_WORD1, ROW_MAX_WORD1 - ROW_MIN_WORD1 + 1, Direction.vertical, Owner.player1),
-            new GridWord(1, COLUMN_MIN_WORD2, ROW_WORD2, COLUMN_MAX_WORD2 - COLUMN_MIN_WORD2 + 1, Direction.horizontal, Owner.player2)];
+            new GridWord(1, COLUMN_MIN_WORD2, ROW_WORD2, COLUMN_MAX_WORD2 - COLUMN_MIN_WORD2 + 1, Direction.horizontal, Owner.player2)
+        ];
 
-        const FILLED_GRID = new HighlightGrid({
-            player: new GridWord(0, 10, 10, 1, Direction.horizontal),
-            opponent: FOUND_WORDS
-        });
+        const FILLED_GRID = new HighlightGrid(
+            {player: null, opponent: null},
+            FOUND_WORDS
+        );
 
         const SHOULD_BE_FILLED = (row: number, col: number) => {
             if (row === ROW_WORD2 && col === COLUMN_WORD1) {

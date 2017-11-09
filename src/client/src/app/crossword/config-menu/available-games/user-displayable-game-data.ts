@@ -10,14 +10,14 @@ export class UserDisplayableGameData {
 
     private playerNameInternal: string;
     private idInternal: GameId;
-    private modeInternal: string;
-    private difficultyInternal: string;
+    private modeInternal: GameMode;
+    private difficultyInternal: Difficulty;
 
     constructor(playerName: string, gameId: GameId, gameMode: GameMode, difficulty: Difficulty) {
         this.playerNameInternal = playerName;
         this.idInternal = gameId;
-        this.modeInternal = this.deserializeGameMode(gameMode);
-        this.difficultyInternal = this.deserializeDifficulty(difficulty);
+        this.modeInternal = gameMode;
+        this.difficultyInternal = difficulty;
     }
 
     public get playerName(): string {
@@ -28,28 +28,28 @@ export class UserDisplayableGameData {
         return this.idInternal;
     }
 
-    public get mode(): string {
+    public get mode(): GameMode {
         return this.modeInternal;
     }
 
-    public get difficulty(): string {
-        return this.difficultyInternal;
-    }
-
-    private deserializeGameMode(gameMode: GameMode): string {
-        switch (gameMode) {
+    public modeAsString(): string {
+        switch (this.modeInternal) {
             case GameMode.Classic: return 'Classic';
             case GameMode.Dynamic: return 'Dynamic';
-            default: throw new Error(`Game mode ${gameMode} invalid`);
+            default: throw new Error(`Game mode ${this.modeInternal} invalid`);
         }
     }
 
-    private deserializeDifficulty(difficulty: Difficulty): string {
-        switch (difficulty) {
+    public get difficulty(): Difficulty {
+        return this.difficultyInternal;
+    }
+
+    public difficultyAsString(): string {
+        switch (this.difficultyInternal) {
             case Difficulty.easy: return 'Easy';
             case Difficulty.medium: return 'Normal';
             case Difficulty.hard: return 'Hard';
-            default: throw new Error(`Difficulty ${difficulty} invalid`);
+            default: throw new Error(`Difficulty ${this.difficultyInternal} invalid`);
         }
     }
 

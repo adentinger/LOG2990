@@ -7,8 +7,8 @@
         (click)="choose(i)">
         <td>{{game.id}}</td>
         <td>{{game.playerName}}</td>
-        <td>{{game.mode}}</td>
-        <td>{{game.difficulty}}</td>
+        <td>{{game.modeAsString()}}</td>
+        <td>{{game.difficultyAsString()}}</td>
       </tr>
     </ng-container>
   </table>

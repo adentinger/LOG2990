@@ -1,17 +1,19 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { ConnectionBackend, Http, RequestOptions, BaseRequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { PhysicUtils } from './utils';
-import { Collidable } from './collidable';
+import { CollidableMesh } from './collidable';
 
 import * as THREE from 'three';
 import { EventManager } from '../../../event-manager.service';
 import { PhysicMesh } from './object';
 import { Kilograms } from '../../types';
-import { SlipDirection, PuddleBox } from './examples/puddle-box';
 
 let eventManager: EventManager;
 let physicUtils: PhysicUtils;
+
+class InstanciableCollidable extends CollidableMesh {
+    public geometry = new THREE.CubeGeometry(1, 1, 1);
+    public mass = 1;
+}
 
 describe('Physic utils', () => {
     beforeEach(() => {
@@ -59,5 +61,50 @@ describe('Physic utils', () => {
         dummyObject.name = 'Franky';
         physicUtils.setRoot(dummyObject);
         expect(physicUtils['root'].name === 'Franky');
+    });
+
+    it('should not return any collisions if none happened', () => {
+        const mesh = new THREE.Mesh();
+        const dummyObject1 = new InstanciableCollidable();
+        const dummyObject2 = new InstanciableCollidable();
+        dummyObject2.position.set(3, 3, 3);
+        mesh.add(dummyObject1);
+        mesh.add(dummyObject2);
+        dummyObject1.parent = null;
+        dummyObject2.parent = null;
+        physicUtils.setRoot(mesh);
+        expect(physicUtils.getCollisionsOf(dummyObject1).length).toEqual(0);
+    });
+
+    it('should return a collision if 2 objects are at the same positions', () => {
+        const mesh = new THREE.Mesh();
+        const dummyObject1 = new InstanciableCollidable();
+        const dummyObject2 = new InstanciableCollidable();
+        dummyObject1.position.set(3, 3, 3);
+        dummyObject2.position.set(3, 3, 3);
+        mesh.add(dummyObject1);
+        mesh.add(dummyObject2);
+
+        // to avoid circular references
+        dummyObject1.parent = null;
+        dummyObject2.parent = null;
+        physicUtils.setRoot(mesh);
+        expect(physicUtils.getCollisionsOf(dummyObject1).length).not.toBeNull();
+    });
+
+    it('should be able to return physic objects', () => {
+        const mesh = new THREE.Mesh();
+        const dummyObject1 = new InstanciableCollidable();
+        const dummyObject2 = new InstanciableCollidable();
+        dummyObject1.position.set(1, 1, 1);
+        dummyObject2.position.set(3, 3, 3);
+        mesh.add(dummyObject1);
+        mesh.add(dummyObject2);
+
+        // to avoid circular references
+        dummyObject1.parent = null;
+        dummyObject2.parent = null;
+        physicUtils.setRoot(mesh);
+        expect(physicUtils.getAllPhysicObjects().length).not.toBeNull();
     });
 });
