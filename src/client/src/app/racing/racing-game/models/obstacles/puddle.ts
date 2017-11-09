@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
 import { Meters } from '../../../types';
 import { EventManager } from '../../../../event-manager.service';
-import { COLLISION_EVENT } from '../../physic/utils';
+import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable } from '../../physic/dynamic-collidable';
 import { Car } from '../car/car';
 
@@ -24,22 +24,22 @@ export class Puddle extends CollidableMesh {
     private static readonly TRACK_HEIGHT: Meters = 0.001;
     private static readonly FREQUENCY_SCALING_FACTOR = 1000; // ms / s
 
-    private readonly car: Car;
     public readonly mass = 0;
 
     constructor(eventManager: EventManager, private slipDirection: SlipDirection) {
         super(new THREE.CircleGeometry(Puddle.RADIUS, Puddle.SEGMENTS));
-        this.car = new Car(new THREE.Color('green'));
-        this.car.waitToLoad.then(() => {
-            const scale = Math.sqrt((this.car.dimensions.x * this.car.dimensions.z) / Math.PI);
-            this.scale.setScalar(scale) ;
+        Car.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
+            const mesh = new THREE.Mesh();
+            mesh.add(...parts);
+            const dimensions = PhysicUtils.getObjectDimensions(mesh);
+            const scale = Math.sqrt((dimensions.x * dimensions.z) / Math.PI);
+            this.scale.setScalar(scale);
         });
         const texture = Puddle.PUDDLE_TEXTURE;
         this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0 });
         this.rotation.x = Puddle.ORIENTATION_ON_MAP;
         this.position.y = Puddle.TRACK_HEIGHT;
         eventManager.registerClass(this);
-
     }
 
     @EventManager.Listener(COLLISION_EVENT)

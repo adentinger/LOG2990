@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CollidableMesh, CollisionInfo, Collidable } from '../../physic/collidable';
 import { Meters } from '../../../types';
 import { EventManager } from '../../../../event-manager.service';
-import { COLLISION_EVENT } from '../../physic/utils';
+import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
 import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { Car } from '../car/car';
@@ -22,17 +22,17 @@ export class SpeedBooster extends CollidableMesh {
     private static readonly SPEEDBOOSTER_TEXTURE = THREE.ImageUtils.loadTexture(SpeedBooster.TEXTURE_URL);
 
     public readonly mass = 0;
-    private readonly car: Car;
     private boostedTargets: Set<Collidable> = new Set();
 
     constructor(eventManager: EventManager) {
         super(new THREE.CircleGeometry(SpeedBooster.RADIUS, SpeedBooster.SEGMENTS));
         const texture = SpeedBooster.SPEEDBOOSTER_TEXTURE;
-        this.car = new Car(new THREE.Color('green'));
-        this.car.waitToLoad.then(() => {
-            const scale = this.car.dimensions.x;
-            this.scale.setScalar(scale);
-         });
+        Car.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
+            const mesh = new THREE.Mesh();
+            mesh.add(...parts);
+            const dimension = PhysicUtils.getObjectDimensions(mesh).x;
+            this.scale.setScalar(dimension);
+        });
         this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0.2, emissiveIntensity: 0.5, emissive: 0xffffff });
         this.rotation.x = SpeedBooster.ORIENTATION_ON_MAP;
         this.position.y = SpeedBooster.TRACK_HEIGHT;

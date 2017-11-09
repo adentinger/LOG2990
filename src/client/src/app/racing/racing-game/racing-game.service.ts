@@ -10,14 +10,9 @@ import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
-<<<<<<< HEAD
-=======
-import { BoostBox } from './physic/examples/boost-box';
-import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 import { Puddle } from './models/obstacles/puddle';
 import { Pothole } from './models/obstacles/pothole';
 import { SpeedBooster } from './models/obstacles/speed-booster';
->>>>>>> feature/obstacles
 import { Seconds } from '../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -95,7 +90,7 @@ export class RacingGameService {
         // If the game is stopping before it was loaded, then don't start anything.
         Promise.race([
             this.waitToLoad,
-            this.waitToFinalize.toPromise().then(() => {throw void(0); })
+            this.waitToFinalize.toPromise().then(() => { throw void (0); })
         ]).then(() => {
             this.physicEngine.start();
             this.renderer.startRendering();
@@ -134,7 +129,7 @@ export class RacingGameService {
         this.renderer.addMap(this.map);
 
         this.map.addCars(...this.cars);
-        return Promise.all([this.map.waitToLoad]).then(() => {});
+        return Promise.all([this.map.waitToLoad]).then(() => { });
     }
 
     public getCars(): Car[] {

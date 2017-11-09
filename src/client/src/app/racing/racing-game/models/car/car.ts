@@ -34,8 +34,10 @@ export class Car extends UserControllableCollidableMesh {
         'tires',
         'windows'
     ];
-    private static readonly CAR_PARTS: Promise<THREE.Mesh[]> = Car.loadCarParts(Car.PART_NAMES);
-    private static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = Car.loadColoredCarParts();
+
+    // has to be public since other elements have dimensions relative to the car
+    public static readonly CAR_PARTS: Promise<THREE.Mesh[]> = Car.loadCarParts(Car.PART_NAMES);
+    public static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = Car.loadColoredCarParts();
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
         new THREE.Vector3(-0.56077, 0.63412, -1.7),

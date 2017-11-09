@@ -22,25 +22,26 @@ export class Pothole extends CollidableMesh {
 
     private static readonly SLOW_FACTOR = 0.98;
     private static readonly SHAKE_AMPLITUDE = Math.PI / 240;
-    private static readonly TRACK_HEIGHT = 0.015;
+    private static readonly TRACK_HEIGHT = 0.03;
     private static readonly SIZE_TO_CAR_PROPORTION = 0.25;
     public readonly mass = 0;
 
-    private readonly car: Car;
     private targetsToMakeNormal: DynamicCollidable[] = [];
     private targetsToShake: DynamicCollidable[] = [];
 
     constructor(eventManager: EventManager) {
         super(new THREE.CircleGeometry(Pothole.RADIUS, Pothole.SEGMENTS),
-              new THREE.MeshBasicMaterial({transparent: true, opacity: 0}));
-        this.car = new Car(new THREE.Color('green'));
+            new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }));
         const texturedPlane = new THREE.Mesh();
-        this.car.waitToLoad.then(() => {
-            const scale = this.car.dimensions.x * Pothole.SIZE_TO_CAR_PROPORTION;
+        Car.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
+            const mesh = new THREE.Mesh();
+            mesh.add(...parts);
+            const dimensions = PhysicUtils.getObjectDimensions(mesh);
+            const scale = dimensions.x * Pothole.SIZE_TO_CAR_PROPORTION;
             const meshScale = scale / Pothole.SIZE_TO_CAR_PROPORTION / Pothole.RADIUS;
             this.geometry.scale(meshScale, meshScale, meshScale);
             texturedPlane.geometry = new THREE.CircleGeometry(scale);
-         });
+        });
         const texture = Pothole.POTHOLE_TEXTURE;
         texturedPlane.material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, specular: 0 });
         texturedPlane.position.set(0, Pothole.TRACK_HEIGHT, 0);
