@@ -149,30 +149,11 @@ export class Game {
 
     private sendWordFound(foundWord: GridWord, finderId: string): void {
         foundWord.owner = Owner.player1;
-        const finderPacket = new WordTryPacket(foundWord);
-        this.packetManager.sendPacket(
-            WordTryPacket,
-            finderPacket,
-            finderId
-        );
-        if (this.maxPlayers > 1) {
-            const opponentPacket = new WordTryPacket(new GridWord(
-                foundWord.id,
-                foundWord.y,
-                foundWord.x,
-                foundWord.length,
-                foundWord.direction,
-                Owner.player2,
-                foundWord.string
-            ));
-            const opponent =
-                this.players.find((player) => player.socketId !== finderId);
-            this.packetManager.sendPacket(
-                WordTryPacket,
-                opponentPacket,
-                opponent.socketId
-            );
-        }
+        const finderPlayer =
+            this.players.find(player => player.socketId === finderId);
+        const opponent =
+            this.players.find((player) => player.socketId !== finderId);
+        this.communicationHandler.sendFoundWord(foundWord, finderPlayer, opponent);
     }
 
     public updateSelectionOf(player: Player, id: number, direction: Direction): void {
