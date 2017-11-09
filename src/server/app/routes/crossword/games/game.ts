@@ -1,7 +1,5 @@
 import { CrosswordGameConfigs, PlayerNumber, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { PacketManagerServer } from '../../../packet-manager';
-import { registerHandlers } from '../../../../../common/src/index';
 import { GameMode, Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
@@ -20,7 +18,7 @@ export class Game {
 
     private readonly initialized: Promise<void>;
     private started = false;
-    private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
+
     private readonly dataInternal: GameData = new GameData();
     private readonly players: Player[] = [];
     private readonly maxPlayers: PlayerNumber;
@@ -37,8 +35,6 @@ export class Game {
 
         this.initialized =
             this.data.initialize(configs.difficulty).catch((reason) => console.log(reason));
-
-        registerHandlers(this, this.packetManager);
     }
 
     public get data(): GameData {
