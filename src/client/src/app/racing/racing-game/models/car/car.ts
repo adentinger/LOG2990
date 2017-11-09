@@ -180,7 +180,7 @@ export class Car extends UserControllableCollidableMesh {
                 breakLightsIntensity = 0.5 * Math.min(this.dayModeOptions.intensity, 1);
             }
             else {
-                breakLightsIntensity = 0.5 + 0.5 * Math.min(this.dayModeOptions.intensity, 1);
+                breakLightsIntensity = 1;
             }
             (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity = breakLightsIntensity;
             this.breakLights.lightLeft.intensity = this.breakLights.lightRight.intensity = breakLightsIntensity;
