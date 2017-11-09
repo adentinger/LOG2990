@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
-import { CrosswordGame } from '../class/crossword-game';
-import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { TimerService } from '../services/timer.service';
+import { GridService } from '../board/grid.service';
+import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-game-details',
@@ -11,23 +11,27 @@ import { TimerService } from '../services/timer.service';
 })
 export class GameDetailsComponent implements OnInit {
 
-    public crosswordGame: CrosswordGame;
-    public player1: string;
-    public difficulty: string;
-    public gameMode: GameMode;
-
-    constructor(private crosswordGameService: GameService,
-                private timerService: TimerService) { }
+    constructor(public gameService: GameService,
+                private timerService: TimerService,
+                private gridService: GridService) { }
 
     public ngOnInit(): void {
-        this.crosswordGame = this.crosswordGameService.getCurrentGame();
-        this.player1 = this.crosswordGameService.getCurrentGame().player1;
-        this.difficulty = this.crosswordGameService.getCurrentGame().difficulty;
-        this.gameMode = this.crosswordGameService.getCurrentGame().gameMode;
+    }
+
+    public shouldDisplayTimer(): boolean {
+        return this.gameService.data.mode === GameMode.Dynamic;
     }
 
     public get timerValue() {
         return this.timerService.timerValue * 1000;
+    }
+
+    public get playerWordsFound() {
+        return this.gridService.getPlayerWordsFoundCount();
+    }
+
+    public get opponentWordsFound() {
+        return this.gridService.getOpponentWordsFoundCount();
     }
 
 }

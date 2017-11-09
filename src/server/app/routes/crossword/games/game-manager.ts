@@ -8,6 +8,11 @@ import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
+import '../../../../../common/src/crossword/packets/selected-word.parser';
+import { Player } from './player';
+import { GameFilter } from '../../../../../common/src/crossword/game-filter';
+import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 
 export class GameManager {
 
@@ -24,14 +29,21 @@ export class GameManager {
 
     private constructor() {
         registerHandlers(this, this.packetManager);
+        this.packetManager.registerDisconnectHandler((socketId: string) => {
+            this.handleDisconnect(socketId);
+        });
     }
 
-    public getGameConfigurations(): CrosswordGameConfigs[] {
-        const gameConfigs: CrosswordGameConfigs[] = [];
+    public filterPendingGames(filter: GameFilter): Game[] {
+        const matchingGames: Game[] = [];
         this.games.forEach((game) => {
-            gameConfigs.push(game.configuration);
+            const isGameFull =
+                game.currentNumberOfPlayers >= game.configuration.playerNumber;
+            if (!isGameFull && game.matchesFilter(filter)) {
+                matchingGames.push(game);
+            }
         });
-        return gameConfigs;
+        return matchingGames;
     }
 
     public newGame(configs: CrosswordGameConfigs): GameId {
@@ -40,7 +52,29 @@ export class GameManager {
         return GAME.id;
     }
 
-    public getGame(id: number): Game {
+    private handleDisconnect(socketId: string): void {
+        this.games.forEach((game, id) => {
+            if (game.isSocketIdInGame(socketId)) {
+                game.deletePlayerBySocketid(socketId);
+                if (game.currentNumberOfPlayers <= 0) {
+                    return this.games.delete(id);
+                }
+            }
+        });
+    }
+
+    public findGame(predicate: (game: Game) => boolean): Game {
+        let foundGame = null;
+        this.games.forEach((game) => {
+            if (predicate(game)) {
+                foundGame = game;
+                return;
+            }
+        });
+        return foundGame;
+    }
+
+    public getGame(id: GameId): Game {
         if (this.games.has(id)) {
             return this.games.get(id);
         } else {
@@ -52,17 +86,14 @@ export class GameManager {
         return this.games.size;
     }
 
-    public deleteGame(id: number): boolean {
-        return this.games.delete(id);
-    }
-
     @PacketHandler(GameJoinPacket)
-    public gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
+    // tslint:disable-next-line:no-unused-variable
+    private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        const GAME = this.getGameFromId(gameId);
-        const PLAYER_ID = event.socketid;
+        const GAME = this.getGame(gameId);
+        const playerName = event.value.playerName;
 
-        GAME.addPlayer(PLAYER_ID);
+        GAME.addPlayer(new Player(playerName, event.socketid));
     }
 
     /**
@@ -71,40 +102,34 @@ export class GameManager {
      * @param event
      */
     @PacketHandler(WordTryPacket)
-    public wordTryHandler(event: PacketEvent<WordTryPacket>) {
+    // tslint:disable-next-line:no-unused-variable
+    private wordTryHandler(event: PacketEvent<WordTryPacket>) {
         const WORD_TRY: GridWord = event.value.wordTry;
-        const PLAYER_ID: string = event.socketid;
 
-        const game: Game = this.getGameFromPlayerId(PLAYER_ID);
-        const ANSWER: GridWord = WORD_TRY;
-        if (!game.validateUserAnswer(WORD_TRY)) {
-            ANSWER.string = '';
-        }
-        // this.sendGridWord(ANSWER, PLAYER_ID);
+        const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
+        foundGame.validateUserAnswer(WORD_TRY, event.socketid);
     }
 
-    private getGameFromId(id: GameId): Game {
-        const game = this.games.get(id);
-        if (game) {
-            return game;
-        }
-        else {
-            throw new Error(`Game "${id}" not found`);
-        }
+    @PacketHandler(SelectedWordPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private selectedWordHandler(event: PacketEvent<SelectedWordPacket>): void {
+        const foundGame =
+            this.findGame((game) => game.isSocketIdInGame(event.socketid));
+        const foundPlayer =
+            foundGame.findPlayer(player => player.socketId === event.socketid);
+        foundGame.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
     }
 
-    private getGameFromPlayerId(playerId: string): Game {
-        let foundGame: Game = null;
-        this.games.forEach((game) => {
-            if (game.isPlayerInGame(playerId)) {
-                foundGame = game;
-            }
-        });
+    @PacketHandler(TimerPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private getCheatModeTimerValue(event: PacketEvent<TimerPacket>) {
+        const foundGame = this.findGame(game => game.isSocketIdInGame(event.socketid));
         if (foundGame !== null) {
-            return foundGame;
+            console.log('setting countdown for game', foundGame.id, 'to', event.value.countdown);
+            foundGame.countdown = event.value.countdown;
         }
         else {
-            throw new Error(`Player "${playerId}" not found in any game`);
+            throw new Error(`No game with socket ID ${event.socketid} found`);
         }
     }
 

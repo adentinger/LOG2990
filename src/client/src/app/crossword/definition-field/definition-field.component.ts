@@ -1,11 +1,11 @@
-import { Component, ViewChild, ElementRef, Input, NgZone } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 
 import { DefinitionsService, Definitions, Answers } from './definitions.service';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
-import { CrosswordGridService } from '../board/crossword-grid.service';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Definition } from './definition';
+import { GameService, GameState } from '../game.service';
 
 @Component({
     selector: 'app-definition-field',
@@ -16,17 +16,22 @@ export class DefinitionFieldComponent {
 
     public readonly HORIZONTAL = Direction.horizontal;
     public readonly VERTICAL = Direction.vertical;
+    public verticalCollapsed = true;
+    public acrossCollapsed = true;
 
     @ViewChild('inputBuffer') public inputBuffer: ElementRef;
 
-    @Input() public cheatMode: boolean;
+    public get cheatMode(): boolean {
+        return this.gameService.isShowWordsOn();
+    }
 
     constructor(private definitionService: DefinitionsService,
                 private selectionService: SelectionService,
-                private crosswordGridService: CrosswordGridService,
+                private gridService: GridService,
+                private gameService: GameService,
                 private ngZone: NgZone) {
         this.definitionService.pushOnChangeCallback(() => {
-            this.ngZone.run(() => {});
+            this.ngZone.run(() => { });
         });
     }
 
@@ -38,20 +43,42 @@ export class DefinitionFieldComponent {
         return this.definitionService.answers;
     }
 
+    public isDefinitionClickable(id: number, direction: Direction): boolean {
+        const isWordFound =
+            this.gridService.getWord({id: id, direction: direction}).owner === Owner.none;
+        return isWordFound;
+    }
+
     public onDefinitionClicked(index: number, direction: Direction): void {
-        const SELECTED_WORD: GridWord =
-            this.crosswordGridService.getWord(index, direction);
-        this.selectionService.updateSelectedGridWord(SELECTED_WORD);
+        if (this.isDefinitionClickable(index, direction)) {
+            this.selectionService.updateSelectedGridWord({id: index, direction: direction});
+        }
     }
 
     public onClickOutside(): void {
-        this.selectionService.selection.next(SelectionService.NO_SELECTION);
+        if (this.gameService.state >= GameState.started) {
+            this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
+        }
     }
 
     public checkIfSelected(index: number, direction: Direction): boolean {
         return this.selectionService.isDefinitionSelected(
             new Definition(index, direction, '')
         );
+    }
+
+    public checkIfFound(index: number, direction: Direction): boolean {
+        return this.gridService.checkIfWordIsFound(index, direction);
+    }
+
+    public checkDefinitionStatus(index: number, direction: Direction) { }
+
+    public isCollapsedAcross(): void {
+        this.acrossCollapsed = !this.acrossCollapsed;
+    }
+
+    public isCollapsedVertical(): void {
+        this.verticalCollapsed = !this.verticalCollapsed;
     }
 
 }

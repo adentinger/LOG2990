@@ -8,6 +8,9 @@ import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { GameService } from '../game.service';
 import { GameHttpService } from '../services/game-http.service';
+import { UserChoiceService } from './user-choice.service';
+import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { FormsModule } from '@angular/forms';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -16,17 +19,20 @@ describe('ConfigMenuComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientModule
+                HttpClientModule,
+                FormsModule
             ],
             declarations: [
                 ConfigMenuComponent,
                 AvailableGamesComponent,
+                ConfirmationComponent,
                 WaitingComponent
             ],
             providers: [
                 GameService,
                 GameHttpService,
-                {provide: PacketManagerClient, useValue: packetManagerClient}
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                UserChoiceService
             ]
         })
         .compileComponents();

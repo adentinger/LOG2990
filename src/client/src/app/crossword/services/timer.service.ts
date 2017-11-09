@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { PacketManagerClient } from '../../packet-manager-client';
-import { CrosswordTimerPacket } from '../../../../../common/src/crossword/packets/crossword-timer.packet';
+import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
-import '../../../../../common/src/crossword/packets/crossword-timer.parser';
+import '../../../../../common/src/crossword/packets/timer.parser';
 import { Subscription } from 'rxjs/Subscription';
 
 @Injectable()
@@ -34,9 +34,9 @@ export class TimerService {
         return this.timerValueInternal;
     }
 
-    @PacketHandler(CrosswordTimerPacket)
+    @PacketHandler(TimerPacket)
     // tslint:disable-next-line:no-unused-variable
-    private timeChanged(event: PacketEvent<CrosswordTimerPacket>) {
+    private timeChanged(event: PacketEvent<TimerPacket>) {
         console.log(event.value);
         this.serverTimerSubscription.unsubscribe();
         this.timer.next(event.value.countdown);
@@ -47,8 +47,8 @@ export class TimerService {
     private subscribeServerToTimeChanges(): Subscription {
         return this.timer.subscribe((value) => {
             this.packetManager.sendPacket(
-                CrosswordTimerPacket,
-                new CrosswordTimerPacket(value)
+                TimerPacket,
+                new TimerPacket(value)
             );
         });
     }

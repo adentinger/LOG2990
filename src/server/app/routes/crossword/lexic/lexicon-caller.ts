@@ -6,6 +6,7 @@ import { CharConstraint, HttpStatus } from '../../../../../common/src';
 export class LexiconCaller {
 
     private static readonly INSTANCE = new LexiconCaller();
+    private static readonly BASE_URL = 'http://localhost:3000/crossword/lexic';
 
     private constructor() {}
 
@@ -18,7 +19,7 @@ export class LexiconCaller {
                     isCommon: boolean = true,
                     charConstraints: CharConstraint[] = []): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            const URL = 'http://localhost:3000/crossword/lexic/words?' +
+            const URL = LexiconCaller.BASE_URL + '/words?' +
                         'minLength='  + minLength +
                         '&maxLength=' + maxLength +
                         '&isCommon='  + isCommon  +
@@ -44,12 +45,12 @@ export class LexiconCaller {
                         isCommon: boolean = true,
                         charConstraints: CharConstraint[] = []): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            const URL = 'http://localhost:3000/crossword/lexic/words/check?' +
+            const url = LexiconCaller.BASE_URL + '/words/check?' +
                         'minLength='  + minLength +
                         '&maxLength=' + maxLength +
                         '&isCommon='  + isCommon  +
                         '&charConstraints=' + JSON.stringify(charConstraints);
-            http.get(URL, (response: http.IncomingMessage) => {
+            http.get(url, (response: http.IncomingMessage) => {
                 response.on('error', reject);
                 const STATUS_CODE: HttpStatus = response.statusCode;
                 switch (STATUS_CODE) {
@@ -63,7 +64,7 @@ export class LexiconCaller {
 
     public getDefinitions(word: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            resolve(['CHUCK NORRIS IS SO COOL']);
+            resolve(['CHUCK NORRIS IS SO COOL', 'CHUCK NORRIS SOLVES GRIDS IN HIS SLEEP']);
         });
     }
 }

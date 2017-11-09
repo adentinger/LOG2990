@@ -18,7 +18,9 @@ export class WaitingService {
     private isWaitingInternal = new Subject<boolean>();
     private isWaitingValueInternal = false;
 
-    constructor(packetManager: PacketManagerClient) {
+
+    // tslint:disable-next-line:no-unused-variable
+    constructor(private packetManager: PacketManagerClient) {
         this.isWaitingInternal.subscribe((value) => {
             this.isWaitingValueInternal = value;
         });
@@ -36,7 +38,6 @@ export class WaitingService {
     @PacketHandler(GameStartPacket)
     // tslint:disable-next-line:no-unused-variable
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
-        console.log('GAME IS STARTING');
         this.isWaitingInternal.next(false);
     }
 

@@ -1,4 +1,4 @@
-import { MenuAutomatonChoices, CreateOrJoin } from './menu-automaton-choices';
+/*import { MenuAutomatonChoices, CreateOrJoin } from './menu-automaton-choices';
 import { GameMode, Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 
 describe('MenuAutomatonChoices', () => {
@@ -37,3 +37,4 @@ describe('MenuAutomatonChoices', () => {
     });
 
 });
+*/

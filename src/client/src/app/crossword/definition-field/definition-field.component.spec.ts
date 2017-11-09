@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DefinitionFieldComponent } from './definition-field.component';
 import { GameService } from '../game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { DefinitionsService } from './definitions.service';
-import { CrosswordGridService } from '../board/crossword-grid.service';
+import { GridService } from '../board/grid.service';
 import { SelectionService } from '../selection.service';
+import { GameHttpService } from '../services/game-http.service';
+import { UserChoiceService } from '../config-menu/user-choice.service';
 
 describe('DefinitionFieldComponent', () => {
     let component: DefinitionFieldComponent;
@@ -15,12 +18,17 @@ describe('DefinitionFieldComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DefinitionFieldComponent],
+            imports: [
+                HttpClientModule
+            ],
             providers: [
-                GameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
                 DefinitionsService,
-                CrosswordGridService,
-                SelectionService
+                GridService,
+                SelectionService,
+                GameService,
+                GameHttpService,
+                UserChoiceService
             ]
         })
             .compileComponents();

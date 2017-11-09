@@ -1,12 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { MenuAutomatonService } from './menu-automaton.service';
+import { UserChoiceService } from './user-choice.service';
 
 describe('MenuAutomatonService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-        providers: [MenuAutomatonService]
+            providers: [
+                MenuAutomatonService,
+                UserChoiceService
+            ]
         });
     });
 
@@ -27,6 +31,16 @@ describe('MenuAutomatonService', () => {
             menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
             expect(menuAutomaton.state).toBeTruthy();
             expect(menuAutomaton.state).not.toEqual(initialState);
+        });
+
+        it('should not do anything when we should not go to next state', () => {
+            const state0 = menuAutomaton.state;
+            state0.canMoveToNextState = () => false;
+            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+            expect(menuAutomaton.state).toBe(state0);
+            state0.canMoveToNextState = () => true;
+            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
+            expect(menuAutomaton.state).not.toBe(state0);
         });
 
         it('should not accept an option that does not exist', () => {
@@ -72,19 +86,6 @@ describe('MenuAutomatonService', () => {
         expect(menuAutomaton.canGoBack()).toBe(true);
         menuAutomaton.goBack();
         expect(menuAutomaton.canGoBack()).toBe(false);
-    });
-
-    it('should yield a game configuration', () => {
-        let i = 0;
-        let wasCallbackCalled = false;
-        const callback = () => wasCallbackCalled = true;
-        menuAutomaton.configEnd.subscribe(callback);
-        while (i < 1000 && !wasCallbackCalled) {
-            menuAutomaton.chooseOption(menuAutomaton.state.options[0]);
-            ++i;
-        }
-        const configuration = menuAutomaton.choices; // should not throw
-        expect(configuration).toBeTruthy();
     });
 
 });

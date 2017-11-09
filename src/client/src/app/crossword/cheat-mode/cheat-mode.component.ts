@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 import { GameService } from '../game.service';
 import { TimerService } from '../services/timer.service';
@@ -8,22 +8,19 @@ import { TimerService } from '../services/timer.service';
     templateUrl: './cheat-mode.component.html',
     styleUrls: ['./cheat-mode.component.css']
 })
-export class CheatModeComponent implements OnInit {
+export class CheatModeComponent {
 
     @ViewChild('timerInput') private timerInput: ElementRef;
 
-    constructor(private crosswordGameService: GameService,
+    constructor(private gameService: GameService,
                 private timerService: TimerService) { }
 
-    public ngOnInit() {
-    }
-
     public onCheatModeToggle(): void {
-        this.crosswordGameService.setCheatModeOnOff();
+        this.gameService.setCheatModeOnOff();
     }
 
     public isCheatModeOn(): boolean {
-        return this.crosswordGameService.getCheatModeState();
+        return this.gameService.getCheatModeState();
     }
 
     public getCheatModeStateText(): string {
@@ -36,11 +33,11 @@ export class CheatModeComponent implements OnInit {
     }
 
     public onShowWordsToggle(): void {
-        this.crosswordGameService.setShowWordsOnOff();
+        this.gameService.onShowWords.next(!this.gameService.isShowWordsOn());
     }
 
     public isShowWordsOn(): boolean {
-        return this.crosswordGameService.getShowWordsState();
+        return this.gameService.isShowWordsOn();
     }
 
     public getShowWordsStateText(): string {
@@ -53,11 +50,11 @@ export class CheatModeComponent implements OnInit {
     }
 
     public onTimerRunningToggle(): void {
-        this.crosswordGameService.setTimerOnOff();
+        this.gameService.setTimerOnOff();
     }
 
     public isTimerBeingSet(): boolean {
-        return this.crosswordGameService.getTimerState();
+        return this.gameService.getTimerState();
     }
 
     public getTimerStateText(): string {

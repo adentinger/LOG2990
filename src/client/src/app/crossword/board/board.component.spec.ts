@@ -5,9 +5,10 @@ import { CrosswordTileComponent } from './crossword-tile/crossword-tile.componen
 import { GameService } from '../game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
-import { CrosswordGridService } from './crossword-grid.service';
+import { GridService } from './grid.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { SelectionService } from '../selection.service';
+import { UserChoiceService } from '../config-menu/user-choice.service';
 
 describe('BoardComponent', () => {
     let component: BoardComponent;
@@ -20,8 +21,9 @@ describe('BoardComponent', () => {
                 GameService,
                 {provide: PacketManagerClient, useValue: packetManagerClient},
                 DefinitionsService,
-                CrosswordGridService,
-                SelectionService
+                GridService,
+                SelectionService,
+                UserChoiceService
             ]
         })
             .compileComponents();

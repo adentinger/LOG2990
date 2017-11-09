@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
 
-import { CrosswordGame } from './class/crossword-game';
-import { mockCrosswordGame } from './mocks/crossword-game-mock';
 import { PacketManagerClient } from '../packet-manager-client';
 
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import '../../../../common/src/crossword/packets/game-join.parser';
+import { Subject } from 'rxjs/Subject';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
+import { UserChoiceService } from './config-menu/user-choice.service';
+import { GameData } from './game-data';
+import { GameStartPacket } from '../../../../common/src/crossword/packets/game-start.packet';
+
+export enum GameState {
+    configuring,
+    started,
+    finished
+}
 
 /**
  * @class GameService
@@ -18,27 +27,47 @@ import '../../../../common/src/crossword/packets/game-join.parser';
 @Injectable()
 export class GameService {
 
+    public state = GameState.configuring;
+
     private cheatModeOn = false;
-    private showWordsOn = false;
+    private isShowWordsOnInternal = false;
+    private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private gameId: number = null;
+    private dataInternal = new GameData();
 
-    private crosswordGame: CrosswordGame = mockCrosswordGame();
-
-    public constructor(private packetManager: PacketManagerClient) { }
-
-    public getCurrentGame(): CrosswordGame {
-        return this.crosswordGame;
+    public get data(): GameData {
+        return this.dataInternal.clone();
     }
 
-    public joinGame(id: number): void {
-        if (!this.gameId) {
-            this.gameId = id;
-            // use packetmanager to join this game
-            console.log('setting id to', id);
-            this.packetManager.sendPacket(GameJoinPacket, new GameJoinPacket(this.gameId));
+    constructor(private packetManager: PacketManagerClient,
+                private userChoiceService: UserChoiceService) {
+        this.onShowWordsInternal.subscribe((value) => {
+            this.isShowWordsOnInternal = value;
+        });
+        registerHandlers(this, packetManager);
+    }
+
+    public joinGame(id: number, playerName: string): void {
+        if (!this.dataInternal.id) {
+            this.dataInternal.id = id;
+            this.dataInternal.playerName = playerName;
+            this.packetManager.sendPacket(
+                GameJoinPacket,
+                new GameJoinPacket(this.dataInternal.id, this.dataInternal.playerName)
+            );
         }
+    }
+
+    public finishGame(wordsFound: number, opponentWordsFound: number): void {
+        let message: string;
+        if (wordsFound > opponentWordsFound) {
+            message = 'Congratulations ; you win!';
+        }
+        else {
+            message = 'Congratulations ; you (almost) won!';
+        }
+        alert(message);
     }
 
     public setCheatModeOnOff(): void {
@@ -49,12 +78,12 @@ export class GameService {
         return this.cheatModeOn;
     }
 
-    public setShowWordsOnOff(): void {
-        this.showWordsOn = !this.showWordsOn;
+    public isShowWordsOn(): boolean {
+        return this.isShowWordsOnInternal;
     }
 
-    public getShowWordsState(): boolean {
-        return this.showWordsOn;
+    public get onShowWords(): Subject<boolean> {
+        return this.onShowWordsInternal;
     }
 
     public setTimerOnOff(): void {
@@ -63,6 +92,20 @@ export class GameService {
 
     public getTimerState(): boolean {
         return this.changeTimerValueOn;
+    }
+
+    @PacketHandler(GameJoinPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
+        this.dataInternal.opponentName = event.value.playerName;
+    }
+
+    @PacketHandler(GameStartPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private gameStarted(event: PacketEvent<GameStartPacket>): void {
+        this.dataInternal.mode = this.userChoiceService.gameMode;
+        this.dataInternal.difficulty = this.userChoiceService.difficulty;
+        this.dataInternal.numberOfPlayers = this.userChoiceService.playerNumber;
     }
 
 }
