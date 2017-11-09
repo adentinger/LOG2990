@@ -7,8 +7,8 @@ export class GameData {
                 public playerName = 'Dylan Farvacque',
                 public opponentName = 'CHUCK NORRIS',
                 public mode = GameMode.Classic,
-                public difficulty: Difficulty = Difficulty.hard,
-                public numberOfPlayers: PlayerNumber = Math.PI) {}
+                public difficulty = Difficulty.hard,
+                public numberOfPlayers: PlayerNumber = Math.PI) { }
 
     public clone(): GameData {
         return new GameData(
@@ -16,6 +16,7 @@ export class GameData {
             this.playerName,
             this.opponentName,
             this.mode,
+            this.difficulty,
             this.numberOfPlayers
         );
     }
@@ -29,11 +30,12 @@ export class GameData {
     }
 
     public difficultyAsString(): string {
+        console.log(this);
         switch (this.difficulty) {
             case Difficulty.easy: return 'Easy';
             case Difficulty.medium: return 'Normal';
             case Difficulty.hard: return 'Hard';
-            default: return '???';
+            default: console.log(this.difficulty, Difficulty.hard, this.numberOfPlayers); return '???';
         }
     }
 
