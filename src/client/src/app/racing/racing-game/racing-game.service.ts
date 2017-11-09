@@ -6,7 +6,7 @@ import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { DayMode } from './day-mode/day-mode-manager';
-import { UIInputs } from '../services/ui-input.service';
+import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
@@ -31,8 +31,11 @@ export class RacingGameService {
 
     private startTime: Seconds;
     private lapTimesInternal = new Array(this.maxLap).fill(0);
+    private maxLapInternal = 3;
 
     private map: RenderableMap;
+
+    private userInputs: UIInputs = null;
 
     public get controlledCar(): Car {
         return this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
@@ -44,8 +47,7 @@ export class RacingGameService {
     }
 
     public get maxLap(): number {
-        // Mocked
-        return 3;
+        return this.maxLapInternal;
     }
 
     public get positions(): Car[] {
@@ -72,10 +74,12 @@ export class RacingGameService {
         this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
+        eventManager.registerClass(this);
     }
 
     public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
         this.renderer.initialize(container, hudCanvas);
+        this.userInputs = userInputs;
 
         const userCar = this.cars[RacingGameService.CONTROLLABLE_CAR_IDX];
         userCar.setUIInput(userInputs);
@@ -105,6 +109,8 @@ export class RacingGameService {
             car.stopSounds();
             car.removeUIInput();
         });
+
+        this.userInputs = null;
 
         this.physicEngine.finalize();
         this.renderer.finalize();
@@ -146,6 +152,19 @@ export class RacingGameService {
 
     public toggleDayMode(): void {
         this.renderer.toggleDayMode();
+    }
+
+    @EventManager.Listener(KEYDOWN_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private changeMaxLap(event: EventManager.Event<KeyboardEvent>) {
+        // keys from '1' to '9'
+        const MIN = 1, MAX = 9;
+        const keysArray = new Array(MIN + MAX - 1).fill(0).map((dummy, index) => (index + MIN).toString());
+        const keys = new Set(keysArray);
+
+        if (this.userInputs && keys.has(event.data.key) && this.userInputs.isKeyPressed(event.data.key)) {
+            this.maxLapInternal = +event.data.key;
+        }
     }
 
 }

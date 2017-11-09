@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ApplicationRef } from '@angular/core';
 import { GridService } from './grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
 
-import '../../../../../common/src/crossword/packets/word-try.parser';
 import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
@@ -18,6 +17,7 @@ import { Selection } from './crossword-tile/highlight-grid';
     styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit, OnDestroy {
+    private static readonly UPDATE_PERIOD = 200; // ms
 
     public readonly DIMENSIONS = Array(Grid.DIMENSIONS);
 
@@ -27,12 +27,13 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     private highlightGrid = new HighlightGrid();
     private selectionSubscription: Subscription;
+    private updateTimer: any = null;
 
     constructor(private gridService: GridService,
                 private selectionService: SelectionService,
-                private ngZone: NgZone) {
+                private appRef: ApplicationRef) {
         this.gridService.
-            addOnChangeCallback(() => this.ngZone.run(() => {}));
+            addOnChangeCallback(() => this.appRef.tick());
     }
 
     public ngOnInit(): void {
@@ -40,10 +41,12 @@ export class BoardComponent implements OnInit, OnDestroy {
             this.selectionService.selection.subscribe(
                 (selected) => this.onSelect(selected)
             );
+        this.updateTimer = setInterval(() => this.appRef.tick(), BoardComponent.UPDATE_PERIOD);
     }
 
     public ngOnDestroy(): void {
         this.selectionSubscription.unsubscribe();
+        clearTimeout(this.updateTimer);
     }
 
     public getGridCharAt(row: number, column: number) {
@@ -55,10 +58,13 @@ export class BoardComponent implements OnInit, OnDestroy {
         const opponentSelection = this.gridService.getWord(selected.opponent);
         const selection: Selection = {player: playerSelection, opponent: opponentSelection};
         this.highlightGrid = new HighlightGrid(selection, this.gridService.words);
-        if (selected !== null) {
+
+        // Don't focus on invisible input if we didn't select anything.
+        if (selected.player.id !== SelectionService.NO_SELECTION.id) {
             this.inputBuffer.nativeElement.focus();
-            this.inputBuffer.nativeElement.value = '';
         }
+        this.inputBuffer.nativeElement.value = '';
+        this.onInputChange('');
     }
 
     public onInputChange(inputValue: string) {

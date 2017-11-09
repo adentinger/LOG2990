@@ -55,6 +55,12 @@ export class UIInputs implements OnInit, OnDestroy {
             arePreviouKeysInSet && this.pressedKeys.has(currentKey), initialAccumulatorValue);
     }
 
+    public isAtLeastOneKeyPressed(...keys: string[]): boolean {
+        const initialAccumulatorValue = false;
+        return keys.reduce((isAtLeastOnePreviousKeyInSet: boolean, currentKey: string) =>
+            isAtLeastOnePreviousKeyInSet || this.pressedKeys.has(currentKey), initialAccumulatorValue);
+    }
+
     public isMouseButtonPressed(button: MouseButton): boolean {
         return this.pressedMouseButtons.has(button);
     }
