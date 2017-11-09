@@ -1,10 +1,5 @@
 import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 import '../../../../../common/src/crossword/packets/timer.parser';
-import '../../../../../common/src/crossword/packets/word-try.parser';
-import '../../../../../common/src/crossword/packets/grid-word.parser';
-import '../../../../../common/src/crossword/packets/game-definition.parser';
-import '../../../../../common/src/crossword/packets/clear-grid.parser';
-import '../../../../../common/src/crossword/packets/game-start.parser';
 
 import { CrosswordGameConfigs, PlayerNumber, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
@@ -15,7 +10,6 @@ import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
-import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
 
 const COUNTDOWN_DEFAULT_VALUE = 3600; // 1 hour
 
@@ -133,16 +127,7 @@ export class Game {
 
     private notifyArrival(player: Player): void {
         this.players.forEach((existingPlayer) => {
-            this.packetManager.sendPacket(
-                GameJoinPacket,
-                new GameJoinPacket(this.id, player.name),
-                existingPlayer.socketId
-            );
-            this.packetManager.sendPacket(
-                GameJoinPacket,
-                new GameJoinPacket(this.id, existingPlayer.name),
-                player.socketId
-            );
+            this.communicationHandler.notifyArrival(this.id, existingPlayer, player);
         });
     }
 
