@@ -10,8 +10,6 @@ import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
-import { BoostBox } from './physic/examples/boost-box';
-import { PuddleBox, SlipDirection } from './physic/examples/puddle-box';
 import { Seconds } from '../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -30,7 +28,6 @@ export class RacingGameService {
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
-    private readonly boxes;
 
     private startTime: Seconds;
     private lapTimesInternal = new Array(this.maxLap).fill(0);
@@ -75,10 +72,6 @@ export class RacingGameService {
         this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
-        this.boxes = [
-            new BoostBox(eventManager).translateZ(-3),
-            new PuddleBox(eventManager, SlipDirection.RIGHT).translateZ(-10)
-        ];
     }
 
     public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
@@ -125,7 +118,6 @@ export class RacingGameService {
     private setMap(map: SerializedMap): Promise<void> {
         if (this.map) {
             this.cars.forEach(this.map.remove, this.map);
-            this.boxes.forEach(this.map.remove, this.map);
             this.renderer.removeMap(this.map);
         }
 
@@ -134,7 +126,6 @@ export class RacingGameService {
         this.renderer.addMap(this.map);
 
         this.map.addCars(...this.cars);
-        this.map.add(...this.boxes);
         return Promise.all([this.map.waitToLoad]).then(() => {});
     }
 
