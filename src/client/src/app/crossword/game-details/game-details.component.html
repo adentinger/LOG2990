@@ -8,11 +8,11 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{gameService.playerName}}</td>
+            <td>{{gameService.data.playerName}}</td>
             <td>{{playerWordsFound}}</td>
         </tr>
         <tr>
-            <td>{{gameService.opponentName}}</td>
+            <td>{{gameService.data.opponentName}}</td>
             <td>{{opponentWordsFound}}</td>
         </tr>
     </tbody>
@@ -21,11 +21,11 @@
       <tbody>
         <tr>
             <th class='category'>Game Mode</th>
-            <td>{{modeName}}</td>
+            <td>{{gameService.data.modeAsString()}}</td>
         </tr>
         <tr>
             <th class='category'>Difficulty</th>
-            <td>{{difficultyName}}</td>
+            <td>{{gameService.data.difficultyAsString()}}</td>
         </tr>
         <tr>
             <th class='category'>Game Time</th>

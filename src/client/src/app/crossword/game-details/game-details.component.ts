@@ -17,14 +17,6 @@ export class GameDetailsComponent implements OnInit {
     public ngOnInit(): void {
     }
 
-    public get modeName(): string {
-        return 'Classic';
-    }
-
-    public get difficultyName(): string {
-        return 'Hard';
-    }
-
     public get timerValue() {
         return this.timerService.timerValue * 1000;
     }
