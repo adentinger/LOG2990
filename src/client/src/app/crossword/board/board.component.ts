@@ -55,7 +55,9 @@ export class BoardComponent implements OnInit, OnDestroy {
         const opponentSelection = this.gridService.getWord(selected.opponent);
         const selection: Selection = {player: playerSelection, opponent: opponentSelection};
         this.highlightGrid = new HighlightGrid(selection, this.gridService.words);
-        if (selected !== null) {
+
+        // Don't focus on invisible input if we didn't select anything.
+        if (selected.player.id !== SelectionService.NO_SELECTION.id) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
         }
