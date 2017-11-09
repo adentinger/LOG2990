@@ -3,10 +3,10 @@ import { PlayerNumber, GameId } from '../../../../common/src/communication/game-
 
 export class GameData {
 
-    constructor(public id: GameId,
-                public playerName: string,
-                public opponentName: string,
-                public mode: GameMode,
-                public numberOfPlayers: PlayerNumber) {}
+    constructor(public id: GameId = null,
+                public playerName = 'Dylan Farvacque',
+                public opponentName = 'CHUCK NORRIS',
+                public mode = GameMode.Classic,
+                public numberOfPlayers: PlayerNumber = Math.PI) {}
 
 }
