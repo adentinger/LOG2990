@@ -99,13 +99,13 @@ export class HighlightGrid {
                         && wordBelongsTo[row][column] === WhoIsSelecting.opponent) ||
                         (words[word].owner === Owner.player2
                         && wordBelongsTo[row][column] === WhoIsSelecting.player))
-                        && (this.doesTileBelongsToWord(row, column, words[word]))) {
+                        && (this.doesTileBelongToWord(row, column, words[word]))) {
                         wordBelongsTo[row][column] = WhoIsSelecting.both;
                     }
-                    else if (words[word].owner === Owner.player1 && this.doesTileBelongsToWord(row, column, words[word])) {
+                    else if (words[word].owner === Owner.player1 && this.doesTileBelongToWord(row, column, words[word])) {
                         wordBelongsTo[row][column] = WhoIsSelecting.player;
                     }
-                    else if (words[word].owner === Owner.player2 && this.doesTileBelongsToWord(row, column, words[word])) {
+                    else if (words[word].owner === Owner.player2 && this.doesTileBelongToWord(row, column, words[word])) {
                         wordBelongsTo[row][column] = WhoIsSelecting.opponent;
                     }
                 }
@@ -114,7 +114,7 @@ export class HighlightGrid {
         return wordBelongsTo;
     }
 
-    private doesTileBelongsToWord(row: number, column: number, word: GridWord): boolean {
+    private doesTileBelongToWord(row: number, column: number, word: GridWord): boolean {
         if (word.direction === Direction.horizontal) {
             return (row === word.y &&
                 column >= word.x &&
