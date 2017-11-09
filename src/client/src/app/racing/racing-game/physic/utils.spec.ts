@@ -78,13 +78,31 @@ describe('Physic utils', () => {
         const mesh = new THREE.Mesh();
         const dummyObject1 = new InstanciableCollidable();
         const dummyObject2 = new InstanciableCollidable();
-        dummyObject2.position.set(3, 3, 3);
         dummyObject1.position.set(3, 3, 3);
+        dummyObject2.position.set(3, 3, 3);
         mesh.add(dummyObject1);
         mesh.add(dummyObject2);
+
+        // to avoid circular references
         dummyObject1.parent = null;
         dummyObject2.parent = null;
         physicUtils.setRoot(mesh);
         expect(physicUtils.getCollisionsOf(dummyObject1).length).not.toBeNull();
+    });
+
+    it('should be able to return physic objects', () => {
+        const mesh = new THREE.Mesh();
+        const dummyObject1 = new InstanciableCollidable();
+        const dummyObject2 = new InstanciableCollidable();
+        dummyObject1.position.set(1, 1, 1);
+        dummyObject2.position.set(3, 3, 3);
+        mesh.add(dummyObject1);
+        mesh.add(dummyObject2);
+
+        // to avoid circular references
+        dummyObject1.parent = null;
+        dummyObject2.parent = null;
+        physicUtils.setRoot(mesh);
+        expect(physicUtils.getAllPhysicObjects().length).not.toBeNull();
     });
 });
