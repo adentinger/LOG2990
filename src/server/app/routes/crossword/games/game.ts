@@ -175,7 +175,7 @@ export class Game {
 
     public updateSelectionOf(player: Player, id: number, direction: Direction): void {
         const opponents = this.players.filter(
-            (existingPlayer) => existingPlayer.socketId === player.socketId
+            (existingPlayer) => existingPlayer.socketId !== player.socketId
         );
         opponents.forEach((opponent) => {
             this.communicationHandler.updateOpponentSelectionOf(opponent, id, direction)
