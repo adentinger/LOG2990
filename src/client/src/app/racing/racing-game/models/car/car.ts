@@ -200,7 +200,7 @@ export class Car extends UserControllableCollidableMesh {
             HEADLIGHTS.push(HEADLIGHT);
         });
         Car.BREAKLIGHT_POSITIONS.forEach(breaklightPosition => {
-            const breaklight = new THREE.SpotLight(new THREE.Color('red'), 0.2, 200, 4 * Math.PI / 9, 10, 200);
+            const breaklight = new THREE.SpotLight(new THREE.Color('red'), 0.2, 100, 4 * Math.PI / 9, 1, 100);
             breaklight.position.copy(breaklightPosition);
             breaklight.target.position.copy(
                 breaklightPosition.clone().add(BREAKLIGHT_FRONT_DIRECTION)

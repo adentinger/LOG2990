@@ -45,7 +45,7 @@ export class DayModeDay implements DayMode {
 
 export class DayModeNight implements DayMode {
     public get CAR_HEADLIGHT_OPTIONS(): CarHeadlightDayModeOptions {
-        return { intensity: 2.5 };
+        return { intensity: 1 };
     }
 
     public get LIGHTING_OPTIONS(): LightingOptions {

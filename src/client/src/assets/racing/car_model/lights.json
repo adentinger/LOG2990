@@ -12,7 +12,7 @@
         "materials":1
     },
     "materials":[{
-        "colorEmissive":[1,1,1],
+        "colorEmissive":[0.95,0.95,1],
         "transparent":false,
         "opacity":1,
         "depthWrite":true,
