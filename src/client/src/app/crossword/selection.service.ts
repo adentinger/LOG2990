@@ -8,7 +8,7 @@ import { SelectedGridWord, WordByIdAndDirection } from './board/selected-grid-wo
 import { PacketManagerClient } from '../packet-manager-client';
 import { SelectedWordPacket } from '../../../../common/src/crossword/packets/selected-word.packet';
 import '../../../../common/src/crossword/packets/selected-word.parser';
-import { PacketHandler, PacketEvent } from '../../../../common/src/index';
+import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
 import { GridService } from './board/grid.service';
 import { Direction } from '../../../../common/src/crossword/crossword-enums';
 
@@ -23,6 +23,7 @@ export class SelectionService {
     private serverSubscription: Subscription;
 
     constructor(private packetManager: PacketManagerClient) {
+        registerHandlers(this, this.packetManager);
         this.selectionSubject.subscribe((selection) => {
             this.selectionValueInternal = selection;
         });
