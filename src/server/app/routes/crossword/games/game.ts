@@ -7,6 +7,9 @@ import { CommunicationHandler } from './communication-handler';
 import { Player } from './player';
 import { PacketHandler, PacketEvent } from '../../../../../common/src/communication';
 import { SelectedWordPacket } from '../../../../../common/src/crossword/packets';
+import { Logger, warn } from '../../../../../common/src';
+
+const logger = Logger.getLogger('Crossword Game');
 
 export abstract class Game {
 
@@ -22,7 +25,6 @@ export abstract class Game {
     protected readonly maxPlayers: PlayerNumber;
     protected readonly configurationInternal: CrosswordGameConfigs;
     protected communicationHandler: CommunicationHandler;
-    protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
         this.communicationHandler = new CommunicationHandler();
@@ -32,7 +34,7 @@ export abstract class Game {
         this.maxPlayers = configs.playerNumber;
 
         this.initialized =
-            this.data.initialize(configs.difficulty).catch((reason) => console.log(reason));
+            this.data.initialize(configs.difficulty).catch(warn(logger));
     }
 
     public get data(): GameData {
@@ -50,7 +52,7 @@ export abstract class Game {
         return config;
     }
 
-    public get currentNumberOfPlayers(): number {
+    public get currentPlayerCount(): number {
         return this.players.length;
     }
 
@@ -64,7 +66,7 @@ export abstract class Game {
                 this.communicationHandler.clearPlayerGrid(player.socketId);
                 this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.emptyWords);
                 this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
-            }).catch((reason) => console.log(reason));
+            }).catch(warn(logger));
 
             // Start game if max players reached.
             if (this.players.length === this.maxPlayers) {
@@ -80,17 +82,6 @@ export abstract class Game {
         const found = index >= 0;
         if (found) {
             this.players.splice(index, 1);
-            // Stop countdown
-            if (this.timerInterval !== null) {
-                this.players.forEach(player => {
-                    this.communicationHandler.sendNewTimerValueTo(player, 0);
-                });
-                clearInterval(this.timerInterval);
-                this.timerInterval = null;
-            }
-        }
-        else {
-            throw new Error(`Cannot delete player with socket ID ${socketId}: no such player.`);
         }
     }
 
@@ -146,12 +137,9 @@ export abstract class Game {
     }
 
     protected start(): void {
-        if (!this.started) {
-            this.started = true;
-            this.players.forEach((player) => {
-                this.communicationHandler.sendGameStart(this.players);
-            });
-        }
+        this.players.forEach((player) => {
+            this.communicationHandler.sendGameStart(this.players);
+        });
     }
 
     @PacketHandler(SelectedWordPacket)

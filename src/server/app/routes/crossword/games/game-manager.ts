@@ -34,7 +34,7 @@ export class GameManager {
         const matchingGames: Game[] = [];
         this.games.forEach((game) => {
             const isGameFull =
-                game.currentNumberOfPlayers >= game.configuration.playerNumber;
+                game.currentPlayerCount >= game.configuration.playerNumber;
             if (!isGameFull && game.matchesFilter(filter)) {
                 matchingGames.push(game);
             }
@@ -63,7 +63,7 @@ export class GameManager {
         this.games.forEach((game, id) => {
             if (game.isSocketIdInGame(socketId)) {
                 game.deletePlayerBySocketid(socketId);
-                if (game.currentNumberOfPlayers <= 0) {
+                if (game.currentPlayerCount <= 0) {
                     return this.games.delete(id);
                 }
             }
@@ -97,9 +97,9 @@ export class GameManager {
     // tslint:disable-next-line:no-unused-variable
     private gameJoinHandler(event: PacketEvent<GameJoinPacket>): void {
         const gameId = event.value.gameId;
-        const game = this.getGame(gameId);
         const playerName = event.value.playerName;
 
+        const game = this.getGame(gameId);
         game.addPlayer(new Player(playerName, event.socketid));
     }
 
@@ -114,7 +114,9 @@ export class GameManager {
         const wordGuess: GridWord = event.value.wordGuess;
 
         const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
-        foundGame.validateUserAnswer(wordGuess, event.socketid);
+        if (foundGame != null) {
+            foundGame.validateUserAnswer(wordGuess, event.socketid);
+        }
     }
 
 }
