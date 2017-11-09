@@ -50,8 +50,8 @@ export class Car extends UserControllableCollidableMesh {
 
     public readonly mass: Kilograms = 100;
 
-    private lights: CarLights;
-    private breakLights: CarLights;
+    protected lights: CarLights;
+    protected breakLights: CarLights;
     public readonly boundingBox: THREE.Box3;
 
     protected maxSpeed = 50; // m/s

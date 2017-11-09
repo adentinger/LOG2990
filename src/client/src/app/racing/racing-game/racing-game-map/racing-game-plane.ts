@@ -4,8 +4,6 @@ import { PhysicMesh } from '../physic/object';
 import { loadTexture } from '../../../util/textures';
 
 export class RacingGamePlane extends PhysicMesh {
-    private static readonly TEXTURE_LOADER = new THREE.TextureLoader();
-
     private static readonly GRASS_URL = '/assets/racing/textures/grass.png';
 
     private static readonly GRASS_TEXTURE_PROMISE = loadTexture(RacingGamePlane.GRASS_URL);

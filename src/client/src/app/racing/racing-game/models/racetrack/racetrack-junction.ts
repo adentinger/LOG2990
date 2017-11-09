@@ -3,8 +3,6 @@ import { Track } from '../../../track';
 import { loadTexture } from '../../../../util/textures';
 
 export class RacetrackJunction extends THREE.Mesh {
-    private static TEXTURE_LOADER = new THREE.TextureLoader();
-
     private static ASPHALT_URL = 'assets/racing/textures/ground_asphalt_old_07.png';
     private static ASPHALT_NORMALS_URL = 'assets/racing/normals/road_normal_map.jpg';
 
