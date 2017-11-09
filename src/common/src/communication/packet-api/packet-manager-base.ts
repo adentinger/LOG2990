@@ -22,8 +22,8 @@ export abstract class PacketManagerBase<Sock extends Socket> {
     private static readonly PACKET_MESSAGE_MATCHER = /^packet:([a-zA-Z_][a-zA-Z0-9_$]*)$/i;
 
     protected logger = Logger.getLogger('Packet');
-    protected parsers: Map<Class<any>, PacketParser<any>> = new Map();
-    private handlers: Map<Class<any>, Set<PacketHandler<any>>> = new Map();
+    protected parsers: Map<Class, PacketParser<any>> = new Map();
+    private handlers: Map<Class, Set<PacketHandler<any>>> = new Map();
     protected diconnectHandlers: Set<(socketId: string) => void> = new Set();
 
     private static isPacketMessage(message: string): boolean {
@@ -60,7 +60,10 @@ export abstract class PacketManagerBase<Sock extends Socket> {
                     this.logger.debug(`Reception "${eventType}"`);
                     try {
                         const object = parser.parse(toArrayBuffer(data));
-                        this.callHandlers(dataType, new PacketEvent(object, socket.id));
+                        const handlersCalled = this.callHandlers(dataType, new PacketEvent(object, socket.id));
+                        if (!handlersCalled) {
+                            this.logger.warn(`No registered handler for packet of type "${eventType}". Packet dropped`);
+                        }
                     } catch (error) {
                         this.logger.warn(`An error occured while parsing ${eventType}:`,
                             error instanceof Error ? error.message : error);
@@ -91,11 +94,21 @@ export abstract class PacketManagerBase<Sock extends Socket> {
         return null;
     }
 
-    private callHandlers<T>(dataType: Class<T>, event: PacketEvent<T>) {
+    private callHandlers<T>(dataType: Class<T>, event: PacketEvent<T>): boolean {
         const HANDLERS = (this.handlers.get(dataType)) as Set<PacketHandler<T>>;
-        for (const HANDLER of HANDLERS) {
-            HANDLER(event);
+        if (HANDLERS != null && HANDLERS.size > 0) {
+            for (const HANDLER of HANDLERS) {
+                try {
+                    HANDLER(event);
+                }
+                catch (error) {
+                    this.logger.warn(`An error occured while executing ${HANDLER.name}:`,
+                        error instanceof Error ? error.message + error.stack : error);
+                }
+            }
+            return true;
         }
+        return false;
     }
 
     /**
