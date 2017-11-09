@@ -1,34 +1,23 @@
-import '../../../../../common/src/crossword/packets/timer.parser';
-import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
-import '../../../../../common/src/crossword/packets/grid-word.parser';
-import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
-import '../../../../../common/src/crossword/packets/game-definition.parser';
-import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
-import '../../../../../common/src/crossword/packets/clear-grid.parser';
-import { GameStartPacket } from '../../../../../common/src/crossword/packets/game-start.packet';
-import '../../../../../common/src/crossword/packets/game-start.parser';
+import {
+    GridWordPacket,
+    GameDefinitionPacket,
+    ClearGridPacket,
+    GameStartPacket,
+    SelectedWordPacket,
+    TimerPacket,
+    WordGuessPacket,
+    GameJoinPacket
+} from '../../../../../common/src/crossword/packets';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DefinitionWithIndex } from './game-data';
 import { Player } from './player';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
-import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
-import '../../../../../common/src/crossword/packets/selected-word.parser';
-import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
-import '../../../../../common/src/crossword/packets/timer.parser';
-import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
-import '../../../../../common/src/crossword/packets/word-try-result.parser';
-import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game-join.packet';
-import '../../../../../common/src/crossword/packets/game-join.parser';
 import { GameId } from '../../../../../common/src/communication/game-configs';
 
 export class CommunicationHandler {
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
-
-    constructor() {
-        this.packetManager = PacketManagerServer.getInstance();
-    }
 
     public async clearPlayerGrid(playerId: string): Promise<void> {
         this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
@@ -76,14 +65,14 @@ export class CommunicationHandler {
 
     public sendFoundWord(foundWord: GridWord, finder: Player, opponent: Player = null): void {
         foundWord.owner = Owner.player1;
-        const finderPacket = new WordTryPacket(foundWord);
+        const finderPacket = new WordGuessPacket(foundWord);
         this.packetManager.sendPacket(
-            WordTryPacket,
+            WordGuessPacket,
             finderPacket,
             finder.socketId
         );
         if (opponent) {
-            const opponentPacket = new WordTryPacket(new GridWord(
+            const opponentPacket = new WordGuessPacket(new GridWord(
                 foundWord.id,
                 foundWord.y,
                 foundWord.x,
@@ -93,7 +82,7 @@ export class CommunicationHandler {
                 foundWord.string
             ));
             this.packetManager.sendPacket(
-                WordTryPacket,
+                WordGuessPacket,
                 opponentPacket,
                 opponent.socketId
             );

@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 
+import {
+    WordGuessPacket,
+    GridWordPacket,
+    ClearGridPacket
+} from '../../../../../common/src/crossword/packets';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { mockHorizontalGridWords, mockVerticalGridWords } from '../mocks/grid-mock';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { registerHandlers, PacketHandler, PacketEvent } from '../../../../../common/src/index';
-import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
-import '../../../../../common/src/crossword/packets/word-try.parser';
-import { GridWordPacket } from '../../../../../common/src/crossword/packets/grid-word.packet';
-import '../../../../../common/src/crossword/packets/grid-word.parser';
-import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
-import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
 import { SelectionService } from '../selection.service';
 import { GameService, GameState } from '../game.service';
@@ -69,7 +68,7 @@ export class GridService {
     }
 
     private sendWordToServer(word: GridWord): void {
-        this.packetManager.sendPacket(WordTryPacket, new WordTryPacket(word));
+        this.packetManager.sendPacket(WordGuessPacket, new WordGuessPacket(word));
     }
 
     private onChange(): void {
@@ -90,10 +89,10 @@ export class GridService {
         this.onChange();
     }
 
-    @PacketHandler(WordTryPacket)
+    @PacketHandler(WordGuessPacket)
     // tslint:disable-next-line:no-unused-variable
-    private wordWasFound(event: PacketEvent<WordTryPacket>): void {
-        const word = event.value.wordTry;
+    private wordWasFound(event: PacketEvent<WordGuessPacket>): void {
+        const word = event.value.wordGuess;
         this.GRID.updateWord(word);
         const isWordSelected =
             this.selectionService.selectionValue.player !== SelectionService.NO_SELECTION &&

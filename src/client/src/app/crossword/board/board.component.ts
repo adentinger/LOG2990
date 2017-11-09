@@ -3,7 +3,6 @@ import { GridService } from './grid.service';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { SelectionService } from '../selection.service';
 
-import '../../../../../common/src/crossword/packets/word-try.parser';
 import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
