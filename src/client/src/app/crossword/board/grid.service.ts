@@ -45,7 +45,7 @@ export class GridService {
     }
 
     public getWord(wordSearch: WordByIdAndDirection): GridWord {
-        if (wordSearch !== SelectionService.NO_SELECTION) {
+        if (wordSearch.id !== SelectionService.NO_SELECTION.id) {
             return this.GRID.getWord(wordSearch.id, wordSearch.direction);
         }
         else {
