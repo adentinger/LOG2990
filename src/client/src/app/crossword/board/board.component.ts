@@ -83,18 +83,21 @@ export class BoardComponent implements OnInit, OnDestroy {
 
         const SELECTED_WORD =
             this.gridService.getWord(this.selectionService.selectionValue.player);
-        if (input.length > SELECTED_WORD.length) {
-            input = input.substr(0, SELECTED_WORD.length);
+        if (SELECTED_WORD !== null) {
+            if (input.length > SELECTED_WORD.length) {
+                input = input.substr(0, SELECTED_WORD.length);
+            }
+            return new GridWord(
+                -1,
+                SELECTED_WORD.y,
+                SELECTED_WORD.x,
+                SELECTED_WORD.length,
+                SELECTED_WORD.direction,
+                Owner.none,
+                input
+            );
         }
-        return new GridWord(
-            -1,
-            SELECTED_WORD.y,
-            SELECTED_WORD.x,
-            SELECTED_WORD.length,
-            SELECTED_WORD.direction,
-            Owner.none,
-            input
-        );
+        return null;
     }
 
 }
