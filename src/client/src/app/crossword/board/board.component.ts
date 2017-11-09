@@ -7,7 +7,7 @@ import '../../../../../common/src/crossword/packets/word-try.parser';
 import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
-import { Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { SelectedGridWord } from './selected-grid-word';
 import { Logger } from '../../../../../common/src/logger';
 import { Selection } from './crossword-tile/highlight-grid';
@@ -97,7 +97,7 @@ export class BoardComponent implements OnInit, OnDestroy {
                 input
             );
         }
-        return null;
+        return new GridWord(0, 0, 0, 0, Direction.horizontal, Owner.none, '');
     }
 
 }
