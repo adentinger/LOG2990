@@ -2,7 +2,6 @@ import { HighlightGrid, WhoIsSelecting } from './highlight-grid';
 import { GridWord } from '../../../../../../common/src/crossword/grid-word';
 import { Grid } from '../../../../../../common/src/grid';
 import { Direction, Owner } from '../../../../../../common/src/crossword/crossword-enums';
-import { SelectedGridWord } from '../selected-grid-word';
 
 function highlightGridForEach(highlightGrid: HighlightGrid,
     callback: (isHighlighted: WhoIsSelecting, row: number, col: number) => void) {

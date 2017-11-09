@@ -5,7 +5,6 @@ import { PacketManagerClient } from '../packet-manager-client';
 import { GameJoinPacket } from '../../../../common/src/crossword/packets/game-join.packet';
 import '../../../../common/src/crossword/packets/game-join.parser';
 import { Subject } from 'rxjs/Subject';
-import { GameId } from '../../../../common/src/communication/game-configs';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
 import { UserChoiceService } from './config-menu/user-choice.service';
 import { GameData } from './game-data';
