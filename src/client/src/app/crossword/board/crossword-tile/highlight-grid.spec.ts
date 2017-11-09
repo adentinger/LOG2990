@@ -25,7 +25,7 @@ function filledGridForEach(highlightGrid: HighlightGrid,
 describe('HighlightGrid', () => {
 
     it('should be created', () => {
-        expect(new HighlightGrid(new SelectedGridWord())).toBeTruthy();
+        expect(new HighlightGrid()).toBeTruthy();
     });
 
     it('should tell that nothing is selected when constructed with null', () => {
@@ -43,7 +43,10 @@ describe('HighlightGrid', () => {
         const COL_MIN = 2;
         const COL_MAX = 5;
         const HIGHLIGHT_GRID = new HighlightGrid(
-            new SelectedGridWord(new GridWord(0, ROW, COL_MIN, COL_MAX - COL_MIN + 1, Direction.horizontal), null)
+            {
+                player: new GridWord(0, ROW, COL_MIN, COL_MAX - COL_MIN + 1, Direction.horizontal),
+                opponent: null
+            }
         );
         const SHOULD_BE_HIGHLIGHTED = (row: number, col: number) => {
             if (row === ROW && col >= COL_MIN && col <= COL_MAX) {
@@ -63,7 +66,10 @@ describe('HighlightGrid', () => {
         const ROW_MAX = 5;
         const COLUMN = 3;
         const HIGHLIGHT_GRID = new HighlightGrid(
-            new SelectedGridWord(new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical), null)
+            {
+                player: new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical),
+                opponent: null
+            }
         );
         const SHOULD_BE_HIGHLIGHTED = (row: number, col: number) => {
             if (col === COLUMN && row >= ROW_MIN && row <= ROW_MAX) {
@@ -84,8 +90,10 @@ describe('HighlightGrid', () => {
         const ROW_MAX = 5;
         const COLUMN = 3;
         const HIGHLIGHT_GRID = new HighlightGrid(
-            new SelectedGridWord(new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical),
-                new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical))
+            {
+                player: new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical),
+                opponent: new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical)
+            }
         );
         const SHOULD_BE_HIGHLIGHTED = (row: number, col: number) => {
             if (col === COLUMN && row >= ROW_MIN && row <= ROW_MAX) {
@@ -106,8 +114,10 @@ describe('HighlightGrid', () => {
         const ROW_MAX = 5;
         const COLUMN = 3;
         const FOUND_WORD: GridWord[] = [new GridWord(0, ROW_MIN, COLUMN, ROW_MAX - ROW_MIN + 1, Direction.vertical, Owner.player1, 'allo')];
-        const FILLED_GRID = new HighlightGrid(
-            new SelectedGridWord(new GridWord(0, 10, 10, 1, Direction.horizontal)), FOUND_WORD);
+        const FILLED_GRID = new HighlightGrid({
+            player: new GridWord(0, 10, 10, 1, Direction.horizontal),
+            opponent: FOUND_WORD
+        });
 
         const SHOULD_BE_FILLED = (row: number, col: number) => {
             if (col === COLUMN && row >= ROW_MIN && row <= ROW_MAX) {
@@ -136,8 +146,10 @@ describe('HighlightGrid', () => {
             new GridWord(0, ROW_MIN_WORD1, COLUMN_WORD1, ROW_MAX_WORD1 - ROW_MIN_WORD1 + 1, Direction.vertical, Owner.player1),
             new GridWord(1, COLUMN_MIN_WORD2, ROW_WORD2, COLUMN_MAX_WORD2 - COLUMN_MIN_WORD2 + 1, Direction.horizontal, Owner.player2)];
 
-        const FILLED_GRID = new HighlightGrid(
-            new SelectedGridWord(new GridWord(0, 10, 10, 1, Direction.horizontal)), FOUND_WORDS);
+        const FILLED_GRID = new HighlightGrid({
+            player: new GridWord(0, 10, 10, 1, Direction.horizontal),
+            opponent: FOUND_WORDS
+        });
 
         const SHOULD_BE_FILLED = (row: number, col: number) => {
             if (row === ROW_WORD2 && col === COLUMN_WORD1) {
