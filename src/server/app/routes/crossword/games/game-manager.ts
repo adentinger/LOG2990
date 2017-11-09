@@ -9,6 +9,7 @@ import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { GameClassic } from './game-classic';
+import { GameDynamic } from './game-dynamic';
 
 export class GameManager {
 
@@ -51,7 +52,7 @@ export class GameManager {
                 break;
             }
             case GameMode.Dynamic: {
-                game = new GameClassic(configs);
+                game = new GameDynamic(configs);
                 break;
             }
         }
