@@ -13,6 +13,9 @@ import { DefinitionWithIndex } from './game-data';
 import { Player } from './player';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
+import '../../../../../common/src/crossword/packets/selected-word.parser';
+import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
+import '../../../../../common/src/crossword/packets/timer.parser';
 
 export class CommunicationHandler {
 
@@ -65,4 +68,12 @@ export class CommunicationHandler {
             player.socketId
         );
     }
+
+    public sendNewTimerValueTo(player: Player, countdown: number): void {
+        this.packetManager.sendPacket(
+            TimerPacket,
+            new TimerPacket(countdown), player.socketId
+        );
+    }
+
 }
