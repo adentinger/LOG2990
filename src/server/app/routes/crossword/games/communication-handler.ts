@@ -11,11 +11,13 @@ import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DefinitionWithIndex } from './game-data';
 import { Player } from './player';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
 import '../../../../../common/src/crossword/packets/selected-word.parser';
 import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 import '../../../../../common/src/crossword/packets/timer.parser';
+import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
+import '../../../../../common/src/crossword/packets/word-try-result.parser';
 
 export class CommunicationHandler {
 
@@ -67,6 +69,32 @@ export class CommunicationHandler {
             new SelectedWordPacket(selectionDirection, selectionId),
             player.socketId
         );
+    }
+
+    public sendFoundWord(foundWord: GridWord, finder: Player, opponent: Player = null): void {
+        foundWord.owner = Owner.player1;
+        const finderPacket = new WordTryPacket(foundWord);
+        this.packetManager.sendPacket(
+            WordTryPacket,
+            finderPacket,
+            finder.socketId
+        );
+        if (opponent) {
+            const opponentPacket = new WordTryPacket(new GridWord(
+                foundWord.id,
+                foundWord.y,
+                foundWord.x,
+                foundWord.length,
+                foundWord.direction,
+                Owner.player2,
+                foundWord.string
+            ));
+            this.packetManager.sendPacket(
+                WordTryPacket,
+                opponentPacket,
+                opponent.socketId
+            );
+        }
     }
 
     public sendNewTimerValueTo(player: Player, countdown: number): void {
