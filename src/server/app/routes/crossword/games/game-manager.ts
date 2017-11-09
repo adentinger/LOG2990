@@ -125,7 +125,8 @@ export class GameManager {
     private getCheatModeTimerValue(event: PacketEvent<TimerPacket>) {
         const foundGame = this.findGame(game => game.isSocketIdInGame(event.socketid));
         if (foundGame !== null) {
-            // TODO update timer.
+            console.log('setting countdown for game', foundGame.id, 'to', event.value.countdown);
+            foundGame.countdown = event.value.countdown;
         }
         else {
             throw new Error(`No game with socket ID ${event.socketid} found`);

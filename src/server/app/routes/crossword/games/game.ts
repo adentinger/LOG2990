@@ -1,10 +1,7 @@
-import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
-import '../../../../../common/src/crossword/packets/timer.parser';
-
 import { CrosswordGameConfigs, PlayerNumber, GameId } from '../../../../../common/src/communication/game-configs';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
-import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
+import { registerHandlers } from '../../../../../common/src/index';
 import { GameMode, Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
