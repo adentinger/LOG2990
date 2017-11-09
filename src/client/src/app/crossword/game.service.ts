@@ -9,6 +9,7 @@ import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common
 import { UserChoiceService } from './config-menu/user-choice.service';
 import { GameData } from './game-data';
 import { GameStartPacket } from '../../../../common/src/crossword/packets/game-start.packet';
+import { GameMode } from '../../../../common/src/crossword/crossword-enums';
 
 export enum GameState {
     configuring,
@@ -87,7 +88,9 @@ export class GameService {
     }
 
     public setTimerOnOff(): void {
-        this.changeTimerValueOn = !this.changeTimerValueOn;
+        if (this.dataInternal.mode === GameMode.Dynamic) {
+            this.changeTimerValueOn = !this.changeTimerValueOn;
+        }
     }
 
     public getTimerState(): boolean {

@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 
 import { GameService } from '../game.service';
 import { TimerService } from '../services/timer.service';
+import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 
 @Component({
     selector: 'app-cheat-mode',
@@ -51,6 +52,10 @@ export class CheatModeComponent {
 
     public onTimerRunningToggle(): void {
         this.gameService.setTimerOnOff();
+    }
+
+    public haveTimer(): boolean {
+        return this.gameService.data.mode === GameMode.Dynamic;
     }
 
     public isTimerBeingSet(): boolean {
