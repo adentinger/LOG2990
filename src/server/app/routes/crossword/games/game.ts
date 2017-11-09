@@ -174,7 +174,12 @@ export class Game {
     }
 
     public updateSelectionOf(player: Player, id: number, direction: Direction): void {
-        console.log('selection:', player, id, direction);
+        const opponents = this.players.filter(
+            (existingPlayer) => existingPlayer.socketId === player.socketId
+        );
+        opponents.forEach((opponent) => {
+            this.communicationHandler.updateOpponentSelectionOf(opponent, id, direction)
+        });
     }
 
     public isSocketIdInGame(socketId: string): boolean {
