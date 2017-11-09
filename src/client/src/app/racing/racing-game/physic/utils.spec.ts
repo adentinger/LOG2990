@@ -8,7 +8,6 @@ import * as THREE from 'three';
 import { EventManager } from '../../../event-manager.service';
 import { PhysicMesh } from './object';
 import { Kilograms } from '../../types';
-import { SlipDirection, PuddleBox } from './examples/puddle-box';
 
 let eventManager: EventManager;
 let physicUtils: PhysicUtils;
