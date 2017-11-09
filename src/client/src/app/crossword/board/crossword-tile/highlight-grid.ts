@@ -1,7 +1,6 @@
 import { GridWord } from '../../../../../../common/src/crossword/grid-word';
 import { Grid } from '../../../../../../common/src/grid';
 import { Direction, Owner } from '../../../../../../common/src/crossword/crossword-enums';
-import { SelectedGridWord } from '../selected-grid-word';
 
 export enum WhoIsSelecting {
     noOne = 0,
@@ -9,6 +8,11 @@ export enum WhoIsSelecting {
     opponent,
     both,
     length
+}
+
+export interface Selection {
+    player: GridWord;
+    opponent: GridWord;
 }
 
 /**
@@ -19,7 +23,7 @@ export class HighlightGrid {
     private data: WhoIsSelecting[][] = [];
     private wordsFound: WhoIsSelecting[][] = [];
 
-    constructor(selection: SelectedGridWord = { playerSelection: null, opponentSelection: null }, words: GridWord[] = []) {
+    constructor(selection: Selection = { player: null, opponent: null }, words: GridWord[] = []) {
         const DATA = [];
         const found = [];
         for (let row = 0; row < Grid.DIMENSIONS; ++row) {
@@ -43,19 +47,19 @@ export class HighlightGrid {
         return this.wordsFound[row][column];
     }
 
-    private shouldBeSelected(row: number, column: number, word: SelectedGridWord): WhoIsSelecting {
+    private shouldBeSelected(row: number, column: number, selection: Selection): WhoIsSelecting {
 
-        if (word.playerSelection === null && word.opponentSelection === null) {
+        if (selection.player === null && selection.opponent === null) {
             return WhoIsSelecting.noOne;
         }
-        else if (word.playerSelection !== null && word.opponentSelection === null) {
-            return this.isHighlighted(row, column, word.playerSelection, WhoIsSelecting.player);
+        else if (selection.player !== null && selection.opponent === null) {
+            return this.isHighlighted(row, column, selection.player, WhoIsSelecting.player);
         }
-        else if (word.playerSelection === null && word.opponentSelection !== null) {
-            return this.isHighlighted(row, column, word.opponentSelection, WhoIsSelecting.opponent);
+        else if (selection.player === null && selection.opponent !== null) {
+            return this.isHighlighted(row, column, selection.opponent, WhoIsSelecting.opponent);
         }
-        else if (word.playerSelection !== null && word.playerSelection !== null && word.opponentSelection.id === word.playerSelection.id) {
-            return this.isHighlighted(row, column, word.playerSelection, WhoIsSelecting.both);
+        else if (selection.player !== null && selection.player !== null && selection.opponent.id === selection.player.id) {
+            return this.isHighlighted(row, column, selection.player, WhoIsSelecting.both);
         }
 
     }

@@ -44,23 +44,21 @@ export class DefinitionFieldComponent {
         return this.definitionService.answers;
     }
 
-    public isDefinitionClickable(index: number, direction: Direction): boolean {
+    public isDefinitionClickable(id: number, direction: Direction): boolean {
         const isWordFound =
-            this.gridService.getWord(index, direction).owner === Owner.none;
+            this.gridService.getWord({id: id, direction: direction}).owner === Owner.none;
         return isWordFound;
     }
 
     public onDefinitionClicked(index: number, direction: Direction): void {
         if (this.isDefinitionClickable(index, direction)) {
-            const SELECTED_WORD: GridWord =
-                this.gridService.getWord(index, direction);
-            this.selectionService.updateSelectedGridWord(SELECTED_WORD);
+            this.selectionService.updateSelectedGridWord({id: index, direction: direction});
         }
     }
 
     public onClickOutside(): void {
         if (this.gameService.state >= GameState.started) {
-            this.selectionService.selection.next(SelectionService.NO_SELECTION);
+            this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
     }
 

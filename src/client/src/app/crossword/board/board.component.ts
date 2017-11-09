@@ -10,6 +10,7 @@ import { Grid } from '../../../../../common/src/grid';
 import { Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { SelectedGridWord } from './selected-grid-word';
 import { Logger } from '../../../../../common/src/logger';
+import { Selection } from './crossword-tile/highlight-grid';
 
 @Component({
     selector: 'app-board',
@@ -50,7 +51,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     private onSelect(selected: SelectedGridWord): void {
-        this.highlightGrid = new HighlightGrid(selected, this.gridService.words);
+        const playerSelection = this.gridService.getWord(selected.player);
+        const opponentSelection = this.gridService.getWord(selected.opponent);
+        const selection: Selection = {player: playerSelection, opponent: opponentSelection};
+        this.highlightGrid = new HighlightGrid(selection, this.gridService.words);
         if (selected !== null) {
             this.inputBuffer.nativeElement.focus();
             this.inputBuffer.nativeElement.value = '';
@@ -58,7 +62,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     public onInputChange(inputValue: string) {
-        if (this.selectionService.selectionValue.playerSelection !== null) {
+        if (this.selectionService.selectionValue.player !== null) {
             const USER_WORD = this.makeWordFromInput(inputValue);
             this.inputBuffer.nativeElement.value = USER_WORD.string;
             this.gridService.setUserInput(USER_WORD);
@@ -77,7 +81,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         input = input.replace(/[^a-zA-Z]/g, '');
         input = input.toLowerCase();
 
-        const SELECTED_WORD = this.selectionService.selectionValue.playerSelection;
+        const SELECTED_WORD =
+            this.gridService.getWord(this.selectionService.selectionValue.player);
         if (input.length > SELECTED_WORD.length) {
             input = input.substr(0, SELECTED_WORD.length);
         }

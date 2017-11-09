@@ -14,6 +14,7 @@ import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { Grid } from './grid';
 import { SelectionService } from '../selection.service';
 import { GameService, GameState } from '../game.service';
+import { WordByIdAndDirection } from './selected-grid-word';
 
 @Injectable()
 export class GridService {
@@ -43,8 +44,13 @@ export class GridService {
         return this.GRID.getCharAt(row, column);
     }
 
-    public getWord(index: number, direction: Direction): GridWord {
-        return this.GRID.getWord(index, direction);
+    public getWord(wordSearch: WordByIdAndDirection): GridWord {
+        if (wordSearch !== SelectionService.NO_SELECTION) {
+            return this.GRID.getWord(wordSearch.id, wordSearch.direction);
+        }
+        else {
+            return null;
+        }
     }
 
     public setUserInput(word: GridWord): void {
@@ -90,11 +96,11 @@ export class GridService {
         const word = event.value.wordTry;
         this.GRID.updateWord(word);
         const isWordSelected =
-            this.selectionService.selectionValue.playerSelection !== SelectionService.NO_SELECTION &&
-            this.selectionService.selectionValue.playerSelection.id === word.id &&
-            this.selectionService.selectionValue.playerSelection.direction === word.direction;
+            this.selectionService.selectionValue.player !== SelectionService.NO_SELECTION &&
+            this.selectionService.selectionValue.player.id === word.id &&
+            this.selectionService.selectionValue.player.direction === word.direction;
         if (isWordSelected) {
-            this.selectionService.selection.next(SelectionService.NO_SELECTION);
+            this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
         if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.GRID.numberOfWords) {
             this.gameService.state = GameState.finished;
