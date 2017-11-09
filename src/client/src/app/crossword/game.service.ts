@@ -9,6 +9,7 @@ import { GameId } from '../../../../common/src/communication/game-configs';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
 import { UserChoiceService } from './config-menu/user-choice.service';
 import { GameData } from './game-data';
+import { GameStartPacket } from '../../../../common/src/crossword/packets/game-start.packet';
 
 export enum GameState {
     configuring,
@@ -98,6 +99,14 @@ export class GameService {
     // tslint:disable-next-line:no-unused-variable
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
         this.dataInternal.opponentName = event.value.playerName;
+    }
+
+    @PacketHandler(GameStartPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private gameStarted(event: PacketEvent<GameStartPacket>): void {
+        this.dataInternal.mode = this.userChoiceService.gameMode;
+        this.dataInternal.difficulty = this.userChoiceService.difficulty;
+        this.dataInternal.numberOfPlayers = this.userChoiceService.playerNumber;
     }
 
 }
