@@ -85,7 +85,11 @@ export class Game {
         const found = index >= 0;
         if (found) {
             this.players.splice(index, 1);
+            // Stop countdown
             if (this.timerInterval !== null) {
+                this.players.forEach(player => {
+                    this.communicationHandler.sendNewTimerValueTo(player, 0);
+                });
                 clearInterval(this.timerInterval);
                 this.timerInterval = null;
             }
