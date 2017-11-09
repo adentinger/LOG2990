@@ -163,7 +163,9 @@ export class Car extends UserControllableCollidableMesh {
 
     public update(utils: PhysicUtils, deltaTime: Seconds) {
         super.update(utils, deltaTime);
-        this.audio.setPlaybackRate(2 * (this.velocity.length()) / this.maxSpeed + 0.4);
+        const MIN_RATE = 0.4, PITCH_FACTOR = 2;
+        const playbackRate = PITCH_FACTOR * (this.velocity.length() / this.maxSpeed) + MIN_RATE;
+        this.audio.setPlaybackRate(playbackRate);
 
         if (this.isStopped && this.velocity.length() > UserControllableCollidableMesh.MIN_SPEED) {
             this.isStopped = false;
