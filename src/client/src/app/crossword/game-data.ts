@@ -19,4 +19,12 @@ export class GameData {
         );
     }
 
+    public modeAsString(): string {
+        switch (this.mode) {
+            case GameMode.Classic: return 'Classic';
+            case GameMode.Dynamic: return 'Dynamic';
+            default: return '???';
+        }
+    }
+
 }
