@@ -8,7 +8,7 @@ export class SelectedWordParser extends PacketParser<SelectedWordPacket> {
         const BUFFER = new ArrayBuffer(2 * SIZE_UINT32);
         const DATA = new DataView(BUFFER);
         DATA.setInt32(0 * SIZE_UINT32, value.direction);
-        DATA.setInt32(1 * SIZE_UINT32, value.direction);
+        DATA.setInt32(1 * SIZE_UINT32, value.id);
         return BUFFER;
     }
 
@@ -16,7 +16,7 @@ export class SelectedWordParser extends PacketParser<SelectedWordPacket> {
         const WORD = new SelectedWordPacket();
         const VIEW = new DataView(data);
         WORD.direction = VIEW.getInt32(0 * SIZE_UINT32);
-        WORD.id     = VIEW.getInt32(1 * SIZE_UINT32);
+        WORD.id        = VIEW.getInt32(1 * SIZE_UINT32);
         return null;
     }
 
