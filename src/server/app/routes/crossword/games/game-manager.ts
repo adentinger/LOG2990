@@ -8,6 +8,8 @@ import { GameJoinPacket } from '../../../../../common/src/crossword/packets/game
 import '../../../../../common/src/crossword/packets/game-join.parser';
 import { WordTryPacket } from '../../../../../common/src/crossword/packets/word-try.packet';
 import '../../../../../common/src/crossword/packets/word-try.parser';
+import { SelectedWordPacket } from '../../../../../common/src/crossword/packets/selected-word.packet';
+import '../../../../../common/src/crossword/packets/selected-word.parser';
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 
@@ -102,10 +104,19 @@ export class GameManager {
     // tslint:disable-next-line:no-unused-variable
     private wordTryHandler(event: PacketEvent<WordTryPacket>) {
         const WORD_TRY: GridWord = event.value.wordTry;
-        const PLAYER_ID: string = event.socketid;
 
-        const foundGame: Game = this.findGame((game) => game.isSocketIdInGame(PLAYER_ID));
+        const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
         foundGame.validateUserAnswer(WORD_TRY, event.socketid);
+    }
+
+    @PacketHandler(SelectedWordPacket)
+    // tslint:disable-next-line:no-unused-variable
+    private selectedWordHandler(event: PacketEvent<SelectedWordPacket>): void {
+        const foundGame =
+            this.findGame((game) => game.isSocketIdInGame(event.socketid));
+        const foundPlayer =
+            foundGame.findPlayer(player => player.socketId === event.socketid);
+        foundGame.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
     }
 
 }

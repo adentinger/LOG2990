@@ -12,7 +12,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketManagerServer } from '../../../packet-manager';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { Logger } from '../../../../../common/src/logger';
-import { GameMode, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { GameMode, Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
@@ -107,6 +107,10 @@ export class Game {
         }
     }
 
+    public findPlayer(predicate: (player: Player) => boolean): Player {
+        return this.players.find(predicate);
+    }
+
     public matchesFilter(filter: GameFilter): boolean {
         return this.configurationInternal.gameMode === filter.mode &&
                this.maxPlayers === filter.playerNumber;
@@ -167,6 +171,10 @@ export class Game {
                 opponent.socketId
             );
         }
+    }
+
+    public updateSelectionOf(player: Player, id: number, direction: Direction): void {
+        console.log('selection:', player, id, direction);
     }
 
     public isSocketIdInGame(socketId: string): boolean {
