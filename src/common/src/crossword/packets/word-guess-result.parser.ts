@@ -1,11 +1,11 @@
 import { Parser, PacketParser, SIZE_UINT32 } from '../../index';
-import { WordTryResultPacket } from './word-try-result.packet';
+import { WordGuessResultPacket } from './word-guess-result.packet';
 import { GridWordParseUtil } from './utils/grid-word-parse-util';
 
-@Parser(WordTryResultPacket)
-export class WordTryResultParser extends PacketParser<WordTryResultPacket> {
+@Parser(WordGuessResultPacket)
+export class WordGuessResultParser extends PacketParser<WordGuessResultPacket> {
 
-    public serialize(value: WordTryResultPacket): ArrayBuffer {
+    public serialize(value: WordGuessResultPacket): ArrayBuffer {
         let dataLength = SIZE_UINT32;
         if (value.found) {
             dataLength += GridWordParseUtil.bufferSizeOf(value.word);
@@ -21,9 +21,9 @@ export class WordTryResultParser extends PacketParser<WordTryResultPacket> {
         return BUFFER;
     }
 
-    public parse(data: ArrayBuffer): WordTryResultPacket {
+    public parse(data: ArrayBuffer): WordGuessResultPacket {
         const VIEW = new DataView(data);
-        const PACKET = new WordTryResultPacket();
+        const PACKET = new WordGuessResultPacket();
         PACKET.found = VIEW.getUint8(0) !== 0 ? true : false;
         if (PACKET.found) {
             PACKET.word = GridWordParseUtil.parseFromBuffer(data, SIZE_UINT32);
