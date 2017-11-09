@@ -9,4 +9,14 @@ export class GameData {
                 public mode = GameMode.Classic,
                 public numberOfPlayers: PlayerNumber = Math.PI) {}
 
+    public clone(): GameData {
+        return new GameData(
+            this.id,
+            this.playerName,
+            this.opponentName,
+            this.mode,
+            this.numberOfPlayers
+        );
+    }
+
 }
