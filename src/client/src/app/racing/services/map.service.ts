@@ -3,6 +3,9 @@ import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
 import { Map } from '../../admin-screen/map-editor/map';
+import { SerializedPothole } from '../../../../../common/src/racing/serialized-pothole';
+import { SerializedPuddle } from '../../../../../common/src/racing/serialized-puddle';
+import { SerializedSpeedBoost } from '../../../../../common/src/racing/serialized-speed-boost';
 
 @Injectable()
 export class MapService {
@@ -37,7 +40,20 @@ export class MapService {
 
     public getByName(name: string): Promise<SerializedMap> {
         const url = 'http://localhost:3000/racing/maps/' + name;
-        return this.http.get(url).toPromise().then(response => response.json() as SerializedMap);
+        return this.http.get(url).toPromise().then(response => {
+            const json = response.json();
+            return new SerializedMap(json.name,
+                                     json.description,
+                                     json.type,
+                                     json.sumRatings,
+                                     json.numberOfRatings,
+                                     json.numberOfPlays,
+                                     json.points,
+                                     json.potholes.map(pothole => new SerializedPothole(pothole.position)),
+                                     json.puddles.map(puddle => new SerializedPuddle(puddle.position)),
+                                     json.speedBoosts.map(speedBoost => new SerializedSpeedBoost(speedBoost.position)),
+                                     json.bestTimes);
+        });
     }
 
 }

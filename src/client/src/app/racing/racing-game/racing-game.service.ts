@@ -70,7 +70,7 @@ export class RacingGameService {
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
-        eventManager: EventManager) {
+        private eventManager: EventManager) {
         this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
@@ -91,7 +91,7 @@ export class RacingGameService {
         // If the game is stopping before it was loaded, then don't start anything.
         Promise.race([
             this.waitToLoad,
-            this.waitToFinalize.toPromise().then(() => {throw void(0); })
+            this.waitToFinalize.toPromise().then(() => { throw void (0); })
         ]).then(() => {
             this.physicEngine.start();
             this.renderer.startRendering();
@@ -127,12 +127,12 @@ export class RacingGameService {
             this.renderer.removeMap(this.map);
         }
 
-        this.map = new RenderableMap(map);
+        this.map = new RenderableMap(map, this.eventManager);
         this.physicEngine.initialize(this.map);
         this.renderer.addMap(this.map);
 
         this.map.addCars(...this.cars);
-        return Promise.all([this.map.waitToLoad]).then(() => {});
+        return Promise.all([this.map.waitToLoad]).then(() => { });
     }
 
     public getCars(): Car[] {

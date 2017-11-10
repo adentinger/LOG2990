@@ -10,9 +10,16 @@ import { RacetrackSegment } from '../models/racetrack/racetrack-segment';
 import { RacetrackJunction } from '../models/racetrack/racetrack-junction';
 import { Track } from '../../track';
 import { Car } from '../models/car/car';
-import { Radians } from '../../../types';
+import { Radians, Meters } from '../../../types';
+import { SerializedItem } from '../../../../../../common/src/racing/serialized-item';
+import { Line } from '../../../../../../common/src/math/line';
+import { Pothole } from '../models/obstacles/pothole';
+import { EventManager } from '../../../event-manager.service';
+import { Puddle } from '../models/obstacles/puddle';
+import { SpeedBooster } from '../models/obstacles/speed-booster';
 
 export class RenderableMap extends PhysicMesh {
+    private static readonly ITEM_HEIGHT = 0.03;
 
     public mapName: string;
     public mapPoints: Point[];
@@ -23,7 +30,7 @@ export class RenderableMap extends PhysicMesh {
     private readonly plane: RacingGamePlane;
     public readonly waitToLoad: Promise<void>;
 
-    constructor(map: SerializedMap) {
+    constructor(map: SerializedMap, private eventManager: EventManager) {
         super();
 
         this.mapName = map.name;
@@ -38,6 +45,7 @@ export class RenderableMap extends PhysicMesh {
 
         const waitForJunctions = this.placeJunctionsOnMap();
         const waitForSegments = this.placeSegmentsOnMap();
+        this.placeObstaclesOnMap();
 
         this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
     }
@@ -70,7 +78,7 @@ export class RenderableMap extends PhysicMesh {
             this.add(junction);
             waitforJunctions.push(junction.waitToLoad);
         }
-        return Promise.all(waitforJunctions).then(() => {});
+        return Promise.all(waitforJunctions).then(() => { });
     }
 
     private placeSegmentsOnMap(): Promise<void> {
@@ -88,7 +96,47 @@ export class RenderableMap extends PhysicMesh {
             this.add(segment);
             waitForSegments.push(segment.waitToLoad);
         }
-        return Promise.all(waitForSegments).then(() => {});
+        return Promise.all(waitForSegments).then(() => { });
+    }
+
+    private placeObstaclesOnMap(): void {
+        const obstacles: SerializedItem[] = [...this.mapPotholes, ...this.mapPuddles, ...this.mapSpeedBoosts];
+        obstacles.forEach((obstacle) => this.placeObstacleOnMap(obstacle));
+    }
+
+    private placeObstacleOnMap(item: SerializedItem): void {
+        const lines = this.mapPoints.map((point, i, points) => new Line(point, points[(i + 1) % points.length]));
+        let position: Meters = item.position;
+        for (const line of lines) {
+            if (position > line.translation.norm()) {
+                position -= line.translation.norm();
+            }
+            else {
+                const point = line.interpollate(position / line.translation.norm());
+                const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y);
+                const mesh = this.getMeshFromItem(item);
+                if (mesh != null) {
+                    mesh.position.copy(coordinate);
+                    this.add(mesh);
+                }
+                break;
+            }
+        }
+    }
+
+    private getMeshFromItem(item: SerializedItem): THREE.Mesh {
+        let mesh: THREE.Mesh = null;
+        if (item.type === 'pothole') {
+            mesh = new Pothole(this.eventManager);
+        }
+        else if (item.type === 'puddle') {
+            const slipDirection = Math.sign(Math.random() - 0.5); // Generate randomly -1 or 1
+            mesh = new Puddle(this.eventManager, slipDirection);
+        }
+        else if (item.type === 'speedboost') {
+            mesh = new SpeedBooster(this.eventManager);
+        }
+        return mesh;
     }
 
     private angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {

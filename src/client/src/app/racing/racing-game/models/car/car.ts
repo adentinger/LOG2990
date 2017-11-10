@@ -34,8 +34,10 @@ export class Car extends UserControllableCollidableMesh {
         'tires',
         'windows'
     ];
-    private static readonly CAR_PARTS: Promise<THREE.Mesh[]> = Car.loadCarParts(Car.PART_NAMES);
-    private static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = Car.loadColoredCarParts();
+
+    // has to be public since other elements have dimensions relative to the car
+    public static readonly CAR_PARTS: Promise<THREE.Mesh[]> = Car.loadCarParts(Car.PART_NAMES);
+    public static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = Car.loadColoredCarParts();
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
         new THREE.Vector3(-0.56077, 0.63412, -1.7),
@@ -60,6 +62,7 @@ export class Car extends UserControllableCollidableMesh {
     private previousVelocity = new THREE.Vector3();
 
     public waitToLoad: Promise<void>;
+    public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
     public readonly audioListener = new THREE.AudioListener();
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
 
@@ -70,8 +73,10 @@ export class Car extends UserControllableCollidableMesh {
     constructor(carColor: THREE.Color) {
         super();
         this.addLights();
-        this.waitToLoad = this.addCarParts(carColor).then(() => {
+        this.waitToLoad = this.addCarParts(carColor);
+        this.waitToLoad.then(() => {
             this.breakLightMeshs = this.getObjectByName('brake_light') as THREE.Mesh;
+            this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
         });
         this.boundingBox = new THREE.Box3().setFromObject(this);
         this.add(this.audio);
