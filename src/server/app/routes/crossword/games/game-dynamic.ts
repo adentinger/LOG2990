@@ -8,7 +8,7 @@ export class GameDynamic extends Game {
 
     private static readonly COUNTDOWN_INITAL = 3600; // 1 hour
 
-    public countdown = GameDynamic.COUNTDOWN_INITAL;
+    private countdown = GameDynamic.COUNTDOWN_INITAL;
     protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
