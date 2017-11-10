@@ -238,7 +238,7 @@ export class Car extends UserControllableCollidableMesh {
     public dayModeChanged(newMode: DayMode): void {
         this.dayModeOptions = newMode.CAR_HEADLIGHT_OPTIONS;
         const lights = this.getObjectByName('lights') as THREE.Mesh;
-        if (lights) {
+        if (lights && this.breakLightMeshs) {
             (<THREE.MeshPhongMaterial>lights.material).emissiveIntensity = this.dayModeOptions.intensity;
             (<THREE.MeshPhongMaterial>this.breakLightMeshs.material).emissiveIntensity =
                 0.5 * this.dayModeOptions.intensity + (this.isStopped ? 0.5 : 0);
