@@ -7,7 +7,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 export class GameDynamic extends Game {
 
-    private static readonly COUNTDOWN_INITAL = 3600; // 1 hour
+    private static readonly COUNTDOWN_INITAL = 120; // seconds
 
     private countdown = GameDynamic.COUNTDOWN_INITAL;
     protected timerInterval: NodeJS.Timer = null;
