@@ -13,6 +13,9 @@ import { MapService } from '../services/map.service';
 import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { Logger } from '../../../../../common/src/logger';
+
+const logger = Logger.getLogger();
 
 @Injectable()
 export class RacingGameService {
@@ -96,7 +99,7 @@ export class RacingGameService {
             this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
-        }, () => console.log('Initialization interrupted'));
+        }, () => logger.log('Initialization interrupted'));
     }
 
     public finalize() {

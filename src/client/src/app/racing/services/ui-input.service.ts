@@ -1,4 +1,4 @@
-import { HostListener, Directive, OnDestroy, OnInit } from '@angular/core';
+import { HostListener, Directive } from '@angular/core';
 import { EventManager } from '../../event-manager.service';
 
 export enum MouseButton {
@@ -27,19 +27,11 @@ export const MOUSEUP_EVENT = 'userinput-mouseup';
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[catchInputs]', exportAs: '$inputs' })
 // tslint:disable-next-line:directive-class-suffix
-export class UIInputs implements OnInit, OnDestroy {
+export class UIInputs {
     private pressedKeys: Set<string> = new Set();
     private pressedMouseButtons: Set<MouseButton> = new Set();
 
     constructor(private eventManager: EventManager) { }
-
-    public ngOnInit(): void {
-        console.log('New InputService');
-    }
-
-    public ngOnDestroy(): void {
-        console.log('InputService Destroyed');
-    }
 
     public isKeyPressed(key: string): boolean {
         return this.pressedKeys.has(key);

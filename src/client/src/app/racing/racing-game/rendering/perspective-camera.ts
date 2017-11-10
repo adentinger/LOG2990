@@ -37,7 +37,6 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
             this.target.remove(this);
         }
         object.add(this);
-        console.log('Camera instance:', object.getObjectByName('racing-camera'));
         this.target = object;
     }
 

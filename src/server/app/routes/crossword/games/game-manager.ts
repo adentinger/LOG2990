@@ -10,6 +10,9 @@ import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { GameClassic } from './game-classic';
 import { GameDynamic } from './game-dynamic';
+import { Logger } from '../../../../../common/src/logger';
+
+const logger = Logger.getLogger();
 
 export class GameManager {
 
@@ -144,7 +147,7 @@ export class GameManager {
                 foundGame.deletePlayerBySocketid(event.socketid);
                 if (foundGame.currentPlayerCount <= 0) {
                     this.games.delete(foundGame.id);
-                    console.log(`Deleting game (id=${foundGame.id})`);
+                    logger.log(`Deleting game (id=${foundGame.id})`);
                 }
             }
         }
