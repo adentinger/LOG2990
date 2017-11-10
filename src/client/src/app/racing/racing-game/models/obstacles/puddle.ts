@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
-import { Meters } from '../../../types';
+import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable } from '../../physic/dynamic-collidable';
