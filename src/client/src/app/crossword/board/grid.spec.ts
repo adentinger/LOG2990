@@ -163,7 +163,7 @@ describe('Grid', () => {
     it('should empty itself', () => {
         const GRID = new Grid(horizontalWords()
             .concat(verticalWords()));
-        GRID.empty();
+        GRID.clear();
         gridCompare(
             GRID,
             expectedBlack()

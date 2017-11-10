@@ -8,3 +8,4 @@ export * from './selected-word.packet';
 export * from './timer.packet';
 export * from './word-guess-result.packet';
 export * from './word-guess.packet';
+export * from './game-leave.packet';

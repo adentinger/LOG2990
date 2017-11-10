@@ -1,4 +1,4 @@
-import { Meters } from './types';
+import { Meters } from '../types';
 
 export class Track {
 

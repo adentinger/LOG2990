@@ -10,7 +10,7 @@ import { RacetrackSegment } from '../models/racetrack/racetrack-segment';
 import { RacetrackJunction } from '../models/racetrack/racetrack-junction';
 import { Track } from '../../track';
 import { Car } from '../models/car/car';
-import { Radians, Meters } from '../../types';
+import { Radians, Meters } from '../../../types';
 import { SerializedItem } from '../../../../../../common/src/racing/serialized-item';
 import { Line } from '../../../../../../common/src/math/line';
 import { Pothole } from '../models/obstacles/pothole';

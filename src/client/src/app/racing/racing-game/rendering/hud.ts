@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Seconds } from '../../types';
+import { Seconds } from '../../../types';
 import { GameInfo } from '../game-info';
 
 export interface Time {

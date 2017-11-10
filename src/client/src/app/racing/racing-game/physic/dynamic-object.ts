@@ -1,7 +1,7 @@
 import { IPhysicElement, PhysicMesh } from './object';
 import * as THREE from 'three';
 import { PhysicUtils } from './engine';
-import { Seconds } from '../../types';
+import { Seconds } from '../../../types';
 import { hasAttributes, hasFunctions } from '../../../../../../common/src/utils';
 
 export interface DynamicPhysicElement extends IPhysicElement {

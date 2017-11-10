@@ -10,7 +10,7 @@ import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
-import { Seconds } from '../types';
+import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 

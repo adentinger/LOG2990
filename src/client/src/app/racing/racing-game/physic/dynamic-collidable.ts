@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { PhysicUtils } from './engine';
-import { Seconds, Kilograms } from '../../types';
+import { Seconds, Kilograms } from '../../../types';
 import { DynamicPhysicMesh, DynamicPhysicElement, isDynamicPhysicElement } from './dynamic-object';
 import { Collidable, CollisionInfo, isCollidable } from './collidable';
 

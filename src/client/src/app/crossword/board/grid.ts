@@ -25,7 +25,7 @@ export class Grid {
     }
 
     constructor(words: GridWord[] = []) {
-        this.wordsInternal = words.slice();
+        this.wordsInternal.push(...words);
         this.userInputInternal = Grid.NO_USER_INPUT;
         this.regenerateEverything();
     }
@@ -52,8 +52,8 @@ export class Grid {
         }
     }
 
-    public empty(): void {
-        this.wordsInternal = [];
+    public clear(): void {
+        this.wordsInternal.splice(0);
         this.userInputInternal = Grid.NO_USER_INPUT;
         this.regenerateEverything();
     }
