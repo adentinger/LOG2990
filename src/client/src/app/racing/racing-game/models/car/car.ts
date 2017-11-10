@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Logger } from '../../../../../../../common/src';
 import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { CarHeadlight, CarHeadlightDayModeOptions } from './car-headlight';
-import { Kilograms, Seconds } from '../../../types';
+import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
 

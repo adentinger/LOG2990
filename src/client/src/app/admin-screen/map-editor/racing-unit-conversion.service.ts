@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Meters } from '../../racing/types';
+import { Meters } from '../../types';
 import { Track } from '../../racing/track';
 
 @Injectable()

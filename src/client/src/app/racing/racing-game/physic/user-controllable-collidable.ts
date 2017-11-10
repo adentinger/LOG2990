@@ -1,7 +1,7 @@
 import { DynamicCollidableMesh } from './dynamic-collidable';
 import { UIInputs } from '../../services/ui-input.service';
 import { PhysicUtils } from './engine';
-import { Seconds, Newtons } from '../../types';
+import { Seconds, Newtons } from '../../../types';
 import * as THREE from 'three';
 
 const KEY_FORWARD = 'w';

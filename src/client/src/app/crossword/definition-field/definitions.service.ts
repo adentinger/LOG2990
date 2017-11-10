@@ -7,7 +7,7 @@ import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 import { GameDefinitionPacket } from '../../../../../common/src/crossword/packets/game-definition.packet';
 import '../../../../../common/src/crossword/packets/game-definition.parser';
-import { ClearGridPacket } from '../../../../../common/src/crossword/packets/clear-grid.packet';
+import { ClearGridPacket } from '../../../../../common/src/crossword/packets';
 import '../../../../../common/src/crossword/packets/clear-grid.parser';
 import { GameService } from '../game.service';
 import { GameHttpService } from '../services/game-http.service';
@@ -63,6 +63,15 @@ export class DefinitionsService {
         this.onChangeCallbacks.push(callback);
     }
 
+    @PacketHandler(ClearGridPacket)
+    public clearDefinitions(): void {
+        this.horizontalDefinitions.clear();
+        this.verticalDefinitions.clear();
+        this.horizontalAnswers.splice(0);
+        this.verticalAnswers.splice(0);
+        this.onChange();
+    }
+
     private onChange(): void {
         this.onChangeCallbacks.forEach((callback) => {
             callback();
@@ -98,16 +107,6 @@ export class DefinitionsService {
         } else if (direction === Direction.vertical) {
             this.verticalDefinitions.set(definitionIndex, DEFINITION);
         }
-        this.onChange();
-    }
-
-    @PacketHandler(ClearGridPacket)
-    // tslint:disable-next-line:no-unused-variable
-    private clearDefinitions(): void {
-        this.horizontalDefinitions = new Map();
-        this.verticalDefinitions = new Map();
-        this.horizontalAnswers = [];
-        this.verticalAnswers = [];
         this.onChange();
     }
 

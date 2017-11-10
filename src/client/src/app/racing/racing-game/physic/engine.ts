@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PhysicUtils } from './utils';
 import * as THREE from 'three';
-import { Seconds } from '../../types';
+import { Seconds } from '../../../types';
 import { EventManager } from '../../../event-manager.service';
 
 export { PhysicUtils } from './utils';

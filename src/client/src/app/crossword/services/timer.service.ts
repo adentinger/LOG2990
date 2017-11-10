@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 import { PacketManagerClient } from '../../packet-manager-client';
-import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
+import { TimerPacket } from '../../../../../common/src/crossword/packets';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
 import '../../../../../common/src/crossword/packets/timer.parser';
 import { Subscription } from 'rxjs/Subscription';
+import { Seconds } from '../../types';
 
 @Injectable()
 export class TimerService {
 
-    private static DEFAULT_TIME = 3600000;
+    private static DEFAULT_TIME: Seconds = 120;
 
     private timerInternal = new Subject<number>();
     private timerValueInternal: number;

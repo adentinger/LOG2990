@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
-import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
+import { TimerPacket } from '../../../../../common/src/crossword/packets';
 import '../../../../../common/src/crossword/packets/timer.parser';
 
 @Injectable()

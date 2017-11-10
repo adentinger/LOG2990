@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { IPhysicElement, PhysicMesh } from './object';
-import { Kilograms } from '../../types';
+import { Kilograms } from '../../../types';
 
 export interface Collidable extends IPhysicElement {
     geometry: THREE.Geometry;

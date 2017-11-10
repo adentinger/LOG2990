@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { PhysicUtils } from './engine';
-import { Seconds } from '../../types';
+import { Seconds } from '../../../types';
 
 export interface IPhysicElement extends THREE.Object3D {
     position: THREE.Vector3;
