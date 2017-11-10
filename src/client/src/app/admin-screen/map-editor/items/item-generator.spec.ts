@@ -15,43 +15,24 @@ describe('Item generator', () => {
         });
     });
 
-    const itemGenerator = new ItemGenerator();
+    let itemGenerator: ItemGenerator;
     let mockMaps: MockMaps;
 
     beforeEach(inject([MockMaps],
         (mockMapFactory: MockMaps) => {
-        mockMaps = mockMapFactory;
-    }));
+            mockMaps = mockMapFactory;
+            itemGenerator = new ItemGenerator();
+        }));
 
     it('should be created', () => {
         expect(itemGenerator).toBeTruthy();
-    });
-
-    it('should generate a unique position', () => {
-        const map1 = mockMaps.functionalMap1();
-
-        itemGenerator.generatePositions(map1);
-        for (let i = 0; i < itemGenerator.positions.length; i++) {
-            for (let j = i + 1; j < itemGenerator.positions.length; j++) {
-                expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
-            }
-        }
-
-        const map2 = mockMaps.functionalMap1();
-
-        itemGenerator.generatePositions(map2, true);
-        for (let i = 0; i < itemGenerator.positions.length; i++) {
-            for (let j = i + 1; j < itemGenerator.positions.length; j++) {
-                expect(itemGenerator.positions[i]).not.toEqual(itemGenerator.positions[j]);
-            }
-        }
     });
 
     it('should add an item', () => {
         const map1 = mockMaps.functionalMap1();
         const map2 = mockMaps.functionalMap2();
 
-        itemGenerator.generatePositions(map2);
+        itemGenerator['generatePositions'](map2, 5);
 
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(1);
@@ -59,7 +40,7 @@ describe('Item generator', () => {
         itemGenerator.addObstacle(Pothole, map2, map2.potholes);
         expect(map2.potholes.length).toEqual(3);
 
-        itemGenerator.generatePositions(map1);
+        itemGenerator['generatePositions'](map1, 5);
         itemGenerator.addObstacle(SpeedBoost, map1, map1.speedBoosts);
         expect(map1.speedBoosts.length).toEqual(0);
     });
@@ -73,7 +54,7 @@ describe('Item generator', () => {
 
         const duplicates = [];
         let duplicate = false;
-        for (let i = 0 ; i < map.potholes.length; i++) {
+        for (let i = 0; i < map.potholes.length; i++) {
             if (!duplicates.includes(map.potholes[i].position)) {
                 duplicates.push(map.potholes[i].position);
             }
@@ -82,21 +63,6 @@ describe('Item generator', () => {
             }
         }
         expect(duplicate).toBeFalsy();
-
-    });
-
-    it('should verfy is object position is on map', () => {
-        const map = mockMaps.functionalMap1();
-
-        const positionDoNotExist = 2;
-        const positiontExistOnPotHoles = 11;
-        const positiontExistOnPuddle = 15;
-        const positiontExistOnSpeedBooster = 1;
-
-        expect(itemGenerator.positionIsOnMap(map, positionDoNotExist)).toBeFalsy();
-        expect(itemGenerator.positionIsOnMap(map, positiontExistOnPotHoles)).toBeTruthy();
-        expect(itemGenerator.positionIsOnMap(map, positiontExistOnPuddle)).toBeTruthy();
-        expect(itemGenerator.positionIsOnMap(map, positiontExistOnSpeedBooster)).toBeTruthy();
     });
 
     it('should calculate item coordinates', () => {
@@ -106,5 +72,4 @@ describe('Item generator', () => {
         expect(itemGenerator.itemCoordinates(map, map.speedBoosts[2]).x).toBeCloseTo(point.x);
         expect(itemGenerator.itemCoordinates(map, map.speedBoosts[2]).y).toBeCloseTo(point.y);
     });
-
 });

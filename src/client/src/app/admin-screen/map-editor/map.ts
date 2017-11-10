@@ -34,13 +34,13 @@ export class Map {
     private clockwiseCheckerAlgorithm: ShoelaceAlgorithm = new ShoelaceAlgorithm();
 
     constructor(path: Path = new Path(),
-                minimumSegmentLength: number = Infinity,
-                name: string = '',
-                description: string = '',
-                type: string = 'Amateur',
-                potholes: Pothole[] = [],
-                puddles: Puddle[] = [],
-                speedBoosts: SpeedBoost[] = []) {
+        minimumSegmentLength: number = Infinity,
+        name: string = '',
+        description: string = '',
+        type: string = 'Amateur',
+        potholes: Pothole[] = [],
+        puddles: Puddle[] = [],
+        speedBoosts: SpeedBoost[] = []) {
 
         this.path = path;
         this.minimumSegmentLength = minimumSegmentLength;
@@ -50,6 +50,12 @@ export class Map {
         this.potholes.push.apply(this.potholes, potholes);
         this.puddles.push.apply(this.puddles, puddles);
         this.speedBoosts.push.apply(this.speedBoosts, speedBoosts);
+    }
+
+    public resetAllItems(): void {
+        this.speedBoosts.splice(0);
+        this.puddles.splice(0);
+        this.potholes.splice(0);
     }
 
     public isClockwise(): boolean {
@@ -98,7 +104,7 @@ export class Map {
     public computeErrors(): MapError {
         let error: MapError;
         if (!this.isClosed()) {
-             error = MapError.NOT_CLOSED;
+            error = MapError.NOT_CLOSED;
         }
         else if (this.computeBadAngles().length !== 0) {
             error = MapError.SMALL_ANGLE;
@@ -144,7 +150,7 @@ export class Map {
     public isClosed(): boolean {
         return this.path.points.length > 2
             && this.path.points[0].equals(
-               this.path.points[this.path.points.length - 1]);
+                this.path.points[this.path.points.length - 1]);
     }
 
     private computeCrossingLines(): [Line, Line][] {

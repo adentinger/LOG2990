@@ -22,8 +22,8 @@ export class MapEditorService {
     private map: Map;
 
     constructor(private converter: RacingUnitConversionService,
-                private mapConverter: MapConverterService,
-                private itemGenerator: ItemGenerator) {
+        private mapConverter: MapConverterService,
+        private itemGenerator: ItemGenerator) {
         this.newMap();
     }
 
@@ -68,7 +68,7 @@ export class MapEditorService {
 
     public get isMapClockwise(): boolean {
         return this.map.isClockwise() ||
-               this.map.computeErrors() !== MapError.NONE;
+            this.map.computeErrors() !== MapError.NONE;
     }
 
     public serializeMap(): SerializedMap {
@@ -77,8 +77,8 @@ export class MapEditorService {
         }
         else {
             throw new Error('Serializing map failed: ' +
-                            'Please set map width and height to a value ' +
-                            'that is >0 before attempting to deserialize.');
+                'Please set map width and height to a value ' +
+                'that is >0 before attempting to deserialize.');
         }
     }
 
@@ -88,15 +88,15 @@ export class MapEditorService {
             try {
                 newMap = this.mapConverter.deserialize(serializedMap);
             }
-            catch (error) {}
+            catch (error) { }
             finally {
                 this.map = newMap;
             }
         }
         else {
             throw new Error('Deserializing map failed: ' +
-                            'Please set map width and height to a value ' +
-                            'that is >0 before attempting to deserialize.');
+                'Please set map width and height to a value ' +
+                'that is >0 before attempting to deserialize.');
         }
     }
 
@@ -127,6 +127,7 @@ export class MapEditorService {
 
     public editPoint(index: PointIndex, coordinates: Point): void {
         if (this.areValidCoordinates(coordinates)) {
+            this.map.resetAllItems();
             const POINTS_TO_EDIT = [];
             const EDITING_FIRST_POINT = (index === 0);
             const IS_PATH_CLOSED =
@@ -134,7 +135,7 @@ export class MapEditorService {
 
             if (EDITING_FIRST_POINT && IS_PATH_CLOSED) {
                 POINTS_TO_EDIT.push(this.points[0],
-                                    this.points[this.points.length - 1]);
+                    this.points[this.points.length - 1]);
             }
             else {
                 POINTS_TO_EDIT.push(this.points[index]);
@@ -149,7 +150,7 @@ export class MapEditorService {
 
     private areValidCoordinates(coordinates: Point): boolean {
         return coordinates.x < this.mapWidth && coordinates.y < this.mapHeight &&
-               coordinates.x > 0             && coordinates.y > 0;
+            coordinates.x > 0 && coordinates.y > 0;
     }
 
     public isFirstPoint(pointIndex: PointIndex): boolean {
