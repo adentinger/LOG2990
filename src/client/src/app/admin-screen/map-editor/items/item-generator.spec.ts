@@ -45,26 +45,6 @@ describe('Item generator', () => {
         expect(map1.speedBoosts.length).toEqual(0);
     });
 
-    it('should randomly modify the positions of objects in an array of some type', () => {
-        const map = mockMaps.functionalMap1();
-        const previousArray = map.potholes.slice();
-
-        itemGenerator.randomlyModifyObjectsTypePositions(Pothole, map, map.potholes);
-        expect(previousArray.length).toEqual(map.potholes.length);
-
-        const duplicates = [];
-        let duplicate = false;
-        for (let i = 0; i < map.potholes.length; i++) {
-            if (!duplicates.includes(map.potholes[i].position)) {
-                duplicates.push(map.potholes[i].position);
-            }
-            else {
-                duplicate = true;
-            }
-        }
-        expect(duplicate).toBeFalsy();
-    });
-
     it('should calculate item coordinates', () => {
         const map = mockMaps.functionalMap1();
         const point = new Point(5.75736, 4.24264);
