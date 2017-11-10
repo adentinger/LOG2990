@@ -113,7 +113,11 @@ export class RenderableMap extends PhysicMesh {
             }
             else {
                 const point = line.interpollate(position / line.translation.norm());
-                const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y);
+                const TRACK_WIDTH = 3;
+                const randomCoordinateVariation = Math.random() * (2 * TRACK_WIDTH) - TRACK_WIDTH;
+                const coordinate = new THREE.Vector3(point.x + randomCoordinateVariation,
+                    RenderableMap.ITEM_HEIGHT,
+                    point.y + randomCoordinateVariation);
                 const mesh = this.getMeshFromItem(item);
                 if (mesh != null) {
                     mesh.position.copy(coordinate);
