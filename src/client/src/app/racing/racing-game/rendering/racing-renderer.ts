@@ -98,13 +98,17 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
         this.setViewport(0, 0, screenSize.width, screenSize.height);
         this.setScissor(0, 0, screenSize.width, screenSize.height);
+        this.cameras[+!this.currentCamera].visible = false;
         this.render(this.scene, this.cameras[this.currentCamera]);
+        this.cameras[+!this.currentCamera].visible = true;
 
         this.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
             screenSize.width * 0.20, screenSize.height * 0.20);
         this.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
             screenSize.width * 0.20, screenSize.height * 0.20);
+        this.cameras[this.currentCamera].visible = false;
         this.render(this.scene, this.cameras[+!this.currentCamera]);
+        this.cameras[this.currentCamera].visible = true;
 
         this.hud.render(this.game);
     }
@@ -152,6 +156,10 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.dayModeManager.mode = newMode;
         this.dayModeManager.updateScene(this.scene);
         this.shadowMap.enabled = newMode === DayMode.DAY;
+    }
+
+    public getBothCameras() {
+        return this.cameras;
     }
 
 }

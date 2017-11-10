@@ -63,6 +63,18 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         if (this.uiInputs.isKeyPressed('e')) {
             this.racingGame.reloadSounds();
         }
+        if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
+            const currentCamera = this.racingGame.renderer.currentCamera;
+            this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= 1.025;
+            this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
+        }
+
+        if (this.uiInputs.isKeyPressed('-')) {
+            const currentCamera = this.racingGame.renderer.currentCamera;
+            this.racingGame.renderer.getBothCameras()[currentCamera].zoom /= 1.025;
+            this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
+        }
+
 
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
