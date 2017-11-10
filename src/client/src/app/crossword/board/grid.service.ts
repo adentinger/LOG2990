@@ -18,7 +18,7 @@ import { WordByIdAndDirection } from './selected-grid-word';
 @Injectable()
 export class GridService {
 
-    private readonly GRID = new Grid();
+    private readonly grid = new Grid();
     private callbacks: (() => void)[] = [];
 
     constructor(private packetManager: PacketManagerClient,
@@ -26,26 +26,32 @@ export class GridService {
                 private gameService: GameService) {
         registerHandlers(this, packetManager);
 
+        this.reinitialize();
+    }
+
+    public reinitialize(): void {
+        this.grid.clear();
         // This mock is meant to stay as an initial view
         mockHorizontalGridWords().forEach((word) => {
-            this.GRID.addWord(word);
+            this.grid.addWord(word);
         });
         mockVerticalGridWords().forEach((word) => {
-            this.GRID.addWord(word);
+            this.grid.addWord(word);
         });
+
     }
 
     public get words(): GridWord[] {
-        return this.GRID.words;
+        return this.grid.words;
     }
 
     public getCharAt(row: number, column: number): string {
-        return this.GRID.getCharAt(row, column);
+        return this.grid.getCharAt(row, column);
     }
 
     public getWord(wordSearch: WordByIdAndDirection): GridWord {
         if (wordSearch.id !== SelectionService.NO_SELECTION.id) {
-            return this.GRID.getWord(wordSearch.id, wordSearch.direction);
+            return this.grid.getWord(wordSearch.id, wordSearch.direction);
         }
         else {
             return null;
@@ -53,7 +59,7 @@ export class GridService {
     }
 
     public setUserInput(word: GridWord): void {
-        this.GRID.userInput = word;
+        this.grid.userInput = word;
         if (word.length === word.string.length) {
             this.sendWordToServer(word);
         }
@@ -64,7 +70,7 @@ export class GridService {
     }
 
     public checkIfWordIsFound(wordId: number, wordDirection: Direction): boolean {
-        return this.GRID.getWord(wordId, wordDirection).owner !== Owner.none;
+        return this.grid.getWord(wordId, wordDirection).owner !== Owner.none;
     }
 
     private sendWordToServer(word: GridWord): void {
@@ -78,14 +84,14 @@ export class GridService {
     @PacketHandler(GridWordPacket)
     // tslint:disable-next-line:no-unused-variable
     private updateGridWord(event: PacketEvent<GridWordPacket>): void {
-        this.GRID.addWord(event.value.gridword);
+        this.grid.addWord(event.value.gridword);
         this.onChange();
     }
 
     @PacketHandler(ClearGridPacket)
     // tslint:disable-next-line:no-unused-variable
     private clearGrid(): void {
-        this.GRID.empty();
+        this.grid.clear();
         this.onChange();
     }
 
@@ -93,7 +99,7 @@ export class GridService {
     // tslint:disable-next-line:no-unused-variable
     private wordWasFound(event: PacketEvent<WordGuessPacket>): void {
         const word = event.value.wordGuess;
-        this.GRID.updateWord(word);
+        this.grid.updateWord(word);
         const isWordSelected =
             this.selectionService.selectionValue.player !== SelectionService.NO_SELECTION &&
             this.selectionService.selectionValue.player.id === word.id &&
@@ -101,7 +107,7 @@ export class GridService {
         if (isWordSelected) {
             this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
-        if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.GRID.numberOfWords) {
+        if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.grid.numberOfWords) {
             this.gameService.state = GameState.finished;
             this.gameService.finishGame(
                 this.getPlayerWordsFoundCount(),
@@ -112,11 +118,11 @@ export class GridService {
     }
 
     public getPlayerWordsFoundCount() {
-        return this.GRID.getPlayerWordsFoundCount();
+        return this.grid.getPlayerWordsFoundCount();
     }
 
     public getOpponentWordsFoundCount() {
-        return this.GRID.getOpponentWordsFoundCount();
+        return this.grid.getOpponentWordsFoundCount();
     }
 
 }

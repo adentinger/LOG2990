@@ -5,7 +5,7 @@ export interface WordByIdAndDirection {
     direction: Direction;
 }
 
-export class SelectedGridWord {
+export class SelectedGridWords {
     constructor(public player: WordByIdAndDirection,
                 public opponent: WordByIdAndDirection) {}
 }

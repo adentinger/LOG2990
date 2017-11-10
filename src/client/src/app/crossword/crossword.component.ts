@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { SimpleTimer } from 'ng2-simple-timer';
 import { DefinitionsService } from './definition-field/definitions.service';
 import { TimerService } from './services/timer.service';
 import { GameHttpService } from './services/game-http.service';
 import { GameService } from './game.service';
+import { GridService } from './board/grid.service';
 
 @Component({
     selector: 'app-crossword',
@@ -19,10 +19,13 @@ export class CrosswordComponent implements OnDestroy {
 
     constructor(
         private definitions: DefinitionsService,
-        private game: GameService) { }
+        private game: GameService,
+        private grid: GridService) { }
 
     public ngOnDestroy(): void {
-
+        this.definitions.clearDefinitions();
+        this.game.finalize();
+        this.grid.reinitialize();
     }
 
 }

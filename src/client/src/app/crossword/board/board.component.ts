@@ -7,7 +7,7 @@ import { HighlightGrid, WhoIsSelecting } from './crossword-tile/highlight-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { Grid } from '../../../../../common/src/grid';
 import { Owner, Direction } from '../../../../../common/src/crossword/crossword-enums';
-import { SelectedGridWord } from './selected-grid-word';
+import { SelectedGridWords } from './selected-grid-word';
 import { Logger } from '../../../../../common/src/logger';
 import { Selection } from './crossword-tile/highlight-grid';
 
@@ -53,7 +53,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         return this.gridService.getCharAt(row, column);
     }
 
-    private onSelect(selected: SelectedGridWord): void {
+    private onSelect(selected: SelectedGridWords): void {
         const playerSelection = this.gridService.getWord(selected.player);
         const opponentSelection = this.gridService.getWord(selected.opponent);
         const selection: Selection = {player: playerSelection, opponent: opponentSelection};

@@ -4,7 +4,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { PacketManagerServer } from '../../../packet-manager';
-import { GameJoinPacket, WordGuessPacket, SelectedWordPacket } from '../../../../../common/src/crossword/packets';
+import { GameJoinPacket, WordGuessPacket, SelectedWordPacket, GameLeavePacket } from '../../../../../common/src/crossword/packets';
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
@@ -129,6 +129,23 @@ export class GameManager {
                 foundGame.findPlayer(player => player.socketId === event.socketid);
             if (foundPlayer != null) {
                 foundGame.updateSelectionOf(foundPlayer, event.value.id, event.value.direction);
+            }
+        }
+    }
+
+    @PacketHandler(GameLeavePacket)
+    // tslint:disable-next-line:no-unused-variable
+    private gameLeaveHandler(event: PacketEvent<GameLeavePacket>): void {
+        const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
+        if (foundGame != null) {
+            const foundPlayer =
+                foundGame.findPlayer(player => player.socketId === event.socketid);
+            if (foundPlayer != null) {
+                foundGame.deletePlayerBySocketid(event.socketid);
+                if (foundGame.currentPlayerCount <= 0) {
+                    this.games.delete(foundGame.id);
+                    console.log(`Deleting game (id=${foundGame.id})`);
+                }
             }
         }
     }

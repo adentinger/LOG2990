@@ -8,3 +8,4 @@ import './selected-word.parser';
 import './timer.parser';
 import './word-guess-result.parser';
 import './word-guess.parser';
+import './game-leave.parser';

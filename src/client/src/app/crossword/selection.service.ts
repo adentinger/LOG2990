@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Definition } from './definition-field/definition';
-import { SelectedGridWord, WordByIdAndDirection } from './board/selected-grid-word';
+import { SelectedGridWords, WordByIdAndDirection } from './board/selected-grid-word';
 import { PacketManagerClient } from '../packet-manager-client';
 import { SelectedWordPacket } from '../../../../common/src/crossword/packets/selected-word.packet';
 import '../../../../common/src/crossword/packets/selected-word.parser';
@@ -16,8 +16,8 @@ export class SelectionService {
     public static readonly NO_SELECTION: WordByIdAndDirection = {id: -1, direction: Direction.horizontal};
 
     private selectionValueInternal =
-        new SelectedGridWord(SelectionService.NO_SELECTION, SelectionService.NO_SELECTION);
-    private selectionSubject = new Subject<SelectedGridWord>();
+        new SelectedGridWords(SelectionService.NO_SELECTION, SelectionService.NO_SELECTION);
+    private selectionSubject = new Subject<SelectedGridWords>();
     private serverSubscription: Subscription;
 
     constructor(private packetManager: PacketManagerClient) {
@@ -30,11 +30,15 @@ export class SelectionService {
         });
     }
 
-    public get selection(): Subject<SelectedGridWord> {
+    public finalize(): void {
+        this.serverSubscription.unsubscribe();
+    }
+
+    public get selection(): Subject<SelectedGridWords> {
         return this.selectionSubject;
     }
 
-    public get selectionValue(): SelectedGridWord {
+    public get selectionValue(): SelectedGridWords {
         return this.selectionValueInternal;
     }
 
@@ -46,7 +50,7 @@ export class SelectionService {
 
     public updateSelectedGridWord(word: WordByIdAndDirection): void {
         this.selectionSubject.next(
-            new SelectedGridWord(word, this.selectionValueInternal.opponent)
+            new SelectedGridWords(word, this.selectionValueInternal.opponent)
         );
     }
 

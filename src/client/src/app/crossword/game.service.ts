@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/Subject';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
 import { UserChoiceService } from './config-menu/user-choice.service';
 import { GameData } from './game-data';
-import { GameStartPacket } from '../../../../common/src/crossword/packets/game-start.packet';
+import { GameStartPacket, GameLeavePacket } from '../../../../common/src/crossword/packets';
 import { GameMode } from '../../../../common/src/crossword/crossword-enums';
 
 export enum GameState {
@@ -69,6 +69,15 @@ export class GameService {
             message = 'Congratulations ; you (almost) won!';
         }
         alert(message);
+    }
+
+    public finalize(): void {
+        this.cheatModeOn = false;
+        this.changeTimerValueOn = false;
+        this.dataInternal = new GameData();
+        this.state = GameState.configuring;
+        this.userChoiceService.finalize();
+        this.packetManager.sendPacket(GameLeavePacket, new GameLeavePacket());
     }
 
     public setCheatModeOnOff(): void {
