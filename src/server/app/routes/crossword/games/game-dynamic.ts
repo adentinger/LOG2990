@@ -3,12 +3,13 @@ import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../com
 import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { PacketManagerServer } from '../../../packet-manager';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 export class GameDynamic extends Game {
 
-    private static readonly COUNTDOWN_INITAL = 3600; // 1 hour
+    private static readonly COUNTDOWN_INITAL = 120; // seconds
 
-    public countdown = GameDynamic.COUNTDOWN_INITAL;
+    private countdown = GameDynamic.COUNTDOWN_INITAL;
     protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
@@ -55,6 +56,15 @@ export class GameDynamic extends Game {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
+    }
+
+    public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
+        if (super.validateUserAnswer(wordGuess, socketId)) {
+            // Reset timer
+            this.countdown = GameDynamic.COUNTDOWN_INITAL;
+            return true;
+        }
+        return false;
     }
 
     @PacketHandler(TimerPacket)

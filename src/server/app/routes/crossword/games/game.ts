@@ -92,7 +92,7 @@ export abstract class Game {
             this.maxPlayers === filter.playerNumber;
     }
 
-    public validateUserAnswer(wordGuess: GridWord, socketId: string): void {
+    public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
         const DIRECTION = wordGuess.direction;
         const STRING = wordGuess.string;
 
@@ -103,7 +103,9 @@ export abstract class Game {
             }) >= 0;
         if (FOUND) {
             this.sendWordFound(wordGuess, socketId);
+            return true;
         }
+        return false;
     }
 
     protected notifyArrival(player: Player): void {
