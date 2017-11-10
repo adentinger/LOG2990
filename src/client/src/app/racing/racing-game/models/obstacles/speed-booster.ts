@@ -12,8 +12,8 @@ export class SpeedBooster extends CollidableMesh {
     private static readonly SEGMENTS: number = 4;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
 
-    private static readonly BOOST_SPEED = 70; // m/s
-    private static readonly BOOST_PERIOD = 100; // ms
+    private static readonly BOOST_SPEED = 55; // m/s
+    private static readonly BOOST_PERIOD = 10; // ms
     private static readonly BOOST_INTERVAL = 1000; // ms
     private static readonly TRACK_HEIGHT: Meters = 0.001;
     private static readonly SPEEDBOOSTER_TEXTURE = THREE.ImageUtils.loadTexture(SpeedBooster.TEXTURE_URL);
