@@ -1,4 +1,7 @@
 import * as http from 'http';
+import { Logger } from '../../../../../common/src/logger';
+
+const logger = Logger.getLogger();
 
 export class ExternalWordApiService {
     private static readonly FREQUENCY_API_KEY = '509a8efe219607991700e030dbd01768e4a6b86cfa513bcc9';
@@ -18,7 +21,7 @@ export class ExternalWordApiService {
             };
             const req = http.request(REQUEST_OPTIONS);
             req.setTimeout(0).socket.on('error', () => {
-                console.log('SOCKET ERROR HANDLED');
+                logger.log('SOCKET ERROR HANDLED');
             });
             req.on('response', (res: http.IncomingMessage) => {
                 let resp = '';

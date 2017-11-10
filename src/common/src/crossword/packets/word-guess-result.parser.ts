@@ -17,7 +17,6 @@ export class WordGuessResultParser extends PacketParser<WordGuessResultPacket> {
         if (value.found) {
             GridWordParseUtil.serializeToBuffer(value.word, BUFFER, SIZE_UINT32);
         }
-        console.log(value);
         return BUFFER;
     }
 
