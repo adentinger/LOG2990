@@ -22,7 +22,8 @@ export class SpeedBooster extends CollidableMesh {
     private boostedTargets: Set<Collidable> = new Set();
 
     constructor(eventManager: EventManager) {
-        super(new THREE.CircleGeometry(SpeedBooster.RADIUS, SpeedBooster.SEGMENTS));
+        super(new THREE.CircleGeometry(SpeedBooster.RADIUS, SpeedBooster.SEGMENTS)
+            .rotateX(SpeedBooster.ORIENTATION_ON_MAP).rotateY(Math.PI));
         const texture = SpeedBooster.SPEEDBOOSTER_TEXTURE;
         CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
             const mesh = new THREE.Mesh();
@@ -30,8 +31,7 @@ export class SpeedBooster extends CollidableMesh {
             const dimension = PhysicUtils.getObjectDimensions(mesh).x;
             this.scale.setScalar(dimension);
         });
-        this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0.2, emissiveIntensity: 0.5, emissive: 0xffffff });
-        this.rotation.x = SpeedBooster.ORIENTATION_ON_MAP;
+        this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0.2, emissiveIntensity: 0.2, emissive: 0xffffff });
         this.position.y = SpeedBooster.TRACK_HEIGHT;
         eventManager.registerClass(this);
     }

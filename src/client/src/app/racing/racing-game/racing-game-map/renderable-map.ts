@@ -18,6 +18,8 @@ import { EventManager } from '../../../event-manager.service';
 import { Puddle } from '../models/obstacles/puddle';
 import { SpeedBooster } from '../models/obstacles/speed-booster';
 
+const UP = new THREE.Vector3(0, 1, 0);
+
 export class RenderableMap extends PhysicMesh {
     private static readonly ITEM_HEIGHT = 0.03;
 
@@ -29,6 +31,10 @@ export class RenderableMap extends PhysicMesh {
 
     private readonly plane: RacingGamePlane;
     public readonly waitToLoad: Promise<void>;
+
+    public get mapLines(): Line[] {
+        return this.mapPoints.map((point, i, points) => new Line(point, points[(i + 1) % points.length]));
+    }
 
     constructor(map: SerializedMap, private eventManager: EventManager) {
         super();
@@ -83,16 +89,17 @@ export class RenderableMap extends PhysicMesh {
 
     private placeSegmentsOnMap(): Promise<void> {
         const waitForSegments: Promise<void>[] = [];
-        for (let i = 0; i < this.mapPoints.length; i++) {
-            const nextPoint = (i + 1) % this.mapPoints.length;
-            const point1 = new THREE.Vector2(this.mapPoints[i].x, this.mapPoints[i].y);
-            const point2 = new THREE.Vector2(this.mapPoints[nextPoint].x, this.mapPoints[nextPoint].y);
-            const segmentLength = point1.distanceTo(point2);
-            const angle = this.angleBetweenTwoVectors(this.mapPoints[i], this.mapPoints[nextPoint]);
-            let segment = new RacetrackSegment(segmentLength);
+        const lines = this.mapLines;
 
-            const xyTranslation = this.getSegmentXandYTranslation(angle, segmentLength);
-            segment = this.translateSegmentInXandYWithExpectedOrientation(segment, angle, xyTranslation.x, xyTranslation.y, i);
+        for (const line of lines) {
+            const segmentLength = line.translation.norm();
+            const angle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
+            const middlePoint = line.interpollate(0.5);
+            const segment = new RacetrackSegment(segmentLength, middlePoint, angle);
+
+            segment.rotation.y = angle;
+            segment.position.set(middlePoint.x, segment.position.y, middlePoint.y);
+
             this.add(segment);
             waitForSegments.push(segment.waitToLoad);
         }
@@ -105,7 +112,7 @@ export class RenderableMap extends PhysicMesh {
     }
 
     private placeObstacleOnMap(item: SerializedItem): void {
-        const lines = this.mapPoints.map((point, i, points) => new Line(point, points[(i + 1) % points.length]));
+        const lines = this.mapLines;
         let position: Meters = item.position;
         for (const line of lines) {
             if (position > line.translation.norm()) {
@@ -114,13 +121,15 @@ export class RenderableMap extends PhysicMesh {
             else {
                 const point = line.interpollate(position / line.translation.norm());
                 const TRACK_WIDTH = 3;
-                const randomCoordinateVariation = Math.random() * (2 * TRACK_WIDTH) - TRACK_WIDTH;
-                const coordinate = new THREE.Vector3(point.x + randomCoordinateVariation,
-                    RenderableMap.ITEM_HEIGHT,
-                    point.y + randomCoordinateVariation);
+                const lineAngle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
+                const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * TRACK_WIDTH)
+                    .applyAxisAngle(UP, lineAngle);
+                const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y)
+                    .add(randomCoordinateVariation);
                 const mesh = this.getMeshFromItem(item);
                 if (mesh != null) {
                     mesh.position.copy(coordinate);
+                    mesh.rotation.y = lineAngle;
                     this.add(mesh);
                 }
                 break;
@@ -141,24 +150,5 @@ export class RenderableMap extends PhysicMesh {
             mesh = new SpeedBooster(this.eventManager);
         }
         return mesh;
-    }
-
-    private angleBetweenTwoVectors(currentPoint: Point, nextPoint: Point): number {
-        return (Math.atan2(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y));
-    }
-
-    private getSegmentXandYTranslation(angle: number, segmentLength: number): THREE.Vector2 {
-        const opposite = Math.sin(angle) * segmentLength / 2;   // sin(radians) = opposite / hypotenuse
-        const adjacent = Math.cos(angle) * segmentLength / 2;   // cos(radians) = adjacent / hypotenuse
-        return new THREE.Vector2(opposite, adjacent);
-    }
-
-    private translateSegmentInXandYWithExpectedOrientation(segment: RacetrackSegment, angle: number,
-        xTranslation: number, yTranslation: number, currentIndex: number) {
-        segment.rotation.z += angle;
-        segment.position.x = this.mapPoints[currentIndex].x + xTranslation;
-        segment.position.z = this.mapPoints[currentIndex].y + yTranslation;
-
-        return segment;
     }
 }

@@ -28,7 +28,7 @@ export class Pothole extends CollidableMesh {
     private targetsToShake: Set<DynamicCollidable> = new Set();
 
     constructor(eventManager: EventManager) {
-        super(new THREE.CircleGeometry(Pothole.RADIUS, Pothole.SEGMENTS),
+        super(new THREE.CircleGeometry(Pothole.RADIUS, Pothole.SEGMENTS).rotateX(Pothole.ORIENTATION_ON_MAP),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }));
         const texturedPlane = new THREE.Mesh();
         CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
@@ -41,10 +41,10 @@ export class Pothole extends CollidableMesh {
             texturedPlane.geometry = new THREE.CircleGeometry(scale);
         });
         const texture = Pothole.POTHOLE_TEXTURE;
-        texturedPlane.material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, specular: 0 });
+        texturedPlane.material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, specular: 10 });
+        texturedPlane.rotateX(Pothole.ORIENTATION_ON_MAP);
         texturedPlane.position.set(0, Pothole.TRACK_HEIGHT, 0);
         this.add(texturedPlane);
-        this.rotation.x = Pothole.ORIENTATION_ON_MAP;
         this.position.set(0, Pothole.TRACK_HEIGHT, 0);
         eventManager.registerClass(this);
     }

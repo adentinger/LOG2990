@@ -27,7 +27,7 @@ export class Puddle extends CollidableMesh {
     public readonly mass = 0;
 
     constructor(eventManager: EventManager, private slipDirection: SlipDirection) {
-        super(new THREE.CircleGeometry(Puddle.RADIUS, Puddle.SEGMENTS));
+        super(new THREE.CircleGeometry(Puddle.RADIUS, Puddle.SEGMENTS).rotateX(Puddle.ORIENTATION_ON_MAP));
         CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
             const mesh = new THREE.Mesh();
             mesh.add(...parts);
@@ -37,7 +37,6 @@ export class Puddle extends CollidableMesh {
         });
         const texture = Puddle.PUDDLE_TEXTURE;
         this.material = new THREE.MeshPhongMaterial({ map: texture, specular: 0 });
-        this.rotation.x = Puddle.ORIENTATION_ON_MAP;
         this.position.y = Puddle.TRACK_HEIGHT;
         eventManager.registerClass(this);
     }
