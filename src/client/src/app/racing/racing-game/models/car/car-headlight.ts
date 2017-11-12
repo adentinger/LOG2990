@@ -17,7 +17,7 @@ export interface CarHeadlightDayModeOptions {
 
 export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
 
-    private static generalOptions: GeneralOptions = {
+    private static readonly GENERAL_OPTIONS: GeneralOptions = {
         color: 0xf0f0ff,
         distance: 100,
         angle: Math.PI / 4,
@@ -27,17 +27,13 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
 
     public constructor() {
         super(
-            CarHeadlight.generalOptions.color,
+            CarHeadlight.GENERAL_OPTIONS.color,
             0x000000,
-            CarHeadlight.generalOptions.distance,
-            CarHeadlight.generalOptions.angle,
-            CarHeadlight.generalOptions.exponent,
-            CarHeadlight.generalOptions.decay
+            CarHeadlight.GENERAL_OPTIONS.distance,
+            CarHeadlight.GENERAL_OPTIONS.angle,
+            CarHeadlight.GENERAL_OPTIONS.exponent,
+            CarHeadlight.GENERAL_OPTIONS.decay
         );
-        this.castShadow = false;
-        this.shadow.mapSize.width = 1024;
-        this.shadow.mapSize.height = 1024;
-        this.shadow.bias = -0.0039;
     }
 
     public dayModeChanged(newMode: DayMode): void {

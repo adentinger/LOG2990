@@ -99,7 +99,7 @@ export class RacingGameService {
             this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
-        }, () => logger.log('Initialization interrupted'));
+        }, () => logger.warn('Initialization interrupted'));
     }
 
     public finalize() {
@@ -135,7 +135,7 @@ export class RacingGameService {
         this.renderer.addMap(this.map);
 
         this.map.addCars(...this.cars);
-        return Promise.all([this.map.waitToLoad]).then(() => { });
+        return this.map.waitToLoad.then(() => { });
     }
 
     public getCars(): Car[] {

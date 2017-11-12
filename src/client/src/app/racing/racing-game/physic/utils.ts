@@ -25,7 +25,7 @@ export class PhysicUtils {
         return new THREE.Vector3().subVectors(box1.max, box1.min);
     }
 
-    public setRoot(root: THREE.Object3D) {
+    public setRoot(root: THREE.Object3D): void {
         this.root = root;
     }
 
@@ -129,26 +129,14 @@ export class PhysicUtils {
     private getBoundingLines(collidable: Collidable): Line[] {
         const targetLines: Line[] = [];
 
-        let box1: THREE.Box3;
-        if ('boundingBox' in collidable) {
-            const rotation = collidable.rotation.toArray();
-            collidable.rotation.set(0, 0, 0);
-            (collidable['boundingBox'] as THREE.Box3).setFromObject(collidable);
-            box1 = collidable['boundingBox'];
-            collidable.rotation.fromArray(rotation);
-            box1.translate(collidable.position.clone().negate());
-        }
-        else {
-            collidable.geometry.computeBoundingBox();
-            box1 = collidable.geometry.boundingBox;
-        }
+        const box: THREE.Box3 = this.getBoundingBoxFromCollidable(collidable);
 
         // Corners in counter clockwise order (positive rotation)
         const corners: Point[] = [
-            new Point(box1.min.x, box1.min.z),
-            new Point(box1.max.x, box1.min.z),
-            new Point(box1.max.x, box1.max.z),
-            new Point(box1.min.x, box1.max.z)
+            new Point(box.min.x, box.min.z),
+            new Point(box.max.x, box.min.z),
+            new Point(box.max.x, box.max.z),
+            new Point(box.min.x, box.max.z)
         ];
 
         // Make positions relative to the world
@@ -164,6 +152,23 @@ export class PhysicUtils {
         }
 
         return targetLines;
+    }
+
+    private getBoundingBoxFromCollidable(collidable: Collidable): THREE.Box3 {
+        const box = new THREE.Box3();
+        collidable.geometry.computeBoundingSphere();
+        if (collidable.geometry.boundingSphere.radius > 0) {
+            collidable.geometry.computeBoundingBox();
+            box.copy(collidable.geometry.boundingBox);
+        }
+        else {
+            const originalRotation = collidable.rotation.clone();
+            collidable.rotation.set(0, 0, 0);
+            box.setFromObject(collidable);
+            collidable.rotation.copy(originalRotation);
+            box.translate(collidable.position.clone().negate());
+        }
+        return box;
     }
 
     private getVector2FromVector3(vector: THREE.Vector3): THREE.Vector2 {

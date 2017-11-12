@@ -4,7 +4,7 @@ import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
-import { Car } from '../car/car';
+import { CarPartsLoader } from '../car/car-parts-loader';
 
 export class SpeedBooster extends CollidableMesh {
     private static readonly TEXTURE_URL = '/assets/racing/textures/speed-boost.png';
@@ -24,7 +24,7 @@ export class SpeedBooster extends CollidableMesh {
     constructor(eventManager: EventManager) {
         super(new THREE.CircleGeometry(SpeedBooster.RADIUS, SpeedBooster.SEGMENTS));
         const texture = SpeedBooster.SPEEDBOOSTER_TEXTURE;
-        Car.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
+        CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
             const mesh = new THREE.Mesh();
             mesh.add(...parts);
             const dimension = PhysicUtils.getObjectDimensions(mesh).x;

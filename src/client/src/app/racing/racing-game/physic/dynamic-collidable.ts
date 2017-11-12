@@ -16,7 +16,7 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
     public mass: Kilograms = 1;
     public velocity: THREE.Vector3 = new THREE.Vector3(0);
 
-    public update(utils: PhysicUtils, deltaTime: Seconds): void {
+    public updatePhysic(utils: PhysicUtils, deltaTime: Seconds): void {
         const forceDirections = this.getCollisions(utils, deltaTime);
         forceDirections.forEach(([position, force]) => {
             const torque = position.clone().cross(force);
@@ -30,7 +30,7 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
         });
 
-        super.update(utils, deltaTime);
+        super.updatePhysic(utils, deltaTime);
     }
 
     protected getCollisions(utils: PhysicUtils, deltaTime: Seconds) {

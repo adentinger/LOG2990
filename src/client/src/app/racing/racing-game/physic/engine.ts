@@ -60,7 +60,7 @@ export class PhysicEngine {
     private updateWorld(deltaTime: Seconds): void {
         this.eventManager.fireEvent(BEFORE_PHYSIC_UPDATE_EVENT, {name: BEFORE_PHYSIC_UPDATE_EVENT, data: {}});
         const objects = this.physicUtils.getAllPhysicObjects();
-        objects.forEach((object) => object.update(this.physicUtils, deltaTime));
+        objects.forEach((object) => object.updatePhysic(this.physicUtils, deltaTime));
         this.eventManager.fireEvent(AFTER_PHYSIC_UPDATE_EVENT, {name: AFTER_PHYSIC_UPDATE_EVENT, data: {}});
     }
 }

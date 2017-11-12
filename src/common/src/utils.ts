@@ -103,10 +103,11 @@ export interface AttributeDescriptor {
 export function hasNativeAttributes(objectToCheck: any, attributeDescriptors: NativeAttributeDescriptor[]): boolean {
     let hasAttributes = objectToCheck != null;
     for (let i = 0; i < attributeDescriptors.length && hasAttributes; ++i) {
-        const FUNCTION_TO_CHECK = attributeDescriptors[i];
+        const ATTRIBUTE_TO_CHECK = attributeDescriptors[i];
         hasAttributes =
-            FUNCTION_TO_CHECK.name in objectToCheck &&
-            typeof objectToCheck[FUNCTION_TO_CHECK.name] === FUNCTION_TO_CHECK.type;
+            ATTRIBUTE_TO_CHECK.name in objectToCheck &&
+            objectToCheck[ATTRIBUTE_TO_CHECK.name] != null &&
+            typeof objectToCheck[ATTRIBUTE_TO_CHECK.name] === ATTRIBUTE_TO_CHECK.type;
     }
     return hasAttributes;
 }
@@ -114,10 +115,11 @@ export function hasNativeAttributes(objectToCheck: any, attributeDescriptors: Na
 export function hasAttributes(objectToCheck: any, attributeDescriptors: AttributeDescriptor[]): boolean {
     let hasAttributes = objectToCheck != null;
     for (let i = 0; i < attributeDescriptors.length && hasAttributes; ++i) {
-        const FUNCTION_TO_CHECK = attributeDescriptors[i];
+        const ATTRIBUTE_TO_CHECK = attributeDescriptors[i];
         hasAttributes =
-            FUNCTION_TO_CHECK.name in objectToCheck &&
-            objectToCheck[FUNCTION_TO_CHECK.name] instanceof FUNCTION_TO_CHECK.parent;
+            ATTRIBUTE_TO_CHECK.name in objectToCheck &&
+            objectToCheck[ATTRIBUTE_TO_CHECK.name] != null &&
+            objectToCheck[ATTRIBUTE_TO_CHECK.name] instanceof ATTRIBUTE_TO_CHECK.parent;
     }
     return hasAttributes;
 }
@@ -128,6 +130,7 @@ export function hasFunctions(objectToCheck: any, functionDescriptors: FunctionDe
         const FUNCTION_TO_CHECK = functionDescriptors[i];
         hasFunctions =
             FUNCTION_TO_CHECK.name in objectToCheck &&
+            objectToCheck[FUNCTION_TO_CHECK.name] != null &&
             objectToCheck[FUNCTION_TO_CHECK.name].length >= FUNCTION_TO_CHECK.parameterCount;
     }
     return hasFunctions;

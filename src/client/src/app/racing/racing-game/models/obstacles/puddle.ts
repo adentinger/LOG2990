@@ -4,7 +4,7 @@ import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable } from '../../physic/dynamic-collidable';
-import { Car } from '../car/car';
+import { CarPartsLoader } from '../car/car-parts-loader';
 
 
 export enum SlipDirection {
@@ -28,7 +28,7 @@ export class Puddle extends CollidableMesh {
 
     constructor(eventManager: EventManager, private slipDirection: SlipDirection) {
         super(new THREE.CircleGeometry(Puddle.RADIUS, Puddle.SEGMENTS));
-        Car.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
+        CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
             const mesh = new THREE.Mesh();
             mesh.add(...parts);
             const dimensions = PhysicUtils.getObjectDimensions(mesh);

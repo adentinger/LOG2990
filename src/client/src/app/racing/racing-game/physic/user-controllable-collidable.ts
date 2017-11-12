@@ -19,19 +19,19 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
 
     protected friction: Newtons = 15;
     protected acceleration = 25; // m/s^2
-    protected maxSpeed = 20; // m/s
+    protected targetSpeed = 20; // m/s
 
     protected angularFriction: number = 2 * Math.PI; // rad/s^2
     protected angularAcceleration = 4 * Math.PI; // rad/s^2
-    protected maxAngularSpeed = 3 * Math.PI / 4; // rad/s
+    protected targetAngularSpeed = 3 * Math.PI / 4; // rad/s
 
     protected get front(): THREE.Vector3 {
         return FRONT.clone().applyEuler(this.rotation);
     }
 
-    public update(engine: PhysicUtils, deltaTime: Seconds) {
+    public updatePhysic(engine: PhysicUtils, deltaTime: Seconds) {
         this.applyUserInputs(deltaTime);
-        super.update(engine, deltaTime);
+        super.updatePhysic(engine, deltaTime);
     }
 
     public updateVelocity(deltaTime: Seconds): void {
@@ -70,8 +70,8 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
         if (this.userInputs != null) {
             const angularAccelerationDirection = this.getAngularAccelerationDirection();
 
-            const angularAccelerationFactor = (this.maxAngularSpeed - angularAccelerationDirection.dot(this.angularVelocity)) /
-                this.maxAngularSpeed;
+            const angularAccelerationFactor = (this.targetAngularSpeed - angularAccelerationDirection.dot(this.angularVelocity)) /
+                this.targetAngularSpeed;
             const angularAcceleration = angularAccelerationDirection.multiplyScalar(this.angularAcceleration)
                 .multiplyScalar(angularAccelerationFactor);
             this.angularVelocity.addScaledVector(angularAcceleration, deltaTime);
@@ -84,7 +84,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
                 2 * Math.PI) % (2 * Math.PI);
 
             const accelerationDirection = this.getAccelerationDirection();
-            const accelerationFactor = (this.maxSpeed - accelerationDirection.dot(this.velocity)) / this.maxSpeed;
+            const accelerationFactor = (this.targetSpeed - accelerationDirection.dot(this.velocity)) / this.targetSpeed;
             const acceleration = accelerationDirection.multiplyScalar(this.acceleration + this.friction)
                 .multiplyScalar(accelerationFactor);
             this.velocity.addScaledVector(acceleration, deltaTime);

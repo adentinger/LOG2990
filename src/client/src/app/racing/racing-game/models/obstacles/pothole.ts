@@ -4,7 +4,7 @@ import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
 import { PhysicUtils } from '../../physic/utils';
-import { Car } from '../car/car';
+import { CarPartsLoader } from '../car/car-parts-loader';
 import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { PerspectiveCamera } from '../../rendering/perspective-camera';
 
@@ -31,7 +31,7 @@ export class Pothole extends CollidableMesh {
         super(new THREE.CircleGeometry(Pothole.RADIUS, Pothole.SEGMENTS),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }));
         const texturedPlane = new THREE.Mesh();
-        Car.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
+        CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
             const mesh = new THREE.Mesh();
             mesh.add(...parts);
             const dimensions = PhysicUtils.getObjectDimensions(mesh);

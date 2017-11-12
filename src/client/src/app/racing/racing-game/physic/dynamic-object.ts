@@ -32,8 +32,8 @@ export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhy
     public velocity: THREE.Vector3 = new THREE.Vector3();
     public angularVelocity: THREE.Vector3 = new THREE.Vector3();
 
-    public update(engine: PhysicUtils, deltaTime: Seconds): void {
-        super.update(engine, deltaTime);
+    public updatePhysic(engine: PhysicUtils, deltaTime: Seconds): void {
+        super.updatePhysic(engine, deltaTime);
         this.updateVelocity(deltaTime);
         this.updateAngularVelocity(deltaTime);
 
