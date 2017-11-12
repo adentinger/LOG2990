@@ -24,8 +24,8 @@ export class Pothole extends CollidableMesh {
     private static readonly SIZE_TO_CAR_PROPORTION = 0.25;
     public readonly mass = 0;
 
-    private targetsToMakeNormal: DynamicCollidable[] = [];
-    private targetsToShake: DynamicCollidable[] = [];
+    private targetsToMakeNormal: Set<DynamicCollidable> = new Set();
+    private targetsToShake: Set<DynamicCollidable> = new Set();
 
     constructor(eventManager: EventManager) {
         super(new THREE.CircleGeometry(Pothole.RADIUS, Pothole.SEGMENTS),
@@ -54,11 +54,10 @@ export class Pothole extends CollidableMesh {
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
         if (collision.source === this && isDynamicCollidable(collision.target)) {
-            const index = this.targetsToMakeNormal.findIndex((target) => target === collision.target);
-            if (index !== -1) {
-                this.targetsToMakeNormal.splice(index, 1);
+            if (!this.targetsToMakeNormal.has(collision.target)) {
+                this.targetsToMakeNormal.delete(collision.target);
             }
-            this.targetsToShake.push(collision.target);
+            this.targetsToShake.add(collision.target);
             if (collision.target.velocity.length() > Pothole.MIN_SPEED) {
                 collision.target.velocity.multiplyScalar(Pothole.SLOW_FACTOR);
             }
@@ -74,15 +73,16 @@ export class Pothole extends CollidableMesh {
                 camera.lookAt(PerspectiveCamera.LOOK_AT_POSITION);
             }
         });
-        this.targetsToMakeNormal.splice(0);
+        this.targetsToMakeNormal.clear();
+
         this.targetsToShake.forEach((target) => {
             const camera = target.getObjectByName(PerspectiveCamera.CAMERA_NAME) as THREE.Camera;
             if (camera) {
                 this.shakeCamera(camera, target);
             }
+            this.targetsToMakeNormal.add(target);
         });
-        this.targetsToMakeNormal.push(...this.targetsToShake);
-        this.targetsToShake.splice(0);
+        this.targetsToShake.clear();
     }
 
     public shakeCamera(camera: THREE.Camera, target: DynamicCollidable) {

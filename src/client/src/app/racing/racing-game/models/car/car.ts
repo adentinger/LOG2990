@@ -80,9 +80,8 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
         ));
 
         this.add(... await CarPartsLoader.CAR_COLORED_PARTS.then((parts) =>
-            parts.map((mesh) => {
-                const coloredMesh = mesh.clone();
-                coloredMesh.material = (<THREE.MeshPhongMaterial>coloredMesh.material).clone();
+            parts.map((mesh) => mesh.clone()).map((coloredMesh) => {
+                coloredMesh.material = (coloredMesh.material as THREE.MeshPhongMaterial).clone();
                 (<THREE.MeshPhongMaterial>coloredMesh.material).color.set(color);
                 return coloredMesh;
             })
