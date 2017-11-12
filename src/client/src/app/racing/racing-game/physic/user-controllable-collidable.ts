@@ -35,13 +35,14 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     }
 
     public updateVelocity(deltaTime: Seconds): void {
+        const speed = this.velocity.length();
+        const direction = Math.sign(this.velocity.dot(this.front));
+        this.velocity.copy(this.front.multiplyScalar(direction * speed));
+
         const velocityDirection = this.velocity.clone().normalize();
         const FRICTION_VECTOR = velocityDirection.multiplyScalar(-this.friction);
         this.velocity.addScaledVector(FRICTION_VECTOR, deltaTime);
 
-        const speed = this.velocity.length();
-        const direction = Math.sign(this.velocity.dot(this.front));
-        this.velocity.copy(this.front.multiplyScalar(direction * speed));
         super.updateVelocity(deltaTime);
     }
 

@@ -95,7 +95,7 @@ export class RenderableMap extends PhysicMesh {
             const segmentLength = line.translation.norm();
             const angle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
             const middlePoint = line.interpollate(0.5);
-            const segment = new RacetrackSegment(segmentLength, middlePoint, angle);
+            const segment = new RacetrackSegment(segmentLength);
 
             segment.rotation.y = angle;
             segment.position.set(middlePoint.x, segment.position.y, middlePoint.y);
