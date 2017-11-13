@@ -8,15 +8,15 @@ import { Logger } from '../../../../../common/src/logger';
 
 const logger = Logger.getLogger();
 
-export class GridGenerator {
+export class AbstractGridGenerator {
     private static count = 0;
 
-    private static readonly INSTANCE = new GridGenerator();
+    private static readonly INSTANCE = new AbstractGridGenerator();
 
     private constructor() { }
 
-    public static getInstance(): GridGenerator {
-        return GridGenerator.INSTANCE;
+    public static getInstance(): AbstractGridGenerator {
+        return AbstractGridGenerator.INSTANCE;
     }
 
     public async gridGeneration(suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
@@ -29,7 +29,7 @@ export class GridGenerator {
         await GRID.fillUsing(FILLER_SECOND_SECTION);
         await GRID.fillUsing(FILLER_THIRD_SECTION);
         await GRID.fillUsing(FILLER_FOURTH_SECTION);
-        logger.log('count: %d', ++GridGenerator.count);
+        logger.log('count: %d', ++AbstractGridGenerator.count);
         logger.log(GRID.toString());
         return GRID;
     }
