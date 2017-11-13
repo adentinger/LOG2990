@@ -112,6 +112,7 @@ export class RenderableMap extends PhysicMesh {
     }
 
     private placeObstacleOnMap(item: SerializedItem): void {
+        const ITEM_WIDTH: Meters = 2;
         const lines = this.mapLines;
         let position: Meters = item.position;
         for (const line of lines) {
@@ -120,9 +121,8 @@ export class RenderableMap extends PhysicMesh {
             }
             else {
                 const point = line.interpollate(position / line.translation.norm());
-                const TRACK_WIDTH = 3;
                 const lineAngle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
-                const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * TRACK_WIDTH)
+                const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * (Track.SEGMENT_WIDTH - ITEM_WIDTH))
                     .applyAxisAngle(UP, lineAngle);
                 const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y)
                     .add(randomCoordinateVariation);
