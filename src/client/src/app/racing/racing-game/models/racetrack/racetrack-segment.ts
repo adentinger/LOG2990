@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { Track } from '../../../track';
 import { loadTexture } from '../../../../util/textures';
-import { Point } from '../../../../../../../common/src/math/point';
 
 export class RacetrackSegment extends THREE.Mesh {
     private static readonly GEOMETRY_ROTATION = 3 * Math.PI / 2;
@@ -16,7 +15,7 @@ export class RacetrackSegment extends THREE.Mesh {
 
     public readonly waitToLoad: Promise<void>;
 
-    constructor(private readonly length: number) {
+    constructor(public readonly length: number) {
         super(new THREE.PlaneGeometry(Track.SEGMENT_WIDTH, length).rotateX(RacetrackSegment.GEOMETRY_ROTATION));
         this.material = new THREE.MeshPhongMaterial({side: THREE.FrontSide, shininess: 1000});
         this.waitToLoad = Promise.all([
