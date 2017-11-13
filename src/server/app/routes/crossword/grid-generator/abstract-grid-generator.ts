@@ -9,7 +9,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 const logger = Logger.getLogger();
 
-export class AbstractGridGenerator {
+export abstract class AbstractGridGenerator {
     private static count = 0;
 
     protected constructor() { }
