@@ -14,7 +14,7 @@ export abstract class AbstractGridGenerator {
 
     protected constructor() { }
 
-    public async gridGeneration(wordsToInclude: GridWord[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
+    public async gridGenerationBase(wordsToInclude: GridWord[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
         const GRID = new Grid();
         const FILLER_FIRST_SECTION = new GridFillerFirstSection(suggestionsGetter);
         const FILLER_SECOND_SECTION = new GridFillerSecondSection(suggestionsGetter);

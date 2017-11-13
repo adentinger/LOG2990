@@ -78,13 +78,13 @@ export abstract class GridBank {
 
     protected getGridFromGeneratorWithDifficulty(difficulty: Difficulty): Promise<Grid> {
         return GridGenerator.getInstance()
-               .gridGeneration([], new NormalWordSuggestionsGetter(difficulty));
+               .gridGenerationBase([], new NormalWordSuggestionsGetter(difficulty));
     }
 
     public async requestGridGeneration(): Promise<void> {
         const GRID_PROMISE =
             GridGenerator.getInstance()
-            .gridGeneration([], new NormalWordSuggestionsGetter(this.difficulty));
+            .gridGenerationBase([], new NormalWordSuggestionsGetter(this.difficulty));
         await GRID_PROMISE.then((grid) => this.addGridToBank(grid));
     }
 
