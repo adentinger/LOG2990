@@ -110,7 +110,7 @@ export class HUD {
         const textPosition = HUD.RACE_PLACE_POSITION.clone().multiply(size);
 
         const position = game.positions.findIndex((car) => car === game.controlledCar) + 1;
-        const suffix = position > 3 ? 'th' : ( position === 3 ? 'rd' : (position === 1 ? 'nd' : 'st'));
+        const suffix = position > 3 ? 'th' : ( position === 3 ? 'rd' : (position === 2 ? 'nd' : 'st'));
 
         const text = `${position}${suffix}`;
         const textWidth = this.context.measureText(text).width;
