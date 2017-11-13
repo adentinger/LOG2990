@@ -63,6 +63,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         if (this.uiInputs.isKeyPressed('e')) {
             this.racingGame.reloadSounds();
         }
+        if (this.uiInputs.isKeyPressed('m')) {
+            this.racingGame.switchCar();
+        }
         if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
             const currentCamera = this.racingGame.renderer.currentCamera;
             this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= 1.025;

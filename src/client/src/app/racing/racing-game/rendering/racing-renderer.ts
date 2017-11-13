@@ -116,7 +116,8 @@ export class RacingRenderer extends THREE.WebGLRenderer {
     public setCamerasTarget(target: THREE.Object3D): void {
         this.cameras.forEach((camera) => {
             camera.setTarget(target);
-            if ('audioListener' in target && target['audioListener'] instanceof THREE.AudioListener) {
+            if ('audioListener' in target && target['audioListener'] instanceof THREE.AudioListener &&
+                !new Set(camera.children).has(target['audioListener'])) {
                 camera.add(target['audioListener']);
             }
         });
