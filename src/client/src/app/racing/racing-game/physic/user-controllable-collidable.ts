@@ -25,7 +25,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected angularAcceleration = 4 * Math.PI; // rad/s^2
     protected targetAngularSpeed = 3 * Math.PI / 4; // rad/s
 
-    protected get front(): THREE.Vector3 {
+    public get front(): THREE.Vector3 {
         return FRONT.clone().applyEuler(this.rotation);
     }
 

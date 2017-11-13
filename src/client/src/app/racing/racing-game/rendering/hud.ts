@@ -20,6 +20,7 @@ export class HUD {
     new THREE.Vector2(HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
     private static readonly LAP_TIME_POSITION = HUD.LAP_POSITION.clone().add(HUD.INCREMENT);
     private static readonly GAME_TIME_POSITION = HUD.LAP_TIME_POSITION.clone().add(HUD.INCREMENT);
+    private static readonly SPEED_POSITION = new THREE.Vector2(HUD.TEXT_OFFSET, 1 - (HUD.TEXT_OFFSET + HUD.TEXT_HEIGTH));
     private static readonly RACE_PLACE_POSITION =
         new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
 
@@ -52,8 +53,10 @@ export class HUD {
     }
 
     public setSize(width: number, height: number): void {
-        this.domElementInternal.setAttribute('width', width.toString());
-        this.domElementInternal.setAttribute('height', height.toString());
+        if (this.domElementInternal != null) {
+            this.domElementInternal.setAttribute('width', width.toString());
+            this.domElementInternal.setAttribute('height', height.toString());
+        }
     }
 
     public render(game: GameInfo): void {
@@ -67,35 +70,27 @@ export class HUD {
         this.drawLapTime(this.context, game);
         this.drawGameTime(this.context, game);
         this.drawRacePosition(this.context, game);
+        this.drawSpeed(this.context, game);
     }
 
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
-        const height = context.canvas.height, width = context.canvas.width;
-
-        const size = new THREE.Vector2(width, height);
-        const textPosition = HUD.LAP_POSITION.clone().multiply(size);
+        const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
         this.context.fillText(`${game.lap}/${game.maxLap} laps`,
             textPosition.x, textPosition.y);
     }
 
     private drawLapTime(context: CanvasRenderingContext2D, game: GameInfo): void {
-        const height = context.canvas.height, width = context.canvas.width;
+        const textPosition = this.getTextPosition(context, HUD.LAP_TIME_POSITION);
 
-        const size = new THREE.Vector2(width, height);
-        const textPosition = HUD.LAP_TIME_POSITION.clone().multiply(size);
-
-        const gameTime = this.getTime(game.lapTimes[game.lap - 1]);
-        const currentTime = this.formatTime(gameTime);
+        const lapTime = this.getTime(game.lapTimes[game.lap - 1]);
+        const currentTime = this.formatTime(lapTime);
         this.context.fillText(`Lap time: ${currentTime}`,
             textPosition.x, textPosition.y);
     }
 
     private drawGameTime(context: CanvasRenderingContext2D, game: GameInfo): void {
-        const height = context.canvas.height, width = context.canvas.width;
-
-        const size = new THREE.Vector2(width, height);
-        const textPosition = HUD.GAME_TIME_POSITION.clone().multiply(size);
+        const textPosition = this.getTextPosition(context, HUD.GAME_TIME_POSITION);
 
         const gameTime = this.getTime(game.totalTime);
         const currentTime = this.formatTime(gameTime);
@@ -104,10 +99,7 @@ export class HUD {
     }
 
     private drawRacePosition(context: CanvasRenderingContext2D, game: GameInfo): void {
-        const height = context.canvas.height, width = context.canvas.width;
-
-        const size = new THREE.Vector2(width, height);
-        const textPosition = HUD.RACE_PLACE_POSITION.clone().multiply(size);
+        const textPosition = this.getTextPosition(context, HUD.RACE_PLACE_POSITION);
 
         const position = game.positions.findIndex((car) => car === game.controlledCar) + 1;
         const suffix = position > 3 ? 'th' : ( position === 3 ? 'rd' : (position === 2 ? 'nd' : 'st'));
@@ -116,6 +108,25 @@ export class HUD {
         const textWidth = this.context.measureText(text).width;
         this.context.fillText(text,
             textPosition.x - textWidth, textPosition.y);
+    }
+
+    private drawSpeed(context: CanvasRenderingContext2D, game: GameInfo) {
+        const textPosition = this.getTextPosition(context, HUD.SPEED_POSITION);
+
+        const speed = game.controlledCar.front.dot(game.controlledCar.velocity);
+
+        const text = `${speed.toFixed(2)} m/s`;
+        this.context.fillText(text,
+            textPosition.x, textPosition.y);
+    }
+
+    private getSize(context: CanvasRenderingContext2D): THREE.Vector2 {
+        const height = context.canvas.height, width = context.canvas.width;
+        return new THREE.Vector2(width, height);
+    }
+
+    private getTextPosition(context: CanvasRenderingContext2D, proportionalPosition: THREE.Vector2): THREE.Vector2 {
+        return proportionalPosition.clone().multiply(this.getSize(context));
     }
 
     private getTime(time: Seconds): Time {
@@ -132,9 +143,12 @@ export class HUD {
     }
 
     private formatTime(time: Time): string {
-        return (time.hours > 0 ? HUD.getFormatedNumber(time.hours, 2) + 'h ' : '') +
-            HUD.getFormatedNumber(time.minutes, 2) + '\' ' +
-            HUD.getFormatedNumber(time.seconds, 2) + '.' +
-            HUD.getFormatedNumber(time.milliseconds / 10, 2) + '"';
+        const DISPLAY_PRECISION = 2; // digits
+        const hours = HUD.getFormatedNumber(time.hours, DISPLAY_PRECISION);
+        const minutes = HUD.getFormatedNumber(time.minutes, DISPLAY_PRECISION);
+        const seconds = HUD.getFormatedNumber(time.seconds, DISPLAY_PRECISION);
+        const hundredths = HUD.getFormatedNumber(time.milliseconds / 10, DISPLAY_PRECISION);
+        return (time.hours > 0 ? `${hours}h ` : '') +
+            `${minutes}\' ${seconds}.${hundredths}"`;
     }
 }
