@@ -5,6 +5,7 @@ import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { isDynamicCollidable } from '../../physic/dynamic-collidable';
 import { CarPartsLoader } from '../car/car-parts-loader';
+import { Car } from '../car/car';
 
 
 export enum SlipDirection {
@@ -18,7 +19,7 @@ export class Puddle extends CollidableMesh {
     private static readonly SEGMENTS: number = 40;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
 
-    private static readonly SLIP_FACTOR = Math.PI * 3;
+    private static readonly SLIP_FACTOR = 3 * Math.PI / 2;
     private static readonly PUDDLE_TEXTURE = THREE.ImageUtils.loadTexture(Puddle.TEXTURE_URL);
     private static readonly SLIP_FREQUENCY = 1; // Hz
     private static readonly TRACK_HEIGHT: Meters = 0.001;
@@ -45,8 +46,9 @@ export class Puddle extends CollidableMesh {
     // tslint:disable-next-line:no-unused-variable
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
-        if (collision.source === this && isDynamicCollidable(collision.target)) {
-            collision.target.angularVelocity.set(0, Puddle.SLIP_FACTOR * this.slipDirection *
+        if (collision.source === this && collision.target instanceof Car) {
+            const velocityFactor = collision.target.velocity.length() / (collision.target as Car)['targetSpeed'];
+            collision.target.angularVelocity.set(0, velocityFactor * Puddle.SLIP_FACTOR * this.slipDirection *
                 Math.sin(2 * Math.PI * Date.now() / Puddle.FREQUENCY_SCALING_FACTOR * Puddle.SLIP_FREQUENCY), 0);
         }
     }
