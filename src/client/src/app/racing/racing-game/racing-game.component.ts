@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { trigger, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
@@ -10,11 +11,18 @@ import { EventManager } from '../../event-manager.service';
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
-    styleUrls: ['./racing-game.component.css']
+    styleUrls: ['./racing-game.component.css'],
+    animations: [
+        trigger('gameLoaded', [
+            transition('* => void', animate(1000, style({ opacity: 0 })))
+        ])
+    ]
 })
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
     public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
+
+    public gameLoaded = false;
 
     @ViewChild('gameContainer')
     public racingGameContainer: ElementRef;
@@ -36,6 +44,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.updateRendererSize();
             });
         });
+
+        this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
     public ngOnDestroy() {
