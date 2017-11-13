@@ -2,10 +2,10 @@ import { AbstractGridGenerator } from './abstract-grid-generator';
 
 export class GridMutator extends AbstractGridGenerator {
 
-    private static readonly _INSTANCE = new GridMutator();
+    private static readonly INSTANCE = new GridMutator();
 
     public static getInstance(): GridMutator {
-        return GridMutator._INSTANCE;
+        return GridMutator.INSTANCE;
     }
 
     protected constructor() {

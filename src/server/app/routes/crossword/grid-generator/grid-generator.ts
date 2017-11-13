@@ -2,10 +2,10 @@ import { AbstractGridGenerator } from './abstract-grid-generator';
 
 export class GridGenerator extends AbstractGridGenerator {
 
-    private static readonly _INSTANCE = new GridGenerator();
+    private static readonly INSTANCE = new GridGenerator();
 
     public static getInstance(): GridGenerator {
-        return GridGenerator._INSTANCE;
+        return GridGenerator.INSTANCE;
     }
 
     protected constructor() {

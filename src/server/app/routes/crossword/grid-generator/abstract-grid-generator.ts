@@ -12,13 +12,7 @@ const logger = Logger.getLogger();
 export class AbstractGridGenerator {
     private static count = 0;
 
-    private static readonly INSTANCE = new AbstractGridGenerator();
-
     protected constructor() { }
-
-    public static getInstance(): AbstractGridGenerator {
-        return AbstractGridGenerator.INSTANCE;
-    }
 
     public async gridGeneration(wordsToInclude: GridWord[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
         const GRID = new Grid();
