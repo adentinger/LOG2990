@@ -4,6 +4,10 @@ import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { Logger } from '../../../../../common/src/index';
 
+/**
+ * @class GridGenerator
+ * @description Manages the creation of Grids from scratch.
+ */
 export class GridGenerator extends AbstractGridGenerator {
 
     private static readonly INSTANCE = new GridGenerator();
