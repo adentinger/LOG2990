@@ -8,8 +8,7 @@ import { CarPartsLoader } from '../car/car-parts-loader';
 
 export class SpeedBooster extends CollidableMesh {
     private static readonly TEXTURE_URL = '/assets/racing/textures/speed-boost.png';
-    private static readonly RADIUS: Meters = 1;
-    private static readonly SEGMENTS: number = 4;
+    private static readonly SIDE: Meters = 1;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
 
     private static readonly BOOST_SPEED = 40; // m/s
@@ -22,7 +21,7 @@ export class SpeedBooster extends CollidableMesh {
     private boostedTargets: Set<Collidable> = new Set();
 
     constructor(eventManager: EventManager) {
-        super(new THREE.CircleGeometry(SpeedBooster.RADIUS, SpeedBooster.SEGMENTS)
+        super(new THREE.PlaneGeometry(SpeedBooster.SIDE, SpeedBooster.SIDE)
             .rotateX(SpeedBooster.ORIENTATION_ON_MAP).rotateY(Math.PI));
         const texture = SpeedBooster.SPEEDBOOSTER_TEXTURE;
         CarPartsLoader.CAR_COLORED_PARTS.then((parts: THREE.Mesh[]) => {
