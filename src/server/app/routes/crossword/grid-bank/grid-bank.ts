@@ -2,7 +2,6 @@ import { Collection, Db, MongoError } from 'mongodb';
 
 import { Grid } from '../grid-generator/grid';
 import { GridGenerator } from '../grid-generator/grid-generator';
-import { NormalWordSuggestionsGetter } from '../grid-generator/normal-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { provideDatabase, ensureCollectionReady } from '../../../app-db';
 import { Logger } from '../../../../../common/src';
@@ -78,13 +77,13 @@ export abstract class GridBank {
 
     protected getGridFromGeneratorWithDifficulty(difficulty: Difficulty): Promise<Grid> {
         return GridGenerator.getInstance()
-               .gridGenerationBase([], new NormalWordSuggestionsGetter(difficulty));
+               .gridGeneration(difficulty);
     }
 
     public async requestGridGeneration(): Promise<void> {
         const GRID_PROMISE =
             GridGenerator.getInstance()
-            .gridGenerationBase([], new NormalWordSuggestionsGetter(this.difficulty));
+            .gridGeneration(this.difficulty);
         await GRID_PROMISE.then((grid) => this.addGridToBank(grid));
     }
 
