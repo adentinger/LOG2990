@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { EventManager } from '../../../event-manager.service';
 import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../physic/engine';
+import { SoundListener } from '../sound/sound-listener';
 
-export class PerspectiveCamera extends THREE.PerspectiveCamera {
+export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundListener {
     public static readonly DRIVER_POSITION = new THREE.Vector3(-0.25, 1.15, -0.1);
     public static readonly DEFAULT_POSITION = new THREE.Vector3(0, 2, 5);
     public static readonly LOOK_AT_POSITION = new THREE.Vector3(0, 1.3, -3);
@@ -16,9 +17,9 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
     private static readonly FAR: number = 300;
     private static readonly VIEW_ANGLE: number = 45;
 
-
     private target: THREE.Object3D;
     public readonly name: string;
+    public readonly listener: THREE.AudioListener;
 
     public constructor(eventManager: EventManager) {
         super(
@@ -30,6 +31,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera {
         this.setupPerspectiveView();
         eventManager.registerClass(this);
         this.name = PerspectiveCamera.CAMERA_NAME;
+        this.listener = new THREE.AudioListener();
     }
 
     public setTarget(object: THREE.Object3D) {

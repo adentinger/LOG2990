@@ -14,6 +14,7 @@ import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
+import { SoundService } from '../services/sound-service';
 
 const logger = Logger.getLogger();
 
@@ -40,6 +41,8 @@ export class RacingGameService {
     private map: RenderableMap;
 
     private userInputs: UIInputs = null;
+
+    private soundService: SoundService;
 
     public get controlledCar(): Car {
         return this.cars[this.controlledCarIdx];
@@ -78,6 +81,7 @@ export class RacingGameService {
         this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
+        this.soundService = new SoundService(this.controlledCar);
         eventManager.registerClass(this);
     }
 
@@ -91,6 +95,8 @@ export class RacingGameService {
         this.reloadSounds();
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
+
+        this.soundService.initialise(this.controlledCar, this.renderer.getBothCameras()[0]);
 
         // If the game is stopping before it was loaded, then don't start anything.
         Promise.race([

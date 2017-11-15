@@ -10,6 +10,7 @@ import { CarBreaklight } from './car-breaklight';
 import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
+import { SoundEmiter } from '../../sound/sound-emiter';
 
 export interface CarLights {
     lightLeft: THREE.Light;
@@ -18,7 +19,7 @@ export interface CarLights {
 
 const logger = Logger.getLogger('Car');
 
-export class Car extends UserControllableCollidableMesh implements Loadable {
+export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmiter {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
     private static readonly CAR_ENGINE_SOUND_URL = '/assets/racing/sounds/car-engine.ogg';
     private static readonly AUDIO_LOADER = new THREE.AudioLoader();
@@ -50,6 +51,8 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
     public readonly audio = new THREE.PositionalAudio(this.audioListener);
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
+
+    private ambientSound: THREE.PositionalAudio;
 
     constructor(carColor: THREE.Color) {
         super();
