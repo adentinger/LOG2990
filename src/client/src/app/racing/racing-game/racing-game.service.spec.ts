@@ -16,8 +16,8 @@ describe('RacingGameService', () => {
                 PhysicEngine,
                 EventManager,
                 MapService,
-                {provide: ConnectionBackend, useClass: MockBackend},
-                {provide: RequestOptions, useClass: BaseRequestOptions},
+                { provide: ConnectionBackend, useClass: MockBackend },
+                { provide: RequestOptions, useClass: BaseRequestOptions },
                 Http,
                 UIInputs
             ]
@@ -31,7 +31,7 @@ describe('RacingGameService', () => {
         service = injectedService;
         const CONTAINER = document.createElement('div') as HTMLDivElement;
         const HUD_CANVAS = document.createElement('canvas') as HTMLCanvasElement;
-        service.initialise(CONTAINER, HUD_CANVAS, userInputs);
+        service.initialize(CONTAINER, HUD_CANVAS, userInputs);
     }));
 
     it('should be created', () => {

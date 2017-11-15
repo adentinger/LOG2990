@@ -7,8 +7,9 @@ import { RacingGameService } from './racing-game.service';
 export class CarsPositionsService {
     private carsInternal: Car[];
 
-    public constructor(cars: Car[]) {
+    public initialize(cars: Car[]) {
         this.carsInternal = cars;
+        setInterval(() => console.log(this.playerCoordinates), 3000);
     }
 
     public get playerCoordinates(): THREE.Vector {

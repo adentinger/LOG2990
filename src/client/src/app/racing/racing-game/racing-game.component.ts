@@ -40,7 +40,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
-                this.racingGame.initialise(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
+                this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });
