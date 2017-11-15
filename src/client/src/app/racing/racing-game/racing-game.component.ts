@@ -82,7 +82,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
         }
 
-        if (this.uiInputs.isKeyPressed('-')) {
+        if (this.uiInputs.isKeyPressed('-') || this.uiInputs.isKeyPressed('_')) {
             const currentCamera = this.racingGame.renderer.currentCamera;
             this.racingGame.renderer.getBothCameras()[currentCamera].zoom /= 1.025;
             this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
