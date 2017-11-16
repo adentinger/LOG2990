@@ -17,6 +17,8 @@ import { Pothole } from '../models/obstacles/pothole';
 import { EventManager } from '../../../event-manager.service';
 import { Puddle } from '../models/obstacles/puddle';
 import { SpeedBooster } from '../models/obstacles/speed-booster';
+import { DecorationGenerator } from '../decoratio-generator/decoration-generator';
+import { Vector } from '../../../../../../common/src/math/vector';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -52,6 +54,9 @@ export class RenderableMap extends PhysicMesh {
         const waitForJunctions = this.placeJunctionsOnMap();
         const waitForSegments = this.placeSegmentsOnMap();
         this.placeObstaclesOnMap();
+
+        const decorater = new DecorationGenerator();
+        decorater.placeDecorationOnMap(this);
 
         this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
     }
@@ -150,5 +155,15 @@ export class RenderableMap extends PhysicMesh {
             mesh = new SpeedBooster(this.eventManager);
         }
         return mesh;
+    }
+
+    public computeLength(): number {
+        const POINTS = this.mapPoints;
+        let length = 0;
+        for (let i = 0; i < POINTS.length - 1; i++) {
+            const VECTOR = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
+            length += VECTOR.norm();
+        }
+        return length;
     }
 }
