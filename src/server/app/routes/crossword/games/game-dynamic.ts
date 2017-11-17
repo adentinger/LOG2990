@@ -35,6 +35,7 @@ export class GameDynamic extends Game {
 
     protected start(): void {
         // Reset timer
+        this.resetTimer();
         this.stopTimer();
         this.startTimer();
 
@@ -59,10 +60,14 @@ export class GameDynamic extends Game {
         }
     }
 
+    protected resetTimer(): void {
+        this.countdown = GameDynamic.COUNTDOWN_INITAL;
+    }
+
     public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
         if (super.validateUserAnswer(wordGuess, socketId)) {
             // Reset timer
-            this.countdown = GameDynamic.COUNTDOWN_INITAL;
+            this.resetTimer();
             return true;
         }
         return false;
@@ -74,7 +79,7 @@ export class GameDynamic extends Game {
             this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
         });
         if (this.countdown === 0) {
-            this.countdown = GameDynamic.COUNTDOWN_INITAL;
+            this.resetTimer();
             this.stopTimer();
             this.mutator.mutatedGrid.then((grid) => {
                 const words = grid.toGridWords();
