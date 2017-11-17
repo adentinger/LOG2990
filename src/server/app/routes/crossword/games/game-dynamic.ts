@@ -77,9 +77,10 @@ export class GameDynamic extends Game {
             this.countdown = GameDynamic.COUNTDOWN_INITAL;
             this.stopTimer();
             this.mutator.mutatedGrid.then((grid) => {
+                const words = grid.toGridWords();
                 this.players.forEach((player) => {
+                    (this.dataInternal as GameDataDynamic).updateData(words);
                     this.communicationHandler.clearPlayerGrid(player.socketId);
-                    // TODO set grid in data.
                     this.communicationHandler.sendGridWords(
                         player.socketId,
                         this.dataInternal.wordsViewedByPlayer
