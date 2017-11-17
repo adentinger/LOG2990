@@ -85,11 +85,11 @@ export abstract class GridFiller {
         for (let i = 0; i < this.verticalWords.length; ++i) {
             const PLACEMENT = this.verticalWords[i];
             const CONSTRAINT =
-            WordConstraintChecker.getInstance().getVerticalWordConstraint(
-                grid,
-                PLACEMENT.position,
-                PLACEMENT.minLength
-            );
+                WordConstraintChecker.getInstance().getVerticalWordConstraint(
+                    grid,
+                    PLACEMENT.position,
+                    PLACEMENT.minLength
+                );
             const SUGGESTIONS = await this.suggestionsGetter.getSuggestions(
                 PLACEMENT.minLength,
                 PLACEMENT.maxLength,
