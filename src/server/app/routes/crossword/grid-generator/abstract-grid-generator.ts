@@ -17,6 +17,10 @@ export abstract class AbstractGridGenerator {
 
     private dataOfLatestGeneration: GenerationData = null;
 
+    protected get latestGeneration(): Promise<Grid> {
+        return this.dataOfLatestGeneration.promise;
+    }
+
     protected constructor() { }
 
     protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
