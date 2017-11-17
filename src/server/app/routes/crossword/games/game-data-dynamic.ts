@@ -9,7 +9,8 @@ export class GameDataDynamic extends GameData {
     }
 
     public updateData(gridWords: GridWord[]): void {
-        return null;
+        this.wordsInternal = gridWords;
+        this.setDefinitions();
     }
 
 }
