@@ -14,8 +14,8 @@ export class GameDataDynamic extends GameData {
         this.mutator = new GridMutator(toGridGeneratorDifficulty(difficulty));
     }
 
-    public applyMutation(): void {
-        this.mutatedWords.then(words => {
+    public applyMutation(): Promise<void> {
+        return this.mutatedWords.then(words => {
             this.wordsInternal = words;
             this.setDefinitions();
         });
