@@ -10,6 +10,7 @@ import { MapService } from '../services/map.service';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { PhysicEngine } from './physic/engine';
+import { CarsPositionsService } from './cars-positions.service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -18,17 +19,18 @@ describe('RacingGameComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                RouterModule.forRoot([{ path: 'racing/racing-game/:map-name', component: RacingGameComponent}]),
+                RouterModule.forRoot([{ path: 'racing/racing-game/:map-name', component: RacingGameComponent }]),
                 HttpModule,
                 NoopAnimationsModule
             ],
             declarations: [RacingGameComponent, UIInputs],
             providers: [
-                {provide: APP_BASE_HREF, useValue: '/'},
+                { provide: APP_BASE_HREF, useValue: '/' },
                 RacingGameService,
                 MapService,
                 EventManager,
-                PhysicEngine
+                PhysicEngine,
+                CarsPositionsService
             ]
         })
             .compileComponents();

@@ -1,12 +1,7 @@
 import { Line } from '../../../../common/src/math/line';
 import * as THREE from 'three';
 import { Point } from '../../../../common/src/math/point';
-
-export class Projection {
-    constructor(public readonly interpolation: number,
-        public readonly segment: Line,
-        public readonly distanceToSegment: number) { }
-}
+import { Projection } from './projection';
 
 export class MapPositionAlgorithms {
 
