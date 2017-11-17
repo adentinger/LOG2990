@@ -1,4 +1,6 @@
 import { AbstractGridGenerator } from './abstract-grid-generator';
+import { Grid } from './grid';
+import { Word } from './word';
 
 /**
  * @class GridMutator
@@ -15,6 +17,10 @@ export class GridMutator extends AbstractGridGenerator {
 
     protected constructor() {
         super();
+    }
+
+    public async mutateGrid(existingWords: Word[]): Promise<Grid> {
+        return null;
     }
 
 }
