@@ -18,4 +18,9 @@ export class Player {
         this.socketIdInternal = socketId;
     }
 
+    public equals(that: Player): boolean {
+        return this.nameInternal === that.nameInternal &&
+               this.socketIdInternal === that.socketIdInternal;
+    }
+
 }
