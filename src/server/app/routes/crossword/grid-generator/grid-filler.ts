@@ -4,6 +4,8 @@ import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-gette
 import { WordConstraintChecker } from './word-constraint-checker';
 import { Word } from '../word';
 import { WordSuggestions } from './word-suggestions';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from '../player';
 
 export abstract class GridFiller {
 
@@ -106,7 +108,9 @@ export abstract class GridFiller {
             if (SUGGESTION !== '') {
                 const WORD = new Word(
                     SUGGESTION,
-                    PLACEMENT.position
+                    PLACEMENT.position,
+                    Direction.vertical,
+                    Player.NO_PLAYER
                 );
                 grid.vertical.push(WORD);
             }
@@ -148,7 +152,9 @@ export abstract class GridFiller {
         const WORD_PLACEMENT = this.acrossPlacement[current];
         const WORD = new Word(
             suggestion,
-            WORD_PLACEMENT.position
+            WORD_PLACEMENT.position,
+            Direction.horizontal,
+            Player.NO_PLAYER
         );
         grid.across.push(WORD);
         try {

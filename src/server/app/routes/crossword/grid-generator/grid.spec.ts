@@ -16,14 +16,14 @@ describe('Grid', () => {
 
         const MAKE_TEST_GRIDS = () => {
             const ACROSS_WORDS = [
-                new Word('one',    new WordPosition(0, 0)),
-                new Word('two',    new WordPosition(2, 6)),
-                new Word('across', new WordPosition(4, 4))
+                new Word('one',    new WordPosition(0, 0), Direction.horizontal),
+                new Word('two',    new WordPosition(2, 6), Direction.horizontal),
+                new Word('across', new WordPosition(4, 4), Direction.horizontal)
             ];
             const VERTICAL_WORDS = [
-                new Word('one',  new WordPosition(1, 0)),
-                new Word('two',  new WordPosition(6, 3)),
-                new Word('vert', new WordPosition(6, 8))
+                new Word('one',  new WordPosition(1, 0), Direction.vertical),
+                new Word('two',  new WordPosition(6, 3), Direction.vertical),
+                new Word('vert', new WordPosition(6, 8), Direction.vertical)
             ];
 
             const GRID_ACROSS = new Grid();
@@ -66,12 +66,12 @@ describe('Grid', () => {
         const grid = new Grid();
 
         const ACROSS = [
-            new Word('hi',  new WordPosition(0, 0)),
-            new Word('there', new WordPosition(5, 2))
+            new Word('hi',  new WordPosition(0, 0), Direction.horizontal),
+            new Word('there', new WordPosition(5, 2), Direction.horizontal)
         ];
         const VERTICAL = [
-            new Word('signed', new WordPosition(2, 0)),
-            new Word('chucknorris', new WordPosition(3, 2))
+            new Word('signed', new WordPosition(2, 0), Direction.vertical),
+            new Word('chucknorris', new WordPosition(3, 2), Direction.vertical)
         ];
         const EXPECTED_RESULT = [
             new GridWord(0, 0, 0, 2,  Direction.horizontal, Owner.none, 'hi'),

@@ -5,6 +5,7 @@ import { Grid } from './grid';
 import { Word } from '../word';
 import { WordPosition } from '../word-position';
 import { CharConstraint } from '../../../../../common/src/index';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 function getTestData(isForAcross: boolean): {words: Word[],
                                                positions: WordPosition[],
@@ -16,9 +17,9 @@ function getTestData(isForAcross: boolean): {words: Word[],
     ];
 
     const WORDS: Word[] = [
-        new Word('hello', WORD_POSITIONS[0]),
-        new Word('baz',   WORD_POSITIONS[1]),
-        new Word('qux',   WORD_POSITIONS[2])
+        new Word('hello', WORD_POSITIONS[0], Direction.horizontal),
+        new Word('baz',   WORD_POSITIONS[1], Direction.horizontal),
+        new Word('qux',   WORD_POSITIONS[2], Direction.vertical)
     ];
     const POSITIONS: WordPosition[] = [
         new WordPosition(0, 0),
