@@ -1,5 +1,7 @@
 export class Player {
 
+    public static readonly NO_PLAYER = new Player(null, null)
+
     private nameInternal: string;
     private socketIdInternal: string;
 
