@@ -17,7 +17,7 @@ export enum Owner {
  */
 export enum Difficulty {
     easy,
-    medium,
+    normal,
     hard,
 }
 

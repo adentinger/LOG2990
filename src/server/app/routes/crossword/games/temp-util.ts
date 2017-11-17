@@ -7,7 +7,7 @@ import { DifficultyHard } from '../../../../../common/src/crossword/difficulty-h
 export function toGridGeneratorDifficulty(difficulty: Difficulty): GeneratorDifficulty {
     switch (difficulty) {
         case Difficulty.easy: return new DifficultyEasy();
-        case Difficulty.medium: return new DifficultyNormal();
+        case Difficulty.normal: return new DifficultyNormal();
         case Difficulty.hard: return new DifficultyHard();
         default: throw new Error(`Unknown difficulty: ${difficulty}`);
     }

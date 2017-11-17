@@ -81,7 +81,7 @@ export abstract class GameData {
             case Difficulty.easy: {
                 return await GridBanks.getInstance().getEasyGrid();
             }
-            case Difficulty.medium: {
+            case Difficulty.normal: {
                 return await GridBanks.getInstance().getNormalGrid();
             }
             case Difficulty.hard: {
@@ -100,7 +100,7 @@ export abstract class GameData {
                 definitionString = definitions[0];
                 break;
             }
-            case Difficulty.medium: // fallthrough
+            case Difficulty.normal: // fallthrough
             case Difficulty.hard: {
                 if (definitions.length > 1) {
                     definitions.shift();

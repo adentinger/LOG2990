@@ -32,7 +32,7 @@ export class GameData {
     public difficultyAsString(): string {
         switch (this.difficulty) {
             case Difficulty.easy: return 'Easy';
-            case Difficulty.medium: return 'Normal';
+            case Difficulty.normal: return 'Normal';
             case Difficulty.hard: return 'Hard';
             default: return '???';
         }
