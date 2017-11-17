@@ -19,7 +19,7 @@ export class GridMutator extends AbstractGridGenerator {
 
     private difficulty: Difficulty;
 
-    protected constructor(difficulty: Difficulty) {
+    constructor(difficulty: Difficulty) {
         super();
         this.difficulty = difficulty;
     }
