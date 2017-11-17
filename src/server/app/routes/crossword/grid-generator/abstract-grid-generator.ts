@@ -8,26 +8,37 @@ import { Word } from './word';
 
 export abstract class AbstractGridGenerator {
 
+    private latestGeneration: Promise<Grid> = null;
+
     protected constructor() { }
 
-    protected async gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
-        const GRID = new Grid();
+    protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
 
-        const FILLER_FIRST_SECTION = new GridFillerFirstSection(suggestionsGetter);
-        const FILLER_SECOND_SECTION = new GridFillerSecondSection(suggestionsGetter);
-        const FILLER_THIRD_SECTION = new GridFillerThirdSection(suggestionsGetter);
-        const FILLER_FOURTH_SECTION = new GridFillerFourthSection(suggestionsGetter);
+        this.latestGeneration = new Promise((resolve, reject) => {
+            const GRID = new Grid();
 
-        await GRID.fillUsing(FILLER_FIRST_SECTION);
-        await GRID.fillUsing(FILLER_SECOND_SECTION);
-        await GRID.fillUsing(FILLER_THIRD_SECTION);
-        await GRID.fillUsing(FILLER_FOURTH_SECTION);
+            const FILLER_FIRST_SECTION = new GridFillerFirstSection(suggestionsGetter);
+            const FILLER_SECOND_SECTION = new GridFillerSecondSection(suggestionsGetter);
+            const FILLER_THIRD_SECTION = new GridFillerThirdSection(suggestionsGetter);
+            const FILLER_FOURTH_SECTION = new GridFillerFourthSection(suggestionsGetter);
 
-        return GRID;
+            GRID.fillUsing(FILLER_FIRST_SECTION)
+            .then(() => {
+                GRID.fillUsing(FILLER_SECOND_SECTION);
+            }).then(() => {
+                GRID.fillUsing(FILLER_THIRD_SECTION);
+            }).then(() => {
+                GRID.fillUsing(FILLER_FOURTH_SECTION);
+            });
+
+            return GRID;
+        });
+
+        return this.latestGeneration;
     }
 
     protected cancelLatestGeneration(): Promise<void> {
-        return Promise.resolve();
+        return this.latestGeneration.catch(() => { return; }).then(() => { return; });
     }
 
 }
