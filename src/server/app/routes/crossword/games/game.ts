@@ -94,15 +94,7 @@ export abstract class Game {
     }
 
     public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
-        const DIRECTION = wordGuess.direction;
-        const STRING = wordGuess.string;
-
-        const FOUND = this.dataInternal.words.findIndex(
-            (word) => {
-                return word.direction === DIRECTION &&
-                    word.string === STRING;
-            }) >= 0;
-        if (FOUND) {
+        if (this.dataInternal.validateWord(wordGuess)) {
             this.sendWordFound(wordGuess, socketId);
             return true;
         }
