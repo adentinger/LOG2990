@@ -52,6 +52,11 @@ export abstract class GridFiller {
         // We assume that the words in acrossWords and verticalWords
         // are given top to bottom and left to right (respectively).
         if (current < this.acrossWords.length) {
+
+            if (this.shouldCancelFilling) {
+                throw new Error('Grid generation cancelled.');
+            }
+
             const WORD_PLACEMENT = this.acrossWords[current];
             const SUGGESTIONS =
                 await this.suggestionsGetter.getSuggestions(
