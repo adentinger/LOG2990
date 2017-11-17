@@ -4,16 +4,21 @@ import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.p
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { GridMutator } from '../grid-generator/grid-mutator';
+import { enumDifficultyToStateDifficulty } from './temp-util';
 
 export class GameDynamic extends Game {
 
     private static readonly COUNTDOWN_INITAL = 120; // seconds
 
     private countdown = GameDynamic.COUNTDOWN_INITAL;
+    private mutator: GridMutator;
+
     protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
         super(configs);
+        this.mutator = new GridMutator(enumDifficultyToStateDifficulty(configs.difficulty));
         registerHandlers(this, PacketManagerServer.getInstance());
     }
 
