@@ -43,12 +43,7 @@ export class GameDynamic extends Game {
     protected startTimer() {
         if (this.timerInterval === null) {
             const ONE_SECOND = 1000; // ms
-            this.timerInterval = setInterval(() => {
-                this.countdown--;
-                this.players.forEach((player) => {
-                    this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
-                });
-            }, ONE_SECOND);
+            this.timerInterval = setInterval(() => this.decrementTimer(), ONE_SECOND);
         }
     }
 
@@ -70,6 +65,28 @@ export class GameDynamic extends Game {
             return true;
         }
         return false;
+    }
+
+    private decrementTimer(): void {
+        this.countdown--;
+        this.players.forEach((player) => {
+            this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
+        });
+        if (this.countdown === 0) {
+            this.countdown = GameDynamic.COUNTDOWN_INITAL;
+            this.stopTimer();
+            this.mutator.mutatedGrid.then((grid) => {
+                this.players.forEach((player) => {
+                    this.communicationHandler.clearPlayerGrid(player.socketId);
+                    // TODO set grid in data.
+                    this.communicationHandler.sendGridWords(
+                        player.socketId,
+                        this.dataInternal.wordsViewedByPlayer
+                    );
+                });
+                this.startTimer();
+            });
+        }
     }
 
     @PacketHandler(TimerPacket)
