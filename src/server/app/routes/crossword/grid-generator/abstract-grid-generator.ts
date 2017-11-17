@@ -15,13 +15,20 @@ interface GenerationData {
 
 export abstract class AbstractGridGenerator {
 
-    private dataOfLatestGeneration: GenerationData = null;
+    private dataOfLatestGeneration: GenerationData;
 
     protected get latestGeneration(): Promise<Grid> {
         return this.dataOfLatestGeneration.promise;
     }
 
-    protected constructor() { }
+    protected constructor() {
+        const EMPTY_GRID = new Grid();
+        this.dataOfLatestGeneration = {
+            fillers: [],
+            grid: EMPTY_GRID,
+            promise: Promise.resolve(EMPTY_GRID)
+        };
+    }
 
     protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
         this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, suggestionsGetter);
