@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { RacingGameComponent } from './racing-game.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
+import { HttpModule } from '@angular/http';
+
+import { RacingGameComponent } from './racing-game.component';
 import { RacingGameService } from './racing-game.service';
 import { MapService } from '../services/map.service';
-import { HttpModule } from '@angular/http';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { PhysicEngine } from './physic/engine';
@@ -18,7 +19,8 @@ describe('RacingGameComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 RouterModule.forRoot([{ path: 'racing/racing-game/:map-name', component: RacingGameComponent}]),
-                HttpModule
+                HttpModule,
+                BrowserAnimationsModule
             ],
             declarations: [RacingGameComponent, UIInputs],
             providers: [
