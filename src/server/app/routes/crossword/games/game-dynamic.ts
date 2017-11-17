@@ -80,9 +80,8 @@ export class GameDynamic extends Game {
 
             // Mutate our data
             const dynamicData = (this.dataInternal as GameDataDynamic);
-            dynamicData.mutatedWords.then((words) => {
+            dynamicData.applyMutation().then(() => {
                 this.players.forEach((player) => {
-                    dynamicData.applyMutation();
                     this.communicationHandler.clearPlayerGrid(player.socketId);
                     this.communicationHandler.sendGridWords(
                         player.socketId,

@@ -21,7 +21,7 @@ export class GameDataDynamic extends GameData {
         });
     }
 
-    public get mutatedWords(): Promise<GridWord[]> {
+    protected get mutatedWords(): Promise<GridWord[]> {
         return this.mutator.mutatedGrid.then(grid => grid.toGridWords());
     }
 
