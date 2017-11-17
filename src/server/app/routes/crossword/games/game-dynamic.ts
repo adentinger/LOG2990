@@ -44,7 +44,7 @@ export class GameDynamic extends Game {
     protected startTimer() {
         if (this.timerInterval === null) {
             const ONE_SECOND = 1000; // ms
-            this.timerInterval = setInterval(() => this.decrementTimer(), ONE_SECOND);
+            this.timerInterval = setInterval(() => this.tick(), ONE_SECOND);
         }
     }
 
@@ -68,7 +68,7 @@ export class GameDynamic extends Game {
         return false;
     }
 
-    private decrementTimer(): void {
+    private tick(): void {
         this.countdown--;
         this.players.forEach((player) => {
             this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
