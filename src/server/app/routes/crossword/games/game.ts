@@ -62,7 +62,7 @@ export abstract class Game {
             this.players.push(player);
             this.initialized.then(() => {
                 this.communicationHandler.clearPlayerGrid(player.socketId);
-                this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.emptyWords);
+                this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.wordsViewedByPlayer);
                 this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
             }).catch(warn(logger));
 

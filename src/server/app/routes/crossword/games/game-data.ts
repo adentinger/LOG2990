@@ -24,8 +24,9 @@ export class GameData {
         return this.wordsInternal.slice();
     }
 
-    public get emptyWords(): GridWord[] {
+    public get wordsViewedByPlayer(): GridWord[] {
         return this.wordsInternal.map((word) => {
+            const stringValue = (word.owner === Owner.none ? '' : word.string);
             return new GridWord(
                 word.id,
                 word.y,
@@ -33,7 +34,7 @@ export class GameData {
                 word.length,
                 word.direction,
                 Owner.none,
-                ''
+                stringValue
             );
         });
     }
