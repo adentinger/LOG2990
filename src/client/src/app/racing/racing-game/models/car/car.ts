@@ -11,6 +11,7 @@ import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
 import { SoundEmiter } from '../../sound/sound-emiter';
+import { Sound } from '../../../services/sound-service';
 
 export interface CarLights {
     lightLeft: THREE.Light;
@@ -18,6 +19,7 @@ export interface CarLights {
 }
 
 const logger = Logger.getLogger('Car');
+const MIN_RATE = 0.4;
 
 export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmiter {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
@@ -47,12 +49,12 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
 
     public readonly waitToLoad: Promise<void>;
     public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
-    public readonly audioListener = new THREE.AudioListener();
-    public readonly audio = new THREE.PositionalAudio(this.audioListener);
+    public readonly eventAudios: Map<Sound, THREE.PositionalAudio> = new Map();
+    public readonly constantAudios: Map<Sound, THREE.PositionalAudio> = new Map();
+    public readonly eventSounds: Sound[] = [];
+    public readonly constantSounds: Sound[] = [Sound.CAR_ENGINE];
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
-
-    private ambientSound: THREE.PositionalAudio;
 
     constructor(carColor: THREE.Color) {
         super();
@@ -62,15 +64,14 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
             this.breakLightMeshs = this.getObjectByName('brake_light') as THREE.Mesh;
             this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
         });
-        this.add(this.audio);
-        this.audio.autoplay = true;
-        this.audio.setLoop(true);
-        this.audio.setVolume(10);
-        this.audio.setPlaybackRate(0.1);
-        Car.AUDIO_LOADER.load(Car.CAR_ENGINE_SOUND_URL,
-            (buffer: THREE.AudioBuffer) => {
-                this.audio.setBuffer(buffer);
-            }, () => { }, logger.error);
+    }
+
+    public onAudioSet(sound: Sound, audio: THREE.PositionalAudio): void {
+        this.add(audio);
+        if (sound === Sound.CAR_ENGINE) {
+            audio.setVolume(10);
+            audio.setPlaybackRate(MIN_RATE);
+        }
     }
 
     private async addCarParts(color: THREE.Color): Promise<void> {
@@ -118,9 +119,11 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     }
 
     private updateEnginePitch(): void {
-        const MIN_RATE = 0.4, PITCH_FACTOR = 2;
+        const PITCH_FACTOR = 2;
         const playbackRate = PITCH_FACTOR * (this.velocity.length() / this.targetSpeed) + MIN_RATE;
-        this.audio.setPlaybackRate(playbackRate);
+        if (this.constantAudios.has(Sound.CAR_ENGINE)) {
+            this.constantAudios.get(Sound.CAR_ENGINE).setPlaybackRate(playbackRate);
+        }
     }
 
     private updateBreaklights(): void {
@@ -173,11 +176,15 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     }
 
     public startSounds() {
-        this.audio.setVolume(10);
+        if (this.constantAudios.has(Sound.CAR_ENGINE)) {
+            this.constantAudios.get(Sound.CAR_ENGINE).setVolume(10);
+        }
     }
 
     public stopSounds() {
-        this.audio.setVolume(0);
+        if (this.constantAudios.has(Sound.CAR_ENGINE)) {
+            this.constantAudios.get(Sound.CAR_ENGINE).setVolume(0);
+        }
     }
 
     public dayModeChanged(newMode: DayMode): void {

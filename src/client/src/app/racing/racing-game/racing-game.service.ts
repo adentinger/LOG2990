@@ -14,7 +14,7 @@ import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
-import { SoundService } from '../services/sound-service';
+import { SoundService, Sound } from '../services/sound-service';
 
 const logger = Logger.getLogger();
 
@@ -41,8 +41,6 @@ export class RacingGameService {
     private map: RenderableMap;
 
     private userInputs: UIInputs = null;
-
-    private soundService: SoundService;
 
     public get controlledCar(): Car {
         return this.cars[this.controlledCarIdx];
@@ -77,16 +75,17 @@ export class RacingGameService {
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
-        private eventManager: EventManager) {
+        private eventManager: EventManager,
+        private soundService: SoundService) {
         this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
-        this.soundService = new SoundService(this.controlledCar);
         eventManager.registerClass(this);
     }
 
     public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
         this.renderer.initialize(container, hudCanvas);
+        this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;
 
         const userCar = this.cars[RacingGameService.DEFAULT_CONTROLLABLE_CAR_IDX];
@@ -94,9 +93,10 @@ export class RacingGameService {
         this.renderer.setCamerasTarget(userCar);
         this.reloadSounds();
 
-        this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
+        this.cars.forEach(this.soundService.registerEmiter, this.soundService);
+        this.renderer['scene'].add(this.soundService['ambientAudio']);
 
-        this.soundService.initialise(this.controlledCar, this.renderer.getBothCameras()[0]);
+        this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
 
         // If the game is stopping before it was loaded, then don't start anything.
         Promise.race([
@@ -106,6 +106,8 @@ export class RacingGameService {
             this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
+            this.soundService.setAbmiantSound(Sound.TETRIS);
+            this.soundService.playAmbiantSound(true);
         }, () => logger.warn('Initialization interrupted'));
     }
 
