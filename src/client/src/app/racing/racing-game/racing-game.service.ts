@@ -77,7 +77,10 @@ export class RacingGameService {
         private mapService: MapService,
         private eventManager: EventManager,
         private soundService: SoundService) {
-        this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
+        this.waitToLoad = Promise.all([
+            ...this.cars.map(car => car.waitToLoad),
+            this.soundService.waitToLoad
+        ]).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
         eventManager.registerClass(this);
@@ -93,8 +96,7 @@ export class RacingGameService {
         this.renderer.setCamerasTarget(userCar);
         this.reloadSounds();
 
-        this.cars.forEach(this.soundService.registerEmiter, this.soundService);
-        this.renderer['scene'].add(this.soundService['ambientAudio']);
+        this.cars.forEach(this.soundService.registerEmitter, this.soundService);
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
 
@@ -107,7 +109,9 @@ export class RacingGameService {
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.TETRIS);
-            this.soundService.playAmbiantSound(true);
+            this.waitToLoad.then(() => {
+                this.soundService.playAmbiantSound(true);
+            });
         }, () => logger.warn('Initialization interrupted'));
     }
 
@@ -126,6 +130,7 @@ export class RacingGameService {
 
         this.physicEngine.finalize();
         this.renderer.finalize();
+        this.soundService.finalize();
     }
 
     public loadMap(mapName: string): Promise<void> {

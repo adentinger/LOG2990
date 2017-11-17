@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { Logger } from '../../../../../common/src/logger';
-import { SoundEmiter } from '../racing-game/sound/sound-emiter';
+import { SoundEmitter } from '../racing-game/sound/sound-emitter';
 import { SoundListener } from '../racing-game/sound/sound-listener';
 import { Loadable } from '../../loadable';
 
@@ -30,11 +30,15 @@ export class SoundService implements Loadable {
         SoundService.loadSounds(...SoundService.SOUNDS.map((sound) => SoundService.URL_PREFIX + sound));
 
     private readonly ambientAudio: THREE.Audio = new THREE.Audio(SoundService.AUDIO_LISTENER);
+    private readonly registeredEmitters: Set<SoundEmitter> = new Set();
+    private registeredListener: SoundListener;
+
     public readonly waitToLoad: Promise<void>;
 
     constructor() {
         this.ambientAudio.setLoop(false);
-        this.ambientAudio.setVolume(10);
+        this.ambientAudio.setVolume(0);
+        this.ambientAudio.autoplay = false;
         this.waitToLoad = Promise.all(SoundService.SOUND_PROMISES).then(() => { });
     }
 
@@ -57,47 +61,62 @@ export class SoundService implements Loadable {
         this.registerListener(listener);
     }
 
+    public finalize(): void {
+        this.stopAmbiantSound();
+        this.registeredEmitters.forEach((emitter: SoundEmitter) => {
+            if (emitter.eventAudios != null) {
+                emitter.eventAudios.forEach((audio) => audio.stop());
+                emitter.eventAudios.clear();
+            }
+            if (emitter.constantAudios != null) {
+                emitter.constantAudios.forEach((audio) => audio.stop());
+                emitter.constantAudios.clear();
+            }
+        });
+        this.registeredEmitters.clear();
+
+        if ('onListenerRemove' in this.registeredListener) {
+            this.registeredListener.onListenerRemove(SoundService.AUDIO_LISTENER);
+        }
+        delete this.registeredListener.listener;
+    }
+
     public setAbmiantSound(soundIndex: Sound): void {
         this.stopAmbiantSound();
-        logger.debug('Buffer requested');
         SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             this.ambientAudio.setBuffer(buffer);
-            this.ambientAudio.play();
-            logger.debug('Buffer set', buffer, this.ambientAudio);
         });
     }
 
     public playAmbiantSound(looping: boolean = false): void {
-        if (this.ambientAudio.isPlaying) {
-            this.stopAmbiantSound();
-        }
+        this.stopAmbiantSound();
         this.ambientAudio.setLoop(looping);
         this.ambientAudio.play();
-        this.ambientAudio.autoplay = true;
+        this.ambientAudio.setVolume(1);
     }
 
     public stopAmbiantSound(): void {
         if (this.ambientAudio.isPlaying) {
-            this.ambientAudio.autoplay = false;
             this.ambientAudio.stop();
         }
     }
 
-    public registerEmiter(emiter: SoundEmiter): void {
+    public registerEmitter(emitter: SoundEmitter): void {
         const sounds: [Sound, SoundType][] = [];
-        if (emiter.eventSounds != null && emiter.eventAudios != null) {
-            this.populateAudiosWithSounds('event', emiter.eventSounds, emiter.eventAudios);
-            if ('onAudioSet' in emiter) {
-                for (const [sound, audio] of emiter.eventAudios.entries()) {
-                    emiter.onAudioSet(sound, audio);
+        this.registeredEmitters.add(emitter);
+        if (emitter.eventSounds != null && emitter.eventAudios != null) {
+            this.populateAudiosWithSounds('event', emitter.eventSounds, emitter.eventAudios);
+            if ('onAudioSet' in emitter) {
+                for (const [sound, audio] of emitter.eventAudios.entries()) {
+                    emitter.onAudioSet(sound, audio);
                 }
             }
         }
-        if (emiter.constantSounds != null && emiter.constantAudios != null) {
-            this.populateAudiosWithSounds('constant', emiter.constantSounds, emiter.constantAudios);
-            if ('onAudioSet' in emiter) {
-                for (const [sound, audio] of emiter.constantAudios.entries()) {
-                    emiter.onAudioSet(sound, audio);
+        if (emitter.constantSounds != null && emitter.constantAudios != null) {
+            this.populateAudiosWithSounds('constant', emitter.constantSounds, emitter.constantAudios);
+            if ('onAudioSet' in emitter) {
+                for (const [sound, audio] of emitter.constantAudios.entries()) {
+                    emitter.onAudioSet(sound, audio);
                 }
             }
         }
@@ -120,11 +139,16 @@ export class SoundService implements Loadable {
         audio.setLoop(isConstantSound);
         SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             audio.setBuffer(buffer);
+            audio.setVolume(0);
             audio.play();
         }, logger.error);
     }
 
     private registerListener(objectListening: SoundListener): void {
-        objectListening.listener.add(SoundService.AUDIO_LISTENER);
+        this.registeredListener = objectListening;
+        objectListening.listener = SoundService.AUDIO_LISTENER;
+        if ('onListenerSet' in objectListening) {
+            objectListening.onListenerSet(SoundService.AUDIO_LISTENER);
+        }
     }
 }

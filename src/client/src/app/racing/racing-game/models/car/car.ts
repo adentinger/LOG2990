@@ -10,7 +10,7 @@ import { CarBreaklight } from './car-breaklight';
 import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
-import { SoundEmiter } from '../../sound/sound-emiter';
+import { SoundEmitter } from '../../sound/sound-emitter';
 import { Sound } from '../../../services/sound-service';
 
 export interface CarLights {
@@ -21,10 +21,8 @@ export interface CarLights {
 const logger = Logger.getLogger('Car');
 const MIN_RATE = 0.4;
 
-export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmiter {
+export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmitter {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
-    private static readonly CAR_ENGINE_SOUND_URL = '/assets/racing/sounds/car-engine.ogg';
-    private static readonly AUDIO_LOADER = new THREE.AudioLoader();
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
         new THREE.Vector3(-0.56077, 0.63412, -1.7),
@@ -72,6 +70,10 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
             audio.setVolume(10);
             audio.setPlaybackRate(MIN_RATE);
         }
+    }
+
+    public onAudioRemove(sound: Sound, audio: THREE.PositionalAudio): void {
+        this.remove(audio);
     }
 
     private async addCarParts(color: THREE.Color): Promise<void> {

@@ -31,7 +31,6 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundL
         this.setupPerspectiveView();
         eventManager.registerClass(this);
         this.name = PerspectiveCamera.CAMERA_NAME;
-        this.listener = new THREE.AudioListener();
     }
 
     public setTarget(object: THREE.Object3D) {
@@ -47,6 +46,14 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundL
         this.position.copy(PerspectiveCamera.DEFAULT_POSITION);
         this.rotation.set(0, 0, 0);
         this.lookAt(PerspectiveCamera.LOOK_AT_POSITION);
+    }
+
+    public onListenerSet(listener: THREE.AudioListener): void {
+        this.add(listener);
+    }
+
+    public onListenerRemove(listener: THREE.AudioListener): void {
+        this.remove(listener);
     }
 
     @EventManager.Listener(BEFORE_PHYSIC_UPDATE_EVENT)
