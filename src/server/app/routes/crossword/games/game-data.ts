@@ -44,7 +44,7 @@ export class GameData {
 
     private async initializeWords(difficulty: Difficulty): Promise<void> {
         const grid = await this.fetchGrid(difficulty);
-        this.wordsInternal = this.convertGridToGridWords(grid);
+        this.wordsInternal = grid.toGridWords();
     }
 
     private async initializeDefinitions(difficulty: Difficulty): Promise<void> {
@@ -88,37 +88,6 @@ export class GameData {
             }
             default: throw new Error(`Unknown difficulty: ${difficulty}`);
         }
-    }
-
-    private convertGridToGridWords(grid: Grid): GridWord[] {
-        const HORIZONTAL_WORDS: GridWord[] =
-            grid.across.map(
-                (word, index) =>
-                    new GridWord(
-                        index + 1,
-                        word.position.row,
-                        word.position.column,
-                        word.value.length,
-                        Direction.horizontal,
-                        Owner.none,
-                        word.value
-                    )
-            );
-        const VERTICAL_WORDS: GridWord[] =
-            grid.vertical.map(
-                (word, index) =>
-                    new GridWord(
-                        index + 1,
-                        word.position.row,
-                        word.position.column,
-                        word.value.length,
-                        Direction.vertical,
-                        Owner.none,
-                        word.value
-                    )
-            );
-
-        return HORIZONTAL_WORDS.concat(VERTICAL_WORDS);
     }
 
     private async getDefinitionOfWord(word: GridWord, difficulty: Difficulty): Promise<Definition> {
