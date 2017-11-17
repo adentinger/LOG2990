@@ -43,12 +43,12 @@ export abstract class GameData {
         return this.definitionsInternal.slice();
     }
 
-    private async setWords(difficulty: Difficulty): Promise<void> {
+    protected async setWords(difficulty: Difficulty): Promise<void> {
         const grid = await this.fetchGrid(difficulty);
         this.wordsInternal = grid.toGridWords();
     }
 
-    private async setDefinitions(difficulty: Difficulty): Promise<void> {
+    protected async setDefinitions(difficulty: Difficulty): Promise<void> {
         const DEFINITIONS: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
