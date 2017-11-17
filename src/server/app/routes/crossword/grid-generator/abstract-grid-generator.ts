@@ -4,13 +4,13 @@ import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
 import { GridFillerFourthSection } from './grid-filler-fourth-section';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Word } from './word';
 
 export abstract class AbstractGridGenerator {
 
     protected constructor() { }
 
-    protected async gridGenerationBase(wordsToInclude: GridWord[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
+    protected async gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
         const GRID = new Grid();
 
         const FILLER_FIRST_SECTION = new GridFillerFirstSection(suggestionsGetter);
