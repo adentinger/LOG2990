@@ -4,7 +4,6 @@ import { createMockGameConfigs } from './create-mock-game-configs';
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
-import { GameDataClassic } from './game-data-classic';
 import { GameClassic } from './game-classic';
 
 class MockGame extends GameClassic {}
