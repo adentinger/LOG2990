@@ -88,6 +88,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
         }
 
+        if (this.uiInputs.isKeyPressed('r')) {
+            this.racingGame.renderer.toggleRearViewCamera();
+        }
+
 
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
