@@ -15,33 +15,43 @@ interface GenerationData {
 
 export abstract class AbstractGridGenerator {
 
-    private latestGeneration: Promise<Grid> = null;
+    private latestGeneration: GenerationData = null;
 
     protected constructor() { }
 
     protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
-        this.latestGeneration = this.asyncGridGenerationBase(wordsToInclude, suggestionsGetter);
-        return this.latestGeneration;
+        this.latestGeneration = this.startGeneration(wordsToInclude, suggestionsGetter);
+        return this.latestGeneration.promise;
     }
 
-    private async asyncGridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
-        const GRID = new Grid();
+    private startGeneration(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): GenerationData {
+        const generationData: GenerationData = {
+            grid: null,
+            fillers: null,
+            promise: null
+        };
+        generationData.promise = new Promise(async (resolve, reject) => {
+            generationData.grid = new Grid();
+            generationData.fillers = [
+                new GridFillerFirstSection (suggestionsGetter),
+                new GridFillerSecondSection(suggestionsGetter),
+                new GridFillerThirdSection (suggestionsGetter),
+                new GridFillerFourthSection(suggestionsGetter)
+            ];
 
-        const FILLER_FIRST_SECTION = new GridFillerFirstSection(suggestionsGetter);
-        const FILLER_SECOND_SECTION = new GridFillerSecondSection(suggestionsGetter);
-        const FILLER_THIRD_SECTION = new GridFillerThirdSection(suggestionsGetter);
-        const FILLER_FOURTH_SECTION = new GridFillerFourthSection(suggestionsGetter);
+            for (let i = 0; i < generationData.fillers.length; ++i) {
+                const filler = generationData.fillers[i];
+                await generationData.grid.fillUsing(filler);
+            }
 
-        await GRID.fillUsing(FILLER_FIRST_SECTION);
-        await GRID.fillUsing(FILLER_SECOND_SECTION);
-        await GRID.fillUsing(FILLER_THIRD_SECTION);
-        await GRID.fillUsing(FILLER_FOURTH_SECTION);
+            return generationData.grid;
+        });
 
-        return GRID;
+        return generationData;
     }
 
     protected cancelLatestGeneration(): Promise<void> {
-        return this.latestGeneration
+        return this.latestGeneration.promise
             .catch(() => { return; })
             .then (() => { return; });
     }
