@@ -23,4 +23,8 @@ export class GridMutator extends AbstractGridGenerator {
         return null;
     }
 
+    public cancelMutation(): Promise<void> {
+        return null;
+    }
+
 }

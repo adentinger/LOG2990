@@ -26,8 +26,4 @@ export abstract class AbstractGridGenerator {
         return GRID;
     }
 
-    public cancelGeneration(): void {
-        return null;
-    }
-
 }
