@@ -17,7 +17,6 @@ import { Difficulty } from '../../../../../common/src/crossword/difficulty';
  */
 export class GridMutator extends AbstractGridGenerator {
 
-    private latestMutation: Promise<Grid> = null;
     private difficulty: Difficulty;
 
     protected constructor(difficulty: Difficulty) {
@@ -26,11 +25,10 @@ export class GridMutator extends AbstractGridGenerator {
     }
 
     public mutateGrid(wordsToInclude: Word[]): Promise<Grid> {
-        this.latestMutation = this.gridGenerationBase(
+        return this.gridGenerationBase(
             wordsToInclude,
             new NormalWordSuggestionsGetter(this.difficulty)
         );
-        return this.latestMutation;
     }
 
     public cancelMutation(): Promise<void> {
