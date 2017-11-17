@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { Word } from './word';
 import { WordPosition } from './word-position';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { GridWord } from '../../../../common/src/crossword/grid-word';
+import { Direction, Owner } from '../../../../common/src/crossword/crossword-enums';
 
 describe('Word',  () => {
 

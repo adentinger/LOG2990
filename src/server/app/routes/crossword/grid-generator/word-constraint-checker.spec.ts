@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import { WordConstraintChecker } from './word-constraint-checker';
 import { Grid } from './grid';
-import { Word } from './word';
-import { WordPosition } from './word-position';
+import { Word } from '../word';
+import { WordPosition } from '../word-position';
 import { CharConstraint } from '../../../../../common/src/index';
 
 function getTestData(isForAcross: boolean): {words: Word[],

@@ -1,7 +1,7 @@
 import { CharConstraint } from '../../../../../common/src/index';
 import { Grid } from './grid';
-import { WordPosition } from './word-position';
-import { Word } from './word';
+import { WordPosition } from '../word-position';
+import { Word } from '../word';
 
 type AxisGetter = (position: WordPosition) => number;
 type PositionModifier = (position: WordPosition) => void;

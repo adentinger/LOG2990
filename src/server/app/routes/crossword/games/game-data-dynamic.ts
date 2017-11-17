@@ -3,7 +3,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Difficulty, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GridMutator } from '../grid-generator/grid-mutator';
 import { toGridGeneratorDifficulty } from './temp-util';
-import { Word } from '../grid-generator/word';
+import { Word } from '../word';
 
 export class GameDataDynamic extends GameData {
 

@@ -1,6 +1,6 @@
 import { AbstractGridGenerator } from './abstract-grid-generator';
 import { Grid } from './grid';
-import { Word } from './word';
+import { Word } from '../word';
 import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 

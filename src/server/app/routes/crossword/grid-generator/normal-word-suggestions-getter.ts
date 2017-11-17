@@ -1,6 +1,6 @@
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { WordSuggestions } from './word-suggestions';
-import { WordPosition } from './word-position';
+import { WordPosition } from '../word-position';
 import { CharConstraint } from '../../../../../common/src/index';
 import { LexiconCaller } from '../lexic/lexicon-caller';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';

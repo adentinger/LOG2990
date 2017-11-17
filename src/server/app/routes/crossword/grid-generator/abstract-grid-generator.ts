@@ -5,7 +5,7 @@ import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
 import { GridFillerFourthSection } from './grid-filler-fourth-section';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
-import { Word } from './word';
+import { Word } from '../word';
 
 interface GenerationData {
     grid: Grid;

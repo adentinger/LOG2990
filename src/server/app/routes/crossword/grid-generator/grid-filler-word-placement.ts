@@ -1,4 +1,4 @@
-import { WordPosition } from './word-position';
+import { WordPosition } from '../word-position';
 
 export class GridFillerWordPlacement {
 

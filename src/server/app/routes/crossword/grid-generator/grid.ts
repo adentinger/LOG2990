@@ -1,4 +1,4 @@
-import { Word } from './word';
+import { Word } from '../word';
 import { GridFiller } from './grid-filler';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';

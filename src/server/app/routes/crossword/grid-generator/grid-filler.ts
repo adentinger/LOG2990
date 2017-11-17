@@ -2,7 +2,7 @@ import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-pla
 import { Grid } from './grid';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 import { WordConstraintChecker } from './word-constraint-checker';
-import { Word } from './word';
+import { Word } from '../word';
 import { WordSuggestions } from './word-suggestions';
 
 export abstract class GridFiller {

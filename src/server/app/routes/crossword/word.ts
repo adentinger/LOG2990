@@ -1,5 +1,5 @@
 import { WordPosition } from './word-position';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { GridWord } from '../../../../common/src/crossword/grid-word';
 
 /**
  * @class Word

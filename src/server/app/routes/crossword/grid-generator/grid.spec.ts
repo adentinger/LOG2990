@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Grid } from './grid';
-import { Word } from './word';
-import { WordPosition } from './word-position';
+import { Word } from '../word';
+import { WordPosition } from '../word-position';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 
