@@ -16,8 +16,8 @@ export abstract class GameData {
     private definitionsInternal: DefinitionWithIndex[] = [];
 
     public async initialize(difficulty: Difficulty): Promise<void> {
-        await this.initializeWords(difficulty);
-        await this.initializeDefinitions(difficulty);
+        await this.setWords(difficulty);
+        await this.setDefinitions(difficulty);
     }
 
     public get words(): GridWord[] {
@@ -43,12 +43,12 @@ export abstract class GameData {
         return this.definitionsInternal.slice();
     }
 
-    private async initializeWords(difficulty: Difficulty): Promise<void> {
+    private async setWords(difficulty: Difficulty): Promise<void> {
         const grid = await this.fetchGrid(difficulty);
         this.wordsInternal = grid.toGridWords();
     }
 
-    private async initializeDefinitions(difficulty: Difficulty): Promise<void> {
+    private async setDefinitions(difficulty: Difficulty): Promise<void> {
         const DEFINITIONS: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
