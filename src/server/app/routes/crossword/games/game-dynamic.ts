@@ -1,4 +1,5 @@
 import { Game } from './game';
+import { GameDataDynamic } from './game-data-dynamic';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../common/src/index';
 import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.packet';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
@@ -17,7 +18,7 @@ export class GameDynamic extends Game {
     protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
-        super(configs);
+        super(configs, new GameDataDynamic());
         this.mutator = new GridMutator(enumDifficultyToStateDifficulty(configs.difficulty));
         registerHandlers(this, PacketManagerServer.getInstance());
     }

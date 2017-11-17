@@ -18,15 +18,16 @@ export abstract class Game {
     protected readonly initialized: Promise<void>;
     protected started = false;
 
-    protected readonly dataInternal: GameData = new GameData();
+    protected readonly dataInternal: GameData;
     protected readonly players: Player[] = [];
     protected readonly maxPlayers: PlayerNumber;
     protected readonly configurationInternal: CrosswordGameConfigs;
     protected communicationHandler: CommunicationHandler;
 
-    constructor(configs: CrosswordGameConfigs) {
+    constructor(configs: CrosswordGameConfigs, data: GameData) {
         this.communicationHandler = new CommunicationHandler();
         this.configurationInternal = configs;
+        this.dataInternal = data;
 
         this.id = Game.idCounter++;
         this.maxPlayers = configs.playerNumber;
