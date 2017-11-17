@@ -50,6 +50,23 @@ export abstract class GameData {
         await this.setDefinitions();
     }
 
+    public validateWord(wordGuess: GridWord): boolean {
+        const index = this.wordsInternal.findIndex(
+            (word) => {
+                return word.direction === wordGuess.direction &&
+                       word.string === wordGuess.string &&
+                       word.x === wordGuess.x &&
+                       word.y === wordGuess.y;
+            });
+        const found = index >= 0;
+
+        if (found) {
+            // TODO mark the word as found by the player.
+        }
+
+        return found;
+    }
+
     protected async setDefinitions(): Promise<void> {
         const DEFINITIONS: DefinitionWithIndex[] = [];
 
