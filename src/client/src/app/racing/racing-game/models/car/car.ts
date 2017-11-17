@@ -49,7 +49,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
     public readonly eventAudios: Map<Sound, THREE.PositionalAudio> = new Map();
     public readonly constantAudios: Map<Sound, THREE.PositionalAudio> = new Map();
-    public readonly eventSounds: Sound[] = [Sound.CAR_ENGINE];
+    public readonly eventSounds: Sound[] = [Sound.CAR_CRASH];
     public readonly constantSounds: Sound[] = [Sound.CAR_ENGINE];
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
@@ -67,7 +67,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     public onAudioSet(sound: Sound, audio: THREE.PositionalAudio): void {
         this.add(audio);
         if (sound === Sound.CAR_ENGINE) {
-            audio.setVolume(10);
+            audio.setVolume(1);
             audio.setPlaybackRate(MIN_RATE);
         }
     }
@@ -179,7 +179,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
 
     public startSounds() {
         if (this.constantAudios.has(Sound.CAR_ENGINE)) {
-            this.constantAudios.get(Sound.CAR_ENGINE).setVolume(10);
+            this.constantAudios.get(Sound.CAR_ENGINE).setVolume(1);
         }
     }
 

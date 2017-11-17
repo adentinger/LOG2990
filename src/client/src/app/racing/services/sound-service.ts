@@ -11,8 +11,8 @@ import { Car } from '../racing-game/models/car/car';
 import { Class } from '../../../../../common/src/utils';
 import { Pothole } from '../racing-game/models/obstacles/pothole';
 import { Puddle } from '../racing-game/models/obstacles/puddle';
-import { SpeedBoost } from '../../admin-screen/map-editor/speed-boost';
 import { Sound, SoundType } from './sound';
+import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
 
 const logger = Logger.getLogger('Sound');
 
@@ -31,7 +31,7 @@ export class SoundService implements Loadable {
     private static readonly COLLISION_TO_SOUND_MAPPING: Map<Class<CollidableMesh>, Sound> =  new Map([
         [Pothole, Sound.CAR_CRASH],
         [Puddle, Sound.CAR_CRASH],
-        [SpeedBoost, Sound.CAR_CRASH],
+        [SpeedBooster, Sound.CAR_CRASH],
         [Car, Sound.CAR_CRASH]
     ] as [Class<CollidableMesh>, Sound][]);
 
@@ -75,9 +75,10 @@ export class SoundService implements Loadable {
         const collision = event.data;
         if (collision.target instanceof Car && !this.soundBuffer.has(collision.target)) {
             for (const [collidableClass, sound] of SoundService.COLLISION_TO_SOUND_MAPPING) {
-                if (collision.source instanceof collidableClass) {
+                if (collision.source instanceof collidableClass && collision.target.eventAudios.has(sound)) {
                     const audio = collision.target.eventAudios.get(sound);
                     this.soundBuffer.add(collision.target);
+                    audio.setVolume(1.3);
                     audio.play();
                     const duration = audio['buffer'].duration * 1000;
                     setTimeout(() => {
@@ -123,7 +124,7 @@ export class SoundService implements Loadable {
         this.stopAmbiantSound();
         this.ambientAudio.setLoop(looping);
         this.ambientAudio.play();
-        this.ambientAudio.setVolume(1);
+        this.ambientAudio.setVolume(0.6);
     }
 
     public stopAmbiantSound(): void {
@@ -168,11 +169,10 @@ export class SoundService implements Loadable {
         const audio = audios.get(soundIndex);
         audio.setRefDistance(1);
         audio.setLoop(isConstantSound);
+        audio.setVolume(0);
         SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             audio.setBuffer(buffer);
-            audio.setVolume(0);
             audio.play();
-            audio.setVolume(10);
         }, logger.error);
     }
 
