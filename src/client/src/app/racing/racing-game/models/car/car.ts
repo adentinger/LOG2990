@@ -49,7 +49,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
     public readonly eventAudios: Map<Sound, THREE.PositionalAudio> = new Map();
     public readonly constantAudios: Map<Sound, THREE.PositionalAudio> = new Map();
-    public readonly eventSounds: Sound[] = [];
+    public readonly eventSounds: Sound[] = [Sound.CAR_ENGINE];
     public readonly constantSounds: Sound[] = [Sound.CAR_ENGINE];
 
     protected dayModeOptions: CarHeadlightDayModeOptions;

@@ -4,6 +4,14 @@ import { Logger } from '../../../../../common/src/logger';
 import { SoundEmitter } from '../racing-game/sound/sound-emitter';
 import { SoundListener } from '../racing-game/sound/sound-listener';
 import { Loadable } from '../../loadable';
+import { EventManager } from '../../event-manager.service';
+import { CollisionInfo, Collidable, CollidableMesh } from '../racing-game/physic/collidable';
+import { COLLISION_EVENT } from '../racing-game/physic/utils';
+import { Car } from '../racing-game/models/car/car';
+import { Class } from '../../../../../common/src/utils';
+import { Pothole } from '../racing-game/models/obstacles/pothole';
+import { Puddle } from '../racing-game/models/obstacles/puddle';
+import { SpeedBoost } from '../../admin-screen/map-editor/speed-boost';
 
 const logger = Logger.getLogger('Sound');
 
@@ -26,6 +34,13 @@ export class SoundService implements Loadable {
     private static readonly SOUND_LOADER = new THREE.AudioLoader();
     private static readonly AUDIO_LISTENER = new THREE.AudioListener();
 
+    private static readonly COLLISION_TO_SOUND_MAPPING: Map<Class<CollidableMesh>, Sound> =  new Map([
+        [Pothole, Sound.CAR_ENGINE],
+        [Puddle, Sound.CAR_ENGINE],
+        [SpeedBoost, Sound.CAR_ENGINE],
+        [Car, Sound.CAR_ENGINE]
+    ] as [Class<CollidableMesh>, Sound][]);
+
     private static readonly SOUND_PROMISES =
         SoundService.loadSounds(...SoundService.SOUNDS.map((sound) => SoundService.URL_PREFIX + sound));
 
@@ -35,11 +50,14 @@ export class SoundService implements Loadable {
 
     public readonly waitToLoad: Promise<void>;
 
-    constructor() {
+    private soundBuffer: Set<CollidableMesh> = new Set();
+
+    constructor(private eventManager: EventManager) {
         this.ambientAudio.setLoop(false);
         this.ambientAudio.setVolume(0);
         this.ambientAudio.autoplay = false;
         this.waitToLoad = Promise.all(SoundService.SOUND_PROMISES).then(() => { });
+        this.eventManager.registerClass(this);
     }
 
     private static loadSound(url: string): Promise<THREE.AudioBuffer> {
@@ -55,6 +73,25 @@ export class SoundService implements Loadable {
             soundPromises.push(SoundService.loadSound(url));
         }
         return soundPromises;
+    }
+
+    @EventManager.Listener(COLLISION_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private onCollision(event: EventManager.Event<CollisionInfo>): void {
+        const collision = event.data;
+        if (collision.target instanceof Car && !this.soundBuffer.has(collision.target)) {
+            for (const [collidableClass, sound] of SoundService.COLLISION_TO_SOUND_MAPPING) {
+                if (collision.source instanceof collidableClass) {
+                    const audio = collision.target.eventAudios.get(sound);
+                    this.soundBuffer.add(collision.target);
+                    audio.play();
+                    const duration = audio['buffer'].duration * 1000;
+                    setTimeout(() => {
+                        this.soundBuffer.delete(collision.target as Car);
+                    }, duration);
+                }
+            }
+        }
     }
 
     public initialize(listener: SoundListener): void {
