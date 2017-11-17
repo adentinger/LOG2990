@@ -17,16 +17,6 @@ export abstract class GameData {
 
     private definitionsInternal: DefinitionWithIndex[] = [];
 
-    constructor(difficulty: Difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public async initialize(): Promise<void> {
-        const grid = await this.fetchGrid();
-        this.wordsInternal = grid.toGridWords();
-        await this.setDefinitions();
-    }
-
     public get words(): GridWord[] {
         return this.wordsInternal.slice();
     }
@@ -48,6 +38,16 @@ export abstract class GameData {
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
+    }
+
+    constructor(difficulty: Difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public async initialize(): Promise<void> {
+        const grid = await this.fetchGrid();
+        this.wordsInternal = grid.toGridWords();
+        await this.setDefinitions();
     }
 
     protected async setDefinitions(): Promise<void> {
