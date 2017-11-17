@@ -63,15 +63,16 @@ export class RenderableMap extends PhysicMesh {
 
         const numberOfCars: number = cars.length;
         const startingLineCoordinates = new THREE.Vector3(this.mapPoints[0].x, 0.0, this.mapPoints[0].y);
-        const POSITION_INCREMENT = 2;
-        const carPlacementOffset: number = (-0.5 * numberOfCars + ((numberOfCars % 2 !== 0) ? - 0.5 : 0)) * POSITION_INCREMENT;
+        const WIDTH_POSITION_INCREMENT = Track.SEGMENT_WIDTH / 4;
+        const LENGTH_POSITION_INCREMENT = 4;
+        const carPlacementOffset: number = (-0.5 * numberOfCars + ((numberOfCars % 2 !== 0) ? - 0.5 : 0)) * WIDTH_POSITION_INCREMENT;
         const position = new THREE.Vector3(1);
         position.add(new THREE.Vector3(carPlacementOffset, 0.0, 0.0));
         cars.forEach((car) => {
             car.rotation.set(0, angleOfFirstSegment, 0);
             car.position.copy(position).applyEuler(new THREE.Euler(0, angleOfFirstSegment, 0));
             car.position.add(startingLineCoordinates);
-            position.add(new THREE.Vector3(POSITION_INCREMENT, 0.0, 0.0));
+            position.add(new THREE.Vector3(WIDTH_POSITION_INCREMENT, 0.0, LENGTH_POSITION_INCREMENT));
         });
         this.add(...cars);
     }
