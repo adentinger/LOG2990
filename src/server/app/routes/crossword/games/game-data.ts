@@ -10,7 +10,7 @@ export interface DefinitionWithIndex {
     index: number;
 }
 
-export class GameData {
+export abstract class GameData {
 
     private wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
