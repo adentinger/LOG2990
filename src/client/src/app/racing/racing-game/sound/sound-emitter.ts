@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Sound } from '../../services/sound-service';
+import { Sound } from '../../services/sound';
 
 export interface SoundEmitter {
     readonly eventAudios: Map<Sound, THREE.PositionalAudio>;

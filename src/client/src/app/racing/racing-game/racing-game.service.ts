@@ -14,7 +14,8 @@ import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
-import { SoundService, Sound } from '../services/sound-service';
+import { SoundService } from '../services/sound-service';
+import { Sound } from '../services/sound';
 
 const logger = Logger.getLogger();
 

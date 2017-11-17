@@ -12,16 +12,9 @@ import { Class } from '../../../../../common/src/utils';
 import { Pothole } from '../racing-game/models/obstacles/pothole';
 import { Puddle } from '../racing-game/models/obstacles/puddle';
 import { SpeedBoost } from '../../admin-screen/map-editor/speed-boost';
+import { Sound, SoundType } from './sound';
 
 const logger = Logger.getLogger('Sound');
-
-export type SoundType = 'event' | 'constant';
-
-export enum Sound {
-    TETRIS,
-    CAR_ENGINE,
-    COUNT // The number of sounds
-}
 
 @Injectable()
 export class SoundService implements Loadable {
@@ -29,16 +22,17 @@ export class SoundService implements Loadable {
     private static readonly URL_PREFIX = '/assets/racing/sounds/';
     private static readonly SOUNDS = [
         'tetris.ogg',
-        'car-engine.ogg'
+        'car-engine.ogg',
+        'car-crash.ogg'
     ];
     private static readonly SOUND_LOADER = new THREE.AudioLoader();
     private static readonly AUDIO_LISTENER = new THREE.AudioListener();
 
     private static readonly COLLISION_TO_SOUND_MAPPING: Map<Class<CollidableMesh>, Sound> =  new Map([
-        [Pothole, Sound.CAR_ENGINE],
-        [Puddle, Sound.CAR_ENGINE],
-        [SpeedBoost, Sound.CAR_ENGINE],
-        [Car, Sound.CAR_ENGINE]
+        [Pothole, Sound.CAR_CRASH],
+        [Puddle, Sound.CAR_CRASH],
+        [SpeedBoost, Sound.CAR_CRASH],
+        [Car, Sound.CAR_CRASH]
     ] as [Class<CollidableMesh>, Sound][]);
 
     private static readonly SOUND_PROMISES =
@@ -178,6 +172,7 @@ export class SoundService implements Loadable {
             audio.setBuffer(buffer);
             audio.setVolume(0);
             audio.play();
+            audio.setVolume(10);
         }, logger.error);
     }
 

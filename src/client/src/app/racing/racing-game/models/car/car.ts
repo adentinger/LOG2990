@@ -11,7 +11,7 @@ import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
 import { SoundEmitter } from '../../sound/sound-emitter';
-import { Sound } from '../../../services/sound-service';
+import { Sound } from '../../../services/sound';
 
 export interface CarLights {
     lightLeft: THREE.Light;
