@@ -7,7 +7,7 @@ export class Word {
     public position: WordPosition;
 
     public static fromGridWord(gridWord: GridWord): Word {
-        return null;
+        return new Word(gridWord.string, new WordPosition(gridWord.y, gridWord.x));
     }
 
     constructor(value: string, position: WordPosition) {
