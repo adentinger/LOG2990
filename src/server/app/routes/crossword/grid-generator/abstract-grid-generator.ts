@@ -15,13 +15,13 @@ interface GenerationData {
 
 export abstract class AbstractGridGenerator {
 
-    private latestGeneration: GenerationData = null;
+    private dataOfLatestGeneration: GenerationData = null;
 
     protected constructor() { }
 
     protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
-        this.latestGeneration = this.startGeneration(wordsToInclude, suggestionsGetter);
-        return this.latestGeneration.promise;
+        this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, suggestionsGetter);
+        return this.dataOfLatestGeneration.promise;
     }
 
     private startGeneration(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): GenerationData {
@@ -51,8 +51,8 @@ export abstract class AbstractGridGenerator {
     }
 
     protected cancelLatestGeneration(): Promise<void> {
-        this.latestGeneration.fillers.forEach(filler => filler.cancelFilling());
-        return this.latestGeneration.promise
+        this.dataOfLatestGeneration.fillers.forEach(filler => filler.cancelFilling());
+        return this.dataOfLatestGeneration.promise
             .then (() => { return; })
             .catch(() => { return; });
     }
