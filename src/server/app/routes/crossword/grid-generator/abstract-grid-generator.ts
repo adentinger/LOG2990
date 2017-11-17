@@ -7,6 +7,7 @@ import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-gette
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 export abstract class AbstractGridGenerator {
+
     protected constructor() { }
 
     protected async gridGenerationBase(wordsToInclude: GridWord[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
@@ -21,4 +22,5 @@ export abstract class AbstractGridGenerator {
         await GRID.fillUsing(FILLER_FOURTH_SECTION);
         return GRID;
     }
+
 }
