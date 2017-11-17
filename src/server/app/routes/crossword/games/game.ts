@@ -4,7 +4,7 @@ import { Owner, Direction } from '../../../../../common/src/crossword/crossword-
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
-import { Player } from './player';
+import { Player } from '../player';
 import { Logger, warn } from '../../../../../common/src';
 
 const logger = Logger.getLogger('Crossword Game');

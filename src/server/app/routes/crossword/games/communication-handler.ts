@@ -11,7 +11,7 @@ import {
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DefinitionWithIndex } from './game-data';
-import { Player } from './player';
+import { Player } from '../player';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GameId } from '../../../../../common/src/communication/game-configs';
 

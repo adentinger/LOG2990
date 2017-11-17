@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
-import { Player } from './player';
+import { Player } from '../player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameClassic } from './game-classic';
 

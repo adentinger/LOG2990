@@ -5,7 +5,7 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { PacketEvent, PacketHandler, registerHandlers } from '../../../../../common/src/index';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GameJoinPacket, WordGuessPacket, SelectedWordPacket, GameLeavePacket } from '../../../../../common/src/crossword/packets';
-import { Player } from './player';
+import { Player } from '../player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameMode } from '../../../../../common/src/crossword/crossword-enums';
 import { GameClassic } from './game-classic';
