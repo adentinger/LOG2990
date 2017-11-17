@@ -48,7 +48,7 @@ export abstract class AbstractGridGenerator {
                 await generationData.grid.fillUsing(filler);
             }
 
-            return generationData.grid;
+            resolve(generationData.grid);
         });
 
         return generationData;
