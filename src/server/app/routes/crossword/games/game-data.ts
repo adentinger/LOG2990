@@ -12,13 +12,19 @@ export interface DefinitionWithIndex {
 
 export abstract class GameData {
 
+    protected difficulty: Difficulty;
     protected wordsInternal: GridWord[] = [];
+
     private definitionsInternal: DefinitionWithIndex[] = [];
 
-    public async initialize(difficulty: Difficulty): Promise<void> {
-        const grid = await this.fetchGrid(difficulty);
+    constructor(difficulty: Difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public async initialize(): Promise<void> {
+        const grid = await this.fetchGrid();
         this.wordsInternal = grid.toGridWords();
-        await this.setDefinitions(difficulty);
+        await this.setDefinitions();
     }
 
     public get words(): GridWord[] {
@@ -44,7 +50,7 @@ export abstract class GameData {
         return this.definitionsInternal.slice();
     }
 
-    protected async setDefinitions(difficulty: Difficulty): Promise<void> {
+    protected async setDefinitions(): Promise<void> {
         const DEFINITIONS: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
@@ -63,7 +69,7 @@ export abstract class GameData {
             }
 
             const DEFINITION_WITH_INDEX = {
-                definition: await this.getDefinitionOfWord(word, difficulty),
+                definition: await this.getDefinitionOfWord(word),
                 index: index
             };
             DEFINITIONS.push(DEFINITION_WITH_INDEX);
@@ -72,8 +78,8 @@ export abstract class GameData {
         this.definitionsInternal = DEFINITIONS;
     }
 
-    private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
-        switch (difficulty) {
+    private async fetchGrid(): Promise<Grid> {
+        switch (this.difficulty) {
             case Difficulty.easy: {
                 return await GridBanks.getInstance().getEasyGrid();
             }
@@ -83,15 +89,15 @@ export abstract class GameData {
             case Difficulty.hard: {
                 return await GridBanks.getInstance().getHardGrid();
             }
-            default: throw new Error(`Unknown difficulty: ${difficulty}`);
+            default: throw new Error(`Unknown difficulty: ${this.difficulty}`);
         }
     }
 
-    private async getDefinitionOfWord(word: GridWord, difficulty: Difficulty): Promise<Definition> {
+    private async getDefinitionOfWord(word: GridWord): Promise<Definition> {
         const definitions = await LexiconCaller.getInstance().getDefinitions(word.string);
 
         let definitionString: string;
-        switch (difficulty) {
+        switch (this.difficulty) {
             case Difficulty.easy: {
                 definitionString = definitions[0];
                 break;

@@ -5,20 +5,21 @@ import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossw
 import { Player } from './player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameDataClassic } from './game-data-classic';
+import { GameClassic } from './game-classic';
 
-class MockGame extends Game {}
+class MockGame extends GameClassic {}
 
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
         const mockConfig = createMockGameConfigs();
-        const game = new MockGame(mockConfig, new GameDataClassic());
+        const game = new MockGame(mockConfig);
         expect(game).to.be.not.null;
         done();
     });
 
     let gameToTest: Game;
     beforeEach(() => {
-        gameToTest = new MockGame(createMockGameConfigs(), new GameDataClassic());
+        gameToTest = new MockGame(createMockGameConfigs());
     });
 
     it('should contain grid words', (done) => {
@@ -32,7 +33,7 @@ describe('The Crossword Game', () => {
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
-            }, new GameDataClassic());
+            });
             const PLAYER1 = new Player('asdf123', '123a');
             const PLAYER2 = new Player('qwertyuiop', '123b');
             GAME.addPlayer(PLAYER1);
@@ -46,12 +47,12 @@ describe('The Crossword Game', () => {
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 1
-            }, new GameDataClassic());
+            });
             const GAME2PLAYERS = new MockGame({
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
-            }, new GameDataClassic());
+            });
             const PLAYER1 = new Player('TAM ARAR', '123a');
             const PLAYER2 = new Player('ERIC CHAO', '123a');
             GAME1PLAYER.addPlayer(PLAYER1);
@@ -71,7 +72,7 @@ describe('The Crossword Game', () => {
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
-            }, new GameDataClassic());
+            });
             expect(game.matchesFilter(FILTER)).to.be.true;
         });
 
@@ -80,7 +81,7 @@ describe('The Crossword Game', () => {
                 difficulty: Difficulty.easy,
                 gameMode: GameMode.Classic,
                 playerNumber: 2
-            }, new GameDataClassic());
+            });
             const FILTER1 = new GameFilter(GameMode.Classic, 1);
             const FILTER2 = new GameFilter(GameMode.Dynamic, 2);
             expect(game.matchesFilter(FILTER1)).to.be.false;
@@ -94,7 +95,7 @@ describe('The Crossword Game', () => {
             difficulty: Difficulty.easy,
             gameMode: GameMode.Classic,
             playerNumber: 2
-        }, new GameDataClassic());
+        });
         const PLAYER1 = new Player('ADAM CÔTÉ', '123a');
         const PLAYER2 = new Player('EMIR BELHADDAD', '123b');
         GAME.addPlayer(PLAYER1);

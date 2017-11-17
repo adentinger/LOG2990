@@ -18,7 +18,7 @@ export class GameDynamic extends Game {
     protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
-        super(configs, new GameDataDynamic());
+        super(configs, new GameDataDynamic(configs.difficulty));
         this.mutator = new GridMutator(toGridGeneratorDifficulty(configs.difficulty));
         registerHandlers(this, PacketManagerServer.getInstance());
     }
