@@ -13,6 +13,8 @@ export abstract class GridFiller {
     protected verticalWords: WordPlacement[] = [];
     protected suggestionsGetter: AbstractWordSuggestionsGetter;
 
+    private shouldCancelFilling = false;
+
     constructor(suggestionsGetter: AbstractWordSuggestionsGetter) {
         this.suggestionsGetter = suggestionsGetter;
     }
@@ -23,6 +25,10 @@ export abstract class GridFiller {
 
     public get verticalPlacement(): WordPlacement[] {
         return this.verticalWords.slice();
+    }
+
+    public cancelFilling(): void {
+        this.shouldCancelFilling = true;
     }
 
     public async fill(grid: Grid): Promise<void> {
