@@ -1,6 +1,11 @@
 import { WordPosition } from './word-position';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
+/**
+ * @class Word
+ * @description This is the representation of a Word that the grid generator uses.
+ * The general crossword game uses the GridWord class.
+ */
 export class Word {
 
     public value: string;
