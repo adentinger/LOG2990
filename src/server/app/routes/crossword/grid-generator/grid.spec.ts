@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import { Grid } from './grid';
 import { Word } from './word';
 import { WordPosition } from './word-position';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 
 describe('Grid', () => {
 
@@ -60,5 +62,39 @@ describe('Grid', () => {
 
     });
 
+    it('should convert itself to an array of GridWords', () => {
+        const grid = new Grid();
+
+        const ACROSS = [
+            new Word('hi',  new WordPosition(0, 0)),
+            new Word('there', new WordPosition(5, 2))
+        ];
+        const VERTICAL = [
+            new Word('signed', new WordPosition(2, 0)),
+            new Word('chucknorris', new WordPosition(3, 2))
+        ];
+        const EXPECTED_RESULT = [
+            new GridWord(0, 0, 0, 2,  Direction.horizontal, Owner.none, 'hi'),
+            new GridWord(1, 5, 2, 5,  Direction.horizontal, Owner.none, 'there'),
+            new GridWord(2, 2, 0, 6,  Direction.vertical,   Owner.none, 'signed'),
+            new GridWord(3, 3, 2, 11, Direction.vertical,   Owner.none, 'chucknorris')
+        ];
+
+        grid.across = ACROSS;
+        grid.vertical = VERTICAL;
+
+        grid.toGridWords().forEach(gridWord => {
+            const predicate = (expectedWord: GridWord) =>
+                expectedWord.length === gridWord.length &&
+                expectedWord.direction === gridWord.direction &&
+                expectedWord.owner === gridWord.owner &&
+                expectedWord.string === gridWord.string &&
+                expectedWord.x === gridWord.x &&
+                expectedWord.y === gridWord.y;
+            const isWordFound = EXPECTED_RESULT.findIndex(predicate) >= 0;
+            expect(isWordFound).to.be.true;
+        });
+
+    });
 
 });
