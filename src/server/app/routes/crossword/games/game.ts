@@ -116,7 +116,7 @@ export abstract class Game {
     }
 
     protected sendWordFound(foundWord: GridWord, finderId: string): void {
-        foundWord.owner = Owner.player1;
+        foundWord.owner = Owner.player;
         const finderPlayer =
             this.players.find(player => player.socketId === finderId);
         const opponent =

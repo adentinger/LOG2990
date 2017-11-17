@@ -64,7 +64,7 @@ export class CommunicationHandler {
     }
 
     public sendFoundWord(foundWord: GridWord, finder: Player, opponent: Player = null): void {
-        foundWord.owner = Owner.player1;
+        foundWord.owner = Owner.player;
         const finderPacket = new WordGuessPacket(foundWord);
         this.packetManager.sendPacket(
             WordGuessPacket,
@@ -78,7 +78,7 @@ export class CommunicationHandler {
                 foundWord.x,
                 foundWord.length,
                 foundWord.direction,
-                Owner.player2,
+                Owner.opponent,
                 foundWord.string
             ));
             this.packetManager.sendPacket(

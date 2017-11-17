@@ -8,8 +8,8 @@ export enum Direction {
 
 export enum Owner {
     none,
-    player1,
-    player2,
+    player,
+    opponent,
 }
 
 /**
