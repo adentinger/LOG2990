@@ -34,8 +34,6 @@ export class RacetrackJunction extends THREE.Mesh {
 
                 (<THREE.MeshPhongMaterial>this.material).map = texture;
                 (<THREE.MeshPhongMaterial>this.material).normalMap = normalMap;
-                (<THREE.MeshPhongMaterial>this.material).bumpMap = normalMap;
-                (<THREE.MeshPhongMaterial>this.material).bumpScale = 5;
             }).then(() => { });
         this.position.add(new THREE.Vector3(0, 0.01, 0));
     }

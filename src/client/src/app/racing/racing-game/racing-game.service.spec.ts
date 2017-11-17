@@ -7,6 +7,7 @@ import { PhysicEngine } from './physic/engine';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
+import { CarsPositionsService } from './cars-positions.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -16,10 +17,11 @@ describe('RacingGameService', () => {
                 PhysicEngine,
                 EventManager,
                 MapService,
-                {provide: ConnectionBackend, useClass: MockBackend},
-                {provide: RequestOptions, useClass: BaseRequestOptions},
+                { provide: ConnectionBackend, useClass: MockBackend },
+                { provide: RequestOptions, useClass: BaseRequestOptions },
                 Http,
-                UIInputs
+                UIInputs,
+                CarsPositionsService
             ]
         });
     });
@@ -31,7 +33,7 @@ describe('RacingGameService', () => {
         service = injectedService;
         const CONTAINER = document.createElement('div') as HTMLDivElement;
         const HUD_CANVAS = document.createElement('canvas') as HTMLCanvasElement;
-        service.initialise(CONTAINER, HUD_CANVAS, userInputs);
+        service.initialize(CONTAINER, HUD_CANVAS, userInputs);
     }));
 
     it('should be created', () => {

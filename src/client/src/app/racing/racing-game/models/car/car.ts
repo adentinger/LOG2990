@@ -187,5 +187,4 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
                 0.5 * this.dayModeOptions.intensity + (this.isStopped ? 0.5 : 0);
         }
     }
-
 }
