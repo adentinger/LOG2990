@@ -12,11 +12,12 @@ export interface DefinitionWithIndex {
 
 export abstract class GameData {
 
-    private wordsInternal: GridWord[] = [];
+    protected wordsInternal: GridWord[] = [];
     private definitionsInternal: DefinitionWithIndex[] = [];
 
     public async initialize(difficulty: Difficulty): Promise<void> {
-        await this.setWords(difficulty);
+        const grid = await this.fetchGrid(difficulty);
+        this.wordsInternal = grid.toGridWords();
         await this.setDefinitions(difficulty);
     }
 
@@ -41,11 +42,6 @@ export abstract class GameData {
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
-    }
-
-    protected async setWords(difficulty: Difficulty): Promise<void> {
-        const grid = await this.fetchGrid(difficulty);
-        this.wordsInternal = grid.toGridWords();
     }
 
     protected async setDefinitions(difficulty: Difficulty): Promise<void> {
