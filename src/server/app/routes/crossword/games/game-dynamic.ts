@@ -87,6 +87,7 @@ export class GameDynamic extends Game {
                         player.socketId,
                         dynamicData.wordsViewedByPlayer
                     );
+                    this.communicationHandler.sendDefinitions(player.socketId, dynamicData.definitions);
                 });
                 this.resetTimer();
                 this.startTimer();
