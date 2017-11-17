@@ -51,9 +51,10 @@ export abstract class AbstractGridGenerator {
     }
 
     protected cancelLatestGeneration(): Promise<void> {
+        this.latestGeneration.fillers.forEach(filler => filler.cancelFilling());
         return this.latestGeneration.promise
-            .catch(() => { return; })
-            .then (() => { return; });
+            .then (() => { return; })
+            .catch(() => { return; });
     }
 
 }
