@@ -19,6 +19,10 @@ export class GridMutator extends AbstractGridGenerator {
 
     private difficulty: Difficulty;
 
+    public get mutatedGrid(): Promise<Grid> {
+        return this.latestGeneration;
+    }
+
     constructor(difficulty: Difficulty) {
         super();
         this.difficulty = difficulty;
