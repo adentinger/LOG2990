@@ -75,8 +75,7 @@ export class GameDynamic extends Game {
             this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
         });
 
-        if (this.countdown === 0) {
-            this.resetTimer();
+        if (this.countdown <= 0) {
             this.stopTimer();
 
             // Mutate our data
@@ -90,6 +89,7 @@ export class GameDynamic extends Game {
                         dynamicData.wordsViewedByPlayer
                     );
                 });
+                this.resetTimer();
                 this.startTimer();
             });
 
