@@ -1,5 +1,6 @@
 import { Word } from './word';
 import { GridFiller } from './grid-filler';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 export class Grid {
 
@@ -15,6 +16,10 @@ export class Grid {
     public doesWordAlreadyExist(word: string): boolean {
         return this.across.findIndex((acrossWord) => acrossWord.value === word) >= 0 ||
                this.vertical.findIndex((verticalWord) => verticalWord.value === word) >= 0;
+    }
+
+    public toGridWords(): GridWord[] {
+        return [];
     }
 
     public toString(): string {
