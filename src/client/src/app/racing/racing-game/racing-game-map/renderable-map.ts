@@ -164,6 +164,7 @@ export class RenderableMap extends PhysicMesh {
             const VECTOR = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
             length += VECTOR.norm();
         }
+        length += Vector.fromPoints(POINTS[0], POINTS[this.mapPoints.length - 1]).norm();
         return length;
     }
 }
