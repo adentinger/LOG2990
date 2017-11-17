@@ -1,14 +1,14 @@
-import { Difficulty as EnumDifficulty } from '../../../../../common/src/crossword/crossword-enums';
-import { Difficulty as StateDifficulty } from '../../../../../common/src/crossword/difficulty';
+import { Difficulty } from '../../../../../common/src/crossword/crossword-enums';
+import { Difficulty as GeneratorDifficulty } from '../../../../../common/src/crossword/difficulty';
 import { DifficultyEasy } from '../../../../../common/src/crossword/difficulty-easy';
 import { DifficultyNormal } from '../../../../../common/src/crossword/difficulty-normal';
 import { DifficultyHard } from '../../../../../common/src/crossword/difficulty-hard';
 
-export function enumDifficultyToStateDifficulty(difficulty: EnumDifficulty): StateDifficulty {
+export function toGridGeneratorDifficulty(difficulty: Difficulty): GeneratorDifficulty {
     switch (difficulty) {
-        case EnumDifficulty.easy: return new DifficultyEasy();
-        case EnumDifficulty.medium: return new DifficultyNormal();
-        case EnumDifficulty.hard: return new DifficultyHard();
+        case Difficulty.easy: return new DifficultyEasy();
+        case Difficulty.medium: return new DifficultyNormal();
+        case Difficulty.hard: return new DifficultyHard();
         default: throw new Error(`Unknown difficulty: ${difficulty}`);
     }
 }

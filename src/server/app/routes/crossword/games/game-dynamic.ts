@@ -6,7 +6,7 @@ import { CrosswordGameConfigs } from '../../../../../common/src/communication/ga
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { GridMutator } from '../grid-generator/grid-mutator';
-import { enumDifficultyToStateDifficulty } from './temp-util';
+import { toGridGeneratorDifficulty } from './temp-util';
 
 export class GameDynamic extends Game {
 
@@ -19,7 +19,7 @@ export class GameDynamic extends Game {
 
     constructor(configs: CrosswordGameConfigs) {
         super(configs, new GameDataDynamic());
-        this.mutator = new GridMutator(enumDifficultyToStateDifficulty(configs.difficulty));
+        this.mutator = new GridMutator(toGridGeneratorDifficulty(configs.difficulty));
         registerHandlers(this, PacketManagerServer.getInstance());
     }
 
