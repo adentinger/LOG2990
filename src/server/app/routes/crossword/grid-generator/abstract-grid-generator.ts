@@ -26,4 +26,8 @@ export abstract class AbstractGridGenerator {
         return GRID;
     }
 
+    protected cancelLatestGeneration(): Promise<void> {
+        return Promise.resolve();
+    }
+
 }
