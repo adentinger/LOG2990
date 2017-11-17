@@ -1,10 +1,17 @@
 import { Grid } from './grid';
+import { GridFiller } from './grid-filler';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
 import { GridFillerFourthSection } from './grid-filler-fourth-section';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 import { Word } from './word';
+
+interface GenerationData {
+    grid: Grid;
+    fillers: GridFiller[];
+    promise: Promise<Grid>;
+}
 
 export abstract class AbstractGridGenerator {
 
