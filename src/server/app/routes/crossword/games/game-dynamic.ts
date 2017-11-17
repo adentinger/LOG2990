@@ -5,21 +5,17 @@ import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.p
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { GridMutator } from '../grid-generator/grid-mutator';
-import { toGridGeneratorDifficulty } from './temp-util';
 
 export class GameDynamic extends Game {
 
     private static readonly COUNTDOWN_INITAL = 120; // seconds
 
     private countdown = GameDynamic.COUNTDOWN_INITAL;
-    private mutator: GridMutator;
 
     protected timerInterval: NodeJS.Timer = null;
 
     constructor(configs: CrosswordGameConfigs) {
         super(configs, new GameDataDynamic(configs.difficulty));
-        this.mutator = new GridMutator(toGridGeneratorDifficulty(configs.difficulty));
         registerHandlers(this, PacketManagerServer.getInstance());
     }
 
@@ -78,22 +74,27 @@ export class GameDynamic extends Game {
         this.players.forEach((player) => {
             this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
         });
+
         if (this.countdown === 0) {
             this.resetTimer();
             this.stopTimer();
-            this.mutator.mutatedGrid.then((grid) => {
-                const words = grid.toGridWords();
+
+            // Mutate our data
+            const dynamicData = (this.dataInternal as GameDataDynamic);
+            dynamicData.mutatedWords.then((words) => {
                 this.players.forEach((player) => {
-                    (this.dataInternal as GameDataDynamic).updateData(words);
+                    dynamicData.applyMutation();
                     this.communicationHandler.clearPlayerGrid(player.socketId);
                     this.communicationHandler.sendGridWords(
                         player.socketId,
-                        this.dataInternal.wordsViewedByPlayer
+                        dynamicData.wordsViewedByPlayer
                     );
                 });
                 this.startTimer();
             });
+
         }
+
     }
 
     @PacketHandler(TimerPacket)

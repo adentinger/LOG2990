@@ -14,9 +14,11 @@ export class GameDataDynamic extends GameData {
         this.mutator = new GridMutator(toGridGeneratorDifficulty(difficulty));
     }
 
-    public updateData(gridWords: GridWord[]): void {
-        this.wordsInternal = gridWords;
-        this.setDefinitions();
+    public applyMutation(): void {
+        this.mutatedWords.then(words => {
+            this.wordsInternal = words;
+            this.setDefinitions();
+        });
     }
 
     public get mutatedWords(): Promise<GridWord[]> {
@@ -27,12 +29,13 @@ export class GameDataDynamic extends GameData {
         const validated = super.validateWord(wordGuess);
 
         if (validated) {
-            this.mutator.cancelMutation();
-            this.mutator.mutateGrid(
-                this.wordsInternal
-                    .filter(gridWord => gridWord.owner !== Owner.none)
-                    .map(gridWord => Word.fromGridWord(gridWord))
-            );
+            this.mutator.cancelMutation().then(() => {
+                this.mutator.mutateGrid(
+                    this.wordsInternal
+                        .filter(gridWord => gridWord.owner !== Owner.none)
+                        .map(gridWord => Word.fromGridWord(gridWord))
+                );
+            });
         }
 
         return validated;
