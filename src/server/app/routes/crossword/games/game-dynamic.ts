@@ -86,7 +86,7 @@ export class GameDynamic extends Game {
                     this.communicationHandler.clearPlayerGrid(player.socketId);
                     this.communicationHandler.sendGridWords(
                         player.socketId,
-                        dynamicData.wordsViewedByPlayer
+                        dynamicData.wordsViewedByPlayer(player)
                     );
                     this.communicationHandler.sendDefinitions(player.socketId, dynamicData.definitions);
                 });

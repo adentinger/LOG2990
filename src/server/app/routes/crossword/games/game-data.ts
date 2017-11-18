@@ -1,41 +1,33 @@
 import { Difficulty, Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
 import { Definition } from '../../../../../common/src/crossword/definition';
 import { LexiconCaller } from '../lexic/lexicon-caller';
 import { Player } from '../player';
+import { Word } from '../word';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
 
 export interface DefinitionWithIndex {
     definition: Definition;
     index: number;
 }
 
+/**
+ * @class GameData
+ * @description Contains a grid and has the responsibility of managing it,
+ * and updating it if requested. Internally, this class contains instances of the
+ * Word class, but for the outside world, only GridWords exist.
+ *
+ * This means, however, that classes that use the GameData class have to specify for
+ * which user they want to get GridWords, because a GridWord's owner is either the
+ * 'player' or their 'opponent'.
+ */
 export abstract class GameData {
 
     protected difficulty: Difficulty;
-    protected wordsInternal: GridWord[] = [];
+    protected grid: Grid = new Grid();
 
     private definitionsInternal: DefinitionWithIndex[] = [];
-
-    public get words(): GridWord[] {
-        return this.wordsInternal.slice();
-    }
-
-    public get wordsViewedByPlayer(): GridWord[] {
-        return this.wordsInternal.map((word) => {
-            const stringValue = (word.owner === Owner.none ? '' : word.string);
-            return new GridWord(
-                word.id,
-                word.y,
-                word.x,
-                word.length,
-                word.direction,
-                Owner.none,
-                stringValue
-            );
-        });
-    }
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
@@ -45,19 +37,32 @@ export abstract class GameData {
         this.difficulty = difficulty;
     }
 
+    public getGridWords(player: Player, opponent: Player): GridWord[] {
+        return this.grid.toGridWords(player);
+    }
+
+    public wordsViewedByPlayer(player: Player): GridWord[] {
+        const gridWords = this.grid.toGridWords(player);
+        gridWords.forEach(gridWord => {
+            if (gridWord.owner === Owner.none) {
+                gridWord.string = '';
+            }
+        });
+        return gridWords;
+    }
+
     public async initialize(): Promise<void> {
-        const grid = await this.fetchGrid();
-        this.wordsInternal = grid.toGridWords(new Player('TODO', 'TODO'));
+        this.grid = await this.fetchGrid();
         await this.setDefinitions();
     }
 
-    public validateWord(wordGuess: GridWord, player: Player): boolean {
-        const index = this.wordsInternal.findIndex(
-            (word) => {
-                return word.direction === wordGuess.direction &&
-                       word.string === wordGuess.string &&
-                       word.x === wordGuess.x &&
-                       word.y === wordGuess.y;
+    public validateWord(gridWordGuess: GridWord, player: Player): boolean {
+        const word = Word.fromGridWord(gridWordGuess, player, Player.NO_PLAYER);
+        const index = this.grid.words.findIndex(
+            (existingWord) => {
+                return existingWord.direction === word.direction &&
+                       existingWord.value === word.value &&
+                       existingWord.position.equals(word.position);
             });
         const found = index >= 0;
 
@@ -73,8 +78,8 @@ export abstract class GameData {
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
-        for (let i = 0; i < this.wordsInternal.length; ++i) {
-            const word = this.wordsInternal[i];
+        for (let i = 0; i < this.grid.words.length; ++i) {
+            const word = this.grid.words[i];
 
             let index;
             if (word.direction === Direction.horizontal) {
@@ -111,8 +116,8 @@ export abstract class GameData {
         }
     }
 
-    private async getDefinitionOfWord(word: GridWord): Promise<Definition> {
-        const definitions = await LexiconCaller.getInstance().getDefinitions(word.string);
+    private async getDefinitionOfWord(word: Word): Promise<Definition> {
+        const definitions = await LexiconCaller.getInstance().getDefinitions(word.value);
 
         let definitionString: string;
         switch (this.difficulty) {
@@ -135,8 +140,8 @@ export abstract class GameData {
             }
         }
 
-        const regex = new RegExp(`(^|\\W)${word.string}(s?(?:\\W|$))`, 'gmi');
-        const replacement = '_'.repeat(word.string.length);
+        const regex = new RegExp(`(^|\\W)${word.value}(s?(?:\\W|$))`, 'gmi');
+        const replacement = '_'.repeat(word.value.length);
         definitionString = definitionString.replace(regex, `$1${replacement}$2`);
 
         const definition = new Definition(

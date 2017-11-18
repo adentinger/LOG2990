@@ -22,7 +22,9 @@ describe('The Crossword Game', () => {
     });
 
     it('should contain grid words', (done) => {
-        expect(gameToTest.data.words).to.be.not.null;
+        const PLAYER = new Player('Homer', 'd0NUt');
+        const OPPONENT = new Player('Burns', 'Nucl3ar');
+        expect(gameToTest.data.getGridWords(PLAYER, OPPONENT)).to.be.not.null;
         done();
     });
 

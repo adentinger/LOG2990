@@ -1,10 +1,10 @@
 import { GameData } from './game-data';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Difficulty, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { GridMutator } from '../grid-generator/grid-mutator';
 import { toGridGeneratorDifficulty } from './temp-util';
-import { Word } from '../word';
 import { Player } from '../player';
+import { Grid } from '../grid-generator/grid';
 
 export class GameDataDynamic extends GameData {
 
@@ -16,14 +16,14 @@ export class GameDataDynamic extends GameData {
     }
 
     public applyMutation(): Promise<void> {
-        return this.mutatedWords.then(words => {
-            this.wordsInternal = words;
+        return this.mutatedGrid.then(grid => {
+            this.grid = grid;
             this.setDefinitions();
         });
     }
 
-    protected get mutatedWords(): Promise<GridWord[]> {
-        return this.mutator.mutatedGrid.then(grid => grid.toGridWords(new Player('TODO', 'TODO')));
+    protected get mutatedGrid(): Promise<Grid> {
+        return this.mutator.mutatedGrid;
     }
 
     public validateWord(wordGuess: GridWord, player: Player): boolean {
@@ -32,9 +32,8 @@ export class GameDataDynamic extends GameData {
         if (validated) {
             this.mutator.cancelMutation().then(() => {
                 this.mutator.mutateGrid(
-                    this.wordsInternal
-                        .filter(gridWord => gridWord.owner !== Owner.none)
-                        .map(gridWord => Word.fromGridWord(gridWord, player, Player.NO_PLAYER))
+                    this.grid.words
+                        .filter(word => word.owner !== Player.NO_PLAYER)
                 );
             });
         }

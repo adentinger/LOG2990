@@ -4,6 +4,7 @@ import { MiddleWare, Route } from '../../middle-ware';
 import { GameManager } from './game-manager';
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
+import { Player } from '../player';
 
 @MiddleWare('/crossword/games')
 export class GamesMiddleWare {
@@ -32,7 +33,7 @@ export class GamesMiddleWare {
         const gameId = req.params.id;
         const foundGame =
             GameManager.getInstance().getGame(Math.floor(gameId));
-        res.json(foundGame.data.words);
+        res.json(foundGame.data.getGridWords(Player.NO_PLAYER, Player.NO_PLAYER));
     }
 
 }
