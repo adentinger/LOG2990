@@ -67,7 +67,7 @@ export abstract class GameData {
         const found = index >= 0;
 
         if (found) {
-            // TODO mark the word as found by the player.
+            this.grid.words[index].owner = player;
         }
 
         return found;
