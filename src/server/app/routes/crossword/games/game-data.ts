@@ -57,12 +57,12 @@ export abstract class GameData {
     }
 
     public validateWord(gridWordGuess: GridWord, player: Player): boolean {
-        const word = Word.fromGridWord(gridWordGuess, player, Player.NO_PLAYER);
+        const wordGuess = Word.fromGridWord(gridWordGuess, player, Player.NO_PLAYER);
         const index = this.grid.words.findIndex(
             (existingWord) => {
-                return existingWord.direction === word.direction &&
-                       existingWord.value === word.value &&
-                       existingWord.position.equals(word.position);
+                return existingWord.direction === wordGuess.direction &&
+                       existingWord.value === wordGuess.value &&
+                       existingWord.position.equals(wordGuess.position);
             });
         const found = index >= 0;
 
