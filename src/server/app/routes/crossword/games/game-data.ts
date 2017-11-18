@@ -74,7 +74,7 @@ export abstract class GameData {
     }
 
     protected async setDefinitions(): Promise<void> {
-        const DEFINITIONS: DefinitionWithIndex[] = [];
+        const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
@@ -91,14 +91,14 @@ export abstract class GameData {
                 ++currentVerticalId;
             }
 
-            const DEFINITION_WITH_INDEX = {
+            const definitionWithIndex = {
                 definition: await this.getDefinitionOfWord(word),
                 index: index
             };
-            DEFINITIONS.push(DEFINITION_WITH_INDEX);
+            definitions.push(definitionWithIndex);
         }
 
-        this.definitionsInternal = DEFINITIONS;
+        this.definitionsInternal = definitions;
     }
 
     private async fetchGrid(): Promise<Grid> {
