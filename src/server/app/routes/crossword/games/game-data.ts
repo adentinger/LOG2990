@@ -15,12 +15,12 @@ export interface DefinitionWithIndex {
 /**
  * @class GameData
  * @description Contains a grid and has the responsibility of managing it,
- * and updating it if requested. Internally, this class contains instances of the
- * Word class, but for the outside world, only GridWords exist.
+ * and updating it if requested.
  *
- * This means, however, that classes that use the GameData class have to specify for
- * which user they want to get GridWords, because a GridWord's owner is either the
- * 'player' or their 'opponent'.
+ * Internally, this class contains instances of the Word class, but for the outside
+ * world, only GridWords exist. This means, however, that classes that use the GameData
+ * class have to specify for which user they want to get GridWords, because a GridWord's
+ * owner is either the 'player' or their 'opponent'.
  */
 export abstract class GameData {
 
