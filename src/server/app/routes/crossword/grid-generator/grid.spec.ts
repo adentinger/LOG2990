@@ -4,6 +4,7 @@ import { Word } from '../word';
 import { WordPosition } from '../word-position';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from '../player';
 
 describe('Grid', () => {
 
@@ -64,25 +65,27 @@ describe('Grid', () => {
     it('should convert itself to an array of GridWords', () => {
         const grid = new Grid();
 
+        const PLAYER = new Player('dylan', 'aw7Aas');
+        const OPPONENT = new Player('mathieu', 'a7qsF');
         const WORDS = [
-            new Word('hi',  new WordPosition(0, 0), Direction.horizontal),
+            new Word('hi',  new WordPosition(0, 0), Direction.horizontal, PLAYER),
             new Word('there', new WordPosition(5, 2), Direction.horizontal),
-            new Word('signed', new WordPosition(2, 0), Direction.vertical),
-            new Word('chucknorris', new WordPosition(3, 2), Direction.vertical)
+            new Word('signed', new WordPosition(2, 0), Direction.vertical, PLAYER),
+            new Word('chucknorris', new WordPosition(3, 2), Direction.vertical, OPPONENT)
         ];
         const EXPECTED_RESULT = [
-            new GridWord(1, 0, 0, 2,  Direction.horizontal, -1, 'hi'),
-            new GridWord(2, 5, 2, 5,  Direction.horizontal, -1, 'there'),
-            new GridWord(1, 2, 0, 6,  Direction.vertical,   -1, 'signed'),
-            new GridWord(2, 3, 2, 11, Direction.vertical,   -1, 'chucknorris')
+            new GridWord(1, 0, 0, 2,  Direction.horizontal, Owner.player,   'hi'),
+            new GridWord(2, 5, 2, 5,  Direction.horizontal, Owner.none,     'there'),
+            new GridWord(1, 2, 0, 6,  Direction.vertical,   Owner.player,   'signed'),
+            new GridWord(2, 3, 2, 11, Direction.vertical,   Owner.opponent, 'chucknorris')
         ];
 
         grid.words = WORDS;
-        grid.toGridWords().forEach((gridWord, i, foo) => {
+        grid.toGridWords(PLAYER).forEach((gridWord) => {
             const predicate = (expectedWord: GridWord) =>
                 expectedWord.length === gridWord.length &&
                 expectedWord.direction === gridWord.direction &&
-                expectedWord.owner === -1 &&
+                expectedWord.owner === gridWord.owner &&
                 expectedWord.string === gridWord.string &&
                 expectedWord.x === gridWord.x &&
                 expectedWord.y === gridWord.y;

@@ -4,6 +4,7 @@ import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
 import { Definition } from '../../../../../common/src/crossword/definition';
 import { LexiconCaller } from '../lexic/lexicon-caller';
+import { Player } from '../player';
 
 export interface DefinitionWithIndex {
     definition: Definition;
@@ -46,7 +47,7 @@ export abstract class GameData {
 
     public async initialize(): Promise<void> {
         const grid = await this.fetchGrid();
-        this.wordsInternal = grid.toGridWords();
+        this.wordsInternal = grid.toGridWords(new Player('TODO', 'TODO'));
         await this.setDefinitions();
     }
 

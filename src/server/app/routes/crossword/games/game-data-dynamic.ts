@@ -4,6 +4,7 @@ import { Difficulty, Owner } from '../../../../../common/src/crossword/crossword
 import { GridMutator } from '../grid-generator/grid-mutator';
 import { toGridGeneratorDifficulty } from './temp-util';
 import { Word } from '../word';
+import { Player } from '../player';
 
 export class GameDataDynamic extends GameData {
 
@@ -22,7 +23,7 @@ export class GameDataDynamic extends GameData {
     }
 
     protected get mutatedWords(): Promise<GridWord[]> {
-        return this.mutator.mutatedGrid.then(grid => grid.toGridWords());
+        return this.mutator.mutatedGrid.then(grid => grid.toGridWords(new Player('TODO', 'TODO')));
     }
 
     public validateWord(wordGuess: GridWord): boolean {

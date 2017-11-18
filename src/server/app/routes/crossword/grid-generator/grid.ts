@@ -1,7 +1,8 @@
 import { Word } from '../word';
 import { GridFiller } from './grid-filler';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
-import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from '../player';
 
 export class Grid {
 
@@ -17,16 +18,30 @@ export class Grid {
         return this.words.findIndex((existingWord) => existingWord.value === word) >= 0;
     }
 
-    public toGridWords(): GridWord[] {
+    public toGridWords(player: Player): GridWord[] {
         let horizontalId = 1, verticalId = 1;
         return this.words.map(word => {
-            let id: number;
 
+            // ID of word
+            let id: number;
             if (word.direction === Direction.horizontal) {
                 id = horizontalId++;
             }
             else {
                 id = verticalId++;
+            }
+
+
+            // Owner
+            let owner: Owner;
+            if (word.owner.equals(Player.NO_PLAYER)) {
+                owner = Owner.none;
+            }
+            else if (word.owner.equals(player)) {
+                owner = Owner.player;
+            }
+            else {
+                owner = Owner.opponent;
             }
 
             return new GridWord(
@@ -35,7 +50,7 @@ export class Grid {
                 word.position.column,
                 word.value.length,
                 word.direction,
-                -1,
+                owner,
                 word.value
             );
         });
