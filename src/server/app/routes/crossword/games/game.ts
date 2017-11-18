@@ -62,12 +62,12 @@ export abstract class Game {
             // Actually add player
             this.players.push(player);
             this.initialized.then(() => {
-                this.communicationHandler.clearPlayerGrid(player.socketId);
+                this.communicationHandler.clearPlayerGrid(player);
                 this.communicationHandler.sendGridWords(
-                    player.socketId,
+                    player,
                     this.dataInternal.wordsViewedByPlayer(player)
                 );
-                this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
+                this.communicationHandler.sendDefinitions(player, this.dataInternal.definitions);
             }).catch(warn(logger));
 
             // Start game if max players reached.

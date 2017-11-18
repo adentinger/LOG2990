@@ -83,12 +83,12 @@ export class GameDynamic extends Game {
             const dynamicData = (this.dataInternal as GameDataDynamic);
             dynamicData.applyMutation().then(() => {
                 this.players.forEach((player) => {
-                    this.communicationHandler.clearPlayerGrid(player.socketId);
+                    this.communicationHandler.clearPlayerGrid(player);
                     this.communicationHandler.sendGridWords(
-                        player.socketId,
+                        player,
                         dynamicData.wordsViewedByPlayer(player)
                     );
-                    this.communicationHandler.sendDefinitions(player.socketId, dynamicData.definitions);
+                    this.communicationHandler.sendDefinitions(player, dynamicData.definitions);
                 });
                 this.resetTimer();
                 this.startTimer();

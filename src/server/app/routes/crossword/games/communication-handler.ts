@@ -19,8 +19,8 @@ export class CommunicationHandler {
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
-    public async clearPlayerGrid(playerId: string): Promise<void> {
-        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
+    public async clearPlayerGrid(player: Player): Promise<void> {
+        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), player.socketId);
     }
 
     public sendGameStart(players: Player[]) {
@@ -29,18 +29,18 @@ export class CommunicationHandler {
         });
     }
 
-    public sendGridWords(socketId: string, gridwords: GridWord[]): void {
+    public sendGridWords(player: Player, gridwords: GridWord[]): void {
         gridwords.forEach((gridword) => {
             this.packetManager.sendPacket(
                 GridWordPacket,
                 new GridWordPacket(gridword),
-                socketId
+                player.socketId
             );
         }
         );
     }
 
-    public sendDefinitions(socketId: string, definitions: DefinitionWithIndex[]): void {
+    public sendDefinitions(player: Player, definitions: DefinitionWithIndex[]): void {
         const definitionsWithIndex = definitions;
         definitionsWithIndex.forEach((definitionWithIndex) => {
             const index = definitionWithIndex.index;
@@ -48,7 +48,7 @@ export class CommunicationHandler {
             this.packetManager.sendPacket(
                 GameDefinitionPacket,
                 new GameDefinitionPacket(index, definition.direction, definition),
-                socketId
+                player.socketId
             );
         });
     }
