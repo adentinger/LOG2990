@@ -36,8 +36,7 @@ export class CommunicationHandler {
                 new GridWordPacket(gridword),
                 player.socketId
             );
-        }
-        );
+        });
     }
 
     public sendDefinitions(player: Player, definitions: DefinitionWithIndex[]): void {
