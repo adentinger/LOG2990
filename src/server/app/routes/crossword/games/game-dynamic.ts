@@ -50,7 +50,7 @@ export class GameDynamic extends Game {
         if (this.timerInterval !== null) {
             // Stop countdown
             this.players.forEach(player => {
-                this.communicationHandler.sendNewTimerValueTo(player, 0);
+                this.communicationHandler.sendNewTimerValue(player, 0);
             });
             clearInterval(this.timerInterval);
             this.timerInterval = null;
@@ -73,7 +73,7 @@ export class GameDynamic extends Game {
     private tick(): void {
         this.countdown--;
         this.players.forEach((player) => {
-            this.communicationHandler.sendNewTimerValueTo(player, this.countdown);
+            this.communicationHandler.sendNewTimerValue(player, this.countdown);
         });
 
         if (this.countdown <= 0) {

@@ -89,7 +89,7 @@ export class CommunicationHandler {
         }
     }
 
-    public sendNewTimerValueTo(player: Player, countdown: number): void {
+    public sendNewTimerValue(player: Player, countdown: number): void {
         this.packetManager.sendPacket(
             TimerPacket,
             new TimerPacket(countdown), player.socketId
