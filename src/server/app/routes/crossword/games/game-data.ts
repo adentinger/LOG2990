@@ -51,7 +51,7 @@ export abstract class GameData {
         await this.setDefinitions();
     }
 
-    public validateWord(wordGuess: GridWord): boolean {
+    public validateWord(wordGuess: GridWord, player: Player): boolean {
         const index = this.wordsInternal.findIndex(
             (word) => {
                 return word.direction === wordGuess.direction &&

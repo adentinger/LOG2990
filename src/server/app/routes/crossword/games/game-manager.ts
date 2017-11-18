@@ -119,7 +119,8 @@ export class GameManager {
 
         const foundGame = this.findGame((game) => game.isSocketIdInGame(event.socketid));
         if (foundGame != null) {
-            foundGame.validateUserAnswer(wordGuess, event.socketid);
+            const foundPlayer = foundGame.findPlayer((player) => player.socketId === event.socketid);
+            foundGame.validateUserAnswer(wordGuess, foundPlayer);
         }
     }
 

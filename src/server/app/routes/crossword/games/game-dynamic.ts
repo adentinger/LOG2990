@@ -5,6 +5,7 @@ import { TimerPacket } from '../../../../../common/src/crossword/packets/timer.p
 import { CrosswordGameConfigs } from '../../../../../common/src/communication/game-configs';
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Player } from '../player';
 
 export class GameDynamic extends Game {
 
@@ -60,8 +61,8 @@ export class GameDynamic extends Game {
         this.countdown = GameDynamic.COUNTDOWN_INITAL;
     }
 
-    public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
-        if (super.validateUserAnswer(wordGuess, socketId)) {
+    public validateUserAnswer(wordGuess: GridWord, player: Player): boolean {
+        if (super.validateUserAnswer(wordGuess, player)) {
             // Reset timer
             this.resetTimer();
             return true;

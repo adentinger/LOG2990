@@ -26,15 +26,15 @@ export class GameDataDynamic extends GameData {
         return this.mutator.mutatedGrid.then(grid => grid.toGridWords(new Player('TODO', 'TODO')));
     }
 
-    public validateWord(wordGuess: GridWord): boolean {
-        const validated = super.validateWord(wordGuess);
+    public validateWord(wordGuess: GridWord, player: Player): boolean {
+        const validated = super.validateWord(wordGuess, player);
 
         if (validated) {
             this.mutator.cancelMutation().then(() => {
                 this.mutator.mutateGrid(
                     this.wordsInternal
                         .filter(gridWord => gridWord.owner !== Owner.none)
-                        .map(gridWord => Word.fromGridWord(gridWord))
+                        .map(gridWord => Word.fromGridWord(gridWord, player, Player.NO_PLAYER))
                 );
             });
         }

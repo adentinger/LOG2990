@@ -93,9 +93,9 @@ export abstract class Game {
             this.maxPlayers === filter.playerNumber;
     }
 
-    public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
-        if (this.dataInternal.validateWord(wordGuess)) {
-            this.sendWordFound(wordGuess, socketId);
+    public validateUserAnswer(wordGuess: GridWord, player: Player): boolean {
+        if (this.dataInternal.validateWord(wordGuess, player)) {
+            this.sendWordFound(wordGuess, player.socketId);
             return true;
         }
         return false;

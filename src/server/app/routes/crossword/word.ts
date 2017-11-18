@@ -1,6 +1,6 @@
 import { GridWord } from '../../../../common/src/crossword/grid-word';
 import { Player } from './player';
-import { Direction } from '../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../common/src/crossword/crossword-enums';
 import { WordPosition } from './word-position';
 
 /**
@@ -15,8 +15,26 @@ export class Word {
     public direction: Direction;
     public owner: Player;
 
-    public static fromGridWord(gridWord: GridWord, owner: Player = Player.NO_PLAYER): Word {
-        return new Word(gridWord.string, new WordPosition(gridWord.y, gridWord.x), gridWord.direction, owner);
+    public static fromGridWord(gridWord: GridWord, player: Player, opponent: Player): Word {
+
+        // Compute owner.
+        let actualOwner: Player;
+        if (gridWord.owner === Owner.player) {
+            actualOwner = player;
+        }
+        else if (gridWord.owner === Owner.opponent) {
+            actualOwner = opponent;
+        }
+        else {
+            actualOwner = Player.NO_PLAYER;
+        }
+
+        return new Word(
+            gridWord.string,
+            new WordPosition(gridWord.y, gridWord.x),
+            gridWord.direction,
+            actualOwner
+        );
     }
 
     constructor(value: string, position: WordPosition, direction: Direction, owner = Player.NO_PLAYER) {
