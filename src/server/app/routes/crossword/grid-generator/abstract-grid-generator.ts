@@ -1,15 +1,12 @@
 import { Grid } from './grid';
 import { GridFiller } from './grid-filler';
-import { GridFillerFirstSection } from './grid-filler-first-section';
-import { GridFillerSecondSection } from './grid-filler-second-section';
-import { GridFillerThirdSection } from './grid-filler-third-section';
-import { GridFillerFourthSection } from './grid-filler-fourth-section';
+import { GridFillerContainer } from './grid-filler-container';
 import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 import { Word } from '../word';
 
 interface GenerationData {
     grid: Grid;
-    fillers: GridFiller[];
+    filler: GridFiller;
     promise: Promise<Grid>;
 }
 
@@ -24,7 +21,7 @@ export abstract class AbstractGridGenerator {
     protected constructor() {
         const EMPTY_GRID = new Grid();
         this.dataOfLatestGeneration = {
-            fillers: [],
+            filler: null,
             grid: EMPTY_GRID,
             promise: Promise.resolve(EMPTY_GRID)
         };
@@ -38,23 +35,13 @@ export abstract class AbstractGridGenerator {
     private startGeneration(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): GenerationData {
         const generationData: GenerationData = {
             grid: null,
-            fillers: null,
+            filler: null,
             promise: null
         };
         generationData.promise = new Promise(async (resolve, reject) => {
             generationData.grid = new Grid();
-            generationData.fillers = [
-                new GridFillerFirstSection (suggestionsGetter),
-                new GridFillerSecondSection(suggestionsGetter),
-                new GridFillerThirdSection (suggestionsGetter),
-                new GridFillerFourthSection(suggestionsGetter)
-            ];
-
-            for (let i = 0; i < generationData.fillers.length; ++i) {
-                const filler = generationData.fillers[i];
-                await generationData.grid.fillUsing(filler);
-            }
-
+            generationData.filler = new GridFillerContainer(suggestionsGetter);
+            await generationData.grid.fillUsing(generationData.filler);
             resolve(generationData.grid);
         });
 
@@ -62,7 +49,7 @@ export abstract class AbstractGridGenerator {
     }
 
     protected cancelLatestGeneration(): Promise<void> {
-        this.dataOfLatestGeneration.fillers.forEach(filler => filler.cancelFilling());
+        this.dataOfLatestGeneration.filler.cancelFilling();
         return this.dataOfLatestGeneration.promise
             .then (() => { return; })
             .catch(() => { return; });
