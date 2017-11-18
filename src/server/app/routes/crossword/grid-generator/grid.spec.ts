@@ -30,10 +30,9 @@ describe('Grid', () => {
             const GRID_VERTICAL = new Grid();
             const GRID_BOTH = new Grid();
 
-            GRID_ACROSS.across = ACROSS_WORDS;
-            GRID_VERTICAL.vertical = VERTICAL_WORDS;
-            GRID_BOTH.across = ACROSS_WORDS;
-            GRID_BOTH.vertical = VERTICAL_WORDS;
+            GRID_ACROSS.words = ACROSS_WORDS;
+            GRID_VERTICAL.words = VERTICAL_WORDS;
+            GRID_BOTH.words = ACROSS_WORDS.concat(VERTICAL_WORDS);
 
             const GRIDS = [
                 GRID_ACROSS,
@@ -65,29 +64,25 @@ describe('Grid', () => {
     it('should convert itself to an array of GridWords', () => {
         const grid = new Grid();
 
-        const ACROSS = [
+        const WORDS = [
             new Word('hi',  new WordPosition(0, 0), Direction.horizontal),
-            new Word('there', new WordPosition(5, 2), Direction.horizontal)
-        ];
-        const VERTICAL = [
+            new Word('there', new WordPosition(5, 2), Direction.horizontal),
             new Word('signed', new WordPosition(2, 0), Direction.vertical),
             new Word('chucknorris', new WordPosition(3, 2), Direction.vertical)
         ];
         const EXPECTED_RESULT = [
-            new GridWord(0, 0, 0, 2,  Direction.horizontal, Owner.none, 'hi'),
-            new GridWord(1, 5, 2, 5,  Direction.horizontal, Owner.none, 'there'),
-            new GridWord(2, 2, 0, 6,  Direction.vertical,   Owner.none, 'signed'),
-            new GridWord(3, 3, 2, 11, Direction.vertical,   Owner.none, 'chucknorris')
+            new GridWord(1, 0, 0, 2,  Direction.horizontal, -1, 'hi'),
+            new GridWord(2, 5, 2, 5,  Direction.horizontal, -1, 'there'),
+            new GridWord(1, 2, 0, 6,  Direction.vertical,   -1, 'signed'),
+            new GridWord(2, 3, 2, 11, Direction.vertical,   -1, 'chucknorris')
         ];
 
-        grid.across = ACROSS;
-        grid.vertical = VERTICAL;
-
-        grid.toGridWords().forEach(gridWord => {
+        grid.words = WORDS;
+        grid.toGridWords().forEach((gridWord, i, foo) => {
             const predicate = (expectedWord: GridWord) =>
                 expectedWord.length === gridWord.length &&
                 expectedWord.direction === gridWord.direction &&
-                expectedWord.owner === gridWord.owner &&
+                expectedWord.owner === -1 &&
                 expectedWord.string === gridWord.string &&
                 expectedWord.x === gridWord.x &&
                 expectedWord.y === gridWord.y;

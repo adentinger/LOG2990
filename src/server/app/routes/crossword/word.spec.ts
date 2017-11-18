@@ -18,7 +18,7 @@ describe('Word',  () => {
         ];
         const expectedWords = [
             new Word('12345',  new WordPosition(1, 4), Direction.horizontal),
-            new Word('123456', new WordPosition(-1, 5), Direction.horizontal)
+            new Word('123456', new WordPosition(-1, 5), Direction.vertical)
         ];
         gridWords.forEach((gridWord, index) => {
             const expectedWord = expectedWords[index];

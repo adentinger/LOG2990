@@ -34,11 +34,11 @@ export abstract class GridFiller {
     }
 
     public async fill(grid: Grid): Promise<void> {
-        const INITIAL_NUMBER_OF_ACROSS_WORDS = grid.across.length;
+        const INITIAL_NUMBER_OF_WORDS = grid.words.length;
         let done = false;
         while (!done) {
-            while (grid.across.length > INITIAL_NUMBER_OF_ACROSS_WORDS) {
-                grid.across.pop();
+            while (grid.words.length > INITIAL_NUMBER_OF_WORDS) {
+                grid.words.pop();
             }
             let doneAcross = false;
             while (!doneAcross) {
@@ -112,12 +112,12 @@ export abstract class GridFiller {
                     Direction.vertical,
                     Player.NO_PLAYER
                 );
-                grid.vertical.push(WORD);
+                grid.words.push(WORD);
             }
             else {
                 // Failure ; clean added vertical words
                 for (let j = 0; j < i; ++j) {
-                    grid.vertical.pop();
+                    grid.words.pop();
                 }
                 return false;
             }
@@ -156,24 +156,24 @@ export abstract class GridFiller {
             Direction.horizontal,
             Player.NO_PLAYER
         );
-        grid.across.push(WORD);
+        grid.words.push(WORD);
         try {
             if (await this.areConstraintsMetFor(grid)) {
                 if (await this.placeAcrossWords(grid, current + 1)) {
                     return true;
                 }
                 else {
-                    grid.across.pop();
+                    grid.words.pop();
                     return false;
                 }
             }
             else {
-                grid.across.pop();
+                grid.words.pop();
                 return false;
             }
         }
         catch (e) {
-            grid.across.pop();
+            grid.words.pop();
             return false;
         }
     }

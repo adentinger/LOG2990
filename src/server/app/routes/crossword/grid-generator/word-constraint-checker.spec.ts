@@ -72,7 +72,7 @@ describe('WordConstraintChecker', () => {
                 expectedConstraints: EXPECTED_CONSTRAINTS
             } = getTestData(true);
             const GRID = new Grid();
-            GRID.vertical = VERTICAL_WORDS;
+            GRID.words = VERTICAL_WORDS;
 
             for (let i = 0; i < POSITIONS.length; ++i) {
                 expect(WordConstraintChecker.getInstance()
@@ -90,7 +90,7 @@ describe('WordConstraintChecker', () => {
                 expectedConstraints: EXPECTED_CONSTRAINTS
             } = getTestData(false);
             const GRID = new Grid();
-            GRID.across = ACROSS_WORDS;
+            GRID.words = ACROSS_WORDS;
 
             for (let i = 0; i < POSITIONS.length; ++i) {
                 const CONSTRAINTS = WordConstraintChecker.getInstance()

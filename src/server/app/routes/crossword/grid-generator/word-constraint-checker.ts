@@ -18,8 +18,7 @@ export class WordConstraintChecker {
 
     public getAcrossWordConstraint(grid: Grid, position: WordPosition, minLength: number): CharConstraint[] {
         return this.getWordConstraint(
-            grid.vertical,
-            grid.across,
+            grid.words,
             position,
             minLength,
             (wordPosition) => wordPosition.column,
@@ -31,8 +30,7 @@ export class WordConstraintChecker {
 
     public getVerticalWordConstraint(grid: Grid, position: WordPosition, minLength: number): CharConstraint[] {
         return this.getWordConstraint(
-            grid.across,
-            grid.vertical,
+            grid.words,
             position,
             minLength,
             (wordPosition) => wordPosition.row,
@@ -42,8 +40,7 @@ export class WordConstraintChecker {
         );
     }
 
-    private getWordConstraint(transversalWords: Word[],
-                              parallelWords: Word[],
+    private getWordConstraint(words: Word[],
                               position: WordPosition,
                               minLength: number,
                               iteratedAxisGetter: AxisGetter,
@@ -61,7 +58,7 @@ export class WordConstraintChecker {
 
             const WORD_THAT_CONTAINS_POSITION =
                 this.findWordThatContainsPosition(
-                    transversalWords,
+                    words,
                     CURRENT_POSITION,
                     constantAxisGetter,
                     iteratedAxisGetter

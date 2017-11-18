@@ -15,20 +15,22 @@ export class Word {
     public direction: Direction;
     public owner: Player;
 
-    public static fromGridWord(gridWord: GridWord): Word {
-        return new Word(gridWord.string, new WordPosition(gridWord.y, gridWord.x), gridWord.direction);
+    public static fromGridWord(gridWord: GridWord, owner: Player = Player.NO_PLAYER): Word {
+        return new Word(gridWord.string, new WordPosition(gridWord.y, gridWord.x), gridWord.direction, owner);
     }
 
     constructor(value: string, position: WordPosition, direction: Direction, owner = Player.NO_PLAYER) {
         this.value = value;
         this.position = position;
+        this.direction = direction;
+        this.owner = owner;
     }
 
     public equals(that: Word): boolean {
         return this.value === that.value &&
                this.position.equals(that.position) &&
                this.direction === that.direction &&
-               this.owner === that.owner;
+               this.owner.equals(that.owner);
     }
 
 }
