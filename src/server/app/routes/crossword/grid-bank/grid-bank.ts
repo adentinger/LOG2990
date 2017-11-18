@@ -8,6 +8,7 @@ import { Logger } from '../../../../../common/src';
 import { Word } from '../word';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from '../player';
+import { WordPosition } from '../word-position';
 
 enum GridState {
     GENERATING = 0,
@@ -111,15 +112,20 @@ export abstract class GridBank {
 
         if (document.hasOwnProperty('words')) {
             // For the grids generated using the new code
-            grid.words = document.words;
+            grid.words = document.words.map(
+                (word: Word) =>
+                    new Word(word.value, new WordPosition(word.position.row, word.position.column), word.direction, Player.NO_PLAYER)
+            );
         }
         else {
             // For the grids generated using the old code
             const across = document.across.map(
-                (word: Word) => new Word(word.value, word.position, Direction.horizontal, Player.NO_PLAYER)
+                (word: Word) =>
+                    new Word(word.value, new WordPosition(word.position.row, word.position.column), Direction.horizontal, Player.NO_PLAYER)
             );
             const vertical = document.vertical.map(
-                (word: Word) => new Word(word.value, word.position, Direction.vertical, Player.NO_PLAYER)
+                (word: Word) =>
+                    new Word(word.value, new WordPosition(word.position.row, word.position.column), Direction.vertical, Player.NO_PLAYER)
             );
             grid.words = across.concat(vertical);
         }
