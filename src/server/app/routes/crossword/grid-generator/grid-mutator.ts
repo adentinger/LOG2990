@@ -38,8 +38,7 @@ export class GridMutator extends AbstractGridGenerator {
             new WordSuggestionsGetter(this.difficulty)
         );
         promise.then((grid) => {
-            this.logger.log('Finished mutating. Mutated grid:');
-            this.logger.log(grid.toString());
+            this.logger.log('Finished mutating. Mutated grid:\n' + grid.toString());
         });
         return promise;
     }
