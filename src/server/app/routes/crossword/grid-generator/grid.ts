@@ -3,6 +3,7 @@ import { GridFiller } from './grid-filler';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from '../player';
+import { WordPosition } from '../word-position';
 
 export class Grid {
 
@@ -20,6 +21,10 @@ export class Grid {
 
     public doesWordAlreadyExist(word: string): boolean {
         return this.words.findIndex((existingWord) => existingWord.value === word) >= 0;
+    }
+
+    public isWordAlreadyPlaced(position: WordPosition, direction: Direction): boolean {
+        return false;
     }
 
     public toGridWords(player: Player): GridWord[] {
