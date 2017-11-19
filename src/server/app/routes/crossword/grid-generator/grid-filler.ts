@@ -50,16 +50,16 @@ export abstract class GridFiller {
         }
     }
 
-    private async placeAcrossWords(grid: Grid, current: number = 0): Promise<boolean> {
+    private async placeAcrossWords(grid: Grid, recursionDepth: number = 0): Promise<boolean> {
         // We assume that the words in acrossWords and verticalWords
         // are given top to bottom and left to right (respectively).
-        if (current < this.acrossWords.length) {
+        if (recursionDepth < this.acrossWords.length) {
 
             if (this.shouldCancelFilling) {
                 throw new Error('Grid generation cancelled.');
             }
 
-            const WORD_PLACEMENT = this.acrossWords[current];
+            const WORD_PLACEMENT = this.acrossWords[recursionDepth];
             const SUGGESTIONS =
                 await this.suggestionsGetter.getSuggestions(
                     WORD_PLACEMENT.minLength,
@@ -76,7 +76,7 @@ export abstract class GridFiller {
                     done = await this.trySuggestion(
                         grid,
                         SUGGESTION,
-                        current
+                        recursionDepth
                     );
                 }
                 --numTriesLeft;
