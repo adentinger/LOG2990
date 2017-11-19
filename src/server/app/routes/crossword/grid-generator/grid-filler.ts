@@ -88,7 +88,7 @@ export abstract class GridFiller {
         }
     }
 
-    private async placeVerticalWords(grid: Grid, current: number = 0): Promise<boolean> {
+    private async placeVerticalWords(grid: Grid): Promise<boolean> {
         for (let i = 0; i < this.verticalWords.length; ++i) {
             const PLACEMENT = this.verticalWords[i];
             const CONSTRAINT =
