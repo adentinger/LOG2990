@@ -10,6 +10,10 @@ export class Grid {
 
     public words: Word[] = [];
 
+    constructor(wordsToInclude: Word[] = []) {
+        this.words = wordsToInclude.slice();
+    }
+
     public async fillUsing(filler: GridFiller): Promise<void> {
         await filler.fill(this);
     }
