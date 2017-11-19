@@ -6,6 +6,10 @@ import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { DifficultyEasy } from '../../../../../common/src/crossword/difficulty-easy';
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { GridFiller } from './grid-filler';
+import { Grid } from './grid';
+import { Word } from '../word';
+import { WordPosition } from '../word-position';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 
 function placementOfFiller(filler: GridFiller): {across: WordPlacement[], vertical: WordPlacement[]} {
     return {
@@ -42,6 +46,32 @@ describe('Transposer', () => {
                 [expectedPlacement.position.column, expectedPlacement.position.row];
             expect(transposedPlacement.vertical[i].equals(expectedPlacement)).to.be.true;
         }
+    });
+
+    it('should transpose grids', () => {
+
+        const GRID = new Grid([
+            new Word('hello', new WordPosition(0, 0), Direction.horizontal),
+            new Word('hi',    new WordPosition(0, 0), Direction.vertical  ),
+            new Word('chuck', new WordPosition(1, 8), Direction.vertical  )
+        ]);
+
+        const EXPECTED_STRING =
+            'h i - - - - - - - -\n' +
+            'e - - - - - - - - -\n' +
+            'l - - - - - - - - -\n' +
+            'l - - - - - - - - -\n' +
+            'o - - - - - - - - -\n' +
+            '- - - - - - - - - -\n' +
+            '- - - - - - - - - -\n' +
+            '- - - - - - - - - -\n' +
+            '- c h u c k - - - -\n' +
+            '- - - - - - - - - -';
+
+        new Transposer().transposeGrid(GRID);
+
+        expect(GRID.toString()).to.equal(EXPECTED_STRING);
+
     });
 
 });
