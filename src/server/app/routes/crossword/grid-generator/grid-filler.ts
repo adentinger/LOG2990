@@ -39,7 +39,6 @@ export abstract class GridFiller {
         const initialNumberOfWords = grid.words.length;
         let done = false;
         while (!done) {
-
             while (grid.words.length > initialNumberOfWords) {
                 grid.words.pop();
             }
