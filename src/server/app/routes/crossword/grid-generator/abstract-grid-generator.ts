@@ -1,7 +1,7 @@
 import { Grid } from './grid';
 import { GridFiller } from './grid-filler';
 import { GridFillerContainer } from './grid-filler-container';
-import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
+import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { Word } from '../word';
 
 interface GenerationData {
@@ -27,12 +27,12 @@ export abstract class AbstractGridGenerator {
         };
     }
 
-    protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): Promise<Grid> {
+    protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: WordSuggestionsGetter): Promise<Grid> {
         this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, suggestionsGetter);
         return this.dataOfLatestGeneration.promise;
     }
 
-    private startGeneration(wordsToInclude: Word[], suggestionsGetter: AbstractWordSuggestionsGetter): GenerationData {
+    private startGeneration(wordsToInclude: Word[], suggestionsGetter: WordSuggestionsGetter): GenerationData {
         const generationData: GenerationData = {
             grid: null,
             filler: null,

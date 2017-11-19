@@ -4,7 +4,7 @@ import { CharConstraint } from '../../../../../common/src/index';
 import { WordPosition } from '../word-position';
 import { LexiconCaller } from '../lexic/lexicon-caller';
 
-export class AbstractWordSuggestionsGetter {
+export class WordSuggestionsGetter {
 
     protected difficulty: Difficulty;
 

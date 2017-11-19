@@ -1,6 +1,6 @@
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { Grid } from './grid';
-import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
+import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { WordConstraintChecker } from './word-constraint-checker';
 import { Word } from '../word';
 import { WordSuggestions } from './word-suggestions';
@@ -13,11 +13,11 @@ export abstract class GridFiller {
 
     protected acrossWords: WordPlacement[] = [];
     protected verticalWords: WordPlacement[] = [];
-    protected suggestionsGetter: AbstractWordSuggestionsGetter;
+    protected suggestionsGetter: WordSuggestionsGetter;
 
     private shouldCancelFilling = false;
 
-    constructor(suggestionsGetter: AbstractWordSuggestionsGetter) {
+    constructor(suggestionsGetter: WordSuggestionsGetter) {
         this.suggestionsGetter = suggestionsGetter;
     }
 
