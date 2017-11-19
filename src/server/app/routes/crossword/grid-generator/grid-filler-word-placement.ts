@@ -20,4 +20,8 @@ export class GridFillerWordPlacement {
                this.position.equals(that.position);
     }
 
+    public clone(): GridFillerWordPlacement {
+        return new GridFillerWordPlacement(this.position.clone(), this.minLength, this.maxLength);
+    }
+
 }
