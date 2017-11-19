@@ -3,6 +3,7 @@ import { Grid } from './grid';
 import { Word } from '../word';
 import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
+import { Logger } from '../../../../../common/src/index';
 
 /**
  * @class GridMutator
@@ -17,6 +18,8 @@ import { Difficulty } from '../../../../../common/src/crossword/difficulty';
  */
 export class GridMutator extends AbstractGridGenerator {
 
+    private readonly logger = Logger.getLogger('GridMutator');
+
     private difficulty: Difficulty;
 
     public get mutatedGrid(): Promise<Grid> {
@@ -29,10 +32,15 @@ export class GridMutator extends AbstractGridGenerator {
     }
 
     public mutateGrid(wordsToInclude: Word[]): Promise<Grid> {
-        return this.gridGenerationBase(
+        const promise = this.gridGenerationBase(
             wordsToInclude,
             new WordSuggestionsGetter(this.difficulty)
         );
+        promise.then((grid) => {
+            this.logger.log('Finished mutating. Mutated grid:');
+            this.logger.log(grid.toString());
+        });
+        return promise;
     }
 
     public cancelMutation(): Promise<void> {
