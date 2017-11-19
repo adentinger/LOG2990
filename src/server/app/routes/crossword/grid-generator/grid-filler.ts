@@ -65,28 +65,34 @@ export abstract class GridFiller {
             }
 
             const wordPlacement = this.acrossWords[recursionDepth];
-            const suggestions =
-                await this.suggestionsGetter.getSuggestions(
-                    wordPlacement.minLength,
-                    wordPlacement.maxLength,
-                    [],
-                    wordPlacement.position
-                );
 
-            let done = false;
-            let numTriesLeft = GridFiller.NUM_TRIES;
-            while (numTriesLeft > 0 && suggestions.length > 0 && !done) {
-                const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
-                if (suggestion !== '') {
-                    done = await this.trySuggestion(
-                        grid,
-                        suggestion,
-                        recursionDepth
-                    );
-                }
-                --numTriesLeft;
+            if (grid.isWordAlreadyPlaced(wordPlacement.position, Direction.horizontal)) {
+                return await this.placeAcrossWords(grid, recursionDepth + 1);
             }
-            return done;
+            else {
+                const suggestions =
+                    await this.suggestionsGetter.getSuggestions(
+                        wordPlacement.minLength,
+                        wordPlacement.maxLength,
+                        [],
+                        wordPlacement.position
+                    );
+
+                let done = false;
+                let numTriesLeft = GridFiller.NUM_TRIES;
+                while (numTriesLeft > 0 && suggestions.length > 0 && !done) {
+                    const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
+                    if (suggestion !== '') {
+                        done = await this.trySuggestion(
+                            grid,
+                            suggestion,
+                            recursionDepth
+                        );
+                    }
+                    --numTriesLeft;
+                }
+                return done;
+            }
         }
         else {
             return true;
@@ -94,36 +100,39 @@ export abstract class GridFiller {
     }
 
     private async placeVerticalWords(grid: Grid): Promise<boolean> {
+        const initialNumberOfWords = grid.words.length;
         for (let i = 0; i < this.verticalWords.length; ++i) {
             const placement = this.verticalWords[i];
-            const constraint =
-                WordConstraintChecker.getInstance().getVerticalWordConstraint(
-                    grid,
-                    placement
+            if (!grid.isWordAlreadyPlaced(placement.position, Direction.vertical)) {
+                const constraint =
+                    WordConstraintChecker.getInstance().getVerticalWordConstraint(
+                        grid,
+                        placement
+                    );
+                const suggestions = await this.suggestionsGetter.getSuggestions(
+                    placement.minLength,
+                    placement.maxLength,
+                    constraint,
+                    placement.position
                 );
-            const suggestions = await this.suggestionsGetter.getSuggestions(
-                placement.minLength,
-                placement.maxLength,
-                constraint,
-                placement.position
-            );
-            // We know that there is at least one suggestion
-            const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
-            if (suggestion !== '') {
-                const word = new Word(
-                    suggestion,
-                    placement.position,
-                    Direction.vertical,
-                    Player.NO_PLAYER
-                );
-                grid.words.push(word);
-            }
-            else {
-                // Failure ; clean added vertical words
-                for (let j = 0; j < i; ++j) {
-                    grid.words.pop();
+                // We know that there is at least one suggestion
+                const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
+                if (suggestion !== '') {
+                    const word = new Word(
+                        suggestion,
+                        placement.position,
+                        Direction.vertical,
+                        Player.NO_PLAYER
+                    );
+                    grid.words.push(word);
                 }
-                return false;
+                else {
+                    // Failure ; clean added vertical words
+                    while (grid.words.length > initialNumberOfWords) {
+                        grid.words.pop();
+                    }
+                    return false;
+                }
             }
         }
         return true;
