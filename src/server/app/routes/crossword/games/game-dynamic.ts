@@ -32,8 +32,8 @@ export class GameDynamic extends Game {
 
     protected start(): void {
         // Reset timer
-        this.resetTimer();
         this.stopTimer();
+        this.resetTimer();
         this.startTimer();
 
         super.start();
