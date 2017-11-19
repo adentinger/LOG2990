@@ -6,6 +6,35 @@ import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from '../player';
 
+function makeTestGrids(): Grid[] {
+    const ACROSS_WORDS = [
+        new Word('one',    new WordPosition(0, 0), Direction.horizontal),
+        new Word('two',    new WordPosition(2, 6), Direction.horizontal),
+        new Word('across', new WordPosition(4, 4), Direction.horizontal)
+    ];
+    const VERTICAL_WORDS = [
+        new Word('one',  new WordPosition(1, 0), Direction.vertical),
+        new Word('two',  new WordPosition(6, 3), Direction.vertical),
+        new Word('vert', new WordPosition(6, 8), Direction.vertical)
+    ];
+
+    const GRID_ACROSS = new Grid();
+    const GRID_VERTICAL = new Grid();
+    const GRID_BOTH = new Grid();
+
+    GRID_ACROSS.words = ACROSS_WORDS;
+    GRID_VERTICAL.words = VERTICAL_WORDS;
+    GRID_BOTH.words = ACROSS_WORDS.concat(VERTICAL_WORDS);
+
+    const GRIDS = [
+        GRID_ACROSS,
+        GRID_VERTICAL,
+        GRID_BOTH
+    ];
+
+    return GRIDS;
+};
+
 describe('Grid', () => {
 
     it('should be created', () => {
@@ -15,37 +44,8 @@ describe('Grid', () => {
 
     describe('doesWordAlreadyExist', () => {
 
-        const MAKE_TEST_GRIDS = () => {
-            const ACROSS_WORDS = [
-                new Word('one',    new WordPosition(0, 0), Direction.horizontal),
-                new Word('two',    new WordPosition(2, 6), Direction.horizontal),
-                new Word('across', new WordPosition(4, 4), Direction.horizontal)
-            ];
-            const VERTICAL_WORDS = [
-                new Word('one',  new WordPosition(1, 0), Direction.vertical),
-                new Word('two',  new WordPosition(6, 3), Direction.vertical),
-                new Word('vert', new WordPosition(6, 8), Direction.vertical)
-            ];
-
-            const GRID_ACROSS = new Grid();
-            const GRID_VERTICAL = new Grid();
-            const GRID_BOTH = new Grid();
-
-            GRID_ACROSS.words = ACROSS_WORDS;
-            GRID_VERTICAL.words = VERTICAL_WORDS;
-            GRID_BOTH.words = ACROSS_WORDS.concat(VERTICAL_WORDS);
-
-            const GRIDS = [
-                GRID_ACROSS,
-                GRID_VERTICAL,
-                GRID_BOTH
-            ];
-
-            return GRIDS;
-        };
-
         it('should tell that a word already exists if it does', () => {
-            const GRIDS = MAKE_TEST_GRIDS();
+            const GRIDS = makeTestGrids();
             GRIDS.forEach(grid => {
                 expect(grid.doesWordAlreadyExist('one')).to.be.true;
                 expect(grid.doesWordAlreadyExist('two')).to.be.true;
@@ -53,11 +53,33 @@ describe('Grid', () => {
         });
 
         it('should tell that a word does not exist if it does not', () => {
-            const GRIDS = MAKE_TEST_GRIDS();
+            const GRIDS = makeTestGrids();
             GRIDS.forEach(grid => {
                 expect(grid.doesWordAlreadyExist('hi')).to.be.false;
                 expect(grid.doesWordAlreadyExist('there')).to.be.false;
             });
+        });
+
+    });
+
+    describe('isWordAlreadyPlaced', () => {
+
+        it('should tell so when a word is already placed.', () => {
+            const GRIDS = makeTestGrids();
+            expect(GRIDS[0].isWordAlreadyPlaced(new WordPosition(0, 0), Direction.horizontal)).to.be.true;
+            expect(GRIDS[0].isWordAlreadyPlaced(new WordPosition(2, 6), Direction.horizontal)).to.be.true;
+            expect(GRIDS[1].isWordAlreadyPlaced(new WordPosition(6, 8), Direction.vertical  )).to.be.true;
+            expect(GRIDS[2].isWordAlreadyPlaced(new WordPosition(0, 0), Direction.horizontal)).to.be.true;
+            expect(GRIDS[2].isWordAlreadyPlaced(new WordPosition(2, 6), Direction.horizontal)).to.be.true;
+            expect(GRIDS[2].isWordAlreadyPlaced(new WordPosition(6, 8), Direction.vertical  )).to.be.true;
+        });
+
+        it('should tell so when a word is not already placed.', () => {
+            const GRIDS = makeTestGrids();
+            expect(GRIDS[0].isWordAlreadyPlaced(new WordPosition(1, 0), Direction.horizontal)).to.be.false;
+            expect(GRIDS[0].isWordAlreadyPlaced(new WordPosition(2, 7), Direction.horizontal)).to.be.false;
+            expect(GRIDS[1].isWordAlreadyPlaced(new WordPosition(6, 8), Direction.horizontal)).to.be.false;
+            expect(GRIDS[2].isWordAlreadyPlaced(new WordPosition(0, 0), Direction.vertical  )).to.be.false;
         });
 
     });
