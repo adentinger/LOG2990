@@ -7,6 +7,13 @@ import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-pla
 type AxisGetter = (position: WordPosition) => number;
 type PositionModifier = (position: WordPosition) => void;
 
+interface PositionActor {
+    getIteratedAxis: AxisGetter;
+    getConstantAxis: AxisGetter;
+    incrementIteratedAxis: PositionModifier;
+    decrementIteratedAxis: PositionModifier;
+}
+
 export class WordConstraintChecker {
 
     private static INSTANCE = new WordConstraintChecker();
@@ -18,33 +25,36 @@ export class WordConstraintChecker {
     }
 
     public getAcrossWordConstraint(grid: Grid, placement: WordPlacement): CharConstraint[] {
+        const POSITION_ACTOR: PositionActor = {
+            getIteratedAxis: (wordPosition) => wordPosition.column,
+            getConstantAxis: (wordPosition) => wordPosition.row,
+            incrementIteratedAxis: (wordPosition) => { ++wordPosition.column; },
+            decrementIteratedAxis: (wordPosition) => { --wordPosition.column; }
+        };
         return this.getWordConstraint(
             grid.words,
             placement,
-            (wordPosition) => wordPosition.column,
-            (wordPosition) => wordPosition.row,
-            (wordPosition) => { ++wordPosition.column; },
-            (wordPosition) => { --wordPosition.column; }
+            POSITION_ACTOR
         );
     }
 
     public getVerticalWordConstraint(grid: Grid, placement: WordPlacement): CharConstraint[] {
+        const POSITION_ACTOR: PositionActor = {
+            getIteratedAxis: (wordPosition) => wordPosition.row,
+            getConstantAxis: (wordPosition) => wordPosition.column,
+            incrementIteratedAxis: (wordPosition) => { ++wordPosition.row; },
+            decrementIteratedAxis: (wordPosition) => { --wordPosition.row; }
+        };
         return this.getWordConstraint(
             grid.words,
             placement,
-            (wordPosition) => wordPosition.row,
-            (wordPosition) => wordPosition.column,
-            (wordPosition) => { ++wordPosition.row; },
-            (wordPosition) => { --wordPosition.row; }
+            POSITION_ACTOR
         );
     }
 
     private getWordConstraint(words: Word[],
                               placement: WordPlacement,
-                              iteratedAxisGetter: AxisGetter,
-                              constantAxisGetter: AxisGetter,
-                              incrementIteratedAxis: PositionModifier,
-                              decrementIteratedAxis: PositionModifier): CharConstraint[] {
+                              positionActor: PositionActor): CharConstraint[] {
         const CONSTRAINTS: CharConstraint[] = [];
 
         const CURRENT_POSITION = new WordPosition(placement.position.row,
@@ -58,8 +68,7 @@ export class WordConstraintChecker {
                 this.findWordThatContainsPosition(
                     words,
                     CURRENT_POSITION,
-                    constantAxisGetter,
-                    iteratedAxisGetter
+                    positionActor
                 );
 
             const CHAR_FOUND = (WORD_THAT_CONTAINS_POSITION !== undefined);
@@ -69,7 +78,7 @@ export class WordConstraintChecker {
                     this.charOfWordAtPosition(
                         WORD_THAT_CONTAINS_POSITION,
                         CURRENT_POSITION,
-                        constantAxisGetter
+                        positionActor
                     );
                 const CHAR_CONSTRAINT: CharConstraint = {
                     char: CHARACTER,
@@ -79,33 +88,32 @@ export class WordConstraintChecker {
             }
 
             shouldTryToFindNextChar = CHAR_FOUND;
-            incrementIteratedAxis(CURRENT_POSITION);
+            positionActor.incrementIteratedAxis(CURRENT_POSITION);
         }
         return CONSTRAINTS;
     }
 
     private findWordThatContainsPosition(words: Word[],
                                          position: WordPosition,
-                                         constantAxisGetter: AxisGetter,
-                                         iteratedAxisGetter: AxisGetter): Word {
+                                         positionActor: PositionActor): Word {
         return words.find((word) => {
-            const MIN_CONSTANT_AXIS = constantAxisGetter(word.position);
+            const MIN_CONSTANT_AXIS = positionActor.getConstantAxis(word.position);
             const MAX_CONSTANT_AXIS = MIN_CONSTANT_AXIS + word.value.length - 1;
-            const ITERATED_AXIS = iteratedAxisGetter(word.position);
+            const ITERATED_AXIS = positionActor.getIteratedAxis(word.position);
             const WORD_CONTAINS_POSITION =
-                ITERATED_AXIS === iteratedAxisGetter(position) &&
-                constantAxisGetter(position) >= MIN_CONSTANT_AXIS &&
-                constantAxisGetter(position) <= MAX_CONSTANT_AXIS;
+                ITERATED_AXIS === positionActor.getIteratedAxis(position) &&
+                positionActor.getConstantAxis(position) >= MIN_CONSTANT_AXIS &&
+                positionActor.getConstantAxis(position) <= MAX_CONSTANT_AXIS;
             return WORD_CONTAINS_POSITION;
         });
     }
 
     private charOfWordAtPosition(word: Word,
                                  position: WordPosition,
-                                 constantAxisGetter: AxisGetter): string {
+                                 positionActor: PositionActor): string {
         return word.value
-            .charAt(constantAxisGetter(position) -
-                    constantAxisGetter(word.position));
+            .charAt(positionActor.getConstantAxis(position) -
+                    positionActor.getConstantAxis(word.position));
     }
 
 }
