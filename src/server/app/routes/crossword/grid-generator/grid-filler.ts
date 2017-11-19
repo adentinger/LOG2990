@@ -11,18 +11,18 @@ export abstract class GridFiller {
 
     protected static readonly NUM_TRIES = 20;
 
-    protected acrossWords: WordPlacement[] = [];
-    protected verticalWords: WordPlacement[] = [];
+    protected acrossPlacementInternal: WordPlacement[] = [];
+    protected verticalPlacementInternal: WordPlacement[] = [];
     protected suggestionsGetter: WordSuggestionsGetter;
 
     private shouldCancelFilling = false;
 
     public get acrossPlacement(): WordPlacement[] {
-        return this.acrossWords.slice();
+        return this.acrossPlacementInternal.slice();
     }
 
     public get verticalPlacement(): WordPlacement[] {
-        return this.verticalWords.slice();
+        return this.verticalPlacementInternal.slice();
     }
 
     constructor(suggestionsGetter: WordSuggestionsGetter) {
@@ -57,13 +57,13 @@ export abstract class GridFiller {
     private async placeAcrossWords(grid: Grid, recursionDepth: number = 0): Promise<boolean> {
         // We assume that the words in acrossWords and verticalWords
         // are given top to bottom and left to right (respectively).
-        if (recursionDepth < this.acrossWords.length) {
+        if (recursionDepth < this.acrossPlacementInternal.length) {
 
             if (this.shouldCancelFilling) {
                 throw new Error('Grid generation cancelled.');
             }
 
-            const wordPlacement = this.acrossWords[recursionDepth];
+            const wordPlacement = this.acrossPlacementInternal[recursionDepth];
 
             if (grid.isWordAlreadyPlaced(wordPlacement.position, Direction.horizontal)) {
                 return await this.placeAcrossWords(grid, recursionDepth + 1);
@@ -101,8 +101,8 @@ export abstract class GridFiller {
 
     private async placeVerticalWords(grid: Grid): Promise<boolean> {
         const initialNumberOfWords = grid.words.length;
-        for (let i = 0; i < this.verticalWords.length; ++i) {
-            const placement = this.verticalWords[i];
+        for (let i = 0; i < this.verticalPlacementInternal.length; ++i) {
+            const placement = this.verticalPlacementInternal[i];
             if (!grid.isWordAlreadyPlaced(placement.position, Direction.vertical)) {
                 const constraint =
                     WordConstraintChecker.getInstance().getVerticalWordConstraint(
@@ -139,8 +139,8 @@ export abstract class GridFiller {
     }
 
     private async areConstraintsMetFor(grid: Grid): Promise<boolean> {
-        for (let i = 0; i < this.verticalWords.length; ++i) {
-            const verticalWordPlacement = this.verticalWords[i];
+        for (let i = 0; i < this.verticalPlacementInternal.length; ++i) {
+            const verticalWordPlacement = this.verticalPlacementInternal[i];
             const verticalWordConstraint =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,

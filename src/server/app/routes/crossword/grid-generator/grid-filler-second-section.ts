@@ -7,13 +7,13 @@ export class GridFillerSecondSection extends GridFiller {
 
     constructor(suggestionsGetter: WordSuggestionsGetter) {
         super(suggestionsGetter);
-        this.acrossWords = [
+        this.acrossPlacementInternal = [
             new WordPlacement(new WordPosition(3, 3), 3, 5),
             new WordPlacement(new WordPosition(4, 3), 3, 3),
             new WordPlacement(new WordPosition(5, 5), 3, 3),
             new WordPlacement(new WordPosition(6, 3), 3, 3)
         ];
-        this.verticalWords = [
+        this.verticalPlacementInternal = [
             new WordPlacement(new WordPosition(3, 3), 4, 5),
             new WordPlacement(new WordPosition(2, 4), 3, 3),
             new WordPlacement(new WordPosition(3, 5), 4, 4)
