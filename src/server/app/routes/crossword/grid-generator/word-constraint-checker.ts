@@ -2,6 +2,7 @@ import { CharConstraint } from '../../../../../common/src/index';
 import { Grid } from './grid';
 import { WordPosition } from '../word-position';
 import { Word } from '../word';
+import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 
 type AxisGetter = (position: WordPosition) => number;
 type PositionModifier = (position: WordPosition) => void;
@@ -16,11 +17,10 @@ export class WordConstraintChecker {
         return WordConstraintChecker.INSTANCE;
     }
 
-    public getAcrossWordConstraint(grid: Grid, position: WordPosition, minLength: number): CharConstraint[] {
+    public getAcrossWordConstraint(grid: Grid, placement: WordPlacement): CharConstraint[] {
         return this.getWordConstraint(
             grid.words,
-            position,
-            minLength,
+            placement,
             (wordPosition) => wordPosition.column,
             (wordPosition) => wordPosition.row,
             (wordPosition) => { ++wordPosition.column; },
@@ -28,11 +28,10 @@ export class WordConstraintChecker {
         );
     }
 
-    public getVerticalWordConstraint(grid: Grid, position: WordPosition, minLength: number): CharConstraint[] {
+    public getVerticalWordConstraint(grid: Grid, placement: WordPlacement): CharConstraint[] {
         return this.getWordConstraint(
             grid.words,
-            position,
-            minLength,
+            placement,
             (wordPosition) => wordPosition.row,
             (wordPosition) => wordPosition.column,
             (wordPosition) => { ++wordPosition.row; },
@@ -41,20 +40,19 @@ export class WordConstraintChecker {
     }
 
     private getWordConstraint(words: Word[],
-                              position: WordPosition,
-                              minLength: number,
+                              placement: WordPlacement,
                               iteratedAxisGetter: AxisGetter,
                               constantAxisGetter: AxisGetter,
                               incrementIteratedAxis: PositionModifier,
                               decrementIteratedAxis: PositionModifier): CharConstraint[] {
         const CONSTRAINTS: CharConstraint[] = [];
 
-        const CURRENT_POSITION = new WordPosition(position.row,
-                                                  position.column);
+        const CURRENT_POSITION = new WordPosition(placement.position.row,
+                                                  placement.position.column);
 
         let characterPosition = 0;
         let shouldTryToFindNextChar = true;
-        for (characterPosition = 0; characterPosition < minLength; ++characterPosition) {
+        for (characterPosition = 0; characterPosition < placement.minLength; ++characterPosition) {
 
             const WORD_THAT_CONTAINS_POSITION =
                 this.findWordThatContainsPosition(

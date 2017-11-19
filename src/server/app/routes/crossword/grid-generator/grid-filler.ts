@@ -94,8 +94,7 @@ export abstract class GridFiller {
             const CONSTRAINT =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,
-                    PLACEMENT.position,
-                    PLACEMENT.minLength
+                    PLACEMENT
                 );
             const SUGGESTIONS = await this.suggestionsGetter.getSuggestions(
                 PLACEMENT.minLength,
@@ -127,19 +126,18 @@ export abstract class GridFiller {
 
     private async areConstraintsMetFor(grid: Grid): Promise<boolean> {
         for (let i = 0; i < this.verticalWords.length; ++i) {
-            const VERTICAL_WORD = this.verticalWords[i];
+            const VERTICAL_WORD_PLACEMENT = this.verticalWords[i];
             const VERTICAL_WORD_CONSTRAINT =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,
-                    VERTICAL_WORD.position,
-                    VERTICAL_WORD.minLength
+                    VERTICAL_WORD_PLACEMENT
                 );
             const SUGGESTIONS_EXIST =
                 await this.suggestionsGetter.doSuggestionsExist(
-                    VERTICAL_WORD.minLength,
-                    VERTICAL_WORD.maxLength,
+                    VERTICAL_WORD_PLACEMENT.minLength,
+                    VERTICAL_WORD_PLACEMENT.maxLength,
                     VERTICAL_WORD_CONSTRAINT,
-                    VERTICAL_WORD.position
+                    VERTICAL_WORD_PLACEMENT.position
                 );
             if (!SUGGESTIONS_EXIST) {
                 return false;
