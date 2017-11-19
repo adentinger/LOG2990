@@ -1,4 +1,5 @@
 import { GridFiller } from './grid-filler';
+import { Grid } from './grid';
 
 /**
  * @class GridFillerTransposer
@@ -8,6 +9,10 @@ import { GridFiller } from './grid-filler';
 export class Transposer {
 
     public transposeFiller(filler: GridFiller): void {
+        return null;
+    }
+
+    public transposeGrid(grid: Grid): void {
         return null;
     }
 
