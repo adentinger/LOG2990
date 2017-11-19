@@ -32,6 +32,7 @@ export class GridMutator extends AbstractGridGenerator {
     }
 
     public mutateGrid(wordsToInclude: Word[]): Promise<Grid> {
+        this.logger.log('Mutating grid...');
         const promise = this.gridGenerationBase(
             wordsToInclude,
             new WordSuggestionsGetter(this.difficulty)
