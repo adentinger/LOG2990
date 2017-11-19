@@ -34,16 +34,21 @@ export abstract class GridFiller {
     }
 
     public async fill(grid: Grid): Promise<void> {
+        this.shouldCancelFilling = false;
+
         const initialNumberOfWords = grid.words.length;
         let done = false;
         while (!done) {
+
             while (grid.words.length > initialNumberOfWords) {
                 grid.words.pop();
             }
+
             let doneAcross = false;
             while (!doneAcross) {
                 doneAcross = await this.placeAcrossWords(grid);
             }
+
             let doneVertical = false;
             doneVertical = await this.placeVerticalWords(grid);
             done = doneVertical;
