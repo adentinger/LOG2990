@@ -13,12 +13,14 @@ export class GameDataDynamic extends GameData {
     constructor(difficulty: Difficulty) {
         super(difficulty);
         this.mutator = new GridMutator(toGridGeneratorDifficulty(difficulty));
+        this.startMutatingGrid();
     }
 
     public applyMutation(): Promise<void> {
         return this.mutatedGrid.then(grid => {
             this.grid = grid;
             this.setDefinitions();
+            this.startMutatingGrid();
         });
     }
 
@@ -30,15 +32,17 @@ export class GameDataDynamic extends GameData {
         const validated = super.validateWord(wordGuess, player);
 
         if (validated) {
-            this.mutator.cancelMutation().then(() => {
-                this.mutator.mutateGrid(
-                    this.grid.words
-                        .filter(word => word.owner !== Player.NO_PLAYER)
-                ).catch(() => { return; });
-            });
+            this.mutator.cancelMutation().then(() => this.startMutatingGrid());
         }
 
         return validated;
+    }
+
+    private startMutatingGrid(): void {
+        this.mutator.mutateGrid(
+            this.grid.words
+                .filter(word => word.owner !== Player.NO_PLAYER)
+        ).catch(() => { return; });
     }
 
 }
