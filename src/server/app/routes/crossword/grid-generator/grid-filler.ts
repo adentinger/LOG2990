@@ -34,10 +34,10 @@ export abstract class GridFiller {
     }
 
     public async fill(grid: Grid): Promise<void> {
-        const INITIAL_NUMBER_OF_WORDS = grid.words.length;
+        const initialNumberOfWords = grid.words.length;
         let done = false;
         while (!done) {
-            while (grid.words.length > INITIAL_NUMBER_OF_WORDS) {
+            while (grid.words.length > initialNumberOfWords) {
                 grid.words.pop();
             }
             let doneAcross = false;
@@ -59,23 +59,23 @@ export abstract class GridFiller {
                 throw new Error('Grid generation cancelled.');
             }
 
-            const WORD_PLACEMENT = this.acrossWords[recursionDepth];
-            const SUGGESTIONS =
+            const wordPlacement = this.acrossWords[recursionDepth];
+            const suggestions =
                 await this.suggestionsGetter.getSuggestions(
-                    WORD_PLACEMENT.minLength,
-                    WORD_PLACEMENT.maxLength,
+                    wordPlacement.minLength,
+                    wordPlacement.maxLength,
                     [],
-                    WORD_PLACEMENT.position
+                    wordPlacement.position
                 );
 
             let done = false;
             let numTriesLeft = GridFiller.NUM_TRIES;
-            while (numTriesLeft > 0 && SUGGESTIONS.length > 0 && !done) {
-                const SUGGESTION = this.getAWordThatIsNotADuplicate(grid, SUGGESTIONS);
-                if (SUGGESTION !== '') {
+            while (numTriesLeft > 0 && suggestions.length > 0 && !done) {
+                const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
+                if (suggestion !== '') {
                     done = await this.trySuggestion(
                         grid,
-                        SUGGESTION,
+                        suggestion,
                         recursionDepth
                     );
                 }
@@ -90,28 +90,28 @@ export abstract class GridFiller {
 
     private async placeVerticalWords(grid: Grid): Promise<boolean> {
         for (let i = 0; i < this.verticalWords.length; ++i) {
-            const PLACEMENT = this.verticalWords[i];
-            const CONSTRAINT =
+            const placement = this.verticalWords[i];
+            const constraint =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,
-                    PLACEMENT
+                    placement
                 );
-            const SUGGESTIONS = await this.suggestionsGetter.getSuggestions(
-                PLACEMENT.minLength,
-                PLACEMENT.maxLength,
-                CONSTRAINT,
-                PLACEMENT.position
+            const suggestions = await this.suggestionsGetter.getSuggestions(
+                placement.minLength,
+                placement.maxLength,
+                constraint,
+                placement.position
             );
             // We know that there is at least one suggestion
-            const SUGGESTION = this.getAWordThatIsNotADuplicate(grid, SUGGESTIONS);
-            if (SUGGESTION !== '') {
-                const WORD = new Word(
-                    SUGGESTION,
-                    PLACEMENT.position,
+            const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
+            if (suggestion !== '') {
+                const word = new Word(
+                    suggestion,
+                    placement.position,
                     Direction.vertical,
                     Player.NO_PLAYER
                 );
-                grid.words.push(WORD);
+                grid.words.push(word);
             }
             else {
                 // Failure ; clean added vertical words
@@ -126,20 +126,20 @@ export abstract class GridFiller {
 
     private async areConstraintsMetFor(grid: Grid): Promise<boolean> {
         for (let i = 0; i < this.verticalWords.length; ++i) {
-            const VERTICAL_WORD_PLACEMENT = this.verticalWords[i];
-            const VERTICAL_WORD_CONSTRAINT =
+            const verticalWordPlacement = this.verticalWords[i];
+            const verticalWordConstraint =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,
-                    VERTICAL_WORD_PLACEMENT
+                    verticalWordPlacement
                 );
-            const SUGGESTIONS_EXIST =
+            const suggestionsExist =
                 await this.suggestionsGetter.doSuggestionsExist(
-                    VERTICAL_WORD_PLACEMENT.minLength,
-                    VERTICAL_WORD_PLACEMENT.maxLength,
-                    VERTICAL_WORD_CONSTRAINT,
-                    VERTICAL_WORD_PLACEMENT.position
+                    verticalWordPlacement.minLength,
+                    verticalWordPlacement.maxLength,
+                    verticalWordConstraint,
+                    verticalWordPlacement.position
                 );
-            if (!SUGGESTIONS_EXIST) {
+            if (!suggestionsExist) {
                 return false;
             }
         }
@@ -147,14 +147,14 @@ export abstract class GridFiller {
     }
 
     private async trySuggestion(grid: Grid, suggestion: string, current: number): Promise<boolean> {
-        const WORD_PLACEMENT = this.acrossPlacement[current];
-        const WORD = new Word(
+        const wordPlacement = this.acrossPlacement[current];
+        const word = new Word(
             suggestion,
-            WORD_PLACEMENT.position,
+            wordPlacement.position,
             Direction.horizontal,
             Player.NO_PLAYER
         );
-        grid.words.push(WORD);
+        grid.words.push(word);
         try {
             if (await this.areConstraintsMetFor(grid)) {
                 if (await this.placeAcrossWords(grid, current + 1)) {
@@ -181,9 +181,9 @@ export abstract class GridFiller {
         let word = '';
         const FOUND_NON_DUPLICATE = (() => word !== '');
         while (suggestions.length > 0 && !FOUND_NON_DUPLICATE()) {
-            const SUGGESTION = suggestions.consumeRandomSuggestion();
-            if (!grid.doesWordAlreadyExist(SUGGESTION)) {
-                word = SUGGESTION;
+            const suggestion = suggestions.consumeRandomSuggestion();
+            if (!grid.doesWordAlreadyExist(suggestion)) {
+                word = suggestion;
             }
         }
         return word;
