@@ -2,8 +2,9 @@ import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { WordSuggestions } from './word-suggestions';
 import { CharConstraint } from '../../../../../common/src/index';
 import { WordPosition } from '../word-position';
+import { LexiconCaller } from '../lexic/lexicon-caller';
 
-export abstract class AbstractWordSuggestionsGetter {
+export class AbstractWordSuggestionsGetter {
 
     protected difficulty: Difficulty;
 
@@ -11,14 +12,41 @@ export abstract class AbstractWordSuggestionsGetter {
         this.difficulty = difficulty;
     }
 
-    public abstract async getSuggestions(minLength: number,
-                                         maxLength: number,
-                                         charConstraints: CharConstraint[],
-                                         positionHint: WordPosition): Promise<WordSuggestions>;
+    public async getSuggestions(minLength: number,
+                                maxLength: number,
+                                charConstraints: CharConstraint[],
+                                positionHint: WordPosition): Promise<WordSuggestions> {
+        let stringSuggestions: string[];
+        try {
+            stringSuggestions = await LexiconCaller.getInstance().getWords(
+                minLength,
+                maxLength,
+                this.difficulty.isWordCommon(),
+                charConstraints
+            );
+        }
+        catch (e) {
+            stringSuggestions = [];
+        }
+        const WORD_SUGGESTIONS = new WordSuggestions(stringSuggestions);
+        return WORD_SUGGESTIONS;
+    }
 
-    public abstract async doSuggestionsExist(minLength: number,
-                                             maxLength: number,
-                                             charConstraints: CharConstraint[],
-                                             positionHint: WordPosition): Promise<boolean>;
+    public async doSuggestionsExist(minLength: number,
+                                    maxLength: number,
+                                    charConstraints: CharConstraint[],
+                                    positionHint: WordPosition): Promise<boolean> {
+        try {
+            return await LexiconCaller.getInstance().doWordsExist(
+                minLength,
+                maxLength,
+                this.difficulty.isWordCommon(),
+                charConstraints
+            );
+        }
+        catch (e) {
+            return false;
+        }
+    }
 
 }
