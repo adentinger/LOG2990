@@ -32,6 +32,13 @@ export abstract class AbstractGridGenerator {
         return this.dataOfLatestGeneration.promise;
     }
 
+    protected cancelLatestGeneration(): Promise<void> {
+        this.dataOfLatestGeneration.filler.cancelFilling();
+        return this.dataOfLatestGeneration.promise
+            .then (() => { return; })
+            .catch(() => { return; });
+    }
+
     private startGeneration(wordsToInclude: Word[], suggestionsGetter: WordSuggestionsGetter): GenerationData {
         const generationData: GenerationData = {
             grid: null,
@@ -46,13 +53,6 @@ export abstract class AbstractGridGenerator {
         });
 
         return generationData;
-    }
-
-    protected cancelLatestGeneration(): Promise<void> {
-        this.dataOfLatestGeneration.filler.cancelFilling();
-        return this.dataOfLatestGeneration.promise
-            .then (() => { return; })
-            .catch(() => { return; });
     }
 
 }
