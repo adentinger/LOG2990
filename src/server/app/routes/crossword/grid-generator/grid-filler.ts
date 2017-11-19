@@ -17,16 +17,16 @@ export abstract class GridFiller {
 
     private shouldCancelFilling = false;
 
-    constructor(suggestionsGetter: WordSuggestionsGetter) {
-        this.suggestionsGetter = suggestionsGetter;
-    }
-
     public get acrossPlacement(): WordPlacement[] {
         return this.acrossWords.slice();
     }
 
     public get verticalPlacement(): WordPlacement[] {
         return this.verticalWords.slice();
+    }
+
+    constructor(suggestionsGetter: WordSuggestionsGetter) {
+        this.suggestionsGetter = suggestionsGetter;
     }
 
     public cancelFilling(): void {
