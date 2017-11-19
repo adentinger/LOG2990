@@ -24,7 +24,9 @@ export class Grid {
     }
 
     public isWordAlreadyPlaced(position: WordPosition, direction: Direction): boolean {
-        return false;
+        return this.words.findIndex(
+            (word: Word) => word.position.equals(position) && word.direction === direction
+        ) >= 0;
     }
 
     public toGridWords(player: Player): GridWord[] {
