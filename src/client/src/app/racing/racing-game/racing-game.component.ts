@@ -21,8 +21,12 @@ import { EventManager } from '../../event-manager.service';
 export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly HEADER_HEIGHT = 50;
     public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
+    private static readonly ZOOM_FACTOR = 1.025;
+    private static readonly COLOR_FILTERS = ['normal', 'protanopia', 'protanomaly', 'deuteranopia',
+    'deuteranomaly', 'tritanopia', 'tritanomaly', 'achromatopsia', 'achromatomaly'];
 
     public gameLoaded = false;
+    public colorFilterClass = RacingGameComponent.COLOR_FILTERS[0];
 
     @ViewChild('gameContainer')
     public racingGameContainer: ElementRef;
@@ -67,24 +71,28 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         if (this.uiInputs.isKeyPressed('c')) {
             this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
         }
+
         if (this.uiInputs.isKeyPressed('n')) {
             this.racingGame.toggleDayMode();
         }
+
         if (this.uiInputs.isKeyPressed('e')) {
             this.racingGame.reloadSounds();
         }
+
         if (this.uiInputs.isKeyPressed('m')) {
             this.racingGame.switchCar();
         }
+
         if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
             const currentCamera = this.racingGame.renderer.currentCamera;
-            this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= 1.025;
+            this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= RacingGameComponent.ZOOM_FACTOR;
             this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
         }
 
         if (this.uiInputs.isKeyPressed('-') || this.uiInputs.isKeyPressed('_')) {
             const currentCamera = this.racingGame.renderer.currentCamera;
-            this.racingGame.renderer.getBothCameras()[currentCamera].zoom /= 1.025;
+            this.racingGame.renderer.getBothCameras()[currentCamera].zoom /= RacingGameComponent.ZOOM_FACTOR;
             this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
         }
 
@@ -92,6 +100,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.renderer.toggleRearViewCamera();
         }
 
+        if (this.uiInputs.isKeyPressed('f')) {
+            const indexOfFilter = this.toggleNextColorFilter();
+            this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
+        }
 
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
@@ -99,6 +111,20 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
         if (!areAllowedKeyCombinationsPressed) {
             return false; // Prevent Default behaviors
+        }
+    }
+
+    private toggleNextColorFilter(): number {
+        const filters = RacingGameComponent.COLOR_FILTERS;
+        for (let i = 0; filters.length; i++) {
+            if (this.colorFilterClass === filters[i]) {
+                if (i !== filters.length - 1) {
+                    return ++i;
+                }
+                else {
+                    return 0;
+                }
+            }
         }
     }
 

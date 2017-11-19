@@ -1,4 +1,4 @@
-<div id="viewSpace" #gameContainer catchInputs #userInputs=$inputs>
+<div id="viewSpace" [className]='colorFilterClass' #gameContainer catchInputs #userInputs=$inputs>
   <canvas id="hud" #hud></canvas>
 </div>
 <div id="loading-disclaimer" [@gameLoaded]=gameLoaded *ngIf=!gameLoaded></div>
