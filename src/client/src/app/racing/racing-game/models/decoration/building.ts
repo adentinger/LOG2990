@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { CollidableMesh } from '../../physic/collidable';
+import { Decoration } from './decoration';
 
-export class Building extends CollidableMesh {
+export class Building extends Decoration {
 
     constructor() {
         super(new THREE.BoxGeometry(3, 10, 5), new THREE.MeshBasicMaterial({color: 0xA47840}));
