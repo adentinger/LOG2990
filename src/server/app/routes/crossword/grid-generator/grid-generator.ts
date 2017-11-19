@@ -1,6 +1,6 @@
 import { AbstractGridGenerator } from './abstract-grid-generator';
 import { Grid } from './grid';
-import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
+import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { Logger } from '../../../../../common/src/index';
 
@@ -24,7 +24,7 @@ export class GridGenerator extends AbstractGridGenerator {
     }
 
     public async gridGeneration(difficulty: Difficulty): Promise<Grid> {
-        const grid = await super.gridGenerationBase([], new NormalWordSuggestionsGetter(difficulty));
+        const grid = await super.gridGenerationBase([], new AbstractWordSuggestionsGetter(difficulty));
         this.logger.log('count: %d', ++GridGenerator.count);
         this.logger.log(grid.toString());
         return grid;
