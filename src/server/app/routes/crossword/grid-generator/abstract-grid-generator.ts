@@ -46,7 +46,7 @@ export abstract class AbstractGridGenerator {
             promise: null
         };
         generationData.promise = new Promise(async (resolve, reject) => {
-            generationData.grid = new Grid();
+            generationData.grid = new Grid(wordsToInclude);
             generationData.filler = new GridFillerContainer(suggestionsGetter);
             await generationData.grid.fillUsing(generationData.filler);
             resolve(generationData.grid);
