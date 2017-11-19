@@ -70,11 +70,12 @@ export abstract class GridFiller {
                 return await this.placeAcrossWords(grid, recursionDepth + 1);
             }
             else {
+                const constraints = WordConstraintChecker.getInstance().getAcrossWordConstraint(grid, wordPlacement);
                 const suggestions =
                     await this.suggestionsGetter.getSuggestions(
                         wordPlacement.minLength,
                         wordPlacement.maxLength,
-                        [],
+                        constraints,
                         wordPlacement.position
                     );
 
