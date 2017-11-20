@@ -28,8 +28,10 @@ export abstract class AbstractGridGenerator {
     }
 
     protected gridGenerationBase(wordsToInclude: Word[], difficulty: Difficulty): Promise<Grid> {
-        this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, difficulty);
-        return this.dataOfLatestGeneration.promise;
+        return this.dataOfLatestGeneration.promise.then(() => {
+            this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, difficulty);
+            return this.dataOfLatestGeneration.promise;
+        });
     }
 
     protected cancelLatestGeneration(): Promise<void> {
