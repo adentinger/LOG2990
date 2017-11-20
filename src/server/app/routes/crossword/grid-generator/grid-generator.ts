@@ -25,8 +25,8 @@ export class GridGenerator extends AbstractGridGenerator {
 
     public async gridGeneration(difficulty: Difficulty): Promise<Grid> {
         const grid = await super.gridGenerationBase([], new WordSuggestionsGetter(difficulty));
-        this.logger.log('count: %d', ++GridGenerator.count);
-        this.logger.log(grid.toString());
+        this.logger.log(`Number of grid generated so far: ${++GridGenerator.count}`);
+        this.logger.log(`This grid\'s difficulty: ${difficulty.toString()}\n${grid.toString()}`);
         return grid;
     }
 
