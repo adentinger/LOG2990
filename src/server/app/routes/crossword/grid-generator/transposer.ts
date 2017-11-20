@@ -10,14 +10,18 @@ import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 export class Transposer {
 
     public transposeFiller(filler: GridFiller): void {
-        filler.acrossPlacement.forEach(placement => {
+        const acrossPlacement = filler.verticalPlacement;
+        const verticalPlacement = filler.acrossPlacement;
+        acrossPlacement.forEach(placement => {
             [placement.position.row, placement.position.column] =
                 [placement.position.column, placement.position.row];
         });
-        filler.verticalPlacement.forEach(placement => {
+        verticalPlacement.forEach(placement => {
             [placement.position.row, placement.position.column] =
                 [placement.position.column, placement.position.row];
         });
+        filler.acrossPlacement = acrossPlacement;
+        filler.verticalPlacement = verticalPlacement;
     }
 
     public transposeGrid(grid: Grid): void {
