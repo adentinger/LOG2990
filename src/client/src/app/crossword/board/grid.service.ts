@@ -86,6 +86,7 @@ export class GridService {
     private updateGridWord(event: PacketEvent<GridWordPacket>): void {
         this.grid.addWord(event.value.gridword);
         this.onChange();
+        this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         this.gameService.onShowWords.next(false);
     }
 
@@ -94,6 +95,7 @@ export class GridService {
     private clearGrid(): void {
         this.grid.clear();
         this.onChange();
+        this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         this.gameService.onShowWords.next(false);
     }
 
