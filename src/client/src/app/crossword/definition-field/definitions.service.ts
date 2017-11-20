@@ -67,8 +67,8 @@ export class DefinitionsService {
     public clearDefinitions(): void {
         this.horizontalDefinitions.clear();
         this.verticalDefinitions.clear();
-        this.horizontalAnswers.splice(0);
-        this.verticalAnswers.splice(0);
+        this.horizontalAnswers = [];
+        this.verticalAnswers = [];
         this.onChange();
     }
 
