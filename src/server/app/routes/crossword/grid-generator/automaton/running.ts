@@ -5,6 +5,7 @@ declare class Stopped extends State {
     public generation(): State;
     public cancellation(): State;
     public done(): State;
+    public shouldGenerationBeRunning(): boolean;
 }
 
 export class Running extends State {
@@ -19,6 +20,10 @@ export class Running extends State {
 
     public done(): State {
         return new Stopped();
+    }
+
+    public shouldGenerationBeRunning(): boolean {
+        return true;
     }
 
 }

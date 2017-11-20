@@ -16,4 +16,8 @@ export class CancellingGenerationRequested extends State {
         return new Running;
     }
 
+    public shouldGenerationBeRunning(): boolean {
+        return false;
+    }
+
 }

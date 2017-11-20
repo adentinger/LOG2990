@@ -15,4 +15,8 @@ export class Stopped extends State {
         throw new Error('Generation or cancellation done while in Stopped state.');
     }
 
+    public shouldGenerationBeRunning(): boolean {
+        return false;
+    }
+
 }

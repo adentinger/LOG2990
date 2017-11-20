@@ -6,4 +6,6 @@ export abstract class State {
 
     public abstract done(): State;
 
+    public abstract shouldGenerationBeRunning(): boolean;
+
 }
