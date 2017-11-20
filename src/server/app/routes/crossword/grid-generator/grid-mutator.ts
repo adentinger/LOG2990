@@ -33,14 +33,21 @@ export class GridMutator extends AbstractGridGenerator {
 
     public mutateGrid(wordsToInclude: Word[]): Promise<Grid> {
         this.logger.log('Mutating grid...');
+
         const promise = this.gridGenerationBase(
             wordsToInclude,
             new WordSuggestionsGetter(this.difficulty)
         );
-        promise.then((grid) => {
-            this.logger.log('Finished mutating. Mutated grid:\n' + grid.toString());
-        }).catch();
-        return promise;
+
+        return promise.then((grid) => {
+            if (grid !== null) {
+                this.logger.log('Finished mutating. Mutated grid:\n' + grid.toString());
+            }
+            else {
+                this.logger.log('Mutation cancelled.');
+            }
+            return grid;
+        });
     }
 
     public cancelMutation(): Promise<void> {

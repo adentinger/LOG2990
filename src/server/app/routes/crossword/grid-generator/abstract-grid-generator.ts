@@ -49,8 +49,8 @@ export abstract class AbstractGridGenerator {
             generationData.grid = new Grid(wordsToInclude);
             generationData.filler = new GridFillerContainer(suggestionsGetter);
             generationData.grid.fillUsing(generationData.filler)
-                .then(grid => resolve(generationData.grid))
-                .catch((reason) => { reject(reason.message + '12345'); });
+                .then(() => resolve(generationData.grid))
+                .catch(() => resolve(null));
         });
 
         return generationData;

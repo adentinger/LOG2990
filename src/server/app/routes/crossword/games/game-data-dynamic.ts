@@ -27,7 +27,16 @@ export class GameDataDynamic extends GameData {
     }
 
     protected get mutatedGrid(): Promise<Grid> {
-        return this.mutator.mutatedGrid;
+        return new Promise((resolve, reject) => {
+            this.mutator.mutatedGrid.then(grid => {
+                if (grid !== null) {
+                    resolve(grid);
+                }
+                else {
+                    reject('[GameDataDynamic]: Grid generation cancelled');
+                }
+            });
+        });
     }
 
     public validateWord(wordGuess: GridWord, player: Player): boolean {
