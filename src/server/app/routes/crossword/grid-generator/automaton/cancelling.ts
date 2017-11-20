@@ -1,8 +1,10 @@
 import { State } from './state';
 import { Stopped } from './stopped';
+import { Word } from '../../word';
+import { Difficulty } from '../../../../../../common/src/crossword/difficulty';
 
 declare class CancellingGenerationRequested extends State {
-    public generation(): State;
+    public generation(wordsToInclude: Word[], difficulty: Difficulty): State;
     public cancellation(): State;
     public done(): State;
     public shouldGenerationBeRunning(): boolean;
@@ -10,7 +12,7 @@ declare class CancellingGenerationRequested extends State {
 
 export class Cancelling extends State {
 
-    public generation(): State {
+    public generation(wordsToInclude: Word[], difficulty: Difficulty): State {
         return new CancellingGenerationRequested();
     }
 

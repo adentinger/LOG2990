@@ -1,9 +1,11 @@
 import { State } from './state';
 import { Running } from './running';
+import { Word } from '../../word';
+import { Difficulty } from '../../../../../../common/src/crossword/difficulty';
 
 export class Stopped extends State {
 
-    public generation(): State {
+    public generation(wordsToInclude: Word[], difficulty: Difficulty): State {
         return new Running();
     }
 
