@@ -1,10 +1,9 @@
-import { State } from './state';
+import { State, GenerationParameters } from './state';
 import { Stopped } from './stopped';
-import { Word } from '../../word';
-import { Difficulty } from '../../../../../../common/src/crossword/difficulty';
 
 declare class CancellingGenerationRequested extends State {
-    public generation(wordsToInclude: Word[], difficulty: Difficulty): State;
+    public generationParameters: GenerationParameters;
+    public generation(parameters: GenerationParameters): State;
     public cancellation(): State;
     public done(): State;
     public shouldGenerationBeRunning(): boolean;
@@ -12,7 +11,7 @@ declare class CancellingGenerationRequested extends State {
 
 export class Cancelling extends State {
 
-    public generation(wordsToInclude: Word[], difficulty: Difficulty): State {
+    public generation(parameters: GenerationParameters): State {
         return new CancellingGenerationRequested();
     }
 
@@ -26,6 +25,10 @@ export class Cancelling extends State {
 
     public shouldGenerationBeRunning(): boolean {
         return false;
+    }
+
+    public get generationParameters(): GenerationParameters {
+        throw new Error('Requesting generation parameters while in Cancelling state.');
     }
 
 }

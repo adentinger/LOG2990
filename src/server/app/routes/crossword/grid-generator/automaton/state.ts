@@ -14,6 +14,6 @@ export abstract class State {
 
     public abstract done(): State;
 
-    public abstract shouldGenerationBeRunning(): boolean;
+    public abstract get generationParameters(): GenerationParameters;
 
 }

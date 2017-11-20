@@ -1,10 +1,9 @@
-import { State } from './state';
+import { State, GenerationParameters } from './state';
 import { Cancelling } from './cancelling';
-import { Word } from '../../word';
-import { Difficulty } from '../../../../../../common/src/crossword/difficulty';
 
 declare class Stopped extends State {
-    public generation(): State;
+    public generationParameters: GenerationParameters;
+    public generation(parameters: GenerationParameters): State;
     public cancellation(): State;
     public done(): State;
     public shouldGenerationBeRunning(): boolean;
@@ -12,7 +11,7 @@ declare class Stopped extends State {
 
 export class Running extends State {
 
-    public generation(wordsToInclude: Word[], difficulty: Difficulty): State {
+    public generation(parameters: GenerationParameters): State {
         throw new Error('Requesting generation while in Running state.');
     }
 
@@ -26,6 +25,13 @@ export class Running extends State {
 
     public shouldGenerationBeRunning(): boolean {
         return true;
+    }
+
+    public get generationParameters(): GenerationParameters {
+        return {
+            wordsToInclude: null,
+            difficulty: null
+        };
     }
 
 }

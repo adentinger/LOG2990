@@ -1,11 +1,9 @@
-import { State } from './state';
+import { State, GenerationParameters } from './state';
 import { Running } from './running';
-import { Word } from '../../word';
-import { Difficulty } from '../../../../../../common/src/crossword/difficulty';
 
 export class Stopped extends State {
 
-    public generation(wordsToInclude: Word[], difficulty: Difficulty): State {
+    public generation(parameters: GenerationParameters): State {
         return new Running();
     }
 
@@ -19,6 +17,10 @@ export class Stopped extends State {
 
     public shouldGenerationBeRunning(): boolean {
         return false;
+    }
+
+    public get generationParameters(): GenerationParameters {
+        throw new Error('Requesting generation parameters while in Stopped state.');
     }
 
 }
