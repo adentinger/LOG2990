@@ -92,7 +92,7 @@ export class GameDynamic extends Game {
                 });
                 this.resetTimer();
                 this.startTimer();
-            });
+            }).catch();
 
         }
 

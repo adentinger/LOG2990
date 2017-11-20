@@ -21,7 +21,7 @@ export class GameDataDynamic extends GameData {
             this.grid = grid;
             this.setDefinitions();
             this.startMutatingGrid();
-        });
+        }).catch();
     }
 
     protected get mutatedGrid(): Promise<Grid> {
@@ -32,7 +32,7 @@ export class GameDataDynamic extends GameData {
         const validated = super.validateWord(wordGuess, player);
 
         if (validated) {
-            this.mutator.cancelMutation().then(() => this.startMutatingGrid());
+            this.mutator.cancelMutation().then(() => this.startMutatingGrid()).catch();
         }
 
         return validated;
@@ -42,7 +42,7 @@ export class GameDataDynamic extends GameData {
         this.mutator.mutateGrid(
             this.grid.words
                 .filter(word => word.owner !== Player.NO_PLAYER)
-        ).catch(() => { return; });
+        ).catch();
     }
 
 }
