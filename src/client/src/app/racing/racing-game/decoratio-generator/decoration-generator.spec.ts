@@ -33,10 +33,4 @@ describe('Decoration generator', () => {
         const map = mockMaps.renderableMap();
         expect(map).toContain(Decoration);
     });
-
-    it('Should not have superposed decorations', () => {
-        const map = mockMaps.renderableMap();
-        map.children.forEach((children) => {
-        });
-    });
 });

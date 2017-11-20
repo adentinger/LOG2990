@@ -9,6 +9,7 @@ import { DecorationFactory } from './decoration-factory';
 import { Line } from '../../../../../../common/src/math/line';
 import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
 import { Projection } from '../../../util/projection';
+import { Decoration } from '../models/decoration/decoration';
 
 export enum DecorationEnum {
     Tree,
@@ -22,7 +23,7 @@ export class DecorationGenerator {
     private static readonly CERCLE_RADIAN = 2 * Math.PI;
     private mapPointsIntervalCoordinate: THREE.Vector3[];
     private finalPoints: THREE.Vector3[];
-    private finalDecorations: CollidableMesh[];
+    private finalDecorations: Decoration[];
     private intervalPointsWithLine: [THREE.Vector3, Line][];
 
 
@@ -54,7 +55,7 @@ export class DecorationGenerator {
             this.finalDecorations.push(decoration);
         });
 
-        this.finalDecorations.forEach((decoration) => {map.add(decoration); });
+        this.finalDecorations.forEach((decoration) => {map.mapDecorations.push(decoration); });
     }
 
     private isSuperposedItem(point: Vector3, map: RenderableMap): boolean {
@@ -118,7 +119,7 @@ export class DecorationGenerator {
         return new THREE.Vector3(Math.round(randomRadius * Math.cos(randomTheta)), 0.03, Math.round(randomRadius * Math.sin(randomTheta)));
     }
 
-    private generateRandomDecoration(): CollidableMesh {
+    private generateRandomDecoration(): Decoration {
         const randomIndex = Math.round(Math.random() * 2);
         const randomClassName = DecorationEnum[randomIndex];
         const decorationFactory = new DecorationFactory();
