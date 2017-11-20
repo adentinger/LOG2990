@@ -86,6 +86,7 @@ export class GridService {
     private updateGridWord(event: PacketEvent<GridWordPacket>): void {
         this.grid.addWord(event.value.gridword);
         this.onChange();
+        this.gameService.onShowWords.next(false);
     }
 
     @PacketHandler(ClearGridPacket)
@@ -93,6 +94,7 @@ export class GridService {
     private clearGrid(): void {
         this.grid.clear();
         this.onChange();
+        this.gameService.onShowWords.next(false);
     }
 
     @PacketHandler(WordGuessPacket)
