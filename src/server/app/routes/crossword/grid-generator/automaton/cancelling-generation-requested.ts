@@ -4,6 +4,13 @@ import { Running } from './running';
 
 export class CancellingGenerationRequested extends State {
 
+    private parameters: GenerationParameters;
+
+    constructor(parameters: GenerationParameters) {
+        super();
+        this.parameters = parameters;
+    }
+
     public generation(parameters: GenerationParameters): State {
         throw new Error('Generation while in CancellingGenerationRequested state.');
     }
@@ -13,7 +20,7 @@ export class CancellingGenerationRequested extends State {
     }
 
     public done(): State {
-        return new Running;
+        return new Running(this.parameters);
     }
 
     public shouldGenerationBeRunning(): boolean {

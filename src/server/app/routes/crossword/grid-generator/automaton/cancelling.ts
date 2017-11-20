@@ -3,6 +3,8 @@ import { Stopped } from './stopped';
 
 declare class CancellingGenerationRequested extends State {
     public generationParameters: GenerationParameters;
+
+    constructor(parameters: GenerationParameters);
     public generation(parameters: GenerationParameters): State;
     public cancellation(): State;
     public done(): State;
@@ -12,7 +14,7 @@ declare class CancellingGenerationRequested extends State {
 export class Cancelling extends State {
 
     public generation(parameters: GenerationParameters): State {
-        return new CancellingGenerationRequested();
+        return new CancellingGenerationRequested(parameters);
     }
 
     public cancellation(): State {

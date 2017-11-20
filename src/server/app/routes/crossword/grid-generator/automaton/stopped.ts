@@ -4,7 +4,7 @@ import { Running } from './running';
 export class Stopped extends State {
 
     public generation(parameters: GenerationParameters): State {
-        return new Running();
+        return new Running(parameters);
     }
 
     public cancellation(): State {

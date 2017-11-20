@@ -11,6 +11,13 @@ declare class Stopped extends State {
 
 export class Running extends State {
 
+    private parameters: GenerationParameters;
+
+    constructor(parameters: GenerationParameters) {
+        super();
+        this.parameters = parameters;
+    }
+
     public generation(parameters: GenerationParameters): State {
         throw new Error('Requesting generation while in Running state.');
     }
