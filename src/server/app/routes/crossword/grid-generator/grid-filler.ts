@@ -112,7 +112,7 @@ export abstract class GridFiller {
                 if (suggestion !== '') {
                     const word = new Word(
                         suggestion,
-                        placement.position,
+                        placement.position.clone(),
                         Direction.vertical,
                         Player.NO_PLAYER
                     );
@@ -156,7 +156,7 @@ export abstract class GridFiller {
         const wordPlacement = this.acrossPlacement[current];
         const word = new Word(
             suggestion,
-            wordPlacement.position,
+            wordPlacement.position.clone(),
             Direction.horizontal,
             Player.NO_PLAYER
         );
