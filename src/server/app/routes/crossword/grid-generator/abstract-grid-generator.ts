@@ -3,6 +3,7 @@ import { GridFiller } from './grid-filler';
 import { GridFillerContainer } from './grid-filler-container';
 import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { Word } from '../word';
+import { State } from './automaton/state';
 
 interface GenerationData {
     grid: Grid;
