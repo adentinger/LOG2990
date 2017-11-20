@@ -14,10 +14,10 @@ export class MapPositionAlgorithms {
         const dot: number = pointVector.scalar(lineVector);
         const interpolation: number = dot / this.squaredNorm(lineVector);
 
-        const inversedOrigin = new Point(-origin.x, -origin.y);
-        const interpolationPoint: Point = line.interpolate(interpolation).add(inversedOrigin);
-        // console.log("interpolation point between from origin" + line.origin.x + line.origin.y + ": " + interpolationPoint.x, interpolationPoint.y);
-        const distanceToSegment: number = position.distanceTo(interpolationPoint);
+        const interpolationPoint: Point = line.interpolate(interpolation);
+
+        const distanceToSegment: number = interpolationPoint.distanceTo(position);
+        console.log('distanceToSegment=' + distanceToSegment);
 
         return new Projection(interpolation, line, distanceToSegment);
     }
@@ -49,11 +49,15 @@ export class MapPositionAlgorithms {
 
     // interpolate from a ratio of vector
     private static interpolate(line: Line, interpolation: number): Point {
-        const vector = line.destination.substract(line.origin);
+        const vector: Point = line.destination.substract(line.origin);
         vector.x = interpolation * vector.x;
         vector.y = interpolation * vector.y;
         vector.add(line.origin);
 
         return vector;
+    }
+
+    private static dotProduct(p1: Point, p2: Point): number {
+        return p1.x * p2.x + p1.y * p2.y;
     }
 }

@@ -69,8 +69,23 @@ describe('Map position algorithms', () => {
 
         expect(projection.segment).toEqual(line);
         expect(projection.interpolation).toEqual(-2 / 25);
-        expect(projection.distanceToSegment).toEqual(Math.sqrt(8));
+        // expect(projection.distanceToSegment).toEqual(Math.sqrt(8));
 
+    });
+
+
+    it('should calculate the interpolations on all lines given a point and a set of lines', () => {
+        const thePosition = new Point(9.0, 6.0);
+
+        const allProjections: Projection[] = MapPositionAlgorithms.getAllProjections(thePosition, lines);
+
+        expect(allProjections.length).toEqual(lines.length);
+
+        expect(allProjections[3].distanceToSegment).toEqual(3.5 * Math.sqrt(2));
+        expect(allProjections[3].interpolation).toEqual(0.5);
+
+        expect(allProjections[5].distanceToSegment).toEqual(3);
+        expect(allProjections[5].interpolation).toEqual(0);
     });
 
     xit('should calculate the interpolation given a point and a set of lines', () => {
@@ -82,17 +97,6 @@ describe('Map position algorithms', () => {
         expect(closestInterpolation.segment).toEqual(lines[1]);
         expect(closestInterpolation.interpolation).toEqual(3.0 / 8.0);
     });
-
-    // it('should calculate the interpolations on all lines given a point and a set of lines', () => {
-    //     const thePosition = new Point(9.0, 6.0);
-
-    //     const allProjections: Projection[] = MapPositionAlgorithms.getAllProjections(thePosition, lines);
-
-    //     expect(allProjections.length).toEqual(lines.length);
-
-    //     expect(allProjections[3].distanceToSegment).toEqual(3.5 * Math.sqrt(2));
-    //     expect(allProjections[3].interpolation).toEqual(0.5);
-    // });
 
     xit('should calculate the interpolations on all lines given a point and a set of lines', () => {
         const thePosition = new Point(9.0, 6.0);
