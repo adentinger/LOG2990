@@ -7,6 +7,7 @@ import { WordSuggestions } from './word-suggestions';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from '../player';
 import { Transposer } from './transposer';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 export abstract class GridFiller {
 
@@ -19,8 +20,8 @@ export abstract class GridFiller {
     private shouldCancelFilling = false;
     private transposer = new Transposer();
 
-    constructor(suggestionsGetter: WordSuggestionsGetter) {
-        this.suggestionsGetter = suggestionsGetter;
+    constructor(difficulty: Difficulty) {
+        this.suggestionsGetter = new WordSuggestionsGetter(difficulty);
     }
 
     public cancelFilling(): void {

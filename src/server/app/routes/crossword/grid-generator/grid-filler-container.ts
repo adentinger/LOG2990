@@ -3,21 +3,21 @@ import { GridFillerFirstSection } from './grid-filler-first-section';
 import { GridFillerSecondSection } from './grid-filler-second-section';
 import { GridFillerThirdSection } from './grid-filler-third-section';
 import { GridFillerFourthSection } from './grid-filler-fourth-section';
-import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { Grid } from './grid';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 export class GridFillerContainer extends GridFiller {
 
     private readonly fillers: GridFiller[];
 
-    constructor(suggestionsGetter: WordSuggestionsGetter) {
-        super(suggestionsGetter);
+    constructor(difficulty: Difficulty) {
+        super(difficulty);
         this.fillers = [
-            new GridFillerFirstSection (suggestionsGetter),
-            new GridFillerSecondSection(suggestionsGetter),
-            new GridFillerThirdSection (suggestionsGetter),
-            new GridFillerFourthSection(suggestionsGetter)
+            new GridFillerFirstSection (difficulty),
+            new GridFillerSecondSection(difficulty),
+            new GridFillerThirdSection (difficulty),
+            new GridFillerFourthSection(difficulty)
         ];
     }
 

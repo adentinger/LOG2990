@@ -25,7 +25,7 @@ describe('Transposer', () => {
     });
 
     it('should transpose a GridFiller', () => {
-        const FILLER = new GridFillerFirstSection(new WordSuggestionsGetter(new DifficultyEasy()));
+        const FILLER = new GridFillerFirstSection(new DifficultyEasy());
         const initialPlacement = placementOfFiller(FILLER);
         new Transposer().transposeFiller(FILLER);
         const transposedPlacement = placementOfFiller(FILLER);

@@ -1,7 +1,6 @@
 import { AbstractGridGenerator } from './abstract-grid-generator';
 import { Grid } from './grid';
 import { Word } from '../word';
-import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { Logger } from '../../../../../common/src/index';
 
@@ -34,10 +33,7 @@ export class GridMutator extends AbstractGridGenerator {
     public mutateGrid(wordsToInclude: Word[]): Promise<Grid> {
         this.logger.log('Mutating grid...');
 
-        const promise = this.gridGenerationBase(
-            wordsToInclude,
-            new WordSuggestionsGetter(this.difficulty)
-        );
+        const promise = this.gridGenerationBase(wordsToInclude, this.difficulty);
 
         return promise.then((grid) => {
             if (grid !== null) {

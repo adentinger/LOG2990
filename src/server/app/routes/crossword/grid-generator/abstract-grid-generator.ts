@@ -1,9 +1,8 @@
 import { Grid } from './grid';
 import { GridFiller } from './grid-filler';
 import { GridFillerContainer } from './grid-filler-container';
-import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { Word } from '../word';
-import { State } from './automaton/state';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 interface GenerationData {
     grid: Grid;
@@ -28,8 +27,8 @@ export abstract class AbstractGridGenerator {
         };
     }
 
-    protected gridGenerationBase(wordsToInclude: Word[], suggestionsGetter: WordSuggestionsGetter): Promise<Grid> {
-        this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, suggestionsGetter);
+    protected gridGenerationBase(wordsToInclude: Word[], difficulty: Difficulty): Promise<Grid> {
+        this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, difficulty);
         return this.dataOfLatestGeneration.promise;
     }
 
@@ -40,7 +39,7 @@ export abstract class AbstractGridGenerator {
             .catch();
     }
 
-    private startGeneration(wordsToInclude: Word[], suggestionsGetter: WordSuggestionsGetter): GenerationData {
+    private startGeneration(wordsToInclude: Word[], difficulty: Difficulty): GenerationData {
         const generationData: GenerationData = {
             grid: null,
             filler: null,
@@ -48,7 +47,7 @@ export abstract class AbstractGridGenerator {
         };
         generationData.promise = new Promise((resolve, reject) => {
             generationData.grid = new Grid(wordsToInclude);
-            generationData.filler = new GridFillerContainer(suggestionsGetter);
+            generationData.filler = new GridFillerContainer(difficulty);
             generationData.grid.fillUsing(generationData.filler)
                 .then(() => resolve(generationData.grid))
                 .catch(() => resolve(null));

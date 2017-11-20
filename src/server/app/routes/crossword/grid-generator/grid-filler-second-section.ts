@@ -1,12 +1,12 @@
 import { GridFiller } from './grid-filler';
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { WordPosition } from '../word-position';
-import { WordSuggestionsGetter } from './word-suggestions-getter';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 export class GridFillerSecondSection extends GridFiller {
 
-    constructor(suggestionsGetter: WordSuggestionsGetter) {
-        super(suggestionsGetter);
+    constructor(difficulty: Difficulty) {
+        super(difficulty);
         this.acrossPlacement = [
             new WordPlacement(new WordPosition(3, 3), 3, 5),
             new WordPlacement(new WordPosition(4, 3), 3, 3),
