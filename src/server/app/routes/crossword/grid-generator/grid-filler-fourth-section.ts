@@ -7,7 +7,7 @@ export class GridFillerFourthSection extends GridFiller {
 
     constructor(suggestionsGetter: WordSuggestionsGetter) {
         super(suggestionsGetter);
-        this.verticalPlacementInternal = [
+        this.verticalPlacement = [
             new WordPlacement(new WordPosition(1, 9), 4, 5)
         ];
     }
