@@ -1,6 +1,6 @@
 import { State } from './state';
 import { Cancelling } from './cancelling';
-import { Stopped } from './stopped';
+import { Running } from './running';
 
 export class CancellingGenerationRequested extends State {
 
@@ -13,7 +13,7 @@ export class CancellingGenerationRequested extends State {
     }
 
     public done(): State {
-        return new Stopped;
+        return new Running;
     }
 
 }
