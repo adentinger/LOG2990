@@ -3,7 +3,7 @@ import { Point } from './point';
 export class Vector extends Point {
 
     constructor(x: number,
-                y: number) {
+        y: number) {
         super(x, y);
     }
 
