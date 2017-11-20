@@ -10,6 +10,13 @@ interface GenerationData {
     promise: Promise<Grid>;
 }
 
+enum State {
+    STOPPED = 0,
+    RUNNING,
+    CANCELLING,
+    CANCELLING_GENERATION_REQUESTED
+}
+
 export abstract class AbstractGridGenerator {
 
     private dataOfLatestGeneration: GenerationData;
