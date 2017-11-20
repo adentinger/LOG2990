@@ -203,5 +203,28 @@ export abstract class GridFiller {
         return word;
     }
 
+    /**
+     * @description Checks whether the filler should transpose itself and the grid.
+     * Transposing helps speedup the filling process when there are more horizontal words
+     * to place than vertical words, because we place horizontal words first.
+     * @param grid The grid possibly containing words already
+     */
+    private shouldTranspose(grid: Grid): boolean {
+        let numberOfAcrossWordsToPlace = 0, numberOfVerticalWordsToPlace = 0;
+
+        this.acrossPlacementInternal.forEach(acrossPlacement => {
+            if (!grid.isWordAlreadyPlaced(acrossPlacement.position, Direction.horizontal)) {
+                ++numberOfAcrossWordsToPlace;
+            }
+        });
+        this.verticalPlacementInternal.forEach(verticalPlacement => {
+            if (!grid.isWordAlreadyPlaced(verticalPlacement.position, Direction.vertical)) {
+                ++numberOfVerticalWordsToPlace;
+            }
+        });
+
+        return numberOfVerticalWordsToPlace < numberOfAcrossWordsToPlace;
+    }
+
 }
 
