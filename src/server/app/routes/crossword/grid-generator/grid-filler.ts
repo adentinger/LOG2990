@@ -81,8 +81,7 @@ export abstract class GridFiller {
                     await this.suggestionsGetter.getSuggestions(
                         wordPlacement.minLength,
                         wordPlacement.maxLength,
-                        constraints,
-                        wordPlacement.position
+                        constraints
                     );
 
                 let done = false;
@@ -119,8 +118,7 @@ export abstract class GridFiller {
                 const suggestions = await this.suggestionsGetter.getSuggestions(
                     placement.minLength,
                     placement.maxLength,
-                    constraint,
-                    placement.position
+                    constraint
                 );
                 // We know that there is at least one suggestion
                 const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
@@ -157,8 +155,7 @@ export abstract class GridFiller {
                 await this.suggestionsGetter.doSuggestionsExist(
                     verticalWordPlacement.minLength,
                     verticalWordPlacement.maxLength,
-                    verticalWordConstraint,
-                    verticalWordPlacement.position
+                    verticalWordConstraint
                 );
             if (!suggestionsExist) {
                 return false;

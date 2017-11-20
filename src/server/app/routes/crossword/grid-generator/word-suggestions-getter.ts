@@ -1,7 +1,6 @@
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { WordSuggestions } from './word-suggestions';
 import { CharConstraint } from '../../../../../common/src/index';
-import { WordPosition } from '../word-position';
 import { LexiconCaller } from '../lexic/lexicon-caller';
 
 export class WordSuggestionsGetter {
@@ -14,8 +13,7 @@ export class WordSuggestionsGetter {
 
     public async getSuggestions(minLength: number,
                                 maxLength: number,
-                                charConstraints: CharConstraint[],
-                                positionHint: WordPosition): Promise<WordSuggestions> {
+                                charConstraints: CharConstraint[]): Promise<WordSuggestions> {
         let stringSuggestions: string[];
         try {
             stringSuggestions = await LexiconCaller.getInstance().getWords(
@@ -34,8 +32,7 @@ export class WordSuggestionsGetter {
 
     public async doSuggestionsExist(minLength: number,
                                     maxLength: number,
-                                    charConstraints: CharConstraint[],
-                                    positionHint: WordPosition): Promise<boolean> {
+                                    charConstraints: CharConstraint[]): Promise<boolean> {
         try {
             return await LexiconCaller.getInstance().doWordsExist(
                 minLength,
