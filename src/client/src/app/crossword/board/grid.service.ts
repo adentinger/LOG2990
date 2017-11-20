@@ -60,7 +60,7 @@ export class GridService {
 
     public setUserInput(word: GridWord): void {
         this.grid.userInput = word;
-        if (word.length === word.string.length) {
+        if (word.length === word.string.length && word.length !== 0) {
             this.sendWordToServer(word);
         }
     }
