@@ -5,10 +5,12 @@ import { GridMutator } from '../grid-generator/grid-mutator';
 import { toGridGeneratorDifficulty } from './temp-util';
 import { Player } from '../player';
 import { Grid } from '../grid-generator/grid';
+import { Logger } from '../../../../../common/src/index';
 
 export class GameDataDynamic extends GameData {
 
     private mutator: GridMutator;
+    private logger = Logger.getLogger('GameDataDynamic');
 
     constructor(difficulty: Difficulty) {
         super(difficulty);
@@ -21,7 +23,7 @@ export class GameDataDynamic extends GameData {
             this.grid = grid;
             this.setDefinitions();
             this.startMutatingGrid();
-        }).catch();
+        }).catch(() => this.logger.warn('Failed to apply mutation.'));
     }
 
     protected get mutatedGrid(): Promise<Grid> {
@@ -32,7 +34,9 @@ export class GameDataDynamic extends GameData {
         const validated = super.validateWord(wordGuess, player);
 
         if (validated) {
-            this.mutator.cancelMutation().then(() => this.startMutatingGrid()).catch();
+            this.mutator.cancelMutation()
+                .then(() => this.startMutatingGrid())
+                .catch(() => this.logger.warn('Failed to cancel mutation.'));
         }
 
         return validated;
