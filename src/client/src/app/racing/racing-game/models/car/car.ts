@@ -37,7 +37,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
 
     protected lights: CarLights;
     protected breakLights: CarLights;
-    protected breakLightMeshs: THREE.Mesh;
+    protected breaklightsMesh: THREE.Mesh;
     protected isStopped = false;
 
     protected targetSpeed = 50; // m/s
@@ -59,7 +59,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
         this.addLights();
         this.waitToLoad = this.addCarParts(carColor);
         this.waitToLoad.then(() => {
-            this.breakLightMeshs = this.getObjectByName('brake_light') as THREE.Mesh;
+            this.breaklightsMesh = this.getObjectByName('brake_light') as THREE.Mesh;
             this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
         });
     }
@@ -130,7 +130,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
 
     private updateBreaklights(): void {
         const EPSILON = 0.005;
-        if (this.breakLightMeshs != null && this.dayModeOptions != null) {
+        if (this.breaklightsMesh != null && this.dayModeOptions != null) {
             let breakLightsIntensity: number;
             if (this.isStopped ||
                 this.velocity.length() < this.previousVelocity.length() - EPSILON) {
@@ -139,7 +139,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
             else {
                 breakLightsIntensity = 0.5 * Math.min(this.dayModeOptions.intensity, 1);
             }
-            (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity = breakLightsIntensity;
+            (this.breaklightsMesh.material as THREE.MeshPhongMaterial).emissiveIntensity = breakLightsIntensity;
             this.breakLights.lightLeft.intensity = this.breakLights.lightRight.intensity = breakLightsIntensity;
         }
         this.previousVelocity.copy(this.velocity);

@@ -9,12 +9,11 @@ const KEY_BACK = 's';
 const KEY_RIGHT = 'd';
 const KEY_LEFT = 'a';
 
-const FRONT = new THREE.Vector3(0, 0, -1);
+const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);
 
 const POWER_STEERING_FACTOR = 0.6;
 
 export class UserControllableCollidableMesh extends DynamicCollidableMesh {
-    public static readonly MIN_SPEED = 0.001;
     protected userInputs: UIInputs;
 
     protected friction: Newtons = 15;
@@ -26,7 +25,7 @@ export class UserControllableCollidableMesh extends DynamicCollidableMesh {
     protected targetAngularSpeed = 3 * Math.PI / 4; // rad/s
 
     public get front(): THREE.Vector3 {
-        return FRONT.clone().applyEuler(this.rotation);
+        return INITIAL_FRONT.clone().applyEuler(this.rotation);
     }
 
     public updatePhysic(engine: PhysicUtils, deltaTime: Seconds) {

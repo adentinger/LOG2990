@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { Seconds } from '../../../types';
 import { EventManager } from '../../../event-manager.service';
 
-export { PhysicUtils } from './utils';
+export * from './utils';
 
 export const BEFORE_PHYSIC_UPDATE_EVENT = 'beforephysicupdate';
 export const AFTER_PHYSIC_UPDATE_EVENT = 'afterphysicupdate';
