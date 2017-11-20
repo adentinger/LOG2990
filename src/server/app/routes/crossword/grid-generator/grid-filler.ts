@@ -6,16 +6,18 @@ import { Word } from '../word';
 import { WordSuggestions } from './word-suggestions';
 import { Direction } from '../../../../../common/src/crossword/crossword-enums';
 import { Player } from '../player';
+import { Transposer } from './transposer';
 
 export abstract class GridFiller {
 
     protected static readonly NUM_TRIES = 20;
 
-    public acrossPlacement: WordPlacement[] = [];
-    public verticalPlacement: WordPlacement[] = [];
+    public acrossPlacement: WordPlacement[];
+    public verticalPlacement: WordPlacement[];
     protected suggestionsGetter: WordSuggestionsGetter;
 
     private shouldCancelFilling = false;
+    private transposer = new Transposer();
 
     constructor(suggestionsGetter: WordSuggestionsGetter) {
         this.suggestionsGetter = suggestionsGetter;
@@ -27,6 +29,13 @@ export abstract class GridFiller {
 
     public async fill(grid: Grid): Promise<void> {
         this.shouldCancelFilling = false;
+
+        const transpose = this.shouldTranspose(grid);
+        if (transpose) {
+            // Take rows as columns, and vice-versa.
+            this.transposer.transposeFiller(this);
+            this.transposer.transposeGrid(grid);
+        }
 
         const initialNumberOfWords = grid.words.length;
         let done = false;
@@ -43,6 +52,12 @@ export abstract class GridFiller {
             let doneVertical = false;
             doneVertical = await this.placeVerticalWords(grid);
             done = doneVertical;
+        }
+
+        if (transpose) {
+            // Un-transpose
+            this.transposer.transposeFiller(this);
+            this.transposer.transposeGrid(grid);
         }
     }
 
