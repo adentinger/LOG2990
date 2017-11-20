@@ -1,5 +1,6 @@
 import { State } from './state';
 import { Stopped } from './stopped';
+import { Cancelling } from './cancelling';
 
 export class Running extends State {
 
@@ -8,7 +9,7 @@ export class Running extends State {
     }
 
     public cancellation(): State {
-        return null;
+        return new Cancelling();
     }
 
     public done(): State {
