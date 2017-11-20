@@ -34,14 +34,14 @@ describe('Transposer', () => {
         expect(transposedPlacement.vertical.length).to.equal(initialPlacement.vertical.length);
 
         for (let i = 0; i < transposedPlacement.across.length; ++i) {
-            const expectedPlacement = initialPlacement.across[i].clone();
+            const expectedPlacement = initialPlacement.vertical[i].clone();
             [expectedPlacement.position.row, expectedPlacement.position.column] =
                 [expectedPlacement.position.column, expectedPlacement.position.row];
             expect(transposedPlacement.across[i].equals(expectedPlacement)).to.be.true;
         }
 
         for (let i = 0; i < transposedPlacement.vertical.length; ++i) {
-            const expectedPlacement = initialPlacement.vertical[i].clone();
+            const expectedPlacement = initialPlacement.across[i].clone();
             [expectedPlacement.position.row, expectedPlacement.position.column] =
                 [expectedPlacement.position.column, expectedPlacement.position.row];
             expect(transposedPlacement.vertical[i].equals(expectedPlacement)).to.be.true;
