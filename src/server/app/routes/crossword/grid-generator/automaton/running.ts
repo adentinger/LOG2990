@@ -35,10 +35,7 @@ export class Running extends State {
     }
 
     public get generationParameters(): GenerationParameters {
-        return {
-            wordsToInclude: null,
-            difficulty: null
-        };
+        return this.generationParameters;
     }
 
 }
