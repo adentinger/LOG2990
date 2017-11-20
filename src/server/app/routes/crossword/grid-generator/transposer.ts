@@ -25,7 +25,6 @@ export class Transposer {
     }
 
     public transposeGrid(grid: Grid): void {
-        console.log(grid.toString());
         grid.words.forEach(word => {
             word.direction = (word.direction === Direction.horizontal)
                            ? Direction.vertical
@@ -33,8 +32,6 @@ export class Transposer {
             [word.position.row, word.position.column] =
                 [word.position.column, word.position.row];
         });
-        console.log('---------------------');
-        console.log(grid.toString());
     }
 
 }
