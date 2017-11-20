@@ -1,6 +1,11 @@
 import { State } from './state';
 import { Stopped } from './stopped';
-import { CancellingGenerationRequested } from './cancelling-generation-requested';
+
+declare class CancellingGenerationRequested extends State {
+    public generation(): State;
+    public cancellation(): State;
+    public done(): State;
+}
 
 export class Cancelling extends State {
 
