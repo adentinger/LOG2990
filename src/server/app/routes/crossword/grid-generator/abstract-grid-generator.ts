@@ -36,7 +36,7 @@ export abstract class AbstractGridGenerator {
         this.dataOfLatestGeneration.filler.cancelFilling();
         return this.dataOfLatestGeneration.promise
             .then (() => { return; })
-            .catch(() => { return; });
+            .catch();
     }
 
     private startGeneration(wordsToInclude: Word[], suggestionsGetter: WordSuggestionsGetter): GenerationData {
@@ -49,8 +49,8 @@ export abstract class AbstractGridGenerator {
             generationData.grid = new Grid(wordsToInclude);
             generationData.filler = new GridFillerContainer(suggestionsGetter);
             generationData.grid.fillUsing(generationData.filler)
-                .catch((reason) => reject(reason))
-                .then(grid => resolve(generationData.grid));
+                .then(grid => resolve(generationData.grid))
+                .catch((reason) => { reject(reason.message + '12345'); });
         });
 
         return generationData;

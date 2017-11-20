@@ -15,8 +15,8 @@ export class Grid {
         this.words = wordsToInclude.slice();
     }
 
-    public async fillUsing(filler: GridFiller): Promise<void> {
-        await filler.fill(this);
+    public fillUsing(filler: GridFiller): Promise<void> {
+        return filler.fill(this);
     }
 
     public doesWordAlreadyExist(word: string): boolean {

@@ -39,7 +39,7 @@ export class GridMutator extends AbstractGridGenerator {
         );
         promise.then((grid) => {
             this.logger.log('Finished mutating. Mutated grid:\n' + grid.toString());
-        }).catch(() => { return; });
+        }).catch();
         return promise;
     }
 

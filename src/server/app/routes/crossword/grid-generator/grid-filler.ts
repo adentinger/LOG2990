@@ -46,11 +46,21 @@ export abstract class GridFiller {
 
             let doneAcross = false;
             while (!doneAcross) {
-                doneAcross = await this.placeAcrossWords(grid);
+                try {
+                    doneAcross = await this.placeAcrossWords(grid);
+                }
+                catch (e) {
+                    return Promise.reject(e);
+                }
             }
 
             let doneVertical = false;
-            doneVertical = await this.placeVerticalWords(grid);
+            try {
+                doneVertical = await this.placeVerticalWords(grid);
+            }
+            catch (e) {
+                return Promise.reject(e);
+            }
             done = doneVertical;
         }
 

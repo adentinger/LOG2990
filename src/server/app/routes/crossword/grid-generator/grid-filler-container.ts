@@ -46,7 +46,12 @@ export class GridFillerContainer extends GridFiller {
     public async fill(grid: Grid): Promise<void> {
         for (let i = 0; i < this.fillers.length; ++i) {
             const filler = this.fillers[i];
-            await filler.fill(grid);
+            try {
+                await filler.fill(grid);
+            }
+            catch (e) {
+                return Promise.reject(e);
+            }
         }
     }
 
