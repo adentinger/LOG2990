@@ -1,11 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Line } from '../../../../common/src/math/line';
 import { Point } from '../../../../common/src/math/point';
-import { } from 'jasmine';
 import { MapPositionAlgorithms } from './map-position-algorithms';
-import * as THREE from 'three';
 import { Projection } from './projection';
-import { Vector } from '../../../../common/src/math/vector';
 
 // Simple Map for testing
 const points = [new Point(3.0, 3.0),

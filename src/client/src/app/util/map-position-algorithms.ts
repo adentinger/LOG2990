@@ -2,7 +2,6 @@ import { Line } from '../../../../common/src/math/line';
 import { Point } from '../../../../common/src/math/point';
 import { Projection } from './projection';
 import { Vector } from '../../../../common/src/math/vector';
-import { interpolate } from '@angular/core/src/view/util';
 
 export class MapPositionAlgorithms {
 
@@ -35,29 +34,7 @@ export class MapPositionAlgorithms {
         return projections;
     }
 
-    private static dot(vec1: Point, vec2: Point): number {
-        return (vec1.x * vec2.x + vec1.x * vec2.y);
-    }
-
-    private static norm(vec: Point): number {
-        return Math.sqrt(vec.x ** 2 + vec.y ** 2);
-    }
-
     private static squaredNorm(vec: Point): number {
         return vec.x ** 2 + vec.y ** 2;
-    }
-
-    // interpolate from a ratio of vector
-    private static interpolate(line: Line, interpolation: number): Point {
-        const vector: Point = line.destination.substract(line.origin);
-        vector.x = interpolation * vector.x;
-        vector.y = interpolation * vector.y;
-        vector.add(line.origin);
-
-        return vector;
-    }
-
-    private static dotProduct(p1: Point, p2: Point): number {
-        return p1.x * p2.x + p1.y * p2.y;
     }
 }
