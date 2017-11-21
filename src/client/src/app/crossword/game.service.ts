@@ -13,6 +13,7 @@ import { GameMode } from '../../../../common/src/crossword/crossword-enums';
 
 export enum GameState {
     configuring,
+    waiting,
     started,
     finished
 }
