@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
-import { PhysicUtils, UP_DIRECTION, BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
+import { PhysicUtils, UP_DIRECTION } from '../../physic/engine';
 import { UIInputs, KEYBOARD_EVENT } from '../../../services/ui-input.service';
 import { EventManager } from '../../../../event-manager.service';
 
@@ -16,6 +16,12 @@ const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);
 
 const POWER_STEERING_FACTOR = 0.8;
 
+/**
+ * @abstract @class CarPhysic
+ * @extends DynamicCollidableMesh
+ *
+ * @description An representation of a car in terme of physic interactions.
+ */
 export abstract class CarPhysic extends DynamicCollidableMesh {
     public static readonly DEFAULT_ACCELERATION = 20; // m/s^2
     public static readonly DEFAULT_TARGET_SPEED = 30; // m/s
