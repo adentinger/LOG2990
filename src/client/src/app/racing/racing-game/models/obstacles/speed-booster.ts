@@ -3,7 +3,6 @@ import { CollidableMesh, CollisionInfo, Collidable } from '../../physic/collidab
 import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
-import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
 import { CarPartsLoader } from '../car/car-parts-loader';
 import { Car } from '../car/car';
 import { CarPhysic } from '../car/car-physic';
@@ -15,8 +14,6 @@ export class SpeedBooster extends CollidableMesh {
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
 
     private static readonly BOOST_SPEED = 40; // m/s
-    private static readonly BOOST_ACCELERATION = 100; // m/s^2
-    private static readonly BOOST_PERIOD = 10; // ms
     private static readonly BOOST_INTERVAL = 2000; // ms
     private static readonly TRACK_HEIGHT: Meters = 0.001;
     private static readonly SPEEDBOOSTER_TEXTURE = THREE.ImageUtils.loadTexture(SpeedBooster.TEXTURE_URL);
@@ -47,12 +44,11 @@ export class SpeedBooster extends CollidableMesh {
             if (!this.boostedTargets.has(collision.target)) {
                 this.boostedTargets.add(collision.target);
                 const car = <Car>collision.target;
-                const state = setInterval(() => {
-                    car.velocity.copy(car.front.multiplyScalar(SpeedBooster.BOOST_SPEED));
-                    car.targetSpeed = SpeedBooster.BOOST_SPEED + 1;
-                }, SpeedBooster.BOOST_PERIOD);
+                car['acceleration'] = 0;
+                car.velocity.copy(car.front.multiplyScalar(SpeedBooster.BOOST_SPEED));
+                car.targetSpeed = SpeedBooster.BOOST_SPEED + 1;
                 setTimeout(() => {
-                    clearInterval(state);
+                    car['acceleration'] = CarPhysic.DEFAULT_ACCELERATION;
                     this.boostedTargets.delete(collision.target);
                 }, SpeedBooster.BOOST_INTERVAL);
             }

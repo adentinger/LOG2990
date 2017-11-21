@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
-import { PhysicUtils, UP_DIRECTION } from '../../physic/engine';
+import { UP_DIRECTION } from '../../physic/engine';
 import { UIInputs, KEYBOARD_EVENT } from '../../../services/ui-input.service';
 import { EventManager } from '../../../../event-manager.service';
 
