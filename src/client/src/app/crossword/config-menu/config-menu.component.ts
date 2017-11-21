@@ -23,9 +23,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     private subscriptions: Subscription[] = [];
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                public waitingService: WaitingService,
-                private gameService: GameService,
-                private ngZone: NgZone) { }
+                private gameService: GameService) { }
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
@@ -37,14 +35,10 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
             () => this.gameService.state.next(GameState.waiting)
         );
-        const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
-            () => this.ngZone.run(() => {})
-        );
         this.subscriptions.push(
             chooseGameArriveSubscription,
             chooseGameLeaveSubscription,
-            configEndSubscription,
-            stopDisplayingSubscription
+            configEndSubscription
         );
     }
 
@@ -53,7 +47,11 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public get shouldBeDisplayed(): boolean {
-        return this.gameService.stateValue === GameState.configuring || this.waitingService.isWaitingValue;
+        return this.gameService.stateValue === GameState.configuring || this.waiting;
+    }
+
+    public get waiting(): boolean {
+        return this.gameService.stateValue === GameState.waiting;
     }
 
 }
