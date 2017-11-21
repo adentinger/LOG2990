@@ -4,14 +4,12 @@ import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
 import { PhysicUtils, UP_DIRECTION } from '../../physic/engine';
 import { UIInputs } from '../../../services/ui-input.service';
-import { Logger } from '../../../../../../../common/src';
 
 const KEY_FORWARD = 'w';
 const KEY_BACK = 's';
 const KEY_RIGHT = 'd';
 const KEY_LEFT = 'a';
 
-const logger = Logger.getLogger('CarPhysic');
 // The front direction when the rotation is 0.
 const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);
 

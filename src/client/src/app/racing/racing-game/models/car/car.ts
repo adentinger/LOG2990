@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 
-import { Logger } from '../../../../../../../common/src';
 import { CarPhysic } from './car-physic';
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Loadable } from '../../../../loadable';

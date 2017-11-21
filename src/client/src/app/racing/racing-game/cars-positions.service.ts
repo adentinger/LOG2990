@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { Injectable } from '@angular/core';
-import { Car } from './models/car/car';
 import { GameInfo } from './game-info';
 
 @Injectable()
