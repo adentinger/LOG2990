@@ -23,9 +23,16 @@ export class GameManagerService {
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
-                private gridService: GridService) { }
+                private gridService: GridService) {
+        this.gameService.state.subscribe((state) => {
+            switch (state) {
+                case GameState.waiting: this.startGame(); break;
+                case GameState.finished: this.finishGame(0, 0); break;
+            }
+        });
+    }
 
-    public startGame(): void {
+    private startGame(): void {
         this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
@@ -47,7 +54,7 @@ export class GameManagerService {
         }
     }
 
-    public finishGame(wordsFound: number, opponentWordsFound: number): void {
+    private finishGame(wordsFound: number, opponentWordsFound: number): void {
         let message: string;
         if (wordsFound > opponentWordsFound) {
             message = 'Congratulations ; you win!';
