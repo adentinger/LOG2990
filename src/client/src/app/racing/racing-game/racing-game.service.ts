@@ -87,7 +87,7 @@ export class RacingGameService {
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
         eventManager.registerClass(this);
-        this.carsPositionsService.initialize(this.cars);
+        this.carsPositionsService.initialize(this);
     }
 
     public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
