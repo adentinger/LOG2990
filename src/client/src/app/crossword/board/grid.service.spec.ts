@@ -5,7 +5,6 @@ import { GameService } from '../game.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
-import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { SelectionService } from '../selection.service';
 import { UserChoiceService } from '../config-menu/user-choice.service';
 
