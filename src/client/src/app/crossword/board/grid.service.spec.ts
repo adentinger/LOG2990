@@ -13,7 +13,8 @@ describe('GridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                GridService, GameService,
+                GridService,
+                GameService,
                 { provide: PacketManagerClient, useValue: packetManagerClient },
                 DefinitionsService,
                 SelectionService,
