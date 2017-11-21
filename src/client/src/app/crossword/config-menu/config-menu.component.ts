@@ -13,9 +13,7 @@ import { GameStarterFinisherService } from '../services/game-starter-finisher.se
     templateUrl: './config-menu.component.html',
     styleUrls: ['./config-menu.component.css'],
     providers: [
-        MenuAutomatonService,
-        WaitingService,
-        GameStarterFinisherService
+        MenuAutomatonService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
