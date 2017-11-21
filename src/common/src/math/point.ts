@@ -29,7 +29,7 @@ export class Point {
     }
 
     public distanceTo(that: Point): number {
-        return Math.sqrt((that.x - this.x) ** 2 + (that.y = this.y) ** 2);
+        return Math.sqrt((that.x - this.x) ** 2 + (that.y - this.y) ** 2);
     }
 
 }

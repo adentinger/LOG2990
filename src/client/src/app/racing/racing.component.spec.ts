@@ -7,7 +7,6 @@ import { MapThumbnailComponent } from './initial-view/map-thumbnail/map-thumbnai
 import { MapBestTimeComponent } from './initial-view/map-best-time/map-best-time.component';
 import { MapService } from './services/map.service';
 import { RouterModule } from '@angular/router';
-import { CarsPositionsService } from './racing-game/cars-positions.service';
 
 describe('RacingComponent', () => {
     let component: RacingComponent;
