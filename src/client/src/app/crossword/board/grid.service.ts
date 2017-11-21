@@ -90,19 +90,19 @@ export class GridService {
     @PacketHandler(GridWordPacket)
     // tslint:disable-next-line:no-unused-variable
     private updateGridWord(event: PacketEvent<GridWordPacket>): void {
-        this.grid.addWord(event.value.gridword);
-        this.onChange();
         this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         this.gameService.onShowWords.next(false);
+        this.grid.addWord(event.value.gridword);
+        this.onChange();
     }
 
     @PacketHandler(ClearGridPacket)
     // tslint:disable-next-line:no-unused-variable
     private clearGrid(): void {
-        this.grid.clear();
-        this.onChange();
         this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         this.gameService.onShowWords.next(false);
+        this.grid.clear();
+        this.onChange();
     }
 
     @PacketHandler(WordGuessPacket)
