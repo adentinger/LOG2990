@@ -25,7 +25,6 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 public waitingService: WaitingService,
                 private gameService: GameService,
-                private gameStarterFinisherService: GameManagerService,
                 private ngZone: NgZone) { }
 
     public ngAfterViewInit(): void {
@@ -36,7 +35,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
             () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => this.gameStarterFinisherService.startGame()
+            () => this.gameService.state.next(GameState.waiting)
         );
         const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
             () => this.ngZone.run(() => {})
