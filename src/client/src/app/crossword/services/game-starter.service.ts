@@ -4,6 +4,12 @@ import { UserChoiceService, CreateOrJoin } from '../config-menu/user-choice.serv
 import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 
+/**
+ * @class GameStarterService
+ * @description Has the responsibility of starting the game.
+ * This service was basically created to solve circular dependency problems between
+ * GameService and GameHttpService.
+ */
 @Injectable()
 export class GameStarterService {
 
