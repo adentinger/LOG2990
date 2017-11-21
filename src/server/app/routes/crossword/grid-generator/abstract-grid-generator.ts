@@ -54,14 +54,19 @@ export abstract class AbstractGridGenerator {
             };
 
             const promise = this.dataOfLatestGeneration.promise.then(() => {
-                // Former generation finished. Start next generation if still scheduled.
+                // Former generation finished.
                 if (this.isGenerationScheduled) {
+                    // Start next generation if still scheduled.
                     this.isGenerationScheduled = false;
                     this.dataOfLatestGeneration = this.startGeneration(
                         this.nextGenerationData.wordsToInclude,
                         this.nextGenerationData.difficulty
                     );
                     return this.dataOfLatestGeneration.promise;
+                }
+                else {
+                    // Generation cancelled;
+                    return null;
                 }
             });
             this.nextGenerationData.promise = promise;
