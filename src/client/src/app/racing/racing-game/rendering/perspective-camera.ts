@@ -5,8 +5,8 @@ import { SoundListener } from '../sound/sound-listener';
 
 export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundListener {
     public static readonly DRIVER_POSITION = new THREE.Vector3(-0.25, 1.15, -0.1);
-    public static readonly DEFAULT_POSITION = new THREE.Vector3(0, 2, 5);
-    public static readonly LOOK_AT_POSITION = new THREE.Vector3(0, 1.3, -3);
+    public static readonly DEFAULT_POSITION = new THREE.Vector3(0, 2.5, 5);
+    public static readonly LOOK_AT_POSITION = new THREE.Vector3(0, 1.0, -3);
 
     public static readonly CAMERA_NAME = 'racing-camera';
 
