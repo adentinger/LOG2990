@@ -39,7 +39,7 @@ export class GridService {
         mockVerticalGridWords().forEach((word) => {
             this.grid.addWord(word);
         });
-
+        this.onChange();
     }
 
     public get words(): GridWord[] {
@@ -79,6 +79,7 @@ export class GridService {
     }
 
     private onChange(): void {
+        console.log('HI');
         this.callbacks.forEach((callback) => callback());
     }
 
