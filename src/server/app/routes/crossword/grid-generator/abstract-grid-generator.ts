@@ -10,9 +10,17 @@ interface GenerationData {
     promise: Promise<Grid>;
 }
 
+interface CancellationData {
+    promise: Promise<Grid>;
+    wordsToInclude: Word[];
+    difficulty: Difficulty;
+}
+
 export abstract class AbstractGridGenerator {
 
     private dataOfLatestGeneration: GenerationData;
+    private isGenerationScheduled = false;
+    private nextGenerationData: CancellationData;
 
     protected get latestGeneration(): Promise<Grid> {
         return this.dataOfLatestGeneration.promise;
@@ -25,16 +33,44 @@ export abstract class AbstractGridGenerator {
             grid: EMPTY_GRID,
             promise: Promise.resolve(EMPTY_GRID)
         };
+
+        this.nextGenerationData = null;
     }
 
     protected gridGenerationBase(wordsToInclude: Word[], difficulty: Difficulty): Promise<Grid> {
-        return this.dataOfLatestGeneration.promise.then(() => {
-            this.dataOfLatestGeneration = this.startGeneration(wordsToInclude, difficulty);
-            return this.dataOfLatestGeneration.promise;
-        });
+        if (this.isGenerationScheduled) {
+            // Just update the next generation data.
+            this.nextGenerationData.difficulty = difficulty;
+            this.nextGenerationData.wordsToInclude = wordsToInclude;
+            return this.nextGenerationData.promise;
+        }
+        else {
+            this.isGenerationScheduled = true;
+
+            this.nextGenerationData = {
+                difficulty: difficulty,
+                wordsToInclude: wordsToInclude,
+                promise: null
+            };
+
+            const promise = this.dataOfLatestGeneration.promise.then(() => {
+                // Former generation finished. Start next generation if still scheduled.
+                if (this.isGenerationScheduled) {
+                    this.isGenerationScheduled = false;
+                    this.dataOfLatestGeneration = this.startGeneration(
+                        this.nextGenerationData.wordsToInclude,
+                        this.nextGenerationData.difficulty
+                    );
+                    return this.dataOfLatestGeneration.promise;
+                }
+            });
+
+            this.nextGenerationData.promise = promise;
+        }
     }
 
     protected cancelLatestGeneration(): Promise<void> {
+        this.isGenerationScheduled = false;
         this.dataOfLatestGeneration.filler.cancelFilling();
         return this.dataOfLatestGeneration.promise
             .then (() => { return; })
