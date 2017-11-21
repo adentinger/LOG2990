@@ -88,7 +88,6 @@ export class GameService {
         this.changeTimerValueOn = false;
         this.dataInternal = new GameData();
         this.stateInternal.next(GameState.configuring);
-        this.userChoiceService.finalize();
         this.packetManager.sendPacket(GameLeavePacket, new GameLeavePacket());
     }
 
