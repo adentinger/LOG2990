@@ -41,7 +41,9 @@ export class BoardComponent implements OnInit, OnDestroy {
             this.selectionService.selection.subscribe(
                 () => this.onChange()
             );
+            this.gridService.addOnChangeCallback(() => this.onChange());
         this.updateTimer = setInterval(() => this.appRef.tick(), BoardComponent.UPDATE_PERIOD);
+        this.onChange();
     }
 
     public ngOnDestroy(): void {
