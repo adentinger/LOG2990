@@ -40,6 +40,8 @@ export class GridService {
             this.grid.addWord(word);
         });
         this.onChange();
+
+        this.selectionService.updateSelectedGridWord({direction: Direction.vertical, id: 2});
     }
 
     public get words(): GridWord[] {
