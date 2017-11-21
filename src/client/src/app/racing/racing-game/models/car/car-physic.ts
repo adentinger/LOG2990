@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
-import { Seconds, Newtons } from '../../../../types';
-import { PhysicUtils, UP_DIRECTION } from '../../physic/utils';
+import { Seconds } from '../../../../types';
+import { UP_DIRECTION } from '../../physic/utils';
 
 // The front direction when the rotation is 0.
 const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);

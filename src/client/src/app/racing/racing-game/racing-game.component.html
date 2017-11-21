@@ -1,6 +1,5 @@
-<div id="viewSpace" #gameContainer catchInputs #userInputs=$inputs>
+<div id="viewSpace" [className]='colorFilterClass' #gameContainer catchInputs #userInputs=$inputs>
   <canvas id="hud" #hud></canvas>
 </div>
 <div id="loading-disclaimer" [@gameLoaded]=gameLoaded *ngIf=!gameLoaded></div>
-<span id="loading-message" [@gameLoaded]=gameLoaded *ngIf=!gameLoaded>
-  <img src="/assets/racing/icons/steering-wheel.png"/>Loading...</span>
+<span id="loading-message" [@gameLoaded]=gameLoaded *ngIf=!gameLoaded>Loading...</span>

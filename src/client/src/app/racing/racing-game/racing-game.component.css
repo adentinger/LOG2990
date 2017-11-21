@@ -29,20 +29,25 @@
 
 #loading-message {
     position: absolute;
-    color: #bbbbbb;
-    font-size: 300%;
+    color: #bbb;
+    font-size: 7vmin;
     height: auto;
-    right: 10%;
-    bottom: 10%;
+    right: 7%;
+    bottom: 7%;
     z-index: 1;
+    filter: drop-shadow(0px 0px 2px #fff);
 }
 
-#loading-message img {
+#loading-message::before {
+    content: "";
+    background-image: url(/assets/racing/icons/steering-wheel.png);
+    background-size: contain;
+    display: inline-block;
     filter: contrast(0) brightness(1.5);
-    height: 35px;
-    width: auto;
+    height: 7vmin;
+    width: 7vmin;
     margin-right: 10px;
-    animation: 4s infinite alternate-reverse loading-wheel ease-in-out;
+    animation: 4s infinite alternate loading-wheel ease-in-out;
 }
 
 @keyframes loading-wheel {

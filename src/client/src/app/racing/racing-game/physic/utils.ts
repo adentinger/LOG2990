@@ -73,7 +73,7 @@ export class PhysicUtils {
 
         const lineVector = this.getVector3FromPoint(intersectionLine.translation);
         // The point of application of the force (against the target's position)
-        const applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
+        const applicationPoint = this.getVector2FromPoint(intersectionLine.interpolate(0.5))
             .sub(this.getVector2FromVector3(target.position));
 
         // Check if the points are in the rigth order (to have them point clockwise against the target)

@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
+import { CarsPositionsService } from './cars-positions.service';
 
 const logger = Logger.getLogger();
 
@@ -77,7 +78,8 @@ export class RacingGameService {
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         private eventManager: EventManager,
-        private soundService: SoundService) {
+        private soundService: SoundService,
+        private carsPositionsService: CarsPositionsService) {
         this.waitToLoad = Promise.all([
             ...this.cars.map(car => car.waitToLoad),
             this.soundService.waitToLoad
@@ -85,9 +87,10 @@ export class RacingGameService {
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
         eventManager.registerClass(this);
+        this.carsPositionsService.initialize(this.cars);
     }
 
-    public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
+    public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
         this.renderer.initialize(container, hudCanvas);
         this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;

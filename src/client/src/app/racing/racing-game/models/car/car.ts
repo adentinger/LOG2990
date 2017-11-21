@@ -18,7 +18,6 @@ export interface CarLights {
     lightRight: THREE.Light;
 }
 
-const logger = Logger.getLogger('Car');
 const MIN_RATE = 0.4;
 
 export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmitter {
@@ -199,5 +198,4 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
                 0.5 * this.dayModeOptions.intensity + (this.isStopped ? 0.5 : 0);
         }
     }
-
 }

@@ -12,6 +12,7 @@ import { UIInputs } from './services/ui-input.service';
 import { RacingGameService } from './racing-game/racing-game.service';
 import { PhysicEngine } from './racing-game/physic/engine';
 import { SoundService } from './services/sound-service';
+import { CarsPositionsService } from './racing-game/cars-positions.service';
 
 @NgModule({
     imports: [
@@ -33,7 +34,8 @@ import { SoundService } from './services/sound-service';
         MapService,
         RacingGameService,
         PhysicEngine,
-        SoundService
+        SoundService,
+        CarsPositionsService
     ]
 })
 export class RacingModule { }
