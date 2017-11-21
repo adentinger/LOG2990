@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { GameStarterService } from './game-starter.service';
 
-describe('GameStarterService', () => {
+describe('GameStarterFinisherService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({

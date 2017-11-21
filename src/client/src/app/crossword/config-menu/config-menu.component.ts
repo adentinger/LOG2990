@@ -6,7 +6,7 @@ import { GameHttpService } from '../services/game-http.service';
 import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';
-import { GameStarterService } from '../services/game-starter.service';
+import { GameStarterFinisherService } from '../services/game-starter-finisher.service';
 
 @Component({
     selector: 'app-config-menu',
@@ -15,7 +15,7 @@ import { GameStarterService } from '../services/game-starter.service';
     providers: [
         MenuAutomatonService,
         WaitingService,
-        GameStarterService
+        GameStarterFinisherService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
@@ -27,7 +27,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 public waitingService: WaitingService,
                 private gameService: GameService,
-                private gameStarterService: GameStarterService,
+                private gameStarterFinisherService: GameStarterFinisherService,
                 private ngZone: NgZone) { }
 
     public ngAfterViewInit(): void {
@@ -38,7 +38,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
             () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => this.gameStarterService.startGame()
+            () => this.gameStarterFinisherService.startGame()
         );
         const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
             () => this.ngZone.run(() => {})
