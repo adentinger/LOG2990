@@ -26,8 +26,17 @@ export class GameManagerService {
                 private gridService: GridService) {
         this.gameService.state.subscribe((state) => {
             switch (state) {
-                case GameState.waiting: this.startGame(); break;
-                case GameState.finished: this.finishGame(0, 0); break;
+                case GameState.waiting: {
+                    this.startGame();
+                    break;
+                }
+                case GameState.finished: {
+                    this.finishGame(
+                        this.gridService.getOpponentWordsFoundCount(),
+                        this.gridService.getOpponentWordsFoundCount()
+                    );
+                    break;
+                }
             }
         });
     }
