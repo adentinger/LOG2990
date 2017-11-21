@@ -10,7 +10,7 @@ import { PerspectiveCamera } from '../../rendering/perspective-camera';
 
 export class Pothole extends CollidableMesh {
     private static readonly TEXTURE_URL = '/assets/racing/textures/pothole.png';
-    private static readonly RADIUS: number = 0.5;
+    private static readonly RADIUS: number = 1;
     private static readonly SEGMENTS: number = 40;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
     private static readonly FREQUENCY_SCALING_FACTOR = 1000; // ms / s
@@ -36,8 +36,6 @@ export class Pothole extends CollidableMesh {
             mesh.add(...parts);
             const dimensions = PhysicUtils.getObjectDimensions(mesh);
             const scale = dimensions.x * Pothole.SIZE_TO_CAR_PROPORTION;
-            const meshScale = scale / Pothole.SIZE_TO_CAR_PROPORTION / Pothole.RADIUS;
-            this.geometry.scale(meshScale, meshScale, meshScale);
             texturedPlane.geometry = new THREE.CircleGeometry(scale);
         });
         const texture = Pothole.POTHOLE_TEXTURE;

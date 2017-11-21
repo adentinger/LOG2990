@@ -46,7 +46,6 @@ export class SpeedBooster extends CollidableMesh {
                 const car = <Car>collision.target;
                 car['acceleration'] = 0;
                 car.velocity.copy(car.front.multiplyScalar(SpeedBooster.BOOST_SPEED));
-                car.targetSpeed = SpeedBooster.BOOST_SPEED + 1;
                 setTimeout(() => {
                     car['acceleration'] = CarPhysic.DEFAULT_ACCELERATION;
                     this.boostedTargets.delete(collision.target);
