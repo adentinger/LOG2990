@@ -11,6 +11,7 @@ import { GameHttpService } from '../services/game-http.service';
 import { UserChoiceService } from './user-choice.service';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { FormsModule } from '@angular/forms';
+import { WaitingService } from './waiting/waiting.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -32,7 +33,8 @@ describe('ConfigMenuComponent', () => {
                 GameService,
                 GameHttpService,
                 {provide: PacketManagerClient, useValue: packetManagerClient},
-                UserChoiceService
+                UserChoiceService,
+                WaitingService
             ]
         })
         .compileComponents();

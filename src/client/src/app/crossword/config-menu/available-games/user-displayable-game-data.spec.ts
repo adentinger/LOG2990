@@ -28,7 +28,7 @@ describe('UserDisplayableGameData', () => {
     it('should deserialize game difficulties', () => {
         const DATA1 = new UserDisplayableGameData(DEFAULT_PLAYER_NAME, DEFAULT_ID, DEFAULT_MODE, Difficulty.easy);
         expect(DATA1.difficultyAsString()).toMatch(/^easy$/i);
-        const DATA2 = new UserDisplayableGameData(DEFAULT_PLAYER_NAME, DEFAULT_ID, DEFAULT_MODE, Difficulty.medium);
+        const DATA2 = new UserDisplayableGameData(DEFAULT_PLAYER_NAME, DEFAULT_ID, DEFAULT_MODE, Difficulty.normal);
         expect(DATA2.difficultyAsString()).toMatch(/^normal$/i);
         const DATA3 = new UserDisplayableGameData(DEFAULT_PLAYER_NAME, DEFAULT_ID, DEFAULT_MODE, Difficulty.hard);
         expect(DATA3.difficultyAsString()).toMatch(/^hard$/i);

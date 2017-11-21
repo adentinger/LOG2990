@@ -67,8 +67,8 @@ export class DefinitionsService {
     public clearDefinitions(): void {
         this.horizontalDefinitions.clear();
         this.verticalDefinitions.clear();
-        this.horizontalAnswers.splice(0);
-        this.verticalAnswers.splice(0);
+        this.horizontalAnswers = [];
+        this.verticalAnswers = [];
         this.onChange();
     }
 
@@ -99,13 +99,13 @@ export class DefinitionsService {
         const definitionIndex = event.value.index;
         const serializedDefinition = event.value.definition;
         const direction = event.value.direction;
-        const DEFINITION =
+        const definition =
             Definition.deserialize(definitionIndex, serializedDefinition);
 
         if (direction === Direction.horizontal) {
-            this.horizontalDefinitions.set(definitionIndex, DEFINITION);
+            this.horizontalDefinitions.set(definitionIndex, definition);
         } else if (direction === Direction.vertical) {
-            this.verticalDefinitions.set(definitionIndex, DEFINITION);
+            this.verticalDefinitions.set(definitionIndex, definition);
         }
         this.onChange();
     }

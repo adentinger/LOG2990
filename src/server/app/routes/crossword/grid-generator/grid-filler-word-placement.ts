@@ -1,4 +1,4 @@
-import { WordPosition } from './word-position';
+import { WordPosition } from '../word-position';
 
 export class GridFillerWordPlacement {
 
@@ -18,6 +18,10 @@ export class GridFillerWordPlacement {
         return this.minLength === that.minLength &&
                this.maxLength === that.maxLength &&
                this.position.equals(that.position);
+    }
+
+    public clone(): GridFillerWordPlacement {
+        return new GridFillerWordPlacement(this.position.clone(), this.minLength, this.maxLength);
     }
 
 }

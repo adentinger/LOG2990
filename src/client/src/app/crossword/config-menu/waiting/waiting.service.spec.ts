@@ -3,13 +3,17 @@ import { TestBed, inject } from '@angular/core/testing';
 import { WaitingService } from './waiting.service';
 import { PacketManagerClient } from '../../../packet-manager-client';
 import { packetManagerClient } from '../../../packet-manager.service';
+import { GameService } from '../../game.service';
+import { UserChoiceService } from '../user-choice.service';
 
 describe('WaitingService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 WaitingService,
-                {provide: PacketManagerClient, useValue: packetManagerClient}
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                GameService,
+                UserChoiceService
             ]
         });
     });

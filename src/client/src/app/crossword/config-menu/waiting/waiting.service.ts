@@ -6,6 +6,7 @@ import { PacketHandler, PacketEvent, registerHandlers } from '../../../../../../
 
 import { GameStartPacket } from '../../../../../../common/src/crossword/packets/game-start.packet';
 import '../../../../../../common/src/crossword/packets/game-start.parser';
+import { GameService, GameState } from '../../game.service';
 
 /**
  * @class WaitingService
@@ -20,7 +21,8 @@ export class WaitingService {
 
 
     // tslint:disable-next-line:no-unused-variable
-    constructor(private packetManager: PacketManagerClient) {
+    constructor(private packetManager: PacketManagerClient,
+                private gameService: GameService) {
         this.isWaitingInternal.subscribe((value) => {
             this.isWaitingValueInternal = value;
         });
@@ -39,6 +41,7 @@ export class WaitingService {
     // tslint:disable-next-line:no-unused-variable
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
         this.isWaitingInternal.next(false);
+        this.gameService.state.next(GameState.started);
     }
 
 }

@@ -11,7 +11,7 @@ import {
 import { PacketManagerServer } from '../../../packet-manager';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { DefinitionWithIndex } from './game-data';
-import { Player } from './player';
+import { Player } from '../player';
 import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
 import { GameId } from '../../../../../common/src/communication/game-configs';
 
@@ -19,8 +19,8 @@ export class CommunicationHandler {
 
     private packetManager: PacketManagerServer = PacketManagerServer.getInstance();
 
-    public async clearPlayerGrid(playerId: string): Promise<void> {
-        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), playerId);
+    public async clearPlayerGrid(player: Player): Promise<void> {
+        this.packetManager.sendPacket(ClearGridPacket, new ClearGridPacket(), player.socketId);
     }
 
     public sendGameStart(players: Player[]) {
@@ -29,18 +29,17 @@ export class CommunicationHandler {
         });
     }
 
-    public sendGridWords(socketId: string, gridwords: GridWord[]): void {
+    public sendGridWords(player: Player, gridwords: GridWord[]): void {
         gridwords.forEach((gridword) => {
             this.packetManager.sendPacket(
                 GridWordPacket,
                 new GridWordPacket(gridword),
-                socketId
+                player.socketId
             );
-        }
-        );
+        });
     }
 
-    public sendDefinitions(socketId: string, definitions: DefinitionWithIndex[]): void {
+    public sendDefinitions(player: Player, definitions: DefinitionWithIndex[]): void {
         const definitionsWithIndex = definitions;
         definitionsWithIndex.forEach((definitionWithIndex) => {
             const index = definitionWithIndex.index;
@@ -48,7 +47,7 @@ export class CommunicationHandler {
             this.packetManager.sendPacket(
                 GameDefinitionPacket,
                 new GameDefinitionPacket(index, definition.direction, definition),
-                socketId
+                player.socketId
             );
         });
     }
@@ -64,7 +63,7 @@ export class CommunicationHandler {
     }
 
     public sendFoundWord(foundWord: GridWord, finder: Player, opponent: Player = null): void {
-        foundWord.owner = Owner.player1;
+        foundWord.owner = Owner.player;
         const finderPacket = new WordGuessPacket(foundWord);
         this.packetManager.sendPacket(
             WordGuessPacket,
@@ -78,7 +77,7 @@ export class CommunicationHandler {
                 foundWord.x,
                 foundWord.length,
                 foundWord.direction,
-                Owner.player2,
+                Owner.opponent,
                 foundWord.string
             ));
             this.packetManager.sendPacket(
@@ -89,7 +88,7 @@ export class CommunicationHandler {
         }
     }
 
-    public sendNewTimerValueTo(player: Player, countdown: number): void {
+    public sendNewTimerValue(player: Player, countdown: number): void {
         this.packetManager.sendPacket(
             TimerPacket,
             new TimerPacket(countdown), player.socketId
