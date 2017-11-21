@@ -24,8 +24,7 @@ export class GridService {
 
     constructor(private packetManager: PacketManagerClient,
                 private selectionService: SelectionService,
-                private gameService: GameService,
-                private gameStarterFinishedService: GameManagerService) {
+                private gameService: GameService) {
         registerHandlers(this, packetManager);
 
         this.reinitialize();
@@ -114,11 +113,7 @@ export class GridService {
             this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
         if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.grid.numberOfWords) {
-            this.gameService.state = GameState.finished;
-            this.gameStarterFinishedService.finishGame(
-                this.getPlayerWordsFoundCount(),
-                this.getOpponentWordsFoundCount()
-            );
+            this.gameService.state.next(GameState.finished);
         }
         this.onChange();
     }

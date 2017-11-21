@@ -54,7 +54,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public get shouldBeDisplayed(): boolean {
-        return this.gameService.state === GameState.configuring || this.waitingService.isWaitingValue;
+        return this.gameService.stateValue === GameState.configuring || this.waitingService.isWaitingValue;
     }
 
 }

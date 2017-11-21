@@ -29,7 +29,7 @@ export class GameManagerService {
         this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
-            this.gameService.state = GameState.started;
+            this.gameService.state.next(GameState.started);
             this.gameService.joinGame(
                 this.userChoiceService.chosenGame,
                 this.userChoiceService.playerName
@@ -38,7 +38,7 @@ export class GameManagerService {
         else {
             this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
                 .then((gameId) => {
-                    this.gameService.state = GameState.started;
+                    this.gameService.state.next(GameState.started);
                     this.gameService.joinGame(
                         gameId,
                         this.userChoiceService.playerName

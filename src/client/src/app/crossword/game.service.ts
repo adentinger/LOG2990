@@ -28,7 +28,8 @@ export enum GameState {
 @Injectable()
 export class GameService {
 
-    public state = GameState.configuring;
+    private stateValueInternal: GameState;
+    private stateInternal = new Subject<GameState>();
 
     private cheatModeOn = false;
     private isShowWordsOnInternal = false;
@@ -41,11 +42,21 @@ export class GameService {
         return this.dataInternal.clone();
     }
 
+    public get stateValue(): GameState {
+        return this.stateValueInternal;
+    }
+
+    public get state(): Subject<GameState> {
+        return this.stateInternal;
+    }
+
     constructor(private packetManager: PacketManagerClient,
                 private userChoiceService: UserChoiceService) {
         this.onShowWordsInternal.subscribe((value) => {
             this.isShowWordsOnInternal = value;
         });
+        this.stateInternal.subscribe(state => this.stateValueInternal = state);
+        this.stateInternal.next(GameState.configuring);
         registerHandlers(this, packetManager);
     }
 
@@ -75,7 +86,7 @@ export class GameService {
         this.cheatModeOn = false;
         this.changeTimerValueOn = false;
         this.dataInternal = new GameData();
-        this.state = GameState.configuring;
+        this.stateInternal.next(GameState.configuring);
         this.userChoiceService.finalize();
         this.packetManager.sendPacket(GameLeavePacket, new GameLeavePacket());
     }
