@@ -11,16 +11,16 @@ import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
 import { Projection } from '../../../util/projection';
 import { Decoration } from '../models/decoration/decoration';
 
-export enum DecorationEnum {
-    Tree,
-    Bush,
-    Building
+export enum DecorationType {
+    TREE,
+    BUSH,
+    BUILDING
 }
 
 export class DecorationGenerator {
 
     private static readonly ACCEPTABLE_RADIUS = 30;
-    private static readonly CERCLE_RADIAN = 2 * Math.PI;
+    private static readonly CIRCLE_RADIUS_RADIAN = 2 * Math.PI;
     private mapPointsIntervalCoordinate: THREE.Vector3[];
     private finalPoints: THREE.Vector3[];
     private finalDecorations: Decoration[];
@@ -46,25 +46,34 @@ export class DecorationGenerator {
         this.mapPointsIntervalCoordinate.forEach((point) => {
             let coordinate: Vector3 = new THREE.Vector3(0, 0, 0);
             const finalPoint: Vector3 = new THREE.Vector3(0, 0, 0);
-            do {
-                coordinate = this.generateCoordinatePositionRadius();
-                finalPoint.addVectors(point, coordinate);
-            } while (this.isSuperposedItem(finalPoint, map) || this.isOnTrack(finalPoint, map));
-            const decoration = this.generateRandomDecoration();
-            decoration.position.copy(finalPoint);
-            this.finalDecorations.push(decoration);
+            let decoration: Decoration;
+            for (let i = 0 ; i < 20; i++) {
+                do {
+                    coordinate = this.generateCoordinatePositionRadius();
+                    finalPoint.addVectors(point, coordinate);
+                    decoration = this.generateRandomDecoration();
+                    decoration.position.copy(finalPoint);
+                } while (this.isSuperposedItem(decoration) || this.isOnTrack(finalPoint, map));
+                this.finalDecorations.push(decoration);
+            }
         });
 
-        this.finalDecorations.forEach((decoration) => {map.mapDecorations.push(decoration); });
+        this.finalDecorations.forEach((decoration) => {map.add(decoration); });
     }
 
-    private isSuperposedItem(point: Vector3, map: RenderableMap): boolean {
-        console.log("isSuperposedItem");
+    private isSuperposedItem(decoration: Decoration): boolean {
+        decoration.geometry.computeBoundingBox();
         this.finalDecorations.forEach(
-            (decoration) => {
-                decoration.geometry.computeBoundingBox();
-                if ((point.x < decoration.geometry.boundingBox.min.x || point.x > decoration.geometry.boundingBox.max.x)
-                && (point.z < decoration.geometry.boundingBox.min.z || point.z > decoration.geometry.boundingBox.max.z)) {
+            (decorationOnMap) => {
+                decorationOnMap.geometry.computeBoundingBox();
+                if (((decoration.geometry.boundingBox.max.x + decoration.position.x)
+                 >= (decorationOnMap.geometry.boundingBox.min.x + decorationOnMap.position.x) &&
+                     (decorationOnMap.geometry.boundingBox.max.x + decorationOnMap.position.x) >=
+                     (decoration.geometry.boundingBox.min.x + decoration.position.x))
+                && ((decoration.geometry.boundingBox.max.z + decoration.position.z) >=
+                 (decorationOnMap.geometry.boundingBox.min.z + decorationOnMap.position.z) &&
+                    (decorationOnMap.geometry.boundingBox.max.z + decorationOnMap.position.z) >=
+                     decoration.geometry.boundingBox.min.z +  + decoration.position.z)) {
                     return true;
                 }
             }
@@ -73,19 +82,13 @@ export class DecorationGenerator {
     }
 
     private isOnTrack(point: THREE.Vector3, map: RenderableMap): boolean {
-        console.log("isOnTrack");
         const lines = map.mapLines;
-        const pointe = new Point(point.x, point.z);
-        let pointNorm = pointe.distanceTo(map.mapPoints[0]);
+        const coordinatePoint = new Point(point.x, point.z);
+        const pointDistanceFromOrigin = coordinatePoint.distanceTo(map.mapPoints[0]);
         for (const line of lines) {
-            if (pointNorm > line.translation.norm()) {
-                pointNorm -= line.translation.norm();
-            } else {
-                console.log(pointe, pointNorm, line);
-                const projection: Projection = MapPositionAlgorithms.getProjectionOnLine(pointe, line);
-                if (projection.distanceToSegment <= 5) {
-                    return true;
-                }
+            const projection = MapPositionAlgorithms.getProjectionOnLine(coordinatePoint, line);
+            if (projection.distanceToSegment < (5 + 3)) {
+                return true;
             }
         }
         return false;
@@ -97,7 +100,7 @@ export class DecorationGenerator {
             if (interval > line.translation.norm()) {
                 interval -= line.translation.norm();
             } else {
-                const point = line.interpollate(interval / line.translation.norm());
+                const point = line.interpolate(interval / line.translation.norm());
                 const pointOnMap = new THREE.Vector3(Math.round(point.x), 0.03, Math.round(point.y));
                 return pointOnMap;
             }
@@ -105,23 +108,24 @@ export class DecorationGenerator {
         return null;
     }
 
-    private generateRandomRadius(): number {
-        return Math.floor(Math.random() * DecorationGenerator.ACCEPTABLE_RADIUS * 2 - DecorationGenerator.ACCEPTABLE_RADIUS);
+    private generateRandomRadiusForPosition(): number {
+        return Math.round(Math.random() * DecorationGenerator.ACCEPTABLE_RADIUS);
     }
 
-    private generateRandomAngle(): number {
-        return Math.random() * DecorationGenerator.CERCLE_RADIAN;
+    private generateRandomAngleForPosition(): number {
+        return Math.random() * DecorationGenerator.CIRCLE_RADIUS_RADIAN;
     }
 
     private generateCoordinatePositionRadius(): THREE.Vector3 {
-        const randomRadius = this.generateRandomRadius();
-        const randomTheta = this.generateRandomAngle();
-        return new THREE.Vector3(Math.round(randomRadius * Math.cos(randomTheta)), 0.03, Math.round(randomRadius * Math.sin(randomTheta)));
+        const randomRadius = this.generateRandomRadiusForPosition();
+        const randomAngle = this.generateRandomAngleForPosition();
+        return new THREE.Vector3(Math.round(randomRadius * Math.cos(randomAngle)), 0.03, Math.round(randomRadius * Math.sin(randomAngle)));
     }
 
     private generateRandomDecoration(): Decoration {
-        const randomIndex = Math.round(Math.random() * 2);
-        const randomClassName = DecorationEnum[randomIndex];
+        const numberOfDecorationType = Object.keys(DecorationType).length / 2;
+        const randomIndex = Math.round(Math.random() * (numberOfDecorationType - 1));
+        const randomClassName = DecorationType[randomIndex];
         const decorationFactory = new DecorationFactory();
         return decorationFactory.getClassInstance(randomClassName);
     }

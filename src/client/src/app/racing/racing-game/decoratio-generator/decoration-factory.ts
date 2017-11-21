@@ -10,9 +10,9 @@ export class DecorationFactory {
 
     public getClassInstance(className: string): Decoration {
         switch (className) {
-            case 'Tree':  return new Tree();
-            case 'Bush': return new Bush();
-            case 'Building': return new Building();
+            case 'TREE':  return new Tree();
+            case 'BUSH': return new Bush();
+            case 'BUILDING': return new Building();
         }
     }
 }
