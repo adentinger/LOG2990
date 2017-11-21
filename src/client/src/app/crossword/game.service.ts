@@ -20,7 +20,7 @@ export enum GameState {
 
 /**
  * @class GameService
- * Represents the current game. Has the resposibilities of:
+ * @description Represents the current game. Has the resposibilities of:
  * 1) Containing the game's data
  * 2) Sending all socket packets from the client to the server
  * The response from the server usually goes directly to the appropriate
