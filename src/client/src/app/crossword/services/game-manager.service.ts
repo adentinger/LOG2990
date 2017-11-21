@@ -3,6 +3,8 @@ import { WaitingService } from '../config-menu/waiting/waiting.service';
 import { UserChoiceService, CreateOrJoin } from '../config-menu/user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
+import { DefinitionsService } from '../definition-field/definitions.service';
+import { GridService } from '../board/grid.service';
 
 /**
  * @class GameManagerService
@@ -19,7 +21,9 @@ export class GameManagerService {
     constructor(private waitingService: WaitingService,
                 private userChoiceService: UserChoiceService,
                 private gameService: GameService,
-                private gameHttpService: GameHttpService) { }
+                private gameHttpService: GameHttpService,
+                private definitionsService: DefinitionsService,
+                private gridService: GridService) { }
 
     public startGame(): void {
         this.waitingService.isWaiting.next(true);
@@ -63,6 +67,12 @@ export class GameManagerService {
         else {
             alert(message);
         }
+    }
+
+    public resetGame(): void {
+        this.definitionsService.clearDefinitions();
+        this.gameService.finalize();
+        this.gridService.reinitialize();
     }
 
 }
