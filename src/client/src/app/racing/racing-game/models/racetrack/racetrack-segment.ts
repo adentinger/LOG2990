@@ -35,8 +35,6 @@ export class RacetrackSegment extends THREE.Mesh {
 
                 (<THREE.MeshPhongMaterial>this.material).map = texture;
                 (<THREE.MeshPhongMaterial>this.material).normalMap = normalMap;
-                (<THREE.MeshPhongMaterial>this.material).bumpMap = normalMap;
-                (<THREE.MeshPhongMaterial>this.material).bumpScale = 5;
             }).then(() => { });
         this.position.setY(0.015); // segment must be on top to support other textures
     }

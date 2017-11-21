@@ -76,7 +76,7 @@ export class HUD {
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        this.context.fillText(`${game.lap}/${game.maxLap} laps`,
+        this.context.fillText(`${game.lap}/${game.maxLap} laps; tps: ${game['physicEngine'].tps.toFixed(2)}`,
             textPosition.x, textPosition.y);
     }
 

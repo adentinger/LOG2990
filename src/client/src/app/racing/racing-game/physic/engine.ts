@@ -16,10 +16,10 @@ export class PhysicEngine {
     private physicUtils: PhysicUtils;
     private timer: any = null;
 
-    private sampleSize = PhysicEngine.UPDATE_FREQUENCY * 5;
+    private sampleSize = 20;
     private deltaTimes: Seconds[] = [];
     public get tps(): number {
-        return this.deltaTimes.length / this.deltaTimes.reduce((accumulator, value) => accumulator + value, 0);
+        return (this.deltaTimes.length / this.deltaTimes.reduce((accumulator, value) => accumulator + value, 0)) || 0;
     }
 
     constructor(private eventManager: EventManager) {
@@ -42,7 +42,7 @@ export class PhysicEngine {
                 const deltaTimeMs = now - last;
                 this.updateWorld(deltaTimeMs / 1000);
                 if (this.deltaTimes.length >= this.sampleSize) {
-                    this.deltaTimes.shift();
+                    this.deltaTimes.splice(0, this.deltaTimes.length - this.sampleSize + 1);
                 }
                 this.deltaTimes.push(deltaTimeMs / 1000);
                 last = now;

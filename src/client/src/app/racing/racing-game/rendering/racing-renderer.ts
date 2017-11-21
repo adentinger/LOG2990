@@ -15,16 +15,24 @@ export type CameraId = 0 | 1;
 export class RacingRenderer extends THREE.WebGLRenderer {
     public static readonly DEFAULT_DAYMODE = DayMode.DAY;
     private static readonly AXIS_HELPER: THREE.AxisHelper = new THREE.AxisHelper(1);
+    private static readonly REAR_VIEW_POSITION_X_FACTOR_TO_SCREENSIZE = 0.5;
+    private static readonly REAR_VIEW_POSITION_Y_FACTOR_TO_SCREENSIZE = 0.12;
+    private static readonly REAR_VIEW_FACTOR_TO_SCREENSIZE = 0.20;
+    private static readonly REAR_VIEW_CAMERA_POSITION = new THREE.Vector3(0, 1.5, 1.5);
+    private static readonly REAR_VIEW_CAMERA_ROTATION = new THREE.Vector3(0, 1, 0);
 
     private canvasContainer: HTMLDivElement;
 
+    public renderTarget;
     protected readonly scene = new THREE.Scene();
     protected readonly lighting = new Lighting();
     protected readonly skybox = new Skybox();
     protected readonly cameras: [PerspectiveCamera, OrthographicCamera] = [null, null];
+    protected readonly rearViewCamera: PerspectiveCamera;
 
     private animationRequestId = -1;
     private isRendering = false;
+    private rearViewFactorToScreenSize = RacingRenderer.REAR_VIEW_FACTOR_TO_SCREENSIZE;
 
     private readonly dayModeManager = new DayModeManager();
 
@@ -43,6 +51,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
         this.cameras[0] = new PerspectiveCamera(eventManager);
         this.cameras[1] = new OrthographicCamera();
+        this.rearViewCamera = new PerspectiveCamera(eventManager);
 
         this.cameras[0].add(this.skybox);
     }
@@ -51,6 +60,9 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.canvasContainer = container;
         this.canvasContainer.appendChild(this.domElement);
         this.hud.initialize(hudCanvas);
+
+        this.rearViewCamera.position.copy(RacingRenderer.REAR_VIEW_CAMERA_POSITION);
+        this.rearViewCamera.setRotationFromAxisAngle(RacingRenderer.REAR_VIEW_CAMERA_ROTATION, Math.PI);
 
         this.scene.add(this.lighting);
         this.scene.add(RacingRenderer.AXIS_HELPER);
@@ -96,19 +108,21 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
         this.clear(true, true, true);
 
-        this.setViewport(0, 0, screenSize.width, screenSize.height);
+        // normal view
         this.setScissor(0, 0, screenSize.width, screenSize.height);
+        this.setViewport(0, 0, screenSize.width, screenSize.height);
         this.cameras[+!this.currentCamera].visible = false;
         this.render(this.scene, this.cameras[this.currentCamera]);
         this.cameras[+!this.currentCamera].visible = true;
 
-        this.setViewport(screenSize.width * 0.75, screenSize.height * 0.05,
-            screenSize.width * 0.20, screenSize.height * 0.20);
-        this.setScissor(screenSize.width * 0.75, screenSize.height * 0.05,
-            screenSize.width * 0.20, screenSize.height * 0.20);
-        this.cameras[this.currentCamera].visible = false;
-        this.render(this.scene, this.cameras[+!this.currentCamera]);
-        this.cameras[this.currentCamera].visible = true;
+        // rear-view camera
+        const positionx = screenSize.width * RacingRenderer.REAR_VIEW_POSITION_X_FACTOR_TO_SCREENSIZE;
+        const positiony = screenSize.height * RacingRenderer.REAR_VIEW_POSITION_Y_FACTOR_TO_SCREENSIZE;
+        const width = screenSize.width * this.rearViewFactorToScreenSize;
+        const height = screenSize.height * this.rearViewFactorToScreenSize;
+        this.setScissor(positionx - width / 2, positiony - height / 2, width, height);
+        this.setViewport(positionx - width / 2, positiony - height / 2, width, height);
+        this.render( this.scene, this.rearViewCamera );
 
         this.hud.render(this.game);
     }
@@ -121,6 +135,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
                 camera.add(target['audioListener']);
             }
         });
+        this.rearViewCamera.setTarget(target);
     }
 
     public updateSize(width: number, height: number) {
@@ -133,6 +148,9 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.cameras[1].left = this.cameras[1].bottom * (width / height);
         this.cameras[1].right = this.cameras[1].top * (width / height);
         this.cameras[1].updateProjectionMatrix();
+
+        this.rearViewCamera.aspect = width / height;
+        this.rearViewCamera.updateProjectionMatrix();
     }
 
     public addMap(map: RenderableMap) {
@@ -161,6 +179,15 @@ export class RacingRenderer extends THREE.WebGLRenderer {
 
     public getBothCameras() {
         return this.cameras;
+    }
+
+    public toggleRearViewCamera() {
+        if (this.rearViewFactorToScreenSize === RacingRenderer.REAR_VIEW_FACTOR_TO_SCREENSIZE) {
+            this.rearViewFactorToScreenSize = 0;
+        }
+        else {
+            this.rearViewFactorToScreenSize = RacingRenderer.REAR_VIEW_FACTOR_TO_SCREENSIZE;
+        }
     }
 
 }

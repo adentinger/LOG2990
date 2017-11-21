@@ -11,6 +11,7 @@ import { MapThumbnailComponent } from './initial-view/map-thumbnail/map-thumbnai
 import { UIInputs } from './services/ui-input.service';
 import { RacingGameService } from './racing-game/racing-game.service';
 import { PhysicEngine } from './racing-game/physic/engine';
+import { CarsPositionsService } from './racing-game/cars-positions.service';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { PhysicEngine } from './racing-game/physic/engine';
     providers: [
         MapService,
         RacingGameService,
-        PhysicEngine
+        PhysicEngine,
+        CarsPositionsService
     ]
 })
 export class RacingModule { }

@@ -94,7 +94,7 @@ export class RenderableMap extends PhysicMesh {
         for (const line of lines) {
             const segmentLength = line.translation.norm();
             const angle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
-            const middlePoint = line.interpollate(0.5);
+            const middlePoint = line.interpolate(0.5);
             const segment = new RacetrackSegment(segmentLength);
 
             segment.rotation.y = angle;
@@ -120,7 +120,7 @@ export class RenderableMap extends PhysicMesh {
                 position -= line.translation.norm();
             }
             else {
-                const point = line.interpollate(position / line.translation.norm());
+                const point = line.interpolate(position / line.translation.norm());
                 const lineAngle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
                 const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * (Track.SEGMENT_WIDTH - ITEM_WIDTH))
                     .applyAxisAngle(UP, lineAngle);
