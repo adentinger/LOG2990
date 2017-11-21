@@ -14,6 +14,7 @@ import { Grid } from './grid';
 import { SelectionService } from '../selection.service';
 import { GameService, GameState } from '../game.service';
 import { WordByIdAndDirection } from './selected-grid-word';
+import { GameStarterFinisherService } from '../services/game-starter-finisher.service';
 
 @Injectable()
 export class GridService {
@@ -23,7 +24,8 @@ export class GridService {
 
     constructor(private packetManager: PacketManagerClient,
                 private selectionService: SelectionService,
-                private gameService: GameService) {
+                private gameService: GameService,
+                private gameStarterFinishedService: GameStarterFinisherService) {
         registerHandlers(this, packetManager);
 
         this.reinitialize();
@@ -113,7 +115,7 @@ export class GridService {
         }
         if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.grid.numberOfWords) {
             this.gameService.state = GameState.finished;
-            this.gameService.finishGame(
+            this.gameStarterFinishedService.finishGame(
                 this.getPlayerWordsFoundCount(),
                 this.getOpponentWordsFoundCount()
             );
