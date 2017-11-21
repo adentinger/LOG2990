@@ -46,7 +46,7 @@ export class Puddle extends CollidableMesh {
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
         if (collision.source === this && collision.target instanceof Car) {
-            const velocityFactor = collision.target.velocity.length() / (collision.target as Car)['targetSpeed'];
+            const velocityFactor = collision.target.velocity.length() / Car.DEFAULT_TARGET_SPEED;
             collision.target.angularVelocity.set(0, velocityFactor * Puddle.SLIP_FACTOR * this.slipDirection *
                 Math.sin(2 * Math.PI * Date.now() / Puddle.FREQUENCY_SCALING_FACTOR * Puddle.SLIP_FREQUENCY), 0);
         }

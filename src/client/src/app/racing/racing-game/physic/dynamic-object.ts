@@ -27,7 +27,7 @@ export function isDynamicPhysicElement(object: any): object is DynamicPhysicElem
 
 export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhysicElement {
     public static readonly MIN_SPEED: number = 0.3; // m/s
-    public static readonly MIN_ANGULAR_SPEED: number = 0.03 * Math.PI; // rad/s
+    public static readonly MIN_ANGULAR_SPEED: number = 0.05 * Math.PI; // rad/s
 
     public velocity: THREE.Vector3 = new THREE.Vector3();
     public angularVelocity: THREE.Vector3 = new THREE.Vector3();
@@ -47,7 +47,7 @@ export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhy
 
     public updateVelocity(deltaTime: Seconds): void {
         if (this.velocity.length() < DynamicPhysicMesh.MIN_SPEED) {
-            this.velocity.set(0, 0, 0);
+            this.velocity.setScalar(0);
         }
         this.velocity.setY(0);
     }
@@ -67,6 +67,7 @@ export abstract class DynamicPhysicMesh extends PhysicMesh implements DynamicPhy
         if (this.angularVelocity.length() < DynamicPhysicMesh.MIN_ANGULAR_SPEED) {
             this.angularVelocity.setScalar(0);
         }
-        this.angularVelocity.multiply(UP_DIRECTION);
+        const angularSpeed = this.angularVelocity.dot(UP_DIRECTION);
+        this.angularVelocity.set(0, angularSpeed, 0);
     }
 }

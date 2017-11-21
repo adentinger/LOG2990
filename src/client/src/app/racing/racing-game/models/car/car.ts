@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { Logger } from '../../../../../../../common/src';
-import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
+import { CarPhysic } from './car-physic';
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Loadable } from '../../../../loadable';
 import { CarPartsLoader } from './car-parts-loader';
@@ -20,7 +20,7 @@ export interface CarLights {
 
 const MIN_RATE = 0.4;
 
-export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmitter {
+export class Car extends CarPhysic implements Loadable, SoundEmitter {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
@@ -39,10 +39,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     protected breaklightsMesh: THREE.Mesh;
     protected isStopped = false;
 
-    protected targetSpeed = 50; // m/s
-    protected targetAngularSpeed = Math.PI; // rad/s
-
-    private previousVelocity = new THREE.Vector3();
+    private readonly previousVelocity = new THREE.Vector3();
 
     public readonly waitToLoad: Promise<void>;
     public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
@@ -120,8 +117,8 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     }
 
     private updateEnginePitch(): void {
-        const PITCH_FACTOR = 2;
-        const playbackRate = PITCH_FACTOR * (this.velocity.length() / this.targetSpeed) + MIN_RATE;
+        const PITCH_FACTOR = 1.2;
+        const playbackRate = PITCH_FACTOR * (this.velocity.length() / CarPhysic.DEFAULT_TARGET_SPEED) + MIN_RATE;
         if (this.constantAudios.has(Sound.CAR_ENGINE)) {
             this.constantAudios.get(Sound.CAR_ENGINE).setPlaybackRate(playbackRate);
         }

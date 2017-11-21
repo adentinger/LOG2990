@@ -2,25 +2,35 @@ import * as THREE from 'three';
 
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
-import { UP_DIRECTION } from '../../physic/utils';
+import { PhysicUtils, UP_DIRECTION } from '../../physic/engine';
+import { UIInputs } from '../../../services/ui-input.service';
+import { Logger } from '../../../../../../../common/src';
 
+const KEY_FORWARD = 'w';
+const KEY_BACK = 's';
+const KEY_RIGHT = 'd';
+const KEY_LEFT = 'a';
+
+const logger = Logger.getLogger('CarPhysic');
 // The front direction when the rotation is 0.
 const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);
 
-const POWER_STEERING_FACTOR = 0.6;
+const POWER_STEERING_FACTOR = 0.9;
 
 export abstract class CarPhysic extends DynamicCollidableMesh {
-    public static readonly DEFAULT_ACCELERATION = 25; // m/s^2
-    public static readonly DEFAULT_TARGET_SPEED = 20; // m/s
+    public static readonly DEFAULT_ACCELERATION = 15; // m/s^2
+    public static readonly DEFAULT_TARGET_SPEED = 30; // m/s
 
-    public static readonly DEFAULT_ANGULAR_ACCELERATION = 4 * Math.PI; // rad/s^2
+    public static readonly DEFAULT_ANGULAR_ACCELERATION = 3 * Math.PI; // rad/s^2
     public static readonly DEFAULT_TARGET_ANGULAR_SPEED = 3 * Math.PI / 4; // rad/s
 
     protected acceleration = CarPhysic.DEFAULT_ACCELERATION;
-    public targetSpeed = CarPhysic.DEFAULT_TARGET_SPEED;
+    public targetSpeed = 0; // m/s
 
     protected angularAcceleration = CarPhysic.DEFAULT_ANGULAR_ACCELERATION;
-    public targetAngularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
+    public targetAngularSpeed = 0; // rad/s
+
+    protected userInputs: UIInputs;
 
     public get front(): THREE.Vector3 {
         return INITIAL_FRONT.clone().applyEuler(this.rotation);
@@ -28,6 +38,24 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
 
     public get speed(): number {
         return this.velocity.dot(this.front);
+    }
+
+    public setUIInput(userInputService: UIInputs): void {
+        this.userInputs = userInputService;
+    }
+
+    public removeUIInput(): void {
+        delete this.userInputs;
+    }
+
+    public hasUIInput(): boolean {
+        return this.userInputs != null;
+    }
+
+    public updatePhysic(utils: PhysicUtils, deltaTime: Seconds): void {
+        this.updateTargetVelocities();
+
+        super.updatePhysic(utils, deltaTime);
     }
 
     public updateVelocity(deltaTime: Seconds): void {
@@ -48,10 +76,8 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
         const powerSteering = POWER_STEERING_FACTOR / speed;
         const rotationRestriction = this.velocity.dot(this.front) * powerSteering;
 
-        const originalAngularVelocity = this.angularVelocity.clone();
-        this.angularVelocity.multiplyScalar(rotationRestriction * deltaTime);
-        super.updateRotation(deltaTime);
-        this.angularVelocity.copy(originalAngularVelocity);
+        this.rotation.y += rotationRestriction * this.angularVelocity.y * deltaTime + 2 * Math.PI;
+        this.rotation.y %= 2 * Math.PI;
     }
 
     private updateVelocityDirection(): void {
@@ -61,7 +87,7 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     private updateSpeed(deltaTime: Seconds) {
         let speed = this.speed;
         const speedDifference = (this.targetSpeed - speed);
-        let accelerationFactor = speedDifference / this.targetSpeed;
+        let accelerationFactor = speedDifference / Math.abs(this.targetSpeed);
         accelerationFactor = this.targetSpeed === 0 ? Math.sign(speedDifference) : accelerationFactor;
         const acceleration = accelerationFactor * this.acceleration;
 
@@ -72,11 +98,31 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     private updateAngularSpeed(deltaTime: Seconds): void {
         let angularSpeed = this.angularVelocity.dot(UP_DIRECTION);
         const speedDifference = (this.targetAngularSpeed - angularSpeed);
-        let angularAccelerationFactor = speedDifference / this.targetAngularSpeed;
+        let angularAccelerationFactor = speedDifference / Math.abs(this.targetAngularSpeed);
         angularAccelerationFactor = this.targetAngularSpeed === 0 ? Math.sign(speedDifference) : angularAccelerationFactor;
         const angularAcceleration = angularAccelerationFactor * this.angularAcceleration;
 
         angularSpeed += angularAcceleration * deltaTime;
         this.angularVelocity.copy(UP_DIRECTION).multiplyScalar(angularSpeed);
+    }
+
+    private updateTargetVelocities(): void {
+        if (this.userInputs != null) {
+            this.targetSpeed = 0;
+            if (this.userInputs.isKeyPressed(KEY_FORWARD)) {
+                this.targetSpeed += CarPhysic.DEFAULT_TARGET_SPEED;
+            }
+            if (this.userInputs.isKeyPressed(KEY_BACK)) {
+                this.targetSpeed -= CarPhysic.DEFAULT_TARGET_SPEED;
+            }
+
+            this.targetAngularSpeed = 0;
+            if (this.userInputs.isKeyPressed(KEY_RIGHT)) {
+                this.targetAngularSpeed -= CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
+            }
+            if (this.userInputs.isKeyPressed(KEY_LEFT)) {
+                this.targetAngularSpeed += CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
+            }
+        }
     }
 }
