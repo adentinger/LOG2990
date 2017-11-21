@@ -14,7 +14,7 @@ import { Grid } from './grid';
 import { SelectionService } from '../selection.service';
 import { GameService, GameState } from '../game.service';
 import { WordByIdAndDirection } from './selected-grid-word';
-import { GameStarterFinisherService } from '../services/game-starter-finisher.service';
+import { GameManagerService } from '../services/game-manager.service';
 
 @Injectable()
 export class GridService {
@@ -25,7 +25,7 @@ export class GridService {
     constructor(private packetManager: PacketManagerClient,
                 private selectionService: SelectionService,
                 private gameService: GameService,
-                private gameStarterFinishedService: GameStarterFinisherService) {
+                private gameStarterFinishedService: GameManagerService) {
         registerHandlers(this, packetManager);
 
         this.reinitialize();

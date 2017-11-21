@@ -6,7 +6,7 @@ import { GameHttpService } from '../services/game-http.service';
 import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';
-import { GameStarterFinisherService } from '../services/game-starter-finisher.service';
+import { GameManagerService } from '../services/game-manager.service';
 
 @Component({
     selector: 'app-config-menu',
@@ -25,7 +25,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 public waitingService: WaitingService,
                 private gameService: GameService,
-                private gameStarterFinisherService: GameStarterFinisherService,
+                private gameStarterFinisherService: GameManagerService,
                 private ngZone: NgZone) { }
 
     public ngAfterViewInit(): void {

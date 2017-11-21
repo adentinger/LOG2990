@@ -5,13 +5,13 @@ import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 
 /**
- * @class GameStarterFinisherService
+ * @class GameManagerService
  * @description Has the responsibility of starting and finishing the game.
  * This service was basically created to solve circular dependency problems between
  * GameService and GameHttpService. Yes, this probably denotes a slight architectural problem.
  */
 @Injectable()
-export class GameStarterFinisherService {
+export class GameManagerService {
 
     constructor(private waitingService: WaitingService,
                 private userChoiceService: UserChoiceService,
