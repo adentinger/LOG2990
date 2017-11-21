@@ -32,7 +32,7 @@ export class GameManagerService {
                 }
                 case GameState.finished: {
                     this.finishGame(
-                        this.gridService.getOpponentWordsFoundCount(),
+                        this.gridService.getPlayerWordsFoundCount(),
                         this.gridService.getOpponentWordsFoundCount()
                     );
                     break;
