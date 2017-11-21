@@ -34,14 +34,4 @@ describe('GridService', () => {
         expect(gridService).toBeTruthy();
     });
 
-    it('should be able to indicate that a word is found', () => {
-        gridService['grid']['words'][0].owner = Owner.player;
-        expect(gridService.checkIfWordIsFound(0, Direction.horizontal)).toBeTruthy();
-    });
-
-    it('should be able to detect that a word isn\'t found', () => {
-        gridService['grid']['words'][0].owner = Owner.player;
-        // we check a different word
-        expect(gridService.checkIfWordIsFound(1, Direction.horizontal)).toBeFalsy();
-    });
 });
