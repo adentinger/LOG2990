@@ -64,8 +64,8 @@ export abstract class AbstractGridGenerator {
                     return this.dataOfLatestGeneration.promise;
                 }
             });
-
             this.nextGenerationData.promise = promise;
+            return promise;
         }
     }
 
