@@ -40,4 +40,26 @@ export class GameStarterFinisherService {
         }
     }
 
+    public finishGame(wordsFound: number, opponentWordsFound: number): void {
+        let message: string;
+        if (wordsFound > opponentWordsFound) {
+            message = 'Congratulations ; you win!';
+        }
+        else if (wordsFound < opponentWordsFound) {
+            message = 'Congratulations ; you (almost) win!';
+        }
+        else {
+            message = 'Congratulations ; you equaled your opponent!';
+        }
+        if (this.gameService.data.numberOfPlayers === 1) {
+            message += '\nStart over with the same settings?';
+            if (confirm(message)) {
+                this.startGame();
+            }
+        }
+        else {
+            alert(message);
+        }
+    }
+
 }
