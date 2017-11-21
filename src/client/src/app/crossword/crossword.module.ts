@@ -23,7 +23,6 @@ import { ConfirmationComponent } from './config-menu/confirmation/confirmation.c
 import { GameService } from './game.service';
 import { UserChoiceService } from './config-menu/user-choice.service';
 import { GameHttpService } from './services/game-http.service';
-import { GameStarterService } from './services/game-starter.service';
 
 @NgModule({
     imports: [
@@ -54,8 +53,7 @@ import { GameStarterService } from './services/game-starter.service';
         GameDetailsService,
         SelectionService,
         GameService,
-        UserChoiceService,
-        GameStarterService
+        UserChoiceService
     ],
     exports: [
         CrosswordComponent

@@ -6,6 +6,7 @@ import { GameHttpService } from '../services/game-http.service';
 import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { WaitingService } from './waiting/waiting.service';
+import { GameStarterService } from '../services/game-starter.service';
 
 @Component({
     selector: 'app-config-menu',
@@ -13,7 +14,8 @@ import { WaitingService } from './waiting/waiting.service';
     styleUrls: ['./config-menu.component.css'],
     providers: [
         MenuAutomatonService,
-        WaitingService
+        WaitingService,
+        GameStarterService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
@@ -25,8 +27,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     constructor(public menuAutomaton: MenuAutomatonService,
                 public waitingService: WaitingService,
                 private gameService: GameService,
-                private gameHttpService: GameHttpService,
-                private userChoiceService: UserChoiceService,
+                private gameStarterService: GameStarterService,
                 private ngZone: NgZone) { }
 
     public ngAfterViewInit(): void {
@@ -37,7 +38,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
             () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => this.useConfiguration()
+            () => this.gameStarterService.startGame()
         );
         const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
             () => this.ngZone.run(() => {})
@@ -56,28 +57,6 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 
     public get shouldBeDisplayed(): boolean {
         return this.gameService.state === GameState.configuring || this.waitingService.isWaitingValue;
-    }
-
-    private useConfiguration(): void {
-        this.waitingService.isWaiting.next(true);
-        const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
-        if (isJoiningGame) {
-            this.gameService.state = GameState.started;
-            this.gameService.joinGame(
-                this.userChoiceService.chosenGame,
-                this.userChoiceService.playerName
-            );
-        }
-        else {
-            this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
-                .then((gameId) => {
-                    this.gameService.state = GameState.started;
-                    this.gameService.joinGame(
-                        gameId,
-                        this.userChoiceService.playerName
-                    );
-                });
-        }
     }
 
 }
