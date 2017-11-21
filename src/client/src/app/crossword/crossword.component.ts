@@ -1,9 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { DefinitionsService } from './definition-field/definitions.service';
 import { TimerService } from './services/timer.service';
 import { GameHttpService } from './services/game-http.service';
-import { GameService } from './game.service';
-import { GridService } from './board/grid.service';
 import { GameManagerService } from './services/game-manager.service';
 
 @Component({

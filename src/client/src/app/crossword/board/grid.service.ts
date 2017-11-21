@@ -14,7 +14,6 @@ import { Grid } from './grid';
 import { SelectionService } from '../selection.service';
 import { GameService, GameState } from '../game.service';
 import { WordByIdAndDirection } from './selected-grid-word';
-import { GameManagerService } from '../services/game-manager.service';
 
 @Injectable()
 export class GridService {

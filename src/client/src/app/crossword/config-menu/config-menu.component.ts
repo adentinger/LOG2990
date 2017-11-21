@@ -1,12 +1,8 @@
-import { Component, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
-import { GameHttpService } from '../services/game-http.service';
-import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService, GameState } from '../game.service';
-import { WaitingService } from './waiting/waiting.service';
-import { GameManagerService } from '../services/game-manager.service';
 
 @Component({
     selector: 'app-config-menu',
