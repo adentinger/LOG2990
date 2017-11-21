@@ -2,7 +2,6 @@ import { expect } from 'chai';
 
 import { Transposer } from './transposer';
 import { GridFillerFirstSection } from './grid-filler-first-section';
-import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { DifficultyEasy } from '../../../../../common/src/crossword/difficulty-easy';
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { GridFiller } from './grid-filler';
