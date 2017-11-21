@@ -32,6 +32,7 @@ export class GridService {
 
     public reinitialize(): void {
         this.grid.clear();
+
         // This mock is meant to stay as an initial view
         mockHorizontalGridWords().forEach((word) => {
             this.grid.addWord(word);
@@ -39,9 +40,11 @@ export class GridService {
         mockVerticalGridWords().forEach((word) => {
             this.grid.addWord(word);
         });
-        this.onChange();
 
-        this.selectionService.updateSelectedGridWord({direction: Direction.vertical, id: 2});
+        const mockSelection = {direction: Direction.vertical, id: 2};
+        this.selectionService.updateSelectedGridWord(mockSelection);
+
+        this.onChange();
     }
 
     public get words(): GridWord[] {
@@ -81,7 +84,6 @@ export class GridService {
     }
 
     private onChange(): void {
-        console.log('HI');
         this.callbacks.forEach((callback) => callback());
     }
 
