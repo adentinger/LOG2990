@@ -2,8 +2,9 @@ import * as THREE from 'three';
 
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
-import { PhysicUtils, UP_DIRECTION } from '../../physic/engine';
-import { UIInputs } from '../../../services/ui-input.service';
+import { PhysicUtils, UP_DIRECTION, BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
+import { UIInputs, KEYBOARD_EVENT } from '../../../services/ui-input.service';
+import { EventManager } from '../../../../event-manager.service';
 
 const KEY_FORWARD = 'w';
 const KEY_BACK = 's';
@@ -13,10 +14,10 @@ const KEY_LEFT = 'a';
 // The front direction when the rotation is 0.
 const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);
 
-const POWER_STEERING_FACTOR = 0.9;
+const POWER_STEERING_FACTOR = 0.8;
 
 export abstract class CarPhysic extends DynamicCollidableMesh {
-    public static readonly DEFAULT_ACCELERATION = 15; // m/s^2
+    public static readonly DEFAULT_ACCELERATION = 20; // m/s^2
     public static readonly DEFAULT_TARGET_SPEED = 30; // m/s
 
     public static readonly DEFAULT_ANGULAR_ACCELERATION = 3 * Math.PI; // rad/s^2
@@ -38,6 +39,11 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
         return this.velocity.dot(this.front);
     }
 
+    public constructor() {
+        super();
+        EventManager.getInstance().registerClass(this, CarPhysic.prototype);
+    }
+
     public setUIInput(userInputService: UIInputs): void {
         this.userInputs = userInputService;
     }
@@ -48,12 +54,6 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
 
     public hasUIInput(): boolean {
         return this.userInputs != null;
-    }
-
-    public updatePhysic(utils: PhysicUtils, deltaTime: Seconds): void {
-        this.updateTargetVelocities();
-
-        super.updatePhysic(utils, deltaTime);
     }
 
     public updateVelocity(deltaTime: Seconds): void {
@@ -104,6 +104,8 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
         this.angularVelocity.copy(UP_DIRECTION).multiplyScalar(angularSpeed);
     }
 
+    @EventManager.Listener(KEYBOARD_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private updateTargetVelocities(): void {
         if (this.userInputs != null) {
             this.targetSpeed = 0;

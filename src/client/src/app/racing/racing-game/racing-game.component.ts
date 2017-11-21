@@ -80,10 +80,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.reloadSounds();
         }
 
-        if (this.uiInputs.isKeyPressed('m')) {
-            this.racingGame.switchCar();
-        }
-
         if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
             const currentCamera = this.racingGame.renderer.currentCamera;
             this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= RacingGameComponent.ZOOM_FACTOR;
@@ -115,17 +111,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private toggleNextColorFilter(): number {
-        const filters = RacingGameComponent.COLOR_FILTERS;
-        for (let i = 0; filters.length; i++) {
-            if (this.colorFilterClass === filters[i]) {
-                if (i !== filters.length - 1) {
-                    return ++i;
-                }
-                else {
-                    return 0;
-                }
-            }
-        }
+        const currentFilterIndex = RacingGameComponent.COLOR_FILTERS
+            .findIndex((filter) => this.colorFilterClass === filter);
+        return (currentFilterIndex + 1) % RacingGameComponent.COLOR_FILTERS.length;
     }
 
     @HostListener('window:contextmenu', ['$event'])

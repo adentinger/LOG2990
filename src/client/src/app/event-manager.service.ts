@@ -21,14 +21,22 @@ export declare type Listener = <E extends EventBis>(event: E) => void;
 declare type FieldName = string | symbol;
 
 const EVENT_LISTENERS_PROPERTY_NAMES: Map<InstanceOf<Class<any>>, Map<string, FieldName>> = new Map();
+const registeredInstances: Set<InstanceOf<Class<any>>> = new Set();
 
 @Injectable()
 export class EventManager {
-    private readonly EVENT_LISTENERS: Map<string, Set<Listener>> = new Map();
-    private readonly EVENT_LISTENERS_ONCE: Map<string, Set<Listener>> = new Map();
+    private static readonly INSTANCE = new EventManager();
+
+    private readonly eventListeners: Map<string, Set<Listener>> = new Map();
+    private readonly eventListenersOnce: Map<string, Set<Listener>> = new Map();
+
+    public static getInstance(): EventManager {
+        return EventManager.INSTANCE;
+    }
 
     public static Listener(eventType: string): MethodDecorator {
         return <T extends Class>(prototype: InstanceOf<T>, propertyName: FieldName, descriptor: PropertyDescriptor): void => {
+            const eventListeners = new Map(EVENT_LISTENERS_PROPERTY_NAMES.get(prototype));
             if (!EVENT_LISTENERS_PROPERTY_NAMES.has(prototype)) {
                 EVENT_LISTENERS_PROPERTY_NAMES.set(prototype, new Map());
             }
@@ -36,38 +44,44 @@ export class EventManager {
         };
     }
 
-    public registerClass<T extends Class = any>(instance: InstanceOf<T>): void {
-        const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(Object.getPrototypeOf(instance)) || new Map<string, FieldName>();
-        for (const [eventType, propertyName] of handlersName) {
-            this.addListener(eventType, instance[propertyName].bind(instance));
+    private constructor() { }
+
+    public registerClass<T extends Class = any>(instance: InstanceOf<T>, prototype?: InstanceOf<T>): void {
+        prototype = prototype || Object.getPrototypeOf(instance);
+        const handlersName = EVENT_LISTENERS_PROPERTY_NAMES.get(prototype) || new Map<string, FieldName>();
+        if (!registeredInstances.has(instance)) {
+            registeredInstances.add(instance);
+            for (const [eventType, propertyName] of handlersName) {
+                this.addListener(eventType, instance[propertyName].bind(instance));
+            }
         }
     }
 
     public addListener(type: string, listener: Listener): void {
-        if (!this.EVENT_LISTENERS.has(type)) {
-            this.EVENT_LISTENERS.set(type, new Set());
+        if (!this.eventListeners.has(type)) {
+            this.eventListeners.set(type, new Set());
         }
-        this.EVENT_LISTENERS.get(type).add(listener);
+        this.eventListeners.get(type).add(listener);
     }
 
     public addListenerOnce(type: string, listener: Listener): void {
-        if (!this.EVENT_LISTENERS_ONCE.has(type)) {
-            this.EVENT_LISTENERS_ONCE.set(type, new Set());
+        if (!this.eventListenersOnce.has(type)) {
+            this.eventListenersOnce.set(type, new Set());
         }
-        this.EVENT_LISTENERS_ONCE.get(type).add(listener);
+        this.eventListenersOnce.get(type).add(listener);
     }
 
     public removeListener(type: string, listener: Listener): void {
-        if (this.EVENT_LISTENERS.has(type)) {
-            this.EVENT_LISTENERS.get(type).delete(listener);
+        if (this.eventListeners.has(type)) {
+            this.eventListeners.get(type).delete(listener);
         }
-        if (this.EVENT_LISTENERS_ONCE.has(type)) {
-            this.EVENT_LISTENERS_ONCE.get(type).delete(listener);
+        if (this.eventListenersOnce.has(type)) {
+            this.eventListenersOnce.get(type).delete(listener);
         }
     }
 
     public fireEvent<E extends EventBis>(type: string, event: E): void {
-        const LISTENERS = this.EVENT_LISTENERS.get(type);
+        const LISTENERS = this.eventListeners.get(type);
         if (LISTENERS !== undefined) {
             for (const listener of LISTENERS) {
                 listener(event);
@@ -77,7 +91,7 @@ export class EventManager {
     }
 
     private fireEventOnce<E extends EventBis>(type: string, event: E): void {
-        const LISTENERS = this.EVENT_LISTENERS_ONCE.get(type);
+        const LISTENERS = this.eventListenersOnce.get(type);
         if (LISTENERS !== undefined) {
             for (const listener of LISTENERS) {
                 listener(event);

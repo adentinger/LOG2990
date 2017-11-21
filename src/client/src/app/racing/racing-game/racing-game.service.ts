@@ -175,13 +175,6 @@ export class RacingGameService {
         this.renderer.toggleDayMode();
     }
 
-    public switchCar(): void {
-        this.controlledCar.removeUIInput();
-        this.controlledCarIdx = (this.controlledCarIdx + 1) % this.cars.length;
-        this.controlledCar.setUIInput(this.userInputs);
-        this.renderer.setCamerasTarget(this.controlledCar);
-    }
-
     @EventManager.Listener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private changeMaxLap(event: EventManager.Event<KeyboardEvent>) {

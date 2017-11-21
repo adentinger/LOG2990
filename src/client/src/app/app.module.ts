@@ -50,7 +50,7 @@ import { CarsPositionsService } from './racing/racing-game/cars-positions.servic
         { provide: PacketManagerClient, useValue: packetManagerClient },
         MapService,
         AdminConfigService,
-        EventManager,
+        { provide: EventManager, useValue: EventManager.getInstance() },
         ItemGenerator,
         CarsPositionsService
     ],
