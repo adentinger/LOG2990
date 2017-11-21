@@ -55,7 +55,7 @@ export class GameDataDynamic extends GameData {
         this.mutator.mutateGrid(
             this.grid.words
                 .filter(word => word.owner !== Player.NO_PLAYER)
-        ).catch();
+        ).catch(() => { return; });
     }
 
 }
