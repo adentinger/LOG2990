@@ -83,6 +83,12 @@ export class MenuAutomatonService {
         return this.path.length > 0;
     }
 
+    public goBackToInitialState(): void {
+        while (this.canGoBack()) {
+            this.goBack();
+        }
+    }
+
     private initialize(): void {
         this.createStates();
         this.addStateTransitions();
