@@ -28,6 +28,11 @@ export abstract class GameData {
     protected grid: Grid = new Grid();
 
     private definitionsInternal: DefinitionWithIndex[] = [];
+    private initializedInternal: Promise<void>;
+
+    public get initialized(): Promise<void> {
+        return this.initializedInternal;
+    }
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
@@ -39,6 +44,7 @@ export abstract class GameData {
 
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
+        this.initialize();
     }
 
     public getGridWords(player: Player, opponent: Player): GridWord[] {
@@ -55,9 +61,11 @@ export abstract class GameData {
         return gridWords;
     }
 
-    public async initialized(): Promise<void> {
-        this.grid = await this.fetchGrid();
-        await this.setDefinitions();
+    public initialize(): void {
+        this.initializedInternal = this.fetchGrid().then(grid => {
+            this.grid = grid;
+            return this.setDefinitions();
+        });
     }
 
     public validateWord(gridWordGuess: GridWord, player: Player): boolean {
