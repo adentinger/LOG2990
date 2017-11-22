@@ -21,7 +21,7 @@ export class CarHeadlight extends THREE.SpotLight implements DayModeNotifiable {
         color: 0xf0f0ff,
         distance: 100,
         angle: Math.PI / 4,
-        exponent: 0.6,
+        exponent: 1,
         decay: 1,
     };
 
