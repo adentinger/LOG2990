@@ -50,12 +50,6 @@ export class GameManagerService {
         this.gridService.reinitialize();
     }
 
-    public resetGame(): void {
-        this.definitionsService.clearDefinitions();
-        this.gameService.finalize();
-        this.gridService.reinitialize();
-    }
-
     private startGame(): void {
         this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
@@ -106,6 +100,12 @@ export class GameManagerService {
     private resetUserConfiguration(): void {
         this.userChoiceService.reinitialize();
         this.menuAutomatonService.goBackToInitialState();
+    }
+
+    private resetGame(): void {
+        this.definitionsService.clearDefinitions();
+        this.gameService.finalize();
+        this.gridService.reinitialize();
     }
 
 }
