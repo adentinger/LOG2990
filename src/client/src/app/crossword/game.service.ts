@@ -13,13 +13,14 @@ import { GameMode } from '../../../../common/src/crossword/crossword-enums';
 
 export enum GameState {
     configuring,
+    waiting,
     started,
     finished
 }
 
 /**
  * @class GameService
- * Represents the current game. Has the resposibilities of:
+ * @description Represents the current game. Has the resposibilities of:
  * 1) Containing the game's data
  * 2) Sending all socket packets from the client to the server
  * The response from the server usually goes directly to the appropriate
@@ -28,7 +29,8 @@ export enum GameState {
 @Injectable()
 export class GameService {
 
-    public state = GameState.configuring;
+    private stateValueInternal: GameState;
+    private stateInternal = new Subject<GameState>();
 
     private cheatModeOn = false;
     private isShowWordsOnInternal = false;
@@ -41,11 +43,21 @@ export class GameService {
         return this.dataInternal.clone();
     }
 
+    public get stateValue(): GameState {
+        return this.stateValueInternal;
+    }
+
+    public get state(): Subject<GameState> {
+        return this.stateInternal;
+    }
+
     constructor(private packetManager: PacketManagerClient,
                 private userChoiceService: UserChoiceService) {
         this.onShowWordsInternal.subscribe((value) => {
             this.isShowWordsOnInternal = value;
         });
+        this.stateInternal.subscribe(state => this.stateValueInternal = state);
+        this.stateInternal.next(GameState.configuring);
         registerHandlers(this, packetManager);
     }
 
@@ -75,8 +87,7 @@ export class GameService {
         this.cheatModeOn = false;
         this.changeTimerValueOn = false;
         this.dataInternal = new GameData();
-        this.state = GameState.configuring;
-        this.userChoiceService.finalize();
+        this.stateInternal.next(GameState.configuring);
         this.packetManager.sendPacket(GameLeavePacket, new GameLeavePacket());
     }
 

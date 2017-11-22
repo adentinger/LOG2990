@@ -1,4 +1,3 @@
-import { TestBed, inject } from '@angular/core/testing';
 import { DecorationGenerator } from './decoration-generator';
 import { RenderableMap } from '../racing-game-map/renderable-map';
 import { MockMaps } from '../../../admin-screen/map-editor/mock-maps';

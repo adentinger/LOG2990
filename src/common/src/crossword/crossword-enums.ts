@@ -8,8 +8,8 @@ export enum Direction {
 
 export enum Owner {
     none,
-    player1,
-    player2,
+    player,
+    opponent,
 }
 
 /**
@@ -17,7 +17,7 @@ export enum Owner {
  */
 export enum Difficulty {
     easy,
-    medium,
+    normal,
     hard,
 }
 

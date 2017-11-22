@@ -47,7 +47,7 @@ export class UserDisplayableGameData {
     public difficultyAsString(): string {
         switch (this.difficultyInternal) {
             case Difficulty.easy: return 'Easy';
-            case Difficulty.medium: return 'Normal';
+            case Difficulty.normal: return 'Normal';
             case Difficulty.hard: return 'Hard';
             default: throw new Error(`Difficulty ${this.difficultyInternal} invalid`);
         }

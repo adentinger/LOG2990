@@ -80,7 +80,7 @@ export class MockMaps {
 
     public renderableMap(): RenderableMap {
         const serializedMap = new MapConverterService(new RacingUnitConversionService()).serialize(this.functionalMap1());
-        const eventManager = new EventManager();
+        const eventManager = EventManager.getInstance();
         return new RenderableMap(serializedMap, eventManager);
     }
 

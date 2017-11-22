@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
-import { Logger } from '../../../../../../../common/src';
-import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
+import { CarPhysic } from './car-physic';
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Loadable } from '../../../../loadable';
 import { CarPartsLoader } from './car-parts-loader';
@@ -10,18 +9,18 @@ import { CarBreaklight } from './car-breaklight';
 import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
+import { SoundEmitter } from '../../sound/sound-emitter';
+import { Sound } from '../../../services/sound';
 
 export interface CarLights {
     lightLeft: THREE.Light;
     lightRight: THREE.Light;
 }
 
-const logger = Logger.getLogger('Car');
+const MIN_RATE = 0.4;
 
-export class Car extends UserControllableCollidableMesh implements Loadable {
+export class Car extends CarPhysic implements Loadable, SoundEmitter {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
-    private static readonly CAR_ENGINE_SOUND_URL = '/assets/racing/sounds/car-engine.ogg';
-    private static readonly AUDIO_LOADER = new THREE.AudioLoader();
 
     private static readonly HEADLIGHT_POSITIONS: THREE.Vector3[] = [
         new THREE.Vector3(-0.56077, 0.63412, -1.7),
@@ -36,18 +35,17 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
 
     protected lights: CarLights;
     protected breakLights: CarLights;
-    protected breakLightMeshs: THREE.Mesh;
+    protected breaklightsMesh: THREE.Mesh;
     protected isStopped = false;
 
-    protected targetSpeed = 50; // m/s
-    protected targetAngularSpeed = Math.PI; // rad/s
-
-    private previousVelocity = new THREE.Vector3();
+    private readonly previousVelocity = new THREE.Vector3();
 
     public readonly waitToLoad: Promise<void>;
     public readonly dimensions: THREE.Vector3 = new THREE.Vector3();
-    public readonly audioListener = new THREE.AudioListener();
-    public readonly audio = new THREE.PositionalAudio(this.audioListener);
+    public readonly eventAudios: Map<Sound, THREE.PositionalAudio> = new Map();
+    public readonly constantAudios: Map<Sound, THREE.PositionalAudio> = new Map();
+    public readonly eventSounds: Sound[] = [Sound.CAR_CRASH];
+    public readonly constantSounds: Sound[] = [Sound.CAR_ENGINE];
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
 
@@ -56,18 +54,21 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
         this.addLights();
         this.waitToLoad = this.addCarParts(carColor);
         this.waitToLoad.then(() => {
-            this.breakLightMeshs = this.getObjectByName('brake_light') as THREE.Mesh;
+            this.breaklightsMesh = this.getObjectByName('brake_light') as THREE.Mesh;
             this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
         });
-        this.add(this.audio);
-        this.audio.autoplay = true;
-        this.audio.setLoop(true);
-        this.audio.setVolume(10);
-        this.audio.setPlaybackRate(0.1);
-        Car.AUDIO_LOADER.load(Car.CAR_ENGINE_SOUND_URL,
-            (buffer: THREE.AudioBuffer) => {
-                this.audio.setBuffer(buffer);
-            }, () => { }, logger.error);
+    }
+
+    public onAudioSet(sound: Sound, audio: THREE.PositionalAudio): void {
+        this.add(audio);
+        if (sound === Sound.CAR_ENGINE) {
+            audio.setVolume(1);
+            audio.setPlaybackRate(MIN_RATE);
+        }
+    }
+
+    public onAudioRemove(sound: Sound, audio: THREE.PositionalAudio): void {
+        this.remove(audio);
     }
 
     private async addCarParts(color: THREE.Color): Promise<void> {
@@ -115,14 +116,16 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
     }
 
     private updateEnginePitch(): void {
-        const MIN_RATE = 0.4, PITCH_FACTOR = 2;
-        const playbackRate = PITCH_FACTOR * (this.velocity.length() / this.targetSpeed) + MIN_RATE;
-        this.audio.setPlaybackRate(playbackRate);
+        const PITCH_FACTOR = 1.2;
+        const playbackRate = PITCH_FACTOR * (this.velocity.length() / CarPhysic.DEFAULT_TARGET_SPEED) + MIN_RATE;
+        if (this.constantAudios.has(Sound.CAR_ENGINE)) {
+            this.constantAudios.get(Sound.CAR_ENGINE).setPlaybackRate(playbackRate);
+        }
     }
 
     private updateBreaklights(): void {
         const EPSILON = 0.005;
-        if (this.breakLightMeshs != null && this.dayModeOptions != null) {
+        if (this.breaklightsMesh != null && this.dayModeOptions != null) {
             let breakLightsIntensity: number;
             if (this.isStopped ||
                 this.velocity.length() < this.previousVelocity.length() - EPSILON) {
@@ -131,7 +134,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
             else {
                 breakLightsIntensity = 0.5 * Math.min(this.dayModeOptions.intensity, 1);
             }
-            (this.breakLightMeshs.material as THREE.MeshPhongMaterial).emissiveIntensity = breakLightsIntensity;
+            (this.breaklightsMesh.material as THREE.MeshPhongMaterial).emissiveIntensity = breakLightsIntensity;
             this.breakLights.lightLeft.intensity = this.breakLights.lightRight.intensity = breakLightsIntensity;
         }
         this.previousVelocity.copy(this.velocity);
@@ -170,11 +173,15 @@ export class Car extends UserControllableCollidableMesh implements Loadable {
     }
 
     public startSounds() {
-        this.audio.setVolume(10);
+        if (this.constantAudios.has(Sound.CAR_ENGINE)) {
+            this.constantAudios.get(Sound.CAR_ENGINE).setVolume(1);
+        }
     }
 
     public stopSounds() {
-        this.audio.setVolume(0);
+        if (this.constantAudios.has(Sound.CAR_ENGINE)) {
+            this.constantAudios.get(Sound.CAR_ENGINE).setVolume(0);
+        }
     }
 
     public dayModeChanged(newMode: DayMode): void {

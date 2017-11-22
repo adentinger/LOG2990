@@ -2,15 +2,17 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RacingGameComponent } from './racing-game.component';
 import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
+
+import { RacingGameComponent } from './racing-game.component';
 import { RacingGameService } from './racing-game.service';
 import { MapService } from '../services/map.service';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { PhysicEngine } from './physic/engine';
 import { CarsPositionsService } from './cars-positions.service';
+import { SoundService } from '../services/sound-service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -30,7 +32,8 @@ describe('RacingGameComponent', () => {
                 MapService,
                 EventManager,
                 PhysicEngine,
-                CarsPositionsService
+                CarsPositionsService,
+                SoundService
             ]
         })
             .compileComponents();

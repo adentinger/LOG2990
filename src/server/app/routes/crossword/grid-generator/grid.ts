@@ -1,20 +1,70 @@
-import { Word } from './word';
+import { Word } from '../word';
 import { GridFiller } from './grid-filler';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from '../player';
+import { WordPosition } from '../word-position';
 
 export class Grid {
 
     public static readonly DIMENSIONS = 10;
 
-    public across: Word[] = [];
-    public vertical: Word[] = [];
+    public words: Word[] = [];
 
-    public async fillUsing(filler: GridFiller): Promise<void> {
-        await filler.fill(this);
+    constructor(wordsToInclude: Word[] = []) {
+        this.words = wordsToInclude.slice();
+    }
+
+    public fillUsing(filler: GridFiller): Promise<void> {
+        return filler.fill(this);
     }
 
     public doesWordAlreadyExist(word: string): boolean {
-        return this.across.findIndex((acrossWord) => acrossWord.value === word) >= 0 ||
-               this.vertical.findIndex((verticalWord) => verticalWord.value === word) >= 0;
+        return this.words.findIndex((existingWord) => existingWord.value === word) >= 0;
+    }
+
+    public isWordAlreadyPlaced(position: WordPosition, direction: Direction): boolean {
+        return this.words.findIndex(
+            (word: Word) => word.position.equals(position) && word.direction === direction
+        ) >= 0;
+    }
+
+    public toGridWords(player: Player): GridWord[] {
+        let horizontalId = 1, verticalId = 1;
+        return this.words.map(word => {
+
+            // ID of word
+            let id: number;
+            if (word.direction === Direction.horizontal) {
+                id = horizontalId++;
+            }
+            else {
+                id = verticalId++;
+            }
+
+
+            // Owner
+            let owner: Owner;
+            if (word.owner.equals(Player.NO_PLAYER)) {
+                owner = Owner.none;
+            }
+            else if (word.owner.equals(player)) {
+                owner = Owner.player;
+            }
+            else {
+                owner = Owner.opponent;
+            }
+
+            return new GridWord(
+                id,
+                word.position.row,
+                word.position.column,
+                word.value.length,
+                word.direction,
+                owner,
+                word.value
+            );
+        });
     }
 
     public toString(): string {
@@ -29,18 +79,20 @@ export class Grid {
         }
 
         // Populate DATA with characters of all words
-        this.across.forEach((word) => {
-            for (let i = 0; i < word.value.length; ++i) {
-                const ROW = word.position.row;
-                const COLUMN = word.position.column + i;
-                DATA[ROW][COLUMN] = word.value.charAt(i);
+        this.words.forEach((word) => {
+            if (word.direction === Direction.horizontal) {
+                for (let i = 0; i < word.value.length; ++i) {
+                    const ROW = word.position.row;
+                    const COLUMN = word.position.column + i;
+                    DATA[ROW][COLUMN] = word.value.charAt(i);
+                }
             }
-        });
-        this.vertical.forEach((word) => {
-            for (let i = 0; i < word.value.length; ++i) {
-                const ROW = word.position.row + i;
-                const COLUMN = word.position.column;
-                DATA[ROW][COLUMN] = word.value.charAt(i);
+            else {
+                for (let i = 0; i < word.value.length; ++i) {
+                    const ROW = word.position.row + i;
+                    const COLUMN = word.position.column;
+                    DATA[ROW][COLUMN] = word.value.charAt(i);
+                }
             }
         });
 

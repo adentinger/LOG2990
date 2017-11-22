@@ -60,10 +60,10 @@ export class HUD {
     }
 
     public render(game: GameInfo): void {
-        const width = this.domElement.width, height = this.domElement.height;
+        const size = this.getSize(this.context);
 
-        this.context.clearRect(0, 0, width, height);
-        this.context.font = HUD.getFont(HUD.TEXT_HEIGTH * height);
+        this.context.clearRect(0, 0, size.width, size.height);
+        this.context.font = HUD.getFont(HUD.TEXT_HEIGTH * size.height);
         this.context.fillStyle = HUD.TEXT_COLOR;
 
         this.drawLapCount(this.context, game);

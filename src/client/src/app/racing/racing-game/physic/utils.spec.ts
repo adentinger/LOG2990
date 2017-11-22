@@ -17,10 +17,10 @@ describe('Physic utils', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                EventManager
+                { provide: EventManager, useValue: EventManager.getInstance() }
             ]
         });
-        eventManager = new EventManager();
+        eventManager = EventManager.getInstance();
         physicUtils = new PhysicUtils(eventManager);
     });
 
