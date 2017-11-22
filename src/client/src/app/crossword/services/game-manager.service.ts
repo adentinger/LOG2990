@@ -81,7 +81,7 @@ export class GameManagerService {
         else {
             message = 'Congratulations ; you equaled your opponent!';
         }
-        if (this.gameService.data.maxPlayers === 1) {
+        if (this.gameService.data.maxNumberOfPlayers === 1) {
             message += '\nStart over with the same settings?';
             if (confirm(message)) {
                 this.resetGame();

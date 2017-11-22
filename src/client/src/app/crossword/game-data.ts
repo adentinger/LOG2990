@@ -8,7 +8,7 @@ export class GameData {
                 public opponentName = 'CHUCK NORRIS',
                 public mode = GameMode.Classic,
                 public difficulty = Difficulty.hard,
-                public maxPlayers: PlayerNumber = 2,
+                public maxNumberOfPlayers: PlayerNumber = 2,
                 public currentNumberOfPlayers: PlayerNumber = 2) { }
 
     public clone(): GameData {
@@ -18,7 +18,7 @@ export class GameData {
             this.opponentName,
             this.mode,
             this.difficulty,
-            this.maxPlayers
+            this.maxNumberOfPlayers
         );
     }
 
