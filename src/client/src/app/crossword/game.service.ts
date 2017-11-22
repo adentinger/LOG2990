@@ -128,7 +128,7 @@ export class GameService {
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
         this.dataInternal.mode = this.userChoiceService.gameMode;
         this.dataInternal.difficulty = this.userChoiceService.difficulty;
-        this.dataInternal.numberOfPlayers = this.userChoiceService.playerNumber;
+        this.dataInternal.maxPlayers = this.userChoiceService.playerNumber;
     }
 
 }

@@ -6,6 +6,7 @@ import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridService } from '../board/grid.service';
+import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 
 /**
  * @class GameManagerService
@@ -80,7 +81,7 @@ export class GameManagerService {
         else {
             message = 'Congratulations ; you equaled your opponent!';
         }
-        if (this.gameService.data.numberOfPlayers === 1) {
+        if (this.gameService.data.maxPlayers === 1) {
             message += '\nStart over with the same settings?';
             if (confirm(message)) {
                 this.resetGame();
