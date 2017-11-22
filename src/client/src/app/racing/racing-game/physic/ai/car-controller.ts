@@ -2,13 +2,14 @@ import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
 import { BEFORE_PHYSIC_UPDATE_EVENT } from '../engine';
 
+export enum CarControllerState {
+    DISABLED,
+    ENABLED
+}
+
 export abstract class CarController {
-    public constructor(protected controlledCar: Car) { }
+    public constructor(public readonly car: Car) { }
 
-    public start(): void { }
-    public stop(): void { }
-
-    @EventManager.Listener(BEFORE_PHYSIC_UPDATE_EVENT)
-    // tslint:disable-next-line:no-unused-variable
-    private updateControls(): void { }
+    public abstract start(): void;
+    public abstract stop(): void;
 }

@@ -17,6 +17,8 @@ import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
 import { CarsPositionsService } from './cars-positions.service';
+import { CarController } from './physic/ai/car-controller';
+import { UserCarController } from './physic/ai/user-car-controller';
 
 const logger = Logger.getLogger();
 
@@ -32,6 +34,8 @@ export class RacingGameService {
         new Car(new THREE.Color('blue')),
         new Car(new THREE.Color('red'))
     ];
+    private readonly controllers: CarController[] = this.cars.map((car, idx) =>
+        idx === this.controlledCarIdx ? new UserCarController(car) : {} as CarController);
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
@@ -95,9 +99,9 @@ export class RacingGameService {
         this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;
 
-        const userCar = this.cars[RacingGameService.DEFAULT_CONTROLLABLE_CAR_IDX];
-        userCar.setUIInput(userInputs);
-        this.renderer.setCamerasTarget(userCar);
+        const userCarController = this.controllers[this.controlledCarIdx] as UserCarController;
+        userCarController.setUIInput(userInputs);
+        this.renderer.setCamerasTarget(userCarController.car);
         this.reloadSounds();
 
         this.cars.forEach(this.soundService.registerEmitter, this.soundService);
@@ -127,8 +131,9 @@ export class RacingGameService {
 
         this.cars.forEach(car => {
             car.stopSounds();
-            car.removeUIInput();
         });
+        const userCarController = this.controllers[this.controlledCarIdx] as UserCarController;
+        userCarController.removeUIInput();
 
         this.userInputs = null;
 
