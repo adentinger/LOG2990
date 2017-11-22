@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+
 import { WaitingService } from '../config-menu/waiting/waiting.service';
 import { UserChoiceService, CreateOrJoin } from '../config-menu/user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridService } from '../board/grid.service';
+import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 
 /**
  * @class GameManagerService
@@ -23,7 +25,8 @@ export class GameManagerService {
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
-                private gridService: GridService) {
+                private gridService: GridService,
+                private menuAutomatonService: MenuAutomatonService) {
         this.gameService.state.subscribe((state) => {
             switch (state) {
                 case GameState.waiting: {
@@ -89,6 +92,9 @@ export class GameManagerService {
         this.definitionsService.clearDefinitions();
         this.gameService.finalize();
         this.gridService.reinitialize();
+        while (this.menuAutomatonService.canGoBack()) {
+            this.menuAutomatonService.goBack();
+        }
     }
 
 }
