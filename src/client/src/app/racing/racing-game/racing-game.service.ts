@@ -118,6 +118,8 @@ export class RacingGameService {
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.TETRIS);
+
+            this.controllers.forEach(controller => controller.start());
             this.waitToLoad.then(() => {
                 this.soundService.playAmbiantSound(true);
             });
