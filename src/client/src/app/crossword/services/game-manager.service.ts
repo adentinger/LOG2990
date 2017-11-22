@@ -25,7 +25,8 @@ export class GameManagerService {
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
-                private gridService: GridService) {
+                private gridService: GridService,
+                private menuAutomatonService: MenuAutomatonService) {
         this.gameService.state.subscribe((state) => {
             switch (state) {
                 case GameState.waiting: {
@@ -86,10 +87,18 @@ export class GameManagerService {
                 this.resetGame();
                 this.startGame();
             }
+            else {
+                this.resetUserConfiguration();
+            }
         }
         else {
+            this.resetUserConfiguration();
             alert(message);
         }
+    }
+
+    private resetUserConfiguration(): void {
+        this.menuAutomatonService.goBackToInitialState();
     }
 
 }
