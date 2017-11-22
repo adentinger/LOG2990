@@ -28,8 +28,8 @@ export class GameDataDynamic extends GameData {
         const promise = this.mutationPromise.then(mutationData => {
             this.grid = mutationData.grid;
             this.definitionsInternal = mutationData.definitions;
+            this.startMutatingGrid();
         });
-        this.startMutatingGrid();
         return promise;
     }
 
