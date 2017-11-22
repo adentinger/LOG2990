@@ -55,7 +55,7 @@ export abstract class GameData {
         return gridWords;
     }
 
-    public async initialize(): Promise<void> {
+    public async initialized(): Promise<void> {
         this.grid = await this.fetchGrid();
         await this.setDefinitions();
     }

@@ -33,7 +33,7 @@ export abstract class Game {
         this.maxPlayers = configs.playerNumber;
 
         this.initialized =
-            this.data.initialize().catch(warn(logger));
+            this.data.initialized().catch(warn(logger));
     }
 
     public get data(): GameData {
