@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Obstacle } from './obstacle';
 import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT } from '../../physic/utils';
@@ -7,22 +8,25 @@ import { PhysicUtils } from '../../physic/utils';
 import { CarPartsLoader } from '../car/car-parts-loader';
 import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { PerspectiveCamera } from '../../rendering/perspective-camera';
+import { Loadable } from '../../../../loadable';
+import { TextureLoader } from '../../../services/texture-loader';
 
-export class Pothole extends CollidableMesh {
+export class Pothole extends Obstacle {
     private static readonly TEXTURE_URL = '/assets/racing/textures/pothole.png';
     private static readonly RADIUS: number = 1;
     private static readonly SEGMENTS: number = 40;
     private static readonly ORIENTATION_ON_MAP = 3 * Math.PI / 2;
     private static readonly FREQUENCY_SCALING_FACTOR = 1000; // ms / s
     private static readonly ROTATION_FREQUENCY = 3; // Hz
-    private static readonly POTHOLE_TEXTURE = THREE.ImageUtils.loadTexture(Pothole.TEXTURE_URL);
+    private static readonly POTHOLE_TEXTURE_PROMISE = TextureLoader.getInstance().load(Pothole.TEXTURE_URL);
     private static readonly MIN_SPEED = 10; // m/s
 
     private static readonly SLOW_FACTOR = 0.98;
     private static readonly SHAKE_AMPLITUDE = Math.PI / 240;
     private static readonly TRACK_HEIGHT = 0.03;
     private static readonly SIZE_TO_CAR_PROPORTION = 0.25;
-    public readonly mass = 0;
+
+    public readonly waitToLoad: Promise<void> = Pothole.POTHOLE_TEXTURE_PROMISE.then(() => { });
 
     private targetsToMakeNormal: Set<DynamicCollidable> = new Set();
     private targetsToShake: Set<DynamicCollidable> = new Set();
@@ -38,8 +42,9 @@ export class Pothole extends CollidableMesh {
             const scale = dimensions.x * Pothole.SIZE_TO_CAR_PROPORTION;
             texturedPlane.geometry = new THREE.CircleGeometry(scale);
         });
-        const texture = Pothole.POTHOLE_TEXTURE;
-        texturedPlane.material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, specular: 10 });
+        Pothole.POTHOLE_TEXTURE_PROMISE.then((texture) => {
+            texturedPlane.material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, specular: 10 });
+        });
         texturedPlane.rotateX(Pothole.ORIENTATION_ON_MAP);
         texturedPlane.position.set(0, Pothole.TRACK_HEIGHT, 0);
         this.add(texturedPlane);
