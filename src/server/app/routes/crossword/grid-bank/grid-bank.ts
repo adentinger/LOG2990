@@ -2,10 +2,13 @@ import { Collection, Db, MongoError } from 'mongodb';
 
 import { Grid } from '../grid-generator/grid';
 import { GridGenerator } from '../grid-generator/grid-generator';
-import { NormalWordSuggestionsGetter } from '../grid-generator/normal-word-suggestions-getter';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 import { provideDatabase, ensureCollectionReady } from '../../../app-db';
 import { Logger } from '../../../../../common/src';
+import { Word } from '../word';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from '../player';
+import { WordPosition } from '../word-position';
 
 enum GridState {
     GENERATING = 0,
@@ -78,13 +81,13 @@ export abstract class GridBank {
 
     protected getGridFromGeneratorWithDifficulty(difficulty: Difficulty): Promise<Grid> {
         return GridGenerator.getInstance()
-               .gridGeneration(new NormalWordSuggestionsGetter(difficulty));
+               .gridGeneration(difficulty);
     }
 
     public async requestGridGeneration(): Promise<void> {
         const GRID_PROMISE =
             GridGenerator.getInstance()
-            .gridGeneration(new NormalWordSuggestionsGetter(this.difficulty));
+            .gridGeneration(this.difficulty);
         await GRID_PROMISE.then((grid) => this.addGridToBank(grid));
     }
 
@@ -105,10 +108,29 @@ export abstract class GridBank {
     }
 
     private makeGridFrom(document: any): Grid {
-        const GRID = new Grid();
-        GRID.across = document.across;
-        GRID.vertical = document.vertical;
-        return GRID;
+        const grid = new Grid();
+
+        if (document.hasOwnProperty('words')) {
+            // For the grids generated using the new code
+            grid.words = document.words.map(
+                (word: Word) =>
+                    new Word(word.value, new WordPosition(word.position.row, word.position.column), word.direction, Player.NO_PLAYER)
+            );
+        }
+        else {
+            // For the grids generated using the old code
+            const across = document.across.map(
+                (word: Word) =>
+                    new Word(word.value, new WordPosition(word.position.row, word.position.column), Direction.horizontal, Player.NO_PLAYER)
+            );
+            const vertical = document.vertical.map(
+                (word: Word) =>
+                    new Word(word.value, new WordPosition(word.position.row, word.position.column), Direction.vertical, Player.NO_PLAYER)
+            );
+            grid.words = across.concat(vertical);
+        }
+
+        return grid;
     }
 
 }

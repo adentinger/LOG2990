@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { Line } from '../../../../common/src/math/line';
 import { Point } from '../../../../common/src/math/point';
 import { MapPositionAlgorithms } from './map-position-algorithms';
@@ -21,21 +20,9 @@ new Line(points[5], points[0])];
 
 describe('Map position algorithms', () => {
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-            ],
-            declarations: [
-            ],
-            providers: [
-            ]
-        })
-            .compileComponents();
-    });
-
-    beforeEach(() => {
-    });
-
+    /**
+     * getProjectionOnLine
+     */
     it('should calculate the interpolation given a point and a line', () => {
         const line = new Line(new Point(0.0, 0.0), new Point(8.0, 0.0));
         const point = new Point(3.0, 3.0);
@@ -59,18 +46,19 @@ describe('Map position algorithms', () => {
     });
 
     it('should calculate a negative interpolation given a point and a line', () => {
-        const line = new Line(new Point(4.0, 1.0), new Point(8.0, 4.0));
-        const point = new Point(2.0, 3.0);
+        const line = new Line(new Point(8.0, 2.0), new Point(11.0, 2.0));
+        const point = new Point(6.0, 4.0);
 
         const projection = MapPositionAlgorithms.getProjectionOnLine(point, line);
 
         expect(projection.segment).toEqual(line);
-        expect(projection.interpolation).toEqual(-2 / 25);
-        // expect(projection.distanceToSegment).toEqual(Math.sqrt(8));
-
+        expect(projection.interpolation).toEqual(-2 / 3);
+        expect(projection.distanceToSegment).toEqual(2);
     });
 
-
+    /**
+     * getAllProjections
+     */
     it('should calculate the interpolations on all lines given a point and a set of lines', () => {
         const thePosition = new Point(9.0, 6.0);
 
@@ -85,25 +73,16 @@ describe('Map position algorithms', () => {
         expect(allProjections[5].interpolation).toEqual(0);
     });
 
-    xit('should calculate the interpolation given a point and a set of lines', () => {
+    /**
+     * getClosestProjection
+     */
+    it('should calculate the interpolation given a point and a set of lines', () => {
         const thePosition = new Point(9.0, 6.0);
 
         const closestInterpolation = MapPositionAlgorithms.getClosestProjection(thePosition, lines);
 
         expect(closestInterpolation.distanceToSegment).toEqual(1.0);
         expect(closestInterpolation.segment).toEqual(lines[1]);
-        expect(closestInterpolation.interpolation).toEqual(3.0 / 8.0);
-    });
-
-    xit('should calculate the interpolations on all lines given a point and a set of lines', () => {
-        const thePosition = new Point(9.0, 6.0);
-
-        const allProjections: Projection[] = MapPositionAlgorithms.getAllProjections(thePosition, lines);
-
-        expect(allProjections.length).toEqual(lines.length);
-
-        // expect(allProjections[1].distanceToSegment).toEqual(1);
-        // expect(allProjections[1].interpolation).toEqual(2.0 / 5.0);
-        expect(allProjections[0].segment.origin.x).toEqual(7);
+        expect(closestInterpolation.interpolation).toEqual(2.0 / 5.0);
     });
 });

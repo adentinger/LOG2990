@@ -76,7 +76,7 @@ export class MenuAutomatonService {
         this.states.playerNumber.addOption({name: 'Two players', nextState: this.states.createOrJoin, value: 2});
 
         this.states.difficulty.addOption({name: 'Easy', nextState: this.states.confirm, value: Difficulty.easy});
-        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.medium});
+        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.normal});
         this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm, value: Difficulty.hard});
 
         this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty, value: CreateOrJoin.create});

@@ -4,6 +4,8 @@ import { WaitingComponent } from './waiting.component';
 import { WaitingService } from './waiting.service';
 import { PacketManagerClient } from '../../../packet-manager-client';
 import { packetManagerClient } from '../../../packet-manager.service';
+import { GameService } from '../../game.service';
+import { UserChoiceService } from '../user-choice.service';
 
 describe('WaitingComponent', () => {
     let component: WaitingComponent;
@@ -14,7 +16,9 @@ describe('WaitingComponent', () => {
             declarations: [ WaitingComponent ],
             providers: [
                 WaitingService,
-                {provide: PacketManagerClient, useValue: packetManagerClient}
+                {provide: PacketManagerClient, useValue: packetManagerClient},
+                GameService,
+                UserChoiceService
             ]
         })
         .compileComponents();

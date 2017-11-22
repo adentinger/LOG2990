@@ -2,9 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RacingGameComponent } from './racing-game.component';
 import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
+
+import { RacingGameComponent } from './racing-game.component';
 import { RacingGameService } from './racing-game.service';
 import { MapService } from '../services/map.service';
 import { UIInputs } from '../services/ui-input.service';

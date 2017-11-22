@@ -8,7 +8,7 @@
         "cwd": "${workspaceFolder}/server",
         "program": "${workspaceFolder}/server/out/server/app/www.js",
         "env": {
-          "LOG_LEVEL": "ALL"
+          "LOG_LEVEL": "INFO"
         }
       },
       {

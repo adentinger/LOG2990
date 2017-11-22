@@ -23,7 +23,7 @@ import { PacketManagerClient } from './packet-manager-client';
 import { MapService } from './racing/services/map.service';
 import { AdminConfigComponent } from './admin-screen/admin-config/admin-config.component';
 import { AdminConfigService } from './admin-screen/admin-config.service';
-import { EventManager } from './event-manager.service';
+import { EventManager, eventManagerFactory } from './event-manager.service';
 import { ItemGenerator } from './admin-screen/map-editor/items/item-generator';
 import { CarsPositionsService } from './racing/racing-game/cars-positions.service';
 
@@ -50,7 +50,7 @@ import { CarsPositionsService } from './racing/racing-game/cars-positions.servic
         { provide: PacketManagerClient, useValue: packetManagerClient },
         MapService,
         AdminConfigService,
-        { provide: EventManager, useValue: EventManager.getInstance() },
+        { provide: EventManager, useValue: eventManagerFactory },
         ItemGenerator,
         CarsPositionsService
     ],

@@ -56,7 +56,7 @@ export class DefinitionFieldComponent {
     }
 
     public onClickOutside(): void {
-        if (this.gameService.state >= GameState.started) {
+        if (this.gameService.stateValue >= GameState.started) {
             this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
     }

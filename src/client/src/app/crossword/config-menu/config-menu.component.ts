@@ -1,19 +1,15 @@
-import { Component, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MenuAutomatonService } from './menu-automaton.service';
-import { GameHttpService } from '../services/game-http.service';
-import { UserChoiceService, CreateOrJoin } from './user-choice.service';
 import { GameService, GameState } from '../game.service';
-import { WaitingService } from './waiting/waiting.service';
 
 @Component({
     selector: 'app-config-menu',
     templateUrl: './config-menu.component.html',
     styleUrls: ['./config-menu.component.css'],
     providers: [
-        MenuAutomatonService,
-        WaitingService
+        MenuAutomatonService
     ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
@@ -23,11 +19,7 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     private subscriptions: Subscription[] = [];
 
     constructor(public menuAutomaton: MenuAutomatonService,
-                public waitingService: WaitingService,
-                private gameService: GameService,
-                private gameHttpService: GameHttpService,
-                private userChoiceService: UserChoiceService,
-                private ngZone: NgZone) { }
+                private gameService: GameService) { }
 
     public ngAfterViewInit(): void {
         const chooseGameArriveSubscription = this.menuAutomaton.states.chooseGame.arrive.subscribe(
@@ -37,16 +29,12 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
             () => this.shouldShowAvailableGames = false
         );
         const configEndSubscription = this.menuAutomaton.configEnd.subscribe(
-            () => this.useConfiguration()
-        );
-        const stopDisplayingSubscription = this.waitingService.isWaiting.subscribe(
-            () => this.ngZone.run(() => {})
+            () => this.gameService.state.next(GameState.waiting)
         );
         this.subscriptions.push(
             chooseGameArriveSubscription,
             chooseGameLeaveSubscription,
-            configEndSubscription,
-            stopDisplayingSubscription
+            configEndSubscription
         );
     }
 
@@ -55,29 +43,11 @@ export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public get shouldBeDisplayed(): boolean {
-        return this.gameService.state === GameState.configuring || this.waitingService.isWaitingValue;
+        return this.gameService.stateValue === GameState.configuring || this.waiting;
     }
 
-    private useConfiguration(): void {
-        this.waitingService.isWaiting.next(true);
-        const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
-        if (isJoiningGame) {
-            this.gameService.state = GameState.started;
-            this.gameService.joinGame(
-                this.userChoiceService.chosenGame,
-                this.userChoiceService.playerName
-            );
-        }
-        else {
-            this.gameHttpService.createGame(this.userChoiceService.toGameConfiguration())
-                .then((gameId) => {
-                    this.gameService.state = GameState.started;
-                    this.gameService.joinGame(
-                        gameId,
-                        this.userChoiceService.playerName
-                    );
-                });
-        }
+    public get waiting(): boolean {
+        return this.gameService.stateValue === GameState.waiting;
     }
 
 }

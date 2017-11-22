@@ -1,132 +1,174 @@
 import { GridFillerWordPlacement as WordPlacement } from './grid-filler-word-placement';
 import { Grid } from './grid';
-import { AbstractWordSuggestionsGetter } from './abstract-word-suggestions-getter';
+import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { WordConstraintChecker } from './word-constraint-checker';
-import { Word } from './word';
+import { Word } from '../word';
 import { WordSuggestions } from './word-suggestions';
+import { Direction } from '../../../../../common/src/crossword/crossword-enums';
+import { Player } from '../player';
+import { Transposer } from './transposer';
+import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 export abstract class GridFiller {
 
     protected static readonly NUM_TRIES = 20;
 
-    protected acrossWords: WordPlacement[] = [];
-    protected verticalWords: WordPlacement[] = [];
-    protected suggestionsGetter: AbstractWordSuggestionsGetter;
+    public acrossPlacement: WordPlacement[];
+    public verticalPlacement: WordPlacement[];
+    protected suggestionsGetter: WordSuggestionsGetter;
 
-    constructor(suggestionsGetter: AbstractWordSuggestionsGetter) {
-        this.suggestionsGetter = suggestionsGetter;
+    private shouldCancelFilling = false;
+    private transposer = new Transposer();
+
+    constructor(difficulty: Difficulty) {
+        this.suggestionsGetter = new WordSuggestionsGetter(difficulty);
     }
 
-    public get acrossPlacement(): WordPlacement[] {
-        return this.acrossWords.slice();
-    }
-
-    public get verticalPlacement(): WordPlacement[] {
-        return this.verticalWords.slice();
+    public cancelFilling(): void {
+        this.shouldCancelFilling = true;
     }
 
     public async fill(grid: Grid): Promise<void> {
-        const INITIAL_NUMBER_OF_ACROSS_WORDS = grid.across.length;
+        this.shouldCancelFilling = false;
+
+        const transpose = this.shouldTranspose(grid);
+        if (transpose) {
+            // Take rows as columns, and vice-versa.
+            this.transposer.transposeFiller(this);
+            this.transposer.transposeGrid(grid);
+        }
+
+        const initialNumberOfWords = grid.words.length;
         let done = false;
         while (!done) {
-            while (grid.across.length > INITIAL_NUMBER_OF_ACROSS_WORDS) {
-                grid.across.pop();
+            while (grid.words.length > initialNumberOfWords) {
+                grid.words.pop();
             }
+
             let doneAcross = false;
             while (!doneAcross) {
-                doneAcross = await this.placeAcrossWords(grid);
+                try {
+                    doneAcross = await this.placeAcrossWords(grid);
+                }
+                catch (e) {
+                    return Promise.reject(e);
+                }
             }
+
             let doneVertical = false;
-            doneVertical = await this.placeVerticalWords(grid);
+            try {
+                doneVertical = await this.placeVerticalWords(grid);
+            }
+            catch (e) {
+                return Promise.reject(e);
+            }
             done = doneVertical;
+        }
+
+        if (transpose) {
+            // Un-transpose
+            this.transposer.transposeFiller(this);
+            this.transposer.transposeGrid(grid);
         }
     }
 
-    private async placeAcrossWords(grid: Grid, current: number = 0): Promise<boolean> {
+    private async placeAcrossWords(grid: Grid, recursionDepth: number = 0): Promise<boolean> {
         // We assume that the words in acrossWords and verticalWords
         // are given top to bottom and left to right (respectively).
-        if (current < this.acrossWords.length) {
-            const WORD_PLACEMENT = this.acrossWords[current];
-            const SUGGESTIONS =
-                await this.suggestionsGetter.getSuggestions(
-                    WORD_PLACEMENT.minLength,
-                    WORD_PLACEMENT.maxLength,
-                    [],
-                    WORD_PLACEMENT.position
-                );
+        if (recursionDepth < this.acrossPlacement.length) {
 
-            let done = false;
-            let numTriesLeft = GridFiller.NUM_TRIES;
-            while (numTriesLeft > 0 && SUGGESTIONS.length > 0 && !done) {
-                const SUGGESTION = this.getAWordThatIsNotADuplicate(grid, SUGGESTIONS);
-                if (SUGGESTION !== '') {
-                    done = await this.trySuggestion(
-                        grid,
-                        SUGGESTION,
-                        current
-                    );
-                }
-                --numTriesLeft;
+            if (this.shouldCancelFilling) {
+                throw new Error('Grid generation cancelled.');
             }
-            return done;
+
+            const wordPlacement = this.acrossPlacement[recursionDepth];
+
+            if (grid.isWordAlreadyPlaced(wordPlacement.position, Direction.horizontal)) {
+                return await this.placeAcrossWords(grid, recursionDepth + 1);
+            }
+            else {
+                const constraints = WordConstraintChecker.getInstance().getAcrossWordConstraint(grid, wordPlacement);
+                const suggestions =
+                    await this.suggestionsGetter.getSuggestions(
+                        wordPlacement.minLength,
+                        wordPlacement.maxLength,
+                        constraints
+                    );
+
+                let done = false;
+                let numTriesLeft = GridFiller.NUM_TRIES;
+                while (numTriesLeft > 0 && suggestions.length > 0 && !done) {
+                    const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
+                    if (suggestion !== '') {
+                        done = await this.trySuggestion(
+                            grid,
+                            suggestion,
+                            recursionDepth
+                        );
+                    }
+                    --numTriesLeft;
+                }
+                return done;
+            }
         }
         else {
             return true;
         }
     }
 
-    private async placeVerticalWords(grid: Grid, current: number = 0): Promise<boolean> {
-        for (let i = 0; i < this.verticalWords.length; ++i) {
-            const PLACEMENT = this.verticalWords[i];
-            const CONSTRAINT =
-            WordConstraintChecker.getInstance().getVerticalWordConstraint(
-                grid,
-                PLACEMENT.position,
-                PLACEMENT.minLength
-            );
-            const SUGGESTIONS = await this.suggestionsGetter.getSuggestions(
-                PLACEMENT.minLength,
-                PLACEMENT.maxLength,
-                CONSTRAINT,
-                PLACEMENT.position
-            );
-            // We know that there is at least one suggestion
-            const SUGGESTION = this.getAWordThatIsNotADuplicate(grid, SUGGESTIONS);
-            if (SUGGESTION !== '') {
-                const WORD = new Word(
-                    SUGGESTION,
-                    PLACEMENT.position
+    private async placeVerticalWords(grid: Grid): Promise<boolean> {
+        const initialNumberOfWords = grid.words.length;
+        for (let i = 0; i < this.verticalPlacement.length; ++i) {
+            const placement = this.verticalPlacement[i];
+            if (!grid.isWordAlreadyPlaced(placement.position, Direction.vertical)) {
+                const constraint =
+                    WordConstraintChecker.getInstance().getVerticalWordConstraint(
+                        grid,
+                        placement
+                    );
+                const suggestions = await this.suggestionsGetter.getSuggestions(
+                    placement.minLength,
+                    placement.maxLength,
+                    constraint
                 );
-                grid.vertical.push(WORD);
-            }
-            else {
-                // Failure ; clean added vertical words
-                for (let j = 0; j < i; ++j) {
-                    grid.vertical.pop();
+                // We know that there is at least one suggestion
+                const suggestion = this.getAWordThatIsNotADuplicate(grid, suggestions);
+                if (suggestion !== '') {
+                    const word = new Word(
+                        suggestion,
+                        placement.position.clone(),
+                        Direction.vertical,
+                        Player.NO_PLAYER
+                    );
+                    grid.words.push(word);
                 }
-                return false;
+                else {
+                    // Failure ; clean added vertical words
+                    while (grid.words.length > initialNumberOfWords) {
+                        grid.words.pop();
+                    }
+                    return false;
+                }
             }
         }
         return true;
     }
 
     private async areConstraintsMetFor(grid: Grid): Promise<boolean> {
-        for (let i = 0; i < this.verticalWords.length; ++i) {
-            const VERTICAL_WORD = this.verticalWords[i];
-            const VERTICAL_WORD_CONSTRAINT =
+        for (let i = 0; i < this.verticalPlacement.length; ++i) {
+            const verticalWordPlacement = this.verticalPlacement[i];
+            const verticalWordConstraint =
                 WordConstraintChecker.getInstance().getVerticalWordConstraint(
                     grid,
-                    VERTICAL_WORD.position,
-                    VERTICAL_WORD.minLength
+                    verticalWordPlacement
                 );
-            const SUGGESTIONS_EXIST =
+            const suggestionsExist =
                 await this.suggestionsGetter.doSuggestionsExist(
-                    VERTICAL_WORD.minLength,
-                    VERTICAL_WORD.maxLength,
-                    VERTICAL_WORD_CONSTRAINT,
-                    VERTICAL_WORD.position
+                    verticalWordPlacement.minLength,
+                    verticalWordPlacement.maxLength,
+                    verticalWordConstraint
                 );
-            if (!SUGGESTIONS_EXIST) {
+            if (!suggestionsExist) {
                 return false;
             }
         }
@@ -134,29 +176,31 @@ export abstract class GridFiller {
     }
 
     private async trySuggestion(grid: Grid, suggestion: string, current: number): Promise<boolean> {
-        const WORD_PLACEMENT = this.acrossPlacement[current];
-        const WORD = new Word(
+        const wordPlacement = this.acrossPlacement[current];
+        const word = new Word(
             suggestion,
-            WORD_PLACEMENT.position
+            wordPlacement.position.clone(),
+            Direction.horizontal,
+            Player.NO_PLAYER
         );
-        grid.across.push(WORD);
+        grid.words.push(word);
         try {
             if (await this.areConstraintsMetFor(grid)) {
                 if (await this.placeAcrossWords(grid, current + 1)) {
                     return true;
                 }
                 else {
-                    grid.across.pop();
+                    grid.words.pop();
                     return false;
                 }
             }
             else {
-                grid.across.pop();
+                grid.words.pop();
                 return false;
             }
         }
         catch (e) {
-            grid.across.pop();
+            grid.words.pop();
             return false;
         }
     }
@@ -166,12 +210,35 @@ export abstract class GridFiller {
         let word = '';
         const FOUND_NON_DUPLICATE = (() => word !== '');
         while (suggestions.length > 0 && !FOUND_NON_DUPLICATE()) {
-            const SUGGESTION = suggestions.consumeRandomSuggestion();
-            if (!grid.doesWordAlreadyExist(SUGGESTION)) {
-                word = SUGGESTION;
+            const suggestion = suggestions.consumeRandomSuggestion();
+            if (!grid.doesWordAlreadyExist(suggestion)) {
+                word = suggestion;
             }
         }
         return word;
+    }
+
+    /**
+     * @description Checks whether the filler should transpose itself and the grid.
+     * Transposing helps speedup the filling process when there are more horizontal words
+     * to place than vertical words, because we place horizontal words first.
+     * @param grid The grid possibly containing words already
+     */
+    private shouldTranspose(grid: Grid): boolean {
+        let numberOfAcrossWordsToPlace = 0, numberOfVerticalWordsToPlace = 0;
+
+        this.acrossPlacement.forEach(acrossPlacement => {
+            if (!grid.isWordAlreadyPlaced(acrossPlacement.position, Direction.horizontal)) {
+                ++numberOfAcrossWordsToPlace;
+            }
+        });
+        this.verticalPlacement.forEach(verticalPlacement => {
+            if (!grid.isWordAlreadyPlaced(verticalPlacement.position, Direction.vertical)) {
+                ++numberOfVerticalWordsToPlace;
+            }
+        });
+
+        return numberOfVerticalWordsToPlace < numberOfAcrossWordsToPlace;
     }
 
 }
