@@ -98,6 +98,7 @@ export class GameManagerService {
     }
 
     private resetUserConfiguration(): void {
+        this.userChoiceService.reinitialize();
         this.menuAutomatonService.goBackToInitialState();
     }
 
