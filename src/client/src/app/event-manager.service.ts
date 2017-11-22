@@ -101,7 +101,7 @@ export class EventManager {
     }
 }
 
-export const eventManagerFactory = EventManager.getInstance;
+export const eventManagerValue = EventManager.getInstance();
 
 export namespace EventManager {
     export declare type Event<T = any> = EventBis<T>;
