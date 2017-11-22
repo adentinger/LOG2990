@@ -33,6 +33,10 @@ export abstract class GameData {
         return this.definitionsInternal.slice();
     }
 
+    public get wordsLeftToFind(): Word[] {
+        return this.grid.words.filter(word => word.owner !== Player.NO_PLAYER);
+    }
+
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
     }
