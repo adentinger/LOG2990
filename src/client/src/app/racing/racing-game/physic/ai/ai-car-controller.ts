@@ -3,6 +3,7 @@ import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
 import { Seconds } from '../../../../types';
 import { AFTER_PHYSIC_UPDATE_EVENT } from '../engine';
+import { CarPhysic } from '../../models/car/car-physic';
 
 export class AiCarController extends CarController {
     private static readonly UPDATE_PERIODE = 5; // cycles
@@ -20,6 +21,15 @@ export class AiCarController extends CarController {
         if (++this.cycleCount >= AiCarController.UPDATE_PERIODE) {
             this.cycleCount = 0;
             // Call the physic updates.
+            this.car.targetSpeed = this.getTargetSpeed();
         }
+    }
+
+    private getAngularVelocityForTrack(): number {
+        return 0;
+    }
+
+    private getTargetSpeed(): number {
+        return CarPhysic.DEFAULT_TARGET_SPEED;
     }
 }
