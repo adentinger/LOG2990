@@ -1,5 +1,6 @@
 import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
+import { Line } from '../../../../../../../common/src/math';
 
 export enum CarControllerState {
     DISABLED,
@@ -8,6 +9,7 @@ export enum CarControllerState {
 
 export abstract class CarController {
     protected state = CarControllerState.DISABLED;
+    protected trackLines: Line[] = [];
 
     public constructor(public readonly car: Car) {
         car.targetSpeed = 0;
@@ -24,5 +26,10 @@ export abstract class CarController {
             this.car.targetAngularSpeed = 0;
         }
         this.state = CarControllerState.DISABLED;
+    }
+
+    public setTrackLines(lines: Line[]): void {
+        this.trackLines.splice(0); // clear array
+        this.trackLines.push(...lines);
     }
 }

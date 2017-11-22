@@ -119,7 +119,10 @@ export class RacingGameService {
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.TETRIS);
 
-            this.controllers.forEach(controller => controller.start());
+            // this.controllers.forEach(controller => controller.setTrackLines(this.map.mapLines) && controller.start());
+            this.controllers[this.controlledCarIdx].start();
+            this.controllers[+!this.controlledCarIdx].setTrackLines(this.map.mapLines);
+            this.controllers[+!this.controlledCarIdx].start();
             this.waitToLoad.then(() => {
                 this.soundService.playAmbiantSound(true);
             });
