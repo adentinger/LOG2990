@@ -1,6 +1,7 @@
 import { Car } from './models/car/car';
 import { Seconds } from '../../types';
 import { CarsService } from './cars.service';
+import { Progression } from './racing-types';
 
 export class GameInfo {
 
@@ -13,8 +14,8 @@ export class GameInfo {
         return 1;
     }
 
-    public getPositions(car: Car) {
-        return null;
+    public getPosition(car: Car): Progression {
+        return 0;
     }
 
     public get lapTimes(): Seconds[] {
@@ -34,5 +35,9 @@ export class GameInfo {
 
     public startTimer(): void {
         this.startTime = Date.now() / 1000;
+    }
+
+    public getCurrentRank() {
+
     }
 }

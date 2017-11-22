@@ -101,9 +101,7 @@ export class HUD {
     private drawRacePosition(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.RACE_PLACE_POSITION);
 
-        // const position = game.positions.findIndex((car) => car === game.controlledCar) + 1;
-
-        const position = Math.floor(Math.random() * 4); // MOCK
+        const position = game.getPosition(game.controlledCar);
 
         const suffix = position > 3 ? 'th' : (position === 3 ? 'rd' : (position === 2 ? 'nd' : 'st'));
 

@@ -8,6 +8,10 @@ import { GameInfo } from './game-info';
 import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
+import { Progression } from './racing-types';
+import { EventManager } from '../../event-manager.service';
+import { Seconds } from '../../types';
+import { AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 
 
 @Injectable()
@@ -15,19 +19,24 @@ export class CarsService implements Loadable {
 
     public static readonly CAR_COUNT = 4;
 
-    private controlledCarIdx = Math.floor(Math.random() * CarsService.CAR_COUNT);
     public readonly waitToLoad: Promise<void>;
 
-    private readonly cars: Car[] = [
+    private readonly carsProgression: Map<Car, Progression> = new Map();
+    private progressionUpdateCounter = 0;
+
+    private readonly cars: Set<Car> = new Set([
         new Car(new THREE.Color('green')),
         new Car(new THREE.Color('yellow')),
         new Car(new THREE.Color('blue')),
         new Car(new THREE.Color('red'))
-    ];
+    ]);
+
+    private controlledCar = Array.from(
+        this.cars.values())[Math.floor(Math.random() * CarsService.CAR_COUNT)];
 
     public constructor() {
         this.waitToLoad = Promise.all([
-            ...this.cars.map(car => car.waitToLoad)
+            ...Array.from(this.cars.values(), car => car.waitToLoad)
         ]).then(() => { });
     }
 
@@ -46,8 +55,8 @@ export class CarsService implements Loadable {
         return this.getPlayerCar().position;
     }
 
-    public getPlayerProgressionInPercent(): number {
-        return 0;
+    public getCarsProgression(): Map<Car, Progression> {
+        return this.carsProgression;
     }
 
     private getMapLength(): number {
@@ -55,7 +64,7 @@ export class CarsService implements Loadable {
     }
 
     public getPlayerCar(): Car {
-        return this.cars[this.controlledCarIdx];
+        return this.controlledCar;
     }
 
     public addToMap(map: RenderableMap): void {
@@ -64,5 +73,14 @@ export class CarsService implements Loadable {
 
     public removeFromMap(map: RenderableMap): void {
         this.cars.forEach(map.remove, map);
+    }
+
+    @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
+    private updateCarsProgression(event: EventManager.Event<{ deltaTime: Seconds }>): void {
+        if (++this.progressionUpdateCounter === 30) {
+            this.progressionUpdateCounter = 0;
+            // compute progressions
+            // function call
+        }
     }
 }
