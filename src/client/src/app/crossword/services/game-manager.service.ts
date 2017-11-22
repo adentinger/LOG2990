@@ -44,6 +44,12 @@ export class GameManagerService {
         });
     }
 
+    public finalize(): void {
+        this.definitionsService.clearDefinitions();
+        this.gameService.finalize();
+        this.gridService.reinitialize();
+    }
+
     public resetGame(): void {
         this.definitionsService.clearDefinitions();
         this.gameService.finalize();
