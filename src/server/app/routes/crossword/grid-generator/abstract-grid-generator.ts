@@ -18,85 +18,68 @@ interface CancellationData {
 
 export abstract class AbstractGridGenerator {
 
-    private dataOfLatestGeneration: GenerationData;
+    private latestGeneration: GenerationData;
     private isGenerationScheduled = false;
-    private nextGenerationData: CancellationData;
 
-    protected get latestGeneration(): Promise<Grid> {
-        return this.dataOfLatestGeneration.promise;
+    protected get latestGrid(): Promise<Grid> {
+        return this.latestGeneration.promise;
     }
 
     protected constructor() {
         const EMPTY_GRID = new Grid();
-        this.dataOfLatestGeneration = {
+        this.latestGeneration = {
             filler: null,
             grid: EMPTY_GRID,
             promise: Promise.resolve(EMPTY_GRID)
         };
-
-        this.nextGenerationData = null;
     }
 
     protected gridGenerationBase(wordsToInclude: Word[], difficulty: Difficulty): Promise<Grid> {
         if (this.isGenerationScheduled) {
-            // Just update the next generation data.
-            this.nextGenerationData.difficulty = difficulty;
-            this.nextGenerationData.wordsToInclude = wordsToInclude;
-            return this.nextGenerationData.promise;
+            // Just update the generation parameters.
+            this.latestGeneration.grid = new Grid(wordsToInclude);
+            this.latestGeneration.filler = new GridFillerContainer(difficulty);
         }
         else {
-            this.isGenerationScheduled = true;
-
-            this.nextGenerationData = {
-                difficulty: difficulty,
-                wordsToInclude: wordsToInclude,
-                promise: null
-            };
-
-            const promise = this.dataOfLatestGeneration.promise.then(() => {
-                // Former generation finished.
-                if (this.isGenerationScheduled) {
-                    // Start next generation if still scheduled.
-                    this.isGenerationScheduled = false;
-                    this.dataOfLatestGeneration = this.startGeneration(
-                        this.nextGenerationData.wordsToInclude,
-                        this.nextGenerationData.difficulty
-                    );
-                    return this.dataOfLatestGeneration.promise;
-                }
-                else {
-                    // Generation cancelled;
-                    return null;
-                }
-            });
-            this.nextGenerationData.promise = promise;
-            return promise;
+            this.startGeneration(wordsToInclude, difficulty);
         }
+        return this.latestGeneration.promise;
     }
 
     protected cancelLatestGeneration(): Promise<void> {
         this.isGenerationScheduled = false;
-        this.dataOfLatestGeneration.filler.cancelFilling();
-        return this.dataOfLatestGeneration.promise
+        this.latestGeneration.filler.cancelFilling();
+        return this.latestGeneration.promise
             .then (() => { return; })
             .catch();
     }
 
-    private startGeneration(wordsToInclude: Word[], difficulty: Difficulty): GenerationData {
+    private startGeneration(wordsToInclude: Word[], difficulty: Difficulty): void {
+
         const generationData: GenerationData = {
-            grid: null,
-            filler: null,
+            grid: new Grid(wordsToInclude),
+            filler: new GridFillerContainer(difficulty),
             promise: null
         };
-        generationData.promise = new Promise((resolve, reject) => {
-            generationData.grid = new Grid(wordsToInclude);
-            generationData.filler = new GridFillerContainer(difficulty);
-            generationData.grid.fillUsing(generationData.filler)
-                .then(() => resolve(generationData.grid))
-                .catch(() => resolve(null));
+
+        this.isGenerationScheduled = true;
+        const promise = this.latestGeneration.promise.then(() => {
+            // Former generation finished.
+            if (this.isGenerationScheduled) {
+                // Start next generation if still scheduled.
+                this.isGenerationScheduled = false;
+                return generationData.grid.fillUsing(generationData.filler)
+                    .then(() => generationData.grid)
+                    .catch(() => null);
+            }
+            else {
+                // Generation cancelled.
+                return null;
+            }
         });
 
-        return generationData;
+        generationData.promise = promise;
+        this.latestGeneration = generationData;
     }
 
 }

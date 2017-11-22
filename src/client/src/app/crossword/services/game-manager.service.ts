@@ -12,7 +12,7 @@ import { GridService } from '../board/grid.service';
  * @description Has the responsibility of managing the key moments of a game's life :
  * 1) Creation
  * 2) Completion
- * 3) Reset
+ * 3) Reset and deletion
  * This service was basically created to solve circular dependency problems between
  * GameService and GameHttpService. Yes, this probably denotes a slight architectural problem.
  */
@@ -24,7 +24,8 @@ export class GameManagerService {
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
-                private gridService: GridService) {
+                private gridService: GridService,
+                private menuAutomatonService: MenuAutomatonService) {
         this.gameService.state.subscribe((state) => {
             switch (state) {
                 case GameState.waiting: {
@@ -40,6 +41,12 @@ export class GameManagerService {
                 }
             }
         });
+    }
+
+    public finalize(): void {
+        this.definitionsService.clearDefinitions();
+        this.gameService.finalize();
+        this.gridService.reinitialize();
     }
 
     private startGame(): void {
@@ -79,13 +86,22 @@ export class GameManagerService {
                 this.resetGame();
                 this.startGame();
             }
+            else {
+                this.resetUserConfiguration();
+            }
         }
         else {
+            this.resetUserConfiguration();
             alert(message);
         }
     }
 
-    public resetGame(): void {
+    private resetUserConfiguration(): void {
+        this.userChoiceService.reinitialize();
+        this.menuAutomatonService.goBackToInitialState();
+    }
+
+    private resetGame(): void {
         this.definitionsService.clearDefinitions();
         this.gameService.finalize();
         this.gridService.reinitialize();

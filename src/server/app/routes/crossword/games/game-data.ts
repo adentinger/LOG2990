@@ -26,8 +26,13 @@ export abstract class GameData {
 
     protected difficulty: Difficulty;
     protected grid: Grid = new Grid();
+    protected definitionsInternal: DefinitionWithIndex[] = [];
 
-    private definitionsInternal: DefinitionWithIndex[] = [];
+    private initializedInternal: Promise<void>;
+
+    public get initialized(): Promise<void> {
+        return this.initializedInternal;
+    }
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
@@ -39,6 +44,7 @@ export abstract class GameData {
 
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
+        this.initialize();
     }
 
     public getGridWords(player: Player, opponent: Player): GridWord[] {
@@ -55,9 +61,13 @@ export abstract class GameData {
         return gridWords;
     }
 
-    public async initialize(): Promise<void> {
-        this.grid = await this.fetchGrid();
-        await this.setDefinitions();
+    public initialize(): void {
+        this.initializedInternal = this.fetchGrid().then(grid => {
+            this.grid = grid;
+            return this.fetchDefinitionsOf(grid);
+        }).then(definitions => {
+            this.definitionsInternal = definitions;
+        });
     }
 
     public validateWord(gridWordGuess: GridWord, player: Player): boolean {
@@ -77,13 +87,13 @@ export abstract class GameData {
         return found;
     }
 
-    protected async setDefinitions(): Promise<void> {
+    protected async fetchDefinitionsOf(grid: Grid): Promise<DefinitionWithIndex[]> {
         const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
-        for (let i = 0; i < this.grid.words.length; ++i) {
-            const word = this.grid.words[i];
+        for (let i = 0; i < grid.words.length; ++i) {
+            const word = grid.words[i];
 
             let index;
             if (word.direction === Direction.horizontal) {
@@ -102,7 +112,7 @@ export abstract class GameData {
             definitions.push(definitionWithIndex);
         }
 
-        this.definitionsInternal = definitions;
+        return definitions;
     }
 
     private async fetchGrid(): Promise<Grid> {
