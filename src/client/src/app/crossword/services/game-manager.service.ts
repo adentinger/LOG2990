@@ -43,6 +43,12 @@ export class GameManagerService {
         });
     }
 
+    public resetGame(): void {
+        this.definitionsService.clearDefinitions();
+        this.gameService.finalize();
+        this.gridService.reinitialize();
+    }
+
     private startGame(): void {
         this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
@@ -84,12 +90,6 @@ export class GameManagerService {
         else {
             alert(message);
         }
-    }
-
-    public resetGame(): void {
-        this.definitionsService.clearDefinitions();
-        this.gameService.finalize();
-        this.gridService.reinitialize();
     }
 
 }
