@@ -1,93 +1,77 @@
 import * as THREE from 'three';
 import { RenderableMap } from '../racing-game-map/renderable-map';
-import { Tree } from '../models/decoration/tree';
-import { Building } from '../models/decoration/building';
-import { Point, Vector } from '../../../../../../common/src/math/index';
+import { Point } from '../../../../../../common/src/math/index';
 import { Vector3 } from 'three';
-import { CollidableMesh } from '../physic/collidable';
-import { DecorationFactory } from './decoration-factory';
+import { DecorationFactory, DecorationType } from './decoration-factory';
 import { Line } from '../../../../../../common/src/math/line';
 import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
 import { Projection } from '../../../util/projection';
 import { Decoration } from '../models/decoration/decoration';
+import { Track } from '../../track';
+import { PhysicUtils } from '../physic/utils';
 
-export enum DecorationType {
-    TREE,
-    BUSH,
-    BUILDING
-}
+const MAX_TRY_COUNT = 100;
 
 export class DecorationGenerator {
 
-    private static readonly ACCEPTABLE_RADIUS = 30;
+    private static readonly ACCEPTABLE_RADIUS = 25;
+    private static readonly DECORATION_COUNT_PER_ZONE = 30;
     private static readonly CIRCLE_RADIUS_RADIAN = 2 * Math.PI;
-    private mapPointsIntervalCoordinate: THREE.Vector3[];
-    private finalPoints: THREE.Vector3[];
-    private finalDecorations: Decoration[];
-    private intervalPointsWithLine: [THREE.Vector3, Line][];
+    private static readonly DECORATION_FACTORY = new DecorationFactory();
 
+    public placeDecorationsOnMap(map: RenderableMap): void {
+        const mapLength = map.computeLength();
+        const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
+        // const mapPointsIntervalCoordinate: THREE.Vector3[] = [];
+        const decorations: Decoration[] = [];
 
-    constructor() {
-        this.mapPointsIntervalCoordinate = [];
-        this.finalPoints = [];
-        this.finalDecorations = [];
-        this.intervalPointsWithLine = [];
-    }
-
-    public placeDecorationOnMap(map: RenderableMap): void {
-        const mapLenght = map.computeLength();
-        const numberOfPoints = Math.floor(mapLenght / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
-
-        for (let i = 1 ; i <= numberOfPoints; i++) {
-            const interval = i * (DecorationGenerator.ACCEPTABLE_RADIUS * 2);
-            this.mapPointsIntervalCoordinate.push(this.generateCoordinatePositionMap(interval, map));
+        for (let intervalIndex = 0 ; intervalIndex <= numberOfPoints; intervalIndex++) {
+            const interval = intervalIndex * (DecorationGenerator.ACCEPTABLE_RADIUS * 2);
+            const point = this.generateCoordinatePositionMap(interval, map);
+            this.placeDecorationsAround(point, map, decorations);
         }
 
-        this.mapPointsIntervalCoordinate.forEach((point) => {
-            let coordinate: Vector3 = new THREE.Vector3(0, 0, 0);
-            const finalPoint: Vector3 = new THREE.Vector3(0, 0, 0);
-            let decoration: Decoration;
-            for (let i = 0 ; i < 20; i++) {
-                do {
-                    coordinate = this.generateCoordinatePositionRadius();
-                    finalPoint.addVectors(point, coordinate);
-                    decoration = this.generateRandomDecoration();
-                    decoration.position.copy(finalPoint);
-                } while (this.isSuperposedItem(decoration) || this.isOnTrack(finalPoint, map));
-                this.finalDecorations.push(decoration);
-            }
-        });
-
-        this.finalDecorations.forEach((decoration) => {map.add(decoration); });
+        decorations.forEach((decoration) => {map.add(decoration); });
     }
 
-    private isSuperposedItem(decoration: Decoration): boolean {
-        decoration.geometry.computeBoundingBox();
-        this.finalDecorations.forEach(
-            (decorationOnMap) => {
-                decorationOnMap.geometry.computeBoundingBox();
-                if (((decoration.geometry.boundingBox.max.x + decoration.position.x)
-                 >= (decorationOnMap.geometry.boundingBox.min.x + decorationOnMap.position.x) &&
-                     (decorationOnMap.geometry.boundingBox.max.x + decorationOnMap.position.x) >=
-                     (decoration.geometry.boundingBox.min.x + decoration.position.x))
-                && ((decoration.geometry.boundingBox.max.z + decoration.position.z) >=
-                 (decorationOnMap.geometry.boundingBox.min.z + decorationOnMap.position.z) &&
-                    (decorationOnMap.geometry.boundingBox.max.z + decorationOnMap.position.z) >=
-                     decoration.geometry.boundingBox.min.z +  + decoration.position.z)) {
-                    return true;
-                }
+    private placeDecorationsAround(point: THREE.Vector3, map: RenderableMap, decorations: Decoration[]): void {
+        let coordinatePositionOnRadius: Vector3 = new THREE.Vector3();
+        const pointOnMap: Vector3 = new THREE.Vector3();
+        let decoration: Decoration;
+        let tryCount = 0;
+        for (let i = 0 ; i < DecorationGenerator.DECORATION_COUNT_PER_ZONE; i++) {
+            do {
+                coordinatePositionOnRadius = this.generateCoordinatePositionRadius();
+                pointOnMap.addVectors(point, coordinatePositionOnRadius);
+                decoration = this.generateRandomDecoration();
+                decoration.position.copy(pointOnMap);
+                decoration.rotation.y = this.generateRandomAngle();
+            } while ((this.getIfDecorationSuperposed(decoration, decorations) || this.getIfOnTrack(decoration, map)) &&
+                tryCount++ < MAX_TRY_COUNT);
+            if (tryCount <= MAX_TRY_COUNT) {
+                decorations.push(decoration);
             }
-        );
+        }
+    }
+
+    private getIfDecorationSuperposed(decoration: Decoration, decorations: Decoration[]): boolean {
+        const box1 = new THREE.Box3().setFromObject(decoration);
+        for (const decorationOnMap of decorations) {
+            const box2 = new THREE.Box3().setFromObject(decorationOnMap);
+            if (box1.intersectsBox(box2)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    private isOnTrack(point: THREE.Vector3, map: RenderableMap): boolean {
+    private getIfOnTrack(decoration: Decoration, map: RenderableMap): boolean {
         const lines = map.mapLines;
-        const coordinatePoint = new Point(point.x, point.z);
-        const pointDistanceFromOrigin = coordinatePoint.distanceTo(map.mapPoints[0]);
+        const coordinatePoint = new Point(decoration.position.x, decoration.position.z);
+        const decorationDimensions = PhysicUtils.getObjectDimensions(decoration);
         for (const line of lines) {
             const projection = MapPositionAlgorithms.getProjectionOnLine(coordinatePoint, line);
-            if (projection.distanceToSegment < (5 + 3)) {
+            if (projection.distanceToSegment <= ((Track.SEGMENT_WIDTH / 2) + Math.max(decorationDimensions.x, decorationDimensions.z))) {
                 return true;
             }
         }
@@ -101,32 +85,30 @@ export class DecorationGenerator {
                 interval -= line.translation.norm();
             } else {
                 const point = line.interpolate(interval / line.translation.norm());
-                const pointOnMap = new THREE.Vector3(Math.round(point.x), 0.03, Math.round(point.y));
+                const pointOnMap = new THREE.Vector3(point.x, 0, point.y);
                 return pointOnMap;
             }
         }
-        return null;
+        throw new Error('cannot find interval greater than map length');
     }
 
     private generateRandomRadiusForPosition(): number {
-        return Math.round(Math.random() * DecorationGenerator.ACCEPTABLE_RADIUS);
+        return Math.random() * DecorationGenerator.ACCEPTABLE_RADIUS;
     }
 
-    private generateRandomAngleForPosition(): number {
+    private generateRandomAngle(): number {
         return Math.random() * DecorationGenerator.CIRCLE_RADIUS_RADIAN;
     }
 
     private generateCoordinatePositionRadius(): THREE.Vector3 {
         const randomRadius = this.generateRandomRadiusForPosition();
-        const randomAngle = this.generateRandomAngleForPosition();
-        return new THREE.Vector3(Math.round(randomRadius * Math.cos(randomAngle)), 0.03, Math.round(randomRadius * Math.sin(randomAngle)));
+        const randomAngle = this.generateRandomAngle();
+        return new THREE.Vector3(randomRadius * Math.cos(randomAngle), 0, randomRadius * Math.sin(randomAngle));
     }
 
     private generateRandomDecoration(): Decoration {
-        const numberOfDecorationType = Object.keys(DecorationType).length / 2;
-        const randomIndex = Math.round(Math.random() * (numberOfDecorationType - 1));
-        const randomClassName = DecorationType[randomIndex];
-        const decorationFactory = new DecorationFactory();
-        return decorationFactory.getClassInstance(randomClassName);
+        const numberOfDecorationType = DecorationType.COUNT - 1;
+        const randomIndex = Math.floor(Math.random() * numberOfDecorationType);
+        return DecorationGenerator.DECORATION_FACTORY.getClassInstance(randomIndex as DecorationType);
     }
 }

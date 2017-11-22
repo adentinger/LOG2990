@@ -55,8 +55,8 @@ export class RenderableMap extends PhysicMesh {
         const waitForSegments = this.placeSegmentsOnMap();
         this.placeObstaclesOnMap();
 
-        const decorater = new DecorationGenerator();
-        decorater.placeDecorationOnMap(this);
+        const decorationGenerator = new DecorationGenerator();
+        decorationGenerator.placeDecorationsOnMap(this);
 
         this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
     }

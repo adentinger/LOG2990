@@ -1,5 +1,5 @@
-import { CollidableMesh } from '../../physic/collidable';
+import * as THREE from 'three';
 
-export abstract class Decoration extends CollidableMesh {
-    private isDecoration: true;
+export abstract class Decoration extends THREE.Mesh {
+    public readonly isDecoration: true;
 }

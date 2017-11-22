@@ -1,36 +1,45 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { DecorationGenerator } from './decoration-generator';
 import { RenderableMap } from '../racing-game-map/renderable-map';
-import { EventManager } from '@angular/platform-browser/src/dom/events/event_manager';
 import { MockMaps } from '../../../admin-screen/map-editor/mock-maps';
 import { Decoration } from '../models/decoration/decoration';
+import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { Point } from '../../../../../../common/src/math/point';
+import { Track } from '../../track';
+import * as THREE from 'three';
+import { PhysicUtils } from '../physic/utils';
 
 
 describe('Decoration generator', () => {
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                MockMaps
-            ]
-        });
-    });
-
     let decorationGenerator: DecorationGenerator;
-    let mockMaps: MockMaps;
+    const mockMaps = new MockMaps();
+    let map: RenderableMap;
 
-    beforeEach(inject([MockMaps],
-        (mockMapFactory: MockMaps) => {
-            mockMaps = mockMapFactory;
+    beforeEach(() => {
+            map = mockMaps.renderableMap();
             decorationGenerator = new DecorationGenerator();
-        }));
+        });
 
     it('Should be created', () => {
         expect(DecorationGenerator).toBeTruthy();
     });
 
     it('Should add decorations on map', () => {
-        const map = mockMaps.renderableMap();
-        expect(map).toContain(Decoration);
+        decorationGenerator.placeDecorationsOnMap(map);
+        expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
+    });
+
+    it('Should not place decorations on track', () => {
+        decorationGenerator.placeDecorationsOnMap(map);
+        const decorations = map.children.filter(child => child instanceof Decoration) as Decoration[];
+        let dimensions: THREE.Vector3;
+        expect(decorations.every(decoration =>
+            map.mapLines.every(line =>
+                MapPositionAlgorithms.getProjectionOnLine(new Point(decoration.position.x, decoration.position.z), line)
+                    .distanceToSegment > (Track.SEGMENT_WIDTH / 2) + ((dimensions = PhysicUtils.getObjectDimensions(decoration)) &&
+                    Math.max(dimensions.x, dimensions.z))
+            )
+        )).toBeTruthy();
     });
 });
