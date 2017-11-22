@@ -20,7 +20,7 @@ export class ExternalWordApiService {
                 ...requestOptions
             };
             const req = http.request(REQUEST_OPTIONS);
-            req.setTimeout(0).socket.on('error', () => {
+            req.on('error', () => {
                 logger.log('SOCKET ERROR HANDLED');
             });
             req.on('response', (res: http.IncomingMessage) => {
