@@ -166,7 +166,7 @@ export class Grid {
     public getPlayerWordsFoundCount(): number {
         let wordsFoundCount = 0;
         for (let i = 0; i < this.words.length; i++) {
-            if (this.words[i].owner === Owner.player1) {
+            if (this.words[i].owner === Owner.player) {
                 wordsFoundCount++;
             }
         }
@@ -176,7 +176,7 @@ export class Grid {
     public getOpponentWordsFoundCount(): number {
         let wordsFoundCount = 0;
         for (let i = 0; i < this.words.length; i++) {
-            if (this.words[i].owner === Owner.player2) {
+            if (this.words[i].owner === Owner.opponent) {
                 wordsFoundCount++;
             }
         }

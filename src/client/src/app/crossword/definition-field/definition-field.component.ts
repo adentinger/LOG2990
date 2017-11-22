@@ -56,14 +56,22 @@ export class DefinitionFieldComponent {
     }
 
     public onClickOutside(): void {
-        if (this.gameService.state >= GameState.started) {
+        if (this.gameService.stateValue >= GameState.started) {
             this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
     }
 
-    public checkIfSelected(index: number, direction: Direction): boolean {
+    public checkIfSelectedByPlayer(index: number, direction: Direction): boolean {
         return this.selectionService.isDefinitionSelected(
-            new Definition(index, direction, '')
+            new Definition(index, direction, ''),
+            Owner.player
+        );
+    }
+
+    public checkIfSelectedByOpponent(index: number, direction: Direction): boolean {
+        return this.selectionService.isDefinitionSelected(
+            new Definition(index, direction, ''),
+            Owner.opponent
         );
     }
 

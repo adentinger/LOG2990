@@ -14,6 +14,8 @@ import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
+import { SoundService } from '../services/sound-service';
+import { Sound } from '../services/sound';
 import { CarsPositionsService } from './cars-positions.service';
 
 const logger = Logger.getLogger();
@@ -76,22 +78,29 @@ export class RacingGameService {
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         private eventManager: EventManager,
+        private soundService: SoundService,
         private carsPositionsService: CarsPositionsService) {
-        this.waitToLoad = Promise.all(this.cars.map(car => car.waitToLoad)).then(() => { });
+        this.waitToLoad = Promise.all([
+            ...this.cars.map(car => car.waitToLoad),
+            this.soundService.waitToLoad
+        ]).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
         eventManager.registerClass(this);
-        this.carsPositionsService.initialize(this.cars);
+        this.carsPositionsService.initialize(this);
     }
 
     public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
         this.renderer.initialize(container, hudCanvas);
+        this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;
 
         const userCar = this.cars[RacingGameService.DEFAULT_CONTROLLABLE_CAR_IDX];
         userCar.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCar);
         this.reloadSounds();
+
+        this.cars.forEach(this.soundService.registerEmitter, this.soundService);
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
 
@@ -103,6 +112,10 @@ export class RacingGameService {
             this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
+            this.soundService.setAbmiantSound(Sound.TETRIS);
+            this.waitToLoad.then(() => {
+                this.soundService.playAmbiantSound(true);
+            });
         }, () => logger.warn('Initialization interrupted'));
     }
 
@@ -121,6 +134,7 @@ export class RacingGameService {
 
         this.physicEngine.finalize();
         this.renderer.finalize();
+        this.soundService.finalize();
     }
 
     public loadMap(mapName: string): Promise<void> {
@@ -159,13 +173,6 @@ export class RacingGameService {
 
     public toggleDayMode(): void {
         this.renderer.toggleDayMode();
-    }
-
-    public switchCar(): void {
-        this.controlledCar.removeUIInput();
-        this.controlledCarIdx = (this.controlledCarIdx + 1) % this.cars.length;
-        this.controlledCar.setUIInput(this.userInputs);
-        this.renderer.setCamerasTarget(this.controlledCar);
     }
 
     @EventManager.Listener(KEYDOWN_EVENT)

@@ -39,9 +39,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.selectionSubscription =
             this.selectionService.selection.subscribe(
-                (selected) => this.onSelect(selected)
+                () => this.onChange()
             );
+            this.gridService.addOnChangeCallback(() => this.onChange());
         this.updateTimer = setInterval(() => this.appRef.tick(), BoardComponent.UPDATE_PERIOD);
+        this.onChange();
     }
 
     public ngOnDestroy(): void {
@@ -53,7 +55,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         return this.gridService.getCharAt(row, column);
     }
 
-    private onSelect(selected: SelectedGridWords): void {
+    private onChange(): void {
+        const selected = this.selectionService.selectionValue;
         const playerSelection = this.gridService.getWord(selected.player);
         const opponentSelection = this.gridService.getWord(selected.opponent);
         const selection: Selection = {player: playerSelection, opponent: opponentSelection};

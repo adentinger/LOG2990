@@ -17,6 +17,8 @@ import { Pothole } from '../models/obstacles/pothole';
 import { EventManager } from '../../../event-manager.service';
 import { Puddle } from '../models/obstacles/puddle';
 import { SpeedBooster } from '../models/obstacles/speed-booster';
+import { DecorationGenerator } from '../decoratio-generator/decoration-generator';
+import { Vector } from '../../../../../../common/src/math/vector';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -53,6 +55,9 @@ export class RenderableMap extends PhysicMesh {
         const waitForSegments = this.placeSegmentsOnMap();
         this.placeObstaclesOnMap();
 
+        const decorationGenerator = new DecorationGenerator();
+        decorationGenerator.placeDecorationsOnMap(this);
+
         this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
     }
 
@@ -63,15 +68,16 @@ export class RenderableMap extends PhysicMesh {
 
         const numberOfCars: number = cars.length;
         const startingLineCoordinates = new THREE.Vector3(this.mapPoints[0].x, 0.0, this.mapPoints[0].y);
-        const POSITION_INCREMENT = 2;
-        const carPlacementOffset: number = (-0.5 * numberOfCars + ((numberOfCars % 2 !== 0) ? - 0.5 : 0)) * POSITION_INCREMENT;
+        const WIDTH_POSITION_INCREMENT = Track.SEGMENT_WIDTH / 4;
+        const LENGTH_POSITION_INCREMENT = 4;
+        const carPlacementOffset: number = (-0.5 * numberOfCars + ((numberOfCars % 2 !== 0) ? - 0.5 : 0)) * WIDTH_POSITION_INCREMENT;
         const position = new THREE.Vector3(1);
         position.add(new THREE.Vector3(carPlacementOffset, 0.0, 0.0));
         cars.forEach((car) => {
             car.rotation.set(0, angleOfFirstSegment, 0);
             car.position.copy(position).applyEuler(new THREE.Euler(0, angleOfFirstSegment, 0));
             car.position.add(startingLineCoordinates);
-            position.add(new THREE.Vector3(POSITION_INCREMENT, 0.0, 0.0));
+            position.add(new THREE.Vector3(WIDTH_POSITION_INCREMENT, 0.0, LENGTH_POSITION_INCREMENT));
         });
         this.add(...cars);
     }
@@ -150,5 +156,16 @@ export class RenderableMap extends PhysicMesh {
             mesh = new SpeedBooster(this.eventManager);
         }
         return mesh;
+    }
+
+    public computeLength(): number {
+        const POINTS = this.mapPoints;
+        let length = 0;
+        for (let i = 0; i < POINTS.length - 1; i++) {
+            const VECTOR = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
+            length += VECTOR.norm();
+        }
+        length += Vector.fromPoints(POINTS[0], POINTS[this.mapPoints.length - 1]).norm();
+        return length;
     }
 }

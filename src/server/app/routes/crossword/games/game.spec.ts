@@ -2,10 +2,11 @@ import { expect } from 'chai';
 import { Game } from './game';
 import { createMockGameConfigs } from './create-mock-game-configs';
 import { Difficulty, GameMode } from '../../../../../common/src/crossword/crossword-enums';
-import { Player } from './player';
+import { Player } from '../player';
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
+import { GameClassic } from './game-classic';
 
-class MockGame extends Game {}
+class MockGame extends GameClassic {}
 
 describe('The Crossword Game', () => {
     it('should be created', (done) => {
@@ -21,7 +22,9 @@ describe('The Crossword Game', () => {
     });
 
     it('should contain grid words', (done) => {
-        expect(gameToTest.data.words).to.be.not.null;
+        const PLAYER = new Player('Homer', 'd0NUt');
+        const OPPONENT = new Player('Burns', 'Nucl3ar');
+        expect(gameToTest.data.getGridWords(PLAYER, OPPONENT)).to.be.not.null;
         done();
     });
 

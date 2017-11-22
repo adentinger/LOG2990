@@ -5,7 +5,7 @@ export function createMockGameConfigs(): CrosswordGameConfigs {
     const PLAYER_NAME = 'Chuck Norris\' beard';
     const gameModes = [GameMode.Classic, GameMode.Dynamic];
     const playerNumbers: PlayerNumber[] = [1, 2];
-    const difficulties = [Difficulty.easy, Difficulty.medium, Difficulty.hard];
+    const difficulties = [Difficulty.easy, Difficulty.normal, Difficulty.hard];
 
     const randGameMode = gameModes[Math.floor(Math.random() * gameModes.length)];
     const randPlayerNumber = playerNumbers[Math.floor(Math.random() * playerNumbers.length)];

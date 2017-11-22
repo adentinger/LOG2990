@@ -82,17 +82,17 @@ export class HighlightGrid {
             wordBelongsTo.push(populate.slice());
             for (let column = 0; column < Grid.DIMENSIONS; column++) {
                 for (let word = 0; word < words.length; word++) {
-                    if (((words[word].owner === Owner.player1
+                    if (((words[word].owner === Owner.player
                         && wordBelongsTo[row][column] === WhoIsSelecting.opponent) ||
-                        (words[word].owner === Owner.player2
+                        (words[word].owner === Owner.opponent
                         && wordBelongsTo[row][column] === WhoIsSelecting.player))
                         && (this.doesTileBelongToWord(row, column, words[word]))) {
                         wordBelongsTo[row][column] = WhoIsSelecting.both;
                     }
-                    else if (words[word].owner === Owner.player1 && this.doesTileBelongToWord(row, column, words[word])) {
+                    else if (words[word].owner === Owner.player && this.doesTileBelongToWord(row, column, words[word])) {
                         wordBelongsTo[row][column] = WhoIsSelecting.player;
                     }
-                    else if (words[word].owner === Owner.player2 && this.doesTileBelongToWord(row, column, words[word])) {
+                    else if (words[word].owner === Owner.opponent && this.doesTileBelongToWord(row, column, words[word])) {
                         wordBelongsTo[row][column] = WhoIsSelecting.opponent;
                     }
                 }
