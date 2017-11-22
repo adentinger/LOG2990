@@ -13,7 +13,7 @@ import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
  * @description Has the responsibility of managing the key moments of a game's life :
  * 1) Creation
  * 2) Completion
- * 3) Reset
+ * 3) Reset and deletion
  * This service was basically created to solve circular dependency problems between
  * GameService and GameHttpService. Yes, this probably denotes a slight architectural problem.
  */
