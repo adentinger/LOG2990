@@ -4,7 +4,7 @@ import { Logger } from '../../../../../common/src/logger';
 const logger = Logger.getLogger();
 
 export class ExternalWordApiService {
-    private static readonly FREQUENCY_API_KEY = '509a8efe219607991700e030dbd01768e4a6b86cfa513bcc9';
+    private static readonly FREQUENCY_API_KEY = 'e2fdb2b702080badcd0030252c30fa651ce456b92b2e1dc02';
     private static readonly FREQUENCY_REQUEST_BASE: http.RequestOptions = {
         hostname: 'api.wordnik.com',
         port: '80',
