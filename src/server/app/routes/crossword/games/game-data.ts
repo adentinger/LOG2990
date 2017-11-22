@@ -64,7 +64,7 @@ export abstract class GameData {
     public initialize(): void {
         this.initializedInternal = this.fetchGrid().then(grid => {
             this.grid = grid;
-            return this.fetchDefinitions();
+            return this.fetchDefinitionsOf(grid);
         }).then(definitions => {
             this.definitionsInternal = definitions;
         });
@@ -87,13 +87,13 @@ export abstract class GameData {
         return found;
     }
 
-    protected async fetchDefinitions(): Promise<DefinitionWithIndex[]> {
+    protected async fetchDefinitionsOf(grid: Grid): Promise<DefinitionWithIndex[]> {
         const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
-        for (let i = 0; i < this.grid.words.length; ++i) {
-            const word = this.grid.words[i];
+        for (let i = 0; i < grid.words.length; ++i) {
+            const word = grid.words[i];
 
             let index;
             if (word.direction === Direction.horizontal) {
