@@ -25,7 +25,6 @@ import { AdminConfigComponent } from './admin-screen/admin-config/admin-config.c
 import { AdminConfigService } from './admin-screen/admin-config.service';
 import { EventManager, eventManagerValue } from './event-manager.service';
 import { ItemGenerator } from './admin-screen/map-editor/items/item-generator';
-import { CarsPositionsService } from './racing/racing-game/cars-positions.service';
 
 @NgModule({
     declarations: [
@@ -51,8 +50,7 @@ import { CarsPositionsService } from './racing/racing-game/cars-positions.servic
         MapService,
         AdminConfigService,
         { provide: EventManager, useValue: eventManagerValue },
-        ItemGenerator,
-        CarsPositionsService
+        ItemGenerator
     ],
     bootstrap: [AppComponent]
 })
