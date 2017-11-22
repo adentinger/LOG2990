@@ -72,17 +72,6 @@ export class GameService {
         }
     }
 
-    public finishGame(wordsFound: number, opponentWordsFound: number): void {
-        let message: string;
-        if (wordsFound > opponentWordsFound) {
-            message = 'Congratulations ; you win!';
-        }
-        else {
-            message = 'Congratulations ; you (almost) won!';
-        }
-        alert(message);
-    }
-
     public finalize(): void {
         this.cheatModeOn = false;
         this.changeTimerValueOn = false;
