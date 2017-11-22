@@ -63,8 +63,13 @@ export class GameDynamic extends Game {
 
     public validateUserAnswer(wordGuess: GridWord, player: Player): boolean {
         if (super.validateUserAnswer(wordGuess, player)) {
-            // Reset timer
-            this.resetTimer();
+            if (this.dataInternal.wordsLeftToFind.length > 0) {
+                // Reset timer
+                this.resetTimer();
+            }
+            else {
+                this.stopTimer();
+            }
             return true;
         }
         return false;
