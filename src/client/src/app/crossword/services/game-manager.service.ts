@@ -6,7 +6,6 @@ import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridService } from '../board/grid.service';
-import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 
 /**
  * @class GameManagerService
