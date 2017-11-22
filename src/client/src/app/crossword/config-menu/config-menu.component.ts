@@ -8,9 +8,6 @@ import { GameService, GameState } from '../game.service';
     selector: 'app-config-menu',
     templateUrl: './config-menu.component.html',
     styleUrls: ['./config-menu.component.css'],
-    providers: [
-        MenuAutomatonService
-    ]
 })
 export class ConfigMenuComponent implements AfterViewInit, OnDestroy {
 

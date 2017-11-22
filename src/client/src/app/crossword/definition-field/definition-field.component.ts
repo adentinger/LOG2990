@@ -61,9 +61,17 @@ export class DefinitionFieldComponent {
         }
     }
 
-    public checkIfSelected(index: number, direction: Direction): boolean {
+    public checkIfSelectedByPlayer(index: number, direction: Direction): boolean {
         return this.selectionService.isDefinitionSelected(
-            new Definition(index, direction, '')
+            new Definition(index, direction, ''),
+            Owner.player
+        );
+    }
+
+    public checkIfSelectedByOpponent(index: number, direction: Direction): boolean {
+        return this.selectionService.isDefinitionSelected(
+            new Definition(index, direction, ''),
+            Owner.opponent
         );
     }
 

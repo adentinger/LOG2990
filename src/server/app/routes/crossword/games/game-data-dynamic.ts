@@ -43,9 +43,12 @@ export class GameDataDynamic extends GameData {
         const validated = super.validateWord(wordGuess, player);
 
         if (validated) {
-            this.mutator.cancelMutation()
-                .then(() => this.startMutatingGrid())
+            const mutationCancellation = this.mutator.cancelMutation()
                 .catch(() => this.logger.warn('Failed to cancel mutation.'));
+            if (this.wordsLeftToFind.length > 0) {
+                mutationCancellation
+                    .then(() => this.startMutatingGrid());
+            }
         }
 
         return validated;

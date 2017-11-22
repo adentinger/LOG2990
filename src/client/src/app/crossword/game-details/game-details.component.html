@@ -7,17 +7,17 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class='player'>
             <td>{{gameService.data.playerName}}</td>
             <td>{{playerWordsFound}}</td>
         </tr>
-        <tr *ngIf="gameService.data.numberOfPlayers >= 2">
+        <tr class='opponent' *ngIf='gameService.data.numberOfPlayers >= 2'>
             <td>{{gameService.data.opponentName}}</td>
             <td>{{opponentWordsFound}}</td>
         </tr>
     </tbody>
   </table>
-  <table>
+  <table class='my-table'>
       <tbody>
         <tr>
             <th class='category'>Game Mode</th>
@@ -27,7 +27,7 @@
             <th class='category'>Difficulty</th>
             <td>{{gameService.data.difficultyAsString()}}</td>
         </tr>
-        <tr *ngIf="shouldDisplayTimer()">
+        <tr *ngIf='shouldDisplayTimer()'>
             <th class='category'>Game Time</th>
             <td>{{timerValue | date:'mm:ss'}}</td>
         </tr>

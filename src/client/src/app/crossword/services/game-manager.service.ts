@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+
 import { WaitingService } from '../config-menu/waiting/waiting.service';
 import { UserChoiceService, CreateOrJoin } from '../config-menu/user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridService } from '../board/grid.service';
+import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 
 /**
  * @class GameManagerService
@@ -74,14 +76,13 @@ export class GameManagerService {
         }
         if (this.gameService.data.numberOfPlayers === 1) {
             message += '\nStart over with the same settings?';
-            this.resetGame();
             if (confirm(message)) {
+                this.resetGame();
                 this.startGame();
             }
         }
         else {
             alert(message);
-            this.resetGame();
         }
     }
 

@@ -8,7 +8,7 @@ import { PacketManagerClient } from '../packet-manager-client';
 import { SelectedWordPacket } from '../../../../common/src/crossword/packets/selected-word.packet';
 import '../../../../common/src/crossword/packets/selected-word.parser';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
-import { Direction } from '../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../common/src/crossword/crossword-enums';
 
 @Injectable()
 export class SelectionService {
@@ -42,10 +42,17 @@ export class SelectionService {
         return this.selectionValueInternal;
     }
 
-    public isDefinitionSelected(definition: Definition): boolean {
-        return this.selectionValue.player != null &&
-               definition.index === this.selectionValue.player.id &&
-               definition.direction === this.selectionValue.player.direction;
+    public isDefinitionSelected(definition: Definition, player: Owner): boolean {
+        let selection: WordByIdAndDirection;
+        if (player === Owner.player) {
+            selection = this.selectionValueInternal.player;
+        }
+        else {
+            selection = this.selectionValueInternal.opponent;
+        }
+        return selection != null &&
+               definition.index === selection.id &&
+               definition.direction === selection.direction;
     }
 
     public updateSelectedGridWord(word: WordByIdAndDirection): void {

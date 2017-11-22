@@ -12,6 +12,7 @@ import { UserChoiceService } from './user-choice.service';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { FormsModule } from '@angular/forms';
 import { WaitingService } from './waiting/waiting.service';
+import { MenuAutomatonService } from './menu-automaton.service';
 
 describe('ConfigMenuComponent', () => {
     let component: ConfigMenuComponent;
@@ -34,7 +35,8 @@ describe('ConfigMenuComponent', () => {
                 GameHttpService,
                 {provide: PacketManagerClient, useValue: packetManagerClient},
                 UserChoiceService,
-                WaitingService
+                WaitingService,
+                MenuAutomatonService
             ]
         })
         .compileComponents();
