@@ -11,7 +11,6 @@ const KEY_LEFT = 'a';
 
 export class UserCarController extends CarController {
     protected userInputs: UIInputs;
-    protected state: CarControllerState;
 
     public constructor(car: Car) {
         super(car);
@@ -30,18 +29,10 @@ export class UserCarController extends CarController {
         return this.userInputs != null;
     }
 
-    public start(): void {
-        this.state = CarControllerState.ENABLED;
-    }
-
-    public stop(): void {
-        this.state = CarControllerState.DISABLED;
-    }
-
     @EventManager.Listener(KEYBOARD_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private updateTargetVelocities(): void {
-        if (this.userInputs != null && this.state === CarControllerState.ENABLED) {
+        if (this.state === CarControllerState.ENABLED && this.userInputs != null) {
             this.car.targetSpeed = 0;
             if (this.userInputs.isKeyPressed(KEY_FORWARD)) {
                 this.car.targetSpeed += CarPhysic.DEFAULT_TARGET_SPEED;

@@ -1,6 +1,5 @@
 import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
-import { BEFORE_PHYSIC_UPDATE_EVENT } from '../engine';
 
 export enum CarControllerState {
     DISABLED,
@@ -8,8 +7,15 @@ export enum CarControllerState {
 }
 
 export abstract class CarController {
+    protected state = CarControllerState.DISABLED;
+
     public constructor(public readonly car: Car) { }
 
-    public abstract start(): void;
-    public abstract stop(): void;
+    public start(): void {
+        this.state = CarControllerState.ENABLED;
+    }
+
+    public stop(): void {
+        this.state = CarControllerState.DISABLED;
+    }
 }
