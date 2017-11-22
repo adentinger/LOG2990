@@ -64,7 +64,9 @@ export abstract class GameData {
     public initialize(): void {
         this.initializedInternal = this.fetchGrid().then(grid => {
             this.grid = grid;
-            return this.setDefinitions();
+            return this.fetchDefinitions();
+        }).then(definitions => {
+            this.definitionsInternal = definitions;
         });
     }
 
@@ -85,7 +87,7 @@ export abstract class GameData {
         return found;
     }
 
-    protected async setDefinitions(): Promise<void> {
+    protected async fetchDefinitions(): Promise<DefinitionWithIndex[]> {
         const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
@@ -110,7 +112,7 @@ export abstract class GameData {
             definitions.push(definitionWithIndex);
         }
 
-        this.definitionsInternal = definitions;
+        return definitions;
     }
 
     private async fetchGrid(): Promise<Grid> {
