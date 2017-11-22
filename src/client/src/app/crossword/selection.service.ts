@@ -15,19 +15,25 @@ export class SelectionService {
 
     public static readonly NO_SELECTION: WordByIdAndDirection = {id: -1, direction: Direction.horizontal};
 
-    private selectionValueInternal =
-        new SelectedGridWords(SelectionService.NO_SELECTION, SelectionService.NO_SELECTION);
+    private selectionValueInternal: SelectedGridWords;
     private selectionSubject = new Subject<SelectedGridWords>();
     private serverSubscription: Subscription;
 
     constructor(private packetManager: PacketManagerClient) {
         registerHandlers(this, this.packetManager);
+
         this.selectionSubject.subscribe((selection) => {
             this.selectionValueInternal = selection;
         });
         this.serverSubscription = this.selectionSubject.subscribe((selection) => {
             this.sendSelectionToServer();
         });
+
+        this.reinitialize();
+    }
+
+    public reinitialize(): void {
+        this.selectionSubject.next(new SelectedGridWords(SelectionService.NO_SELECTION, SelectionService.NO_SELECTION));
     }
 
     public finalize(): void {
