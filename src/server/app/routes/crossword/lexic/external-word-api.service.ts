@@ -44,7 +44,10 @@ export class ExternalWordApiService {
                 return ((DEFINITIONS as Array<any>)
                     .sort((a, b) => +a.sequence - +b.sequence)
                     .map((element) => <string>element.text));
-            } else {
+            } else if (DEFINITIONS.length === 0) {
+                return ['No definition this word on Wordnik.'];
+            }
+            else {
                 throw DEFINITIONS as Error;
             }
         });
