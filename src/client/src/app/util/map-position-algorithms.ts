@@ -16,14 +16,19 @@ export class MapPositionAlgorithms {
         const interpolationPoint: Point = line.interpolate(interpolation);
 
         const distanceToSegment: number = interpolationPoint.distanceTo(position);
-        console.log('distanceToSegment=' + distanceToSegment);
 
         return new Projection(interpolation, line, distanceToSegment);
     }
 
     public static getClosestProjection(position: Point, lines: Line[]): Projection {
-
-        return new Projection(0, new Line(new Point(0, 0), new Point(0, 0)), 0);
+        const projections: Projection[] = this.getAllProjections(position, lines);
+        let closestProjection = projections[0];
+        for (const projection of projections) {
+            if (projection.distanceToSegment < closestProjection.distanceToSegment) {
+                closestProjection = projection;
+            }
+        }
+        return closestProjection;
     }
 
     public static getAllProjections(position: Point, lines: Line[]): Projection[] {
