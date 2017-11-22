@@ -1,4 +1,4 @@
-import { GameData } from './game-data';
+import { GameData, DefinitionWithIndex } from './game-data';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { Difficulty } from '../../../../../common/src/crossword/crossword-enums';
 import { GridMutator } from '../grid-generator/grid-mutator';
@@ -6,6 +6,11 @@ import { toGridGeneratorDifficulty } from './temp-util';
 import { Player } from '../player';
 import { Grid } from '../grid-generator/grid';
 import { Logger } from '../../../../../common/src/index';
+
+interface MutationData {
+    grid: Grid;
+    definitions: DefinitionWithIndex[];
+}
 
 export class GameDataDynamic extends GameData {
 
