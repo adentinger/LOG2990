@@ -11,7 +11,7 @@
             <td>{{gameService.data.playerName}}</td>
             <td>{{playerWordsFound}}</td>
         </tr>
-        <tr class='opponent' *ngIf='gameService.data.numberOfPlayers >= 2'>
+        <tr class='opponent' *ngIf='gameService.data.currentNumberOfPlayers >= 2'>
             <td>{{gameService.data.opponentName}}</td>
             <td>{{opponentWordsFound}}</td>
         </tr>
