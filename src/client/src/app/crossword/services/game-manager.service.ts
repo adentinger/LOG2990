@@ -25,8 +25,7 @@ export class GameManagerService {
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
-                private gridService: GridService,
-                private menuAutomatonService: MenuAutomatonService) {
+                private gridService: GridService) {
         this.gameService.state.subscribe((state) => {
             switch (state) {
                 case GameState.waiting: {
