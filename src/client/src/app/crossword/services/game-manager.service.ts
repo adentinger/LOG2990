@@ -77,14 +77,13 @@ export class GameManagerService {
         }
         if (this.gameService.data.numberOfPlayers === 1) {
             message += '\nStart over with the same settings?';
-            this.resetGame();
             if (confirm(message)) {
+                this.resetGame();
                 this.startGame();
             }
         }
         else {
             alert(message);
-            this.resetGame();
         }
     }
 
@@ -92,9 +91,6 @@ export class GameManagerService {
         this.definitionsService.clearDefinitions();
         this.gameService.finalize();
         this.gridService.reinitialize();
-        while (this.menuAutomatonService.canGoBack()) {
-            this.menuAutomatonService.goBack();
-        }
     }
 
 }
