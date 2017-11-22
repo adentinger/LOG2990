@@ -37,7 +37,7 @@ export class GameService {
     private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private dataInternal = new GameData();
+    private dataInternal: GameData;
 
     public get data(): GameData {
         return this.dataInternal.clone();
@@ -58,6 +58,8 @@ export class GameService {
         });
         this.stateInternal.subscribe(state => this.stateValueInternal = state);
         this.stateInternal.next(GameState.configuring);
+        this.reinitialize();
+
         registerHandlers(this, packetManager);
     }
 
@@ -70,6 +72,10 @@ export class GameService {
                 new GameJoinPacket(this.dataInternal.id, this.dataInternal.playerName)
             );
         }
+    }
+
+    public reinitialize(): void {
+        this.dataInternal = new GameData();
     }
 
     public finalize(): void {
@@ -110,6 +116,7 @@ export class GameService {
     // tslint:disable-next-line:no-unused-variable
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
         this.dataInternal.opponentName = event.value.playerName;
+        ++this.dataInternal.currentNumberOfPlayers;
     }
 
     @PacketHandler(GameStartPacket)
