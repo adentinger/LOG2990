@@ -26,8 +26,8 @@ export abstract class GameData {
 
     protected difficulty: Difficulty;
     protected grid: Grid = new Grid();
+    protected definitionsInternal: DefinitionWithIndex[] = [];
 
-    private definitionsInternal: DefinitionWithIndex[] = [];
     private initializedInternal: Promise<void>;
 
     public get initialized(): Promise<void> {
