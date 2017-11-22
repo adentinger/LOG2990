@@ -19,6 +19,7 @@ import { Puddle } from '../models/obstacles/puddle';
 import { SpeedBooster } from '../models/obstacles/speed-booster';
 import { DecorationGenerator } from '../decoratio-generator/decoration-generator';
 import { Vector } from '../../../../../../common/src/math/vector';
+import { Obstacle } from '../models/obstacles/obstacle';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -53,12 +54,17 @@ export class RenderableMap extends PhysicMesh {
 
         const waitForJunctions = this.placeJunctionsOnMap();
         const waitForSegments = this.placeSegmentsOnMap();
-        this.placeObstaclesOnMap();
+        const waitForObstacles = this.placeObstaclesOnMap();
 
         const decorationGenerator = new DecorationGenerator();
         decorationGenerator.placeDecorationsOnMap(this);
 
-        this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
+        this.waitToLoad = Promise.all([
+            this.plane.waitToLoad,
+            waitForJunctions,
+            waitForSegments,
+            waitForObstacles
+        ]).then(() => { });
     }
 
     public addCars(...cars: Car[]) {
@@ -112,12 +118,15 @@ export class RenderableMap extends PhysicMesh {
         return Promise.all(waitForSegments).then(() => { });
     }
 
-    private placeObstaclesOnMap(): void {
+    private placeObstaclesOnMap(): Promise<void> {
+        const waitForObstacles: Promise<void>[] = [];
         const obstacles: SerializedItem[] = [...this.mapPotholes, ...this.mapPuddles, ...this.mapSpeedBoosts];
-        obstacles.forEach((obstacle) => this.placeObstacleOnMap(obstacle));
+        obstacles.forEach((obstacle) => waitForObstacles.push(this.placeObstacleOnMap(obstacle)));
+
+        return Promise.all(waitForObstacles).then(() => { });
     }
 
-    private placeObstacleOnMap(item: SerializedItem): void {
+    private placeObstacleOnMap(item: SerializedItem): Promise<void> {
         const ITEM_WIDTH: Meters = 2;
         const lines = this.mapLines;
         let position: Meters = item.position;
@@ -132,19 +141,19 @@ export class RenderableMap extends PhysicMesh {
                     .applyAxisAngle(UP, lineAngle);
                 const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y)
                     .add(randomCoordinateVariation);
-                const mesh = this.getMeshFromItem(item);
-                if (mesh != null) {
-                    mesh.position.copy(coordinate);
-                    mesh.rotation.y = lineAngle;
-                    this.add(mesh);
+                const obstacle = this.getMeshFromItem(item);
+                if (obstacle != null) {
+                    obstacle.position.copy(coordinate);
+                    obstacle.rotation.y = lineAngle;
+                    this.add(obstacle);
                 }
-                break;
+                return obstacle.waitToLoad;
             }
         }
     }
 
-    private getMeshFromItem(item: SerializedItem): THREE.Mesh {
-        let mesh: THREE.Mesh = null;
+    private getMeshFromItem(item: SerializedItem): Obstacle {
+        let mesh: Obstacle = null;
         if (item.type === 'pothole') {
             mesh = new Pothole(this.eventManager);
         }
