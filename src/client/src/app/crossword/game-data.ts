@@ -9,7 +9,7 @@ export class GameData {
                 public mode = GameMode.Classic,
                 public difficulty = Difficulty.hard,
                 public maxPlayers: PlayerNumber = 2,
-                public currentNumberOfPlayers: PlayerNumber = 1) { }
+                public currentNumberOfPlayers: PlayerNumber = 2) { }
 
     public clone(): GameData {
         return new GameData(
