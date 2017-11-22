@@ -86,8 +86,11 @@ export class DefinitionsService {
                 if (word.direction === Direction.horizontal) {
                     this.horizontalAnswers.push(word.string);
                 }
-                else {
+                else if (word.direction === Direction.vertical) {
                     this.verticalAnswers.push(word.string);
+                }
+                else {
+                    throw new Error(`Answer direction "${word.direction}" is invalid`);
                 }
             });
         });
