@@ -70,7 +70,14 @@ export abstract class AbstractGridGenerator {
                 // Start next generation if still scheduled.
                 generationData.isScheduled = false;
                 return generationData.grid.fillUsing(generationData.filler)
-                    .then(() => generationData.grid)
+                    .then(() => {
+                        if (!generationData.isCancelled) {
+                            return generationData.grid;
+                        }
+                        else {
+                            return null;
+                        }
+                    })
                     .catch(() => null);
             }
             else {
@@ -79,12 +86,7 @@ export abstract class AbstractGridGenerator {
             }
         };
 
-        if (!this.latestGeneration.isCancelled) {
-            generationData.promise = this.latestGeneration.promise.then(startGeneration);
-        }
-        else {
-            generationData.promise = startGeneration();
-        }
+        generationData.promise = startGeneration();
 
         this.latestGeneration = generationData;
     }
