@@ -45,6 +45,7 @@ export class GameManagerService {
     }
 
     public finalize(): void {
+        this.menuAutomatonService.goBackToInitialState();
         this.definitionsService.clearDefinitions();
         this.gameService.finalize();
         this.gridService.reinitialize();
