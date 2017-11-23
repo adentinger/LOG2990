@@ -28,9 +28,9 @@ export abstract class GameData {
     protected difficulty: Difficulty;
     protected grid: Grid = new Grid();
     protected definitionsInternal: DefinitionWithIndex[] = [];
+    protected logger = Logger.getLogger('GameData');
 
     private initializedInternal: Promise<void>;
-    private logger = Logger.getLogger('GameData');
 
     public get initialized(): Promise<void> {
         return this.initializedInternal;

@@ -5,7 +5,6 @@ import { GridMutator } from '../grid-generator/grid-mutator';
 import { toGridGeneratorDifficulty } from './temp-util';
 import { Player } from '../player';
 import { Grid } from '../grid-generator/grid';
-import { Logger } from '../../../../../common/src/index';
 
 interface MutationData {
     grid: Grid;
@@ -15,7 +14,6 @@ interface MutationData {
 export class GameDataDynamic extends GameData {
 
     private mutator: GridMutator;
-    private logger = Logger.getLogger('GameDataDynamic');
     private mutationPromise: Promise<MutationData>;
 
     constructor(difficulty: Difficulty) {
