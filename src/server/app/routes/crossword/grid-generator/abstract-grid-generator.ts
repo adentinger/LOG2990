@@ -5,6 +5,8 @@ import { Word } from '../word';
 import { Difficulty } from '../../../../../common/src/crossword/difficulty';
 
 interface GenerationData {
+    isScheduled: boolean;
+    isCancelled: boolean;
     grid: Grid;
     filler: GridFiller;
     promise: Promise<Grid>;
@@ -19,7 +21,6 @@ interface CancellationData {
 export abstract class AbstractGridGenerator {
 
     private latestGeneration: GenerationData;
-    private isGenerationScheduled = false;
 
     protected get latestGrid(): Promise<Grid> {
         return this.latestGeneration.promise;
@@ -28,6 +29,8 @@ export abstract class AbstractGridGenerator {
     protected constructor() {
         const EMPTY_GRID = new Grid();
         this.latestGeneration = {
+            isScheduled: false,
+            isCancelled: false,
             filler: null,
             grid: EMPTY_GRID,
             promise: Promise.resolve(EMPTY_GRID)
@@ -35,7 +38,7 @@ export abstract class AbstractGridGenerator {
     }
 
     protected gridGenerationBase(wordsToInclude: Word[], difficulty: Difficulty): Promise<Grid> {
-        if (this.isGenerationScheduled) {
+        if (this.latestGeneration.isScheduled) {
             // Just update the generation parameters.
             this.latestGeneration.grid = new Grid(wordsToInclude);
             this.latestGeneration.filler = new GridFillerContainer(difficulty);
@@ -46,39 +49,43 @@ export abstract class AbstractGridGenerator {
         return this.latestGeneration.promise;
     }
 
-    protected cancelLatestGeneration(): Promise<void> {
-        this.isGenerationScheduled = false;
+    protected cancelLatestGeneration(): void {
+        this.latestGeneration.isScheduled = false;
+        this.latestGeneration.isCancelled = true;
         this.latestGeneration.filler.cancelFilling();
-        return this.latestGeneration.promise
-            .then (() => { return; })
-            .catch();
     }
 
     private startGeneration(wordsToInclude: Word[], difficulty: Difficulty): void {
 
         const generationData: GenerationData = {
+            isScheduled: true,
+            isCancelled: false,
             grid: new Grid(wordsToInclude),
             filler: new GridFillerContainer(difficulty),
             promise: null
         };
 
-        this.isGenerationScheduled = true;
-        const promise = this.latestGeneration.promise.then(() => {
-            // Former generation finished.
-            if (this.isGenerationScheduled) {
+        const startGeneration: () => Promise<Grid> = () => {
+            if (generationData.isScheduled) {
                 // Start next generation if still scheduled.
-                this.isGenerationScheduled = false;
+                generationData.isScheduled = false;
                 return generationData.grid.fillUsing(generationData.filler)
                     .then(() => generationData.grid)
                     .catch(() => null);
             }
             else {
                 // Generation cancelled.
-                return null;
+                return Promise.resolve(null);
             }
-        });
+        };
 
-        generationData.promise = promise;
+        if (!this.latestGeneration.isCancelled) {
+            generationData.promise = this.latestGeneration.promise.then(startGeneration);
+        }
+        else {
+            generationData.promise = startGeneration();
+        }
+
         this.latestGeneration = generationData;
     }
 
