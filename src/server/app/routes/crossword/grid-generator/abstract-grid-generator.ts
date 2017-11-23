@@ -49,13 +49,10 @@ export abstract class AbstractGridGenerator {
         return this.latestGeneration.promise;
     }
 
-    protected cancelLatestGeneration(): Promise<void> {
+    protected cancelLatestGeneration(): void {
         this.latestGeneration.isScheduled = false;
         this.latestGeneration.isCancelled = true;
         this.latestGeneration.filler.cancelFilling();
-        return this.latestGeneration.promise
-            .then (() => { return; })
-            .catch();
     }
 
     private startGeneration(wordsToInclude: Word[], difficulty: Difficulty): void {
