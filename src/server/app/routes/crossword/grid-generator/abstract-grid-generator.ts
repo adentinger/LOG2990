@@ -38,7 +38,7 @@ export abstract class AbstractGridGenerator {
             this.latestGeneration.filler = new GridFillerContainer(difficulty);
         }
         else {
-            this.startGeneration(wordsToInclude, difficulty);
+            this.scheduleGeneration(wordsToInclude, difficulty);
         }
         return this.latestGeneration.promise;
     }
@@ -49,7 +49,7 @@ export abstract class AbstractGridGenerator {
         this.latestGeneration.filler.cancelFilling();
     }
 
-    private startGeneration(wordsToInclude: Word[], difficulty: Difficulty): void {
+    private scheduleGeneration(wordsToInclude: Word[], difficulty: Difficulty): void {
 
         const generationData: GenerationData = {
             isScheduled: true,
