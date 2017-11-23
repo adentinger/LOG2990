@@ -12,12 +12,6 @@ interface GenerationData {
     promise: Promise<Grid>;
 }
 
-interface CancellationData {
-    promise: Promise<Grid>;
-    wordsToInclude: Word[];
-    difficulty: Difficulty;
-}
-
 export abstract class AbstractGridGenerator {
 
     private latestGeneration: GenerationData;
