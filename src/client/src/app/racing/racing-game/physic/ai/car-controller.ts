@@ -9,7 +9,7 @@ export enum CarControllerState {
 
 export abstract class CarController {
     protected state = CarControllerState.DISABLED;
-    protected trackLines: Line[] = [];
+    protected readonly trackLines: Line[] = [];
 
     public constructor(public readonly car: Car) {
         car.targetSpeed = 0;

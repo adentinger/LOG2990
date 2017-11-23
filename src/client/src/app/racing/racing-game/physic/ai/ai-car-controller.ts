@@ -1,4 +1,4 @@
-import { CarController } from './car-controller';
+import { CarController, CarControllerState } from './car-controller';
 import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
 import { Seconds } from '../../../../types';
@@ -7,6 +7,7 @@ import { CarPhysic } from '../../models/car/car-physic';
 import { MapPositionAlgorithms } from '../../../../util/map-position-algorithms';
 import { Point, Vector } from '../../../../../../../common/src/math';
 import * as THREE from 'three';
+import { Track } from '../../../track';
 
 export class AiCarController extends CarController {
     private static readonly UPDATE_PERIODE = 5; // cycles
@@ -21,7 +22,7 @@ export class AiCarController extends CarController {
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private onAfterPhysicUpdate(event: EventManager.Event<{deltaTime: Seconds}>): void {
-        if (++this.cycleCount >= AiCarController.UPDATE_PERIODE) {
+        if (++this.cycleCount >= AiCarController.UPDATE_PERIODE && this.state === CarControllerState.ENABLED) {
             this.cycleCount = 0;
             // Call the physic updates.
             this.car.targetAngularSpeed = this.getAngularSpeedForTrack();
@@ -30,8 +31,14 @@ export class AiCarController extends CarController {
     }
 
     private getAngularSpeedForTrack(): number {
-        const projection = MapPositionAlgorithms.getClosestProjection(new Point(this.car.position.x, this.car.position.z), this.trackLines);
-        return Math.sign(UP_DIRECTION.dot(this.getVectorFromPoint(projection.segment.translation.normalized())));
+        const carPosition = this.getPointFromVector(this.car.position);
+        const projection = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
+        const rCar = this.car.position.clone().sub(this.getVectorFromPoint(projection.segment.origin)).normalize();
+        const rLine = this.getVectorFromPoint(projection.segment.translation).normalize();
+        const side = Math.sign(UP_DIRECTION.dot(rCar.clone().cross(rLine)));
+
+        return side * Math.min(CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED,
+            Math.max(UP_DIRECTION.dot(this.car.front.cross(rLine)), CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED));
     }
 
     private getTargetSpeed(): number {

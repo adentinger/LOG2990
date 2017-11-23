@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
 import { UP_DIRECTION } from '../../physic/engine';
-import { UIInputs, KEYBOARD_EVENT } from '../../../services/ui-input.service';
 import { EventManager } from '../../../../event-manager.service';
 
 // The front direction when the rotation is 0.
@@ -40,6 +39,14 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
 
     public set speed(value: number) {
         this.velocity.copy(this.front).multiplyScalar(value);
+    }
+
+    public get angularSpeed(): number {
+        return this.velocity.dot(this.front);
+    }
+
+    public set angularSpeed(value: number) {
+        this.angularVelocity.copy(UP_DIRECTION).multiplyScalar(value);
     }
 
     public constructor() {
