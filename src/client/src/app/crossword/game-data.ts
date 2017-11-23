@@ -18,7 +18,8 @@ export class GameData {
             this.opponentName,
             this.mode,
             this.difficulty,
-            this.maxNumberOfPlayers
+            this.maxNumberOfPlayers,
+            this.currentNumberOfPlayers
         );
     }
 
