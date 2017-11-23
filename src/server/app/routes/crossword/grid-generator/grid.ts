@@ -8,11 +8,72 @@ import { WordPosition } from '../word-position';
 export class Grid {
 
     public static readonly DIMENSIONS = 10;
+    private static id = 0;
+    private id: number;
+    public wordsInternal: Word[] = [];
 
-    public words: Word[] = [];
+    public static readonly grids: Grid[] = [];
+
+    public get words(): Word[] {
+        const array = this.wordsInternal.map(word => {
+            return new Proxy(word, {
+                set: (target, name, value) => {
+                    if (this.horiz > 10 || this.verti > 10) {
+                        console.log('(' + this.id + ')', this.horiz + ' ' + this.verti, new Error());
+                        console.log(new Error(`ALREADY WAS A PROBLEM (${this.id}) ${this.horiz} ${this.verti} ${this}`));
+                    }
+                    target[name] = value;
+                    this.wordsInternal[name] = value;
+                    if (this.horiz > 10 || this.verti > 10) {
+                        console.log('(' + this.id + ')', this.horiz + ' ' + this.verti, new Error());
+                        console.log(new Error(`HERE, PROBLEM (${this.id}) ${this.horiz} ${this.verti} ${this}`));
+                    }
+                    return true;
+                }
+            });
+        });
+
+        const arrayProxy = new Proxy(array, {
+            get: (target, name) => {
+                if (this.horiz > 10 || this.verti > 10) {
+                    console.log('(' + this.id + ')', this.horiz + ' ' + this.verti, new Error());
+                    console.log(new Error(`ALREADY WAS A PROBLEM (${this.id}) ${this.horiz} ${this.verti} ${this}`));
+                }
+                return target[name];
+            },
+            set: (target, name, value) => {
+                if (this.horiz > 10 || this.verti > 10) {
+                    console.log('(' + this.id + ')', this.horiz + ' ' + this.verti, new Error());
+                    console.log(new Error(`ALREADY WAS A PROBLEM (${this.id}) ${this.horiz} ${this.verti} ${this}`));
+                }
+                target[name] = value;
+                this.wordsInternal[name] = value;
+                if (this.horiz > 10 || this.verti > 10) {
+                    console.log('(' + this.id + ')', this.horiz + ' ' + this.verti, new Error());
+                    console.log(new Error(`HERE, PROBLEM (${this.id}) ${this.horiz} ${this.verti} ${this}`));
+                }
+                return true;
+            }
+        });
+        return arrayProxy;
+    }
+
+    public set words(words: Word[]) {
+        this.wordsInternal = words;
+    }
+
+    private get horiz(): number {
+        return this.wordsInternal.filter(word => word.direction === Direction.horizontal).length;
+    }
+
+    private get verti(): number {
+        return this.wordsInternal.filter(word => word.direction === Direction.vertical).length;
+    }
 
     constructor(wordsToInclude: Word[] = []) {
-        this.words = wordsToInclude.slice();
+        this.id = Grid.id++;
+        this.wordsInternal = wordsToInclude.slice();
+        Grid.grids[this.id] = this;
     }
 
     public fillUsing(filler: GridFiller): Promise<void> {
@@ -38,8 +99,15 @@ export class Grid {
             if (word.direction === Direction.horizontal) {
                 id = horizontalId++;
             }
-            else {
+            else if (word.direction === Direction.vertical) {
                 id = verticalId++;
+            }
+            else {
+                throw new Error(`Unknown direction: ${word.direction}`);
+            }
+
+            if (id > 10) {
+                console.log(':)');
             }
 
 
@@ -55,7 +123,7 @@ export class Grid {
                 owner = Owner.opponent;
             }
 
-            return new GridWord(
+            const gridWord = new GridWord(
                 id,
                 word.position.row,
                 word.position.column,
@@ -64,6 +132,7 @@ export class Grid {
                 owner,
                 word.value
             );
+            return gridWord;
         });
     }
 
