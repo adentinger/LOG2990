@@ -2,6 +2,7 @@ import { Line } from '../../../../common/src/math/line';
 import { Point } from '../../../../common/src/math/point';
 import { Projection } from './projection';
 import { Vector } from '../../../../common/src/math/vector';
+import { Meters } from '../types';
 
 export class MapPositionAlgorithms {
 
@@ -37,6 +38,16 @@ export class MapPositionAlgorithms {
             projections.push(this.getProjectionOnLine(position, line));
         }
         return projections;
+    }
+
+    public static getPointAtGivenDistance(distance: Meters, lines: Line[]): Point {
+        const linesLength = lines.map((line) => line.length);
+        linesLength.find((lineLength) => !(!(distance < lineLength) && (distance -= lineLength)));
+        return new Point();
+    }
+
+    public static getTrackLength(lines: Line[]): Meters {
+        return lines.reduce((accumulatedLength, line) => accumulatedLength + line.length, 0);
     }
 
     private static squaredNorm(vec: Point): number {

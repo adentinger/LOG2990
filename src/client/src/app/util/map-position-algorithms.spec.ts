@@ -2,6 +2,7 @@ import { Line } from '../../../../common/src/math/line';
 import { Point } from '../../../../common/src/math/point';
 import { MapPositionAlgorithms } from './map-position-algorithms';
 import { Projection } from './projection';
+import { Meters } from '../types';
 
 // Simple Map for testing
 const points = [new Point(3.0, 3.0),
@@ -84,5 +85,14 @@ describe('Map position algorithms', () => {
         expect(closestInterpolation.distanceToSegment).toEqual(1.0);
         expect(closestInterpolation.segment).toEqual(lines[1]);
         expect(closestInterpolation.interpolation).toEqual(2.0 / 5.0);
+    });
+
+    it('should calculate the point at a given distance from the begining of a track', () => {
+        const theDistance: Meters = 10;
+
+        const pointOnTrack = MapPositionAlgorithms.getPointAtGivenDistance(theDistance, lines);
+
+        expect(pointOnTrack.x).toEqual(7.0 + (10 - Math.sqrt(2 * (4 ** 2))));
+        expect(pointOnTrack.y).toEqual(7.0);
     });
 });
