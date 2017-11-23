@@ -95,4 +95,10 @@ describe('Map position algorithms', () => {
         expect(pointOnTrack.x).toEqual(7.0 + (10 - Math.sqrt(2 * (4 ** 2))));
         expect(pointOnTrack.y).toEqual(7.0);
     });
+
+    it('should calculate the total length of a track', () => {
+        const trackLength = MapPositionAlgorithms.getTrackLength(lines);
+
+        expect(trackLength).toEqual(lines.reduce((length, line) => length + line.length, 0));
+    });
 });
