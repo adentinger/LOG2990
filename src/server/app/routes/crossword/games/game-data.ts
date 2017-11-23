@@ -6,6 +6,7 @@ import { LexiconCaller } from '../lexic/lexicon-caller';
 import { Player } from '../player';
 import { Word } from '../word';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Logger } from '../../../../../common/src/index';
 
 export interface DefinitionWithIndex {
     definition: Definition;
@@ -29,6 +30,7 @@ export abstract class GameData {
     protected definitionsInternal: DefinitionWithIndex[] = [];
 
     private initializedInternal: Promise<void>;
+    private logger = Logger.getLogger('GameData');
 
     public get initialized(): Promise<void> {
         return this.initializedInternal;
@@ -88,6 +90,8 @@ export abstract class GameData {
     }
 
     protected async fetchDefinitionsOf(grid: Grid): Promise<DefinitionWithIndex[]> {
+        this.logger.log('Getting definitions...');
+
         const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
@@ -112,22 +116,31 @@ export abstract class GameData {
             definitions.push(definitionWithIndex);
         }
 
+        this.logger.log('Got definitions');
         return definitions;
     }
 
     private async fetchGrid(): Promise<Grid> {
+        let grid: Grid;
+
         switch (this.difficulty) {
             case Difficulty.easy: {
-                return await GridBanks.getInstance().getEasyGrid();
+                grid = await GridBanks.getInstance().getEasyGrid();
+                break;
             }
             case Difficulty.normal: {
-                return await GridBanks.getInstance().getNormalGrid();
+                grid = await GridBanks.getInstance().getNormalGrid();
+                break;
             }
             case Difficulty.hard: {
-                return await GridBanks.getInstance().getHardGrid();
+                grid = await GridBanks.getInstance().getHardGrid();
+                break;
             }
             default: throw new Error(`Unknown difficulty: ${this.difficulty}`);
         }
+
+        this.logger.log('Fetched grid:\n' + grid.toString());
+        return grid;
     }
 
     private async getDefinitionOfWord(word: Word): Promise<Definition> {
