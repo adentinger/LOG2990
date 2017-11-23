@@ -51,4 +51,8 @@ export class Word {
                this.owner.equals(that.owner);
     }
 
+    public clone(): Word {
+        return new Word(this.value, this.position.clone(), this.direction, this.owner.clone());
+    }
+
 }
