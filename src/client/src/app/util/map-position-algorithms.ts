@@ -41,9 +41,14 @@ export class MapPositionAlgorithms {
     }
 
     public static getPointAtGivenDistance(distance: Meters, lines: Line[]): Point {
-        const linesLength = lines.map((line) => line.length);
-        linesLength.find((lineLength) => !(!(distance < lineLength) && (distance -= lineLength)));
-        return new Point();
+        const lineAtDistance = lines.find((line) => {
+            const predicate = distance < line.length;
+            if (!predicate) {
+                distance -= line.length;
+            }
+            return predicate;
+        });
+        return lineAtDistance.interpolate(distance / lineAtDistance.length);
     }
 
     public static getTrackLength(lines: Line[]): Meters {
