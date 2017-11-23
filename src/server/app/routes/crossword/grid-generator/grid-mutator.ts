@@ -47,7 +47,7 @@ export class GridMutator extends AbstractGridGenerator {
     }
 
     public cancelMutation(): void {
-        return this.cancelLatestGeneration();
+        this.cancelLatestGeneration();
     }
 
 }
