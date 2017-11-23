@@ -72,7 +72,7 @@ export class Grid {
 
     constructor(wordsToInclude: Word[] = []) {
         this.id = Grid.id++;
-        this.wordsInternal = wordsToInclude.slice();
+        this.wordsInternal = wordsToInclude.map(word => word.clone());
         Grid.grids[this.id] = this;
     }
 
