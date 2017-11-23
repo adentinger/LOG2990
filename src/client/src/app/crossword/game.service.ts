@@ -64,6 +64,8 @@ export class GameService {
     }
 
     public joinGame(id: number, playerName: string): void {
+        this.dataInternal.currentNumberOfPlayers = 1;
+
         if (!this.dataInternal.id) {
             this.dataInternal.id = id;
             this.dataInternal.playerName = playerName;
