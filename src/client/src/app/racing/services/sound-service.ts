@@ -23,15 +23,23 @@ export class SoundService implements Loadable {
     private static readonly SOUNDS = [
         'tetris.ogg',
         'car-engine.ogg',
-        'car-crash.ogg'
+        'car-crash.ogg',
+        'start-sound.ogg',
+        'end-of-race.ogg',
+        'pothole.ogg',
+        'puddle.ogg',
+        'boost-start.ogg',
+        'boost-end.ogg',
+        'car-hitting-wall.ogg',
+        'air-horn.ogg'
     ];
     private static readonly SOUND_LOADER = new THREE.AudioLoader();
     private static readonly AUDIO_LISTENER = new THREE.AudioListener();
 
     private static readonly COLLISION_TO_SOUND_MAPPING: Map<Class<CollidableMesh>, Sound> =  new Map([
-        [Pothole, Sound.CAR_CRASH],
-        [Puddle, Sound.CAR_CRASH],
-        [SpeedBooster, Sound.CAR_CRASH],
+        [Pothole, Sound.POTHOLE],
+        [Puddle, Sound.PUDDLE],
+        [SpeedBooster, Sound.BOOST_START],
         [Car, Sound.CAR_CRASH]
     ] as [Class<CollidableMesh>, Sound][]);
 
@@ -77,6 +85,7 @@ export class SoundService implements Loadable {
             for (const [collidableClass, sound] of SoundService.COLLISION_TO_SOUND_MAPPING) {
                 if (collision.source instanceof collidableClass && collision.target.eventAudios.has(sound)) {
                     const audio = collision.target.eventAudios.get(sound);
+                    console.log(audio);
                     this.soundBuffer.add(collision.target);
                     audio.setVolume(1.3);
                     audio.play();
@@ -124,7 +133,7 @@ export class SoundService implements Loadable {
         this.stopAmbiantSound();
         this.ambientAudio.setLoop(looping);
         this.ambientAudio.play();
-        this.ambientAudio.setVolume(0.6);
+        this.ambientAudio.setVolume(0);
     }
 
     public stopAmbiantSound(): void {
