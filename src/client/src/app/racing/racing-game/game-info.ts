@@ -7,5 +7,6 @@ export interface GameInfo {
     positions: Car[];
     lapTimes: Seconds[];
     totalTime: Seconds;
+    startTime: Seconds;
     controlledCar: Car;
 }

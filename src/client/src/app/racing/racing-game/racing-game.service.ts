@@ -38,7 +38,7 @@ export class RacingGameService {
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
 
-    private startTime: Seconds;
+    public startTime: Seconds = Date.now() / 1000;
     private lapTimesInternal = new Array(this.maxLap).fill(0);
     private maxLapInternal = 3;
 
@@ -113,14 +113,16 @@ export class RacingGameService {
         ]).then(() => {
             this.physicEngine.start();
             this.renderer.startRendering();
-            this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.START_SOUND);
-            this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
+            this.waitToLoad.then(() => {
+                this.startTime = Date.now() / 1000 + 3;
+                return this.soundService.playAmbiantSound(false);
+            })
                 .then(() => {
                     const event: EventManager.Event<void> = {name: GAME_START_EVENT, data: void 0};
                     this.eventManager.fireEvent(event.name, event);
                     return this.soundService.setAbmiantSound(Sound.TETRIS);
-                }).then(() => this.soundService.playAmbiantSound(true));
+                }).then(() => this.soundService.playAmbiantSound(true)); // this.carService.startcontrollers()
         }, () => logger.warn('Initialization interrupted'));
     }
 
