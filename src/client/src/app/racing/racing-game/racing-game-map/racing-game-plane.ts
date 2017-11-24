@@ -3,6 +3,9 @@ import { Track } from '../../track';
 import { PhysicMesh } from '../physic/object';
 import { loadTexture } from '../../../util/textures';
 
+const NUMBER_OF_WIDTH_DIVISIONS  = Track.WIDTH_MAX;
+const NUMBER_OF_HEIGHT_DIVISIONS = Track.HEIGHT_MAX;
+
 export class RacingGamePlane extends PhysicMesh {
     private static readonly GRASS_URL = '/assets/racing/textures/grass.png';
 
@@ -13,7 +16,14 @@ export class RacingGamePlane extends PhysicMesh {
 
     constructor() {
         super();
-        this.geometry = new THREE.PlaneBufferGeometry(Track.WIDTH_MAX, Track.HEIGHT_MAX);
+
+        this.geometry = new THREE.PlaneGeometry(
+            Track.WIDTH_MAX,
+            Track.HEIGHT_MAX,
+            NUMBER_OF_WIDTH_DIVISIONS,
+            NUMBER_OF_HEIGHT_DIVISIONS
+        );
+
         this.waitToLoad = RacingGamePlane.GRASS_TEXTURE_PROMISE.then((texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.offset.set(0, 0);
@@ -25,7 +35,9 @@ export class RacingGamePlane extends PhysicMesh {
                 shininess: 1
             });
         }).then(() => {});
+
         this.rotateX(-Math.PI / 2);
         this.receiveShadow = true;
     }
+
 }
