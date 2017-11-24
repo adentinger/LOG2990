@@ -5,6 +5,7 @@ import { Seconds, Meters } from '../../../../types';
 import { AFTER_PHYSIC_UPDATE_EVENT, UP_DIRECTION } from '../engine';
 import { CarPhysic } from '../../models/car/car-physic';
 import { MapPositionAlgorithms } from '../../../../util/map-position-algorithms';
+import { Projection } from '../../../../util/projection';
 import { Point, Vector } from '../../../../../../../common/src/math';
 import * as THREE from 'three';
 import { Track } from '../../../track';
@@ -12,6 +13,7 @@ import '../../../../../../../common/src/math/clamp';
 
 export class AiCarController extends CarController {
     private static readonly UPDATE_PERIODE = 5; // cycles
+    private static readonly THRESHOLD_TO_SLOW: Meters = 20;
 
     private cycleCount = 0;
 
@@ -26,16 +28,17 @@ export class AiCarController extends CarController {
         if (++this.cycleCount >= AiCarController.UPDATE_PERIODE && this.state === CarControllerState.ENABLED) {
             this.cycleCount = 0;
             // Call the physic updates.
-            this.car.angularSpeed = this.getAngularSpeedForTrack(event.data.deltaTime);
-            this.car.targetSpeed = this.getTargetSpeed();
+            const carPosition = this.getPointFromVector(this.car.position);
+            const projection = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
+            this.car.angularSpeed = this.getAngularSpeedForTrack(projection);
+            this.car.targetSpeed = this.getTargetSpeed(projection);
         }
     }
 
-    private getAngularSpeedForTrack(deltaTime: Seconds): number {
-        const TARGET_DISTANCE_FROM_CAR: Meters = 20;
+    private getAngularSpeedForTrack(projection: Projection): number {
+        const TARGET_DISTANCE_FROM_CAR: Meters = 30;
 
         const carPosition = this.getPointFromVector(this.car.position);
-        const projection = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
 
         let distanceFromBeginning = 0;
         for (const line of this.trackLines) {
@@ -52,11 +55,18 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-        return 5 * sens * angle; // (angle + 3 * Math.PI) % (2 * Math.PI) - Math.PI
+		const MAX_VALUE = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
+        return Math.clamp(7 * sens * angle, -MAX_VALUE, MAX_VALUE);
     }
 
-    private getTargetSpeed(): number {
-        return CarPhysic.DEFAULT_TARGET_SPEED - 5;
+    private getTargetSpeed(projection: Projection): number {
+		const distanceToEndOfSegment = projection.segment.length * Math.clamp(1 - projection.interpolation, 0, 1);
+		const nextSegmentIndex = (this.trackLines.findIndex(line => line.equals(projection.segment)) + 1) % this.trackLines.length;
+		const angleFactor = Math.clamp(1 - this.getVectorFromPoint(projection.segment.translation).angleTo(
+			this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation)) / (3 * Math.PI / 2), 0, 1);
+		const speedFactor = (distanceToEndOfSegment < AiCarController.THRESHOLD_TO_SLOW) ?
+			angleFactor * (2 * distanceToEndOfSegment + AiCarController.THRESHOLD_TO_SLOW) / (3 * AiCarController.THRESHOLD_TO_SLOW) : 1;
+        return CarPhysic.DEFAULT_TARGET_SPEED * speedFactor;
     }
 
     private getVectorFromPoint(point: Point): THREE.Vector3 {
