@@ -35,23 +35,7 @@ export class RacingGamePlane extends PhysicMesh {
         this.rotateX(-Math.PI / 2);
         this.receiveShadow = true;
 
-        this.makeTerrain(trackSegments);
+        this.geometry = new TerrainGeometry(trackSegments);
     }
 
-    private makeTerrain(trackSegments: Line[]): void {
-        const geometry = new THREE.PlaneGeometry(
-            Track.WIDTH_MAX,
-            Track.HEIGHT_MAX,
-            NUMBER_OF_WIDTH_DIVISIONS,
-            NUMBER_OF_HEIGHT_DIVISIONS
-        );
-        const vertices = geometry.vertices;
-        const terrainGeneration = new TerrainGeometry(trackSegments);
-
-        vertices.forEach((vertex, index) => {
-            vertex.z += terrainGeneration.get(index);
-        });
-
-        this.geometry = geometry;
-    }
 }
