@@ -29,6 +29,10 @@ export class CarsProgressionService {
 
     }
 
+    public computeUserRank(): number {
+        return 1;
+    }
+
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
     private updateCarsProgression(event: EventManager.Event<{ deltaTime: Seconds }>): void {
         if (++this.progressionUpdateCounter === 30) {

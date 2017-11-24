@@ -32,16 +32,15 @@ export class GameInfo {
         return this.carsService.getPlayerCar();
     }
 
+    public get currentRank(): number {
+        return this.carsProgressionService.computeUserRank();
+    }
+
     constructor(
         private carsService: CarsService,
         private carsProgressionService: CarsProgressionService) { }
 
     public startTimer(): void {
         this.startTime = Date.now() / 1000;
-    }
-
-    public getCurrentRank(): number {
-        // TODO fetch from carsProgressionService
-        return 1;
     }
 }
