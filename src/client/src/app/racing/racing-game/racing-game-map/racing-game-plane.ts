@@ -13,10 +13,8 @@ export class RacingGamePlane extends PhysicMesh {
 
     constructor() {
         super();
-        this.geometry = new THREE.PlaneGeometry(Track.WIDTH_MAX, Track.HEIGHT_MAX);
-        this.waitToLoad = Promise.all([
-            RacingGamePlane.GRASS_TEXTURE_PROMISE
-        ]).then(([texture]) => {
+        this.geometry = new THREE.PlaneBufferGeometry(Track.WIDTH_MAX, Track.HEIGHT_MAX);
+        this.waitToLoad = RacingGamePlane.GRASS_TEXTURE_PROMISE.then((texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.offset.set(0, 0);
             texture.repeat.set(Track.WIDTH_MAX, Track.HEIGHT_MAX);
