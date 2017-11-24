@@ -55,17 +55,17 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-		const MAX_VALUE = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED*1.5;
+        const MAX_VALUE = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.5;
         return Math.clamp(7 * sens * angle, -MAX_VALUE, MAX_VALUE);
     }
 
     private getTargetSpeed(projection: Projection): number {
-		const distanceToEndOfSegment = projection.segment.length * Math.clamp(1 - projection.interpolation, 0, 1);
-		const nextSegmentIndex = (this.trackLines.findIndex(line => line.equals(projection.segment)) + 1) % this.trackLines.length;
-		const angleFactor = Math.clamp(1 - this.getVectorFromPoint(projection.segment.translation).angleTo(
-			this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation)) / (3 * Math.PI / 2), 0, 1) ** 0.5;
-		const speedFactor = (distanceToEndOfSegment < AiCarController.THRESHOLD_TO_SLOW) ?
-			angleFactor * (2 * distanceToEndOfSegment + AiCarController.THRESHOLD_TO_SLOW) / (3 * AiCarController.THRESHOLD_TO_SLOW) : 1;
+        const distanceToEndOfSegment = projection.segment.length * Math.clamp(1 - projection.interpolation, 0, 1);
+        const nextSegmentIndex = (this.trackLines.findIndex(line => line.equals(projection.segment)) + 1) % this.trackLines.length;
+        const angleFactor = Math.clamp(1 - this.getVectorFromPoint(projection.segment.translation).angleTo(
+            this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation)) / (3 * Math.PI / 2), 0, 1) ** 0.5;
+        const speedFactor = (distanceToEndOfSegment < AiCarController.THRESHOLD_TO_SLOW) ?
+            angleFactor * (2 * distanceToEndOfSegment + AiCarController.THRESHOLD_TO_SLOW) / (3 * AiCarController.THRESHOLD_TO_SLOW) : 1;
         return CarPhysic.DEFAULT_TARGET_SPEED * speedFactor;
     }
 
