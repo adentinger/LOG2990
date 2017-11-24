@@ -2,6 +2,7 @@ import { Car } from './models/car/car';
 import { Seconds } from '../../types';
 import { CarsService } from './cars.service';
 import { Progression } from './racing-types';
+import { CarsProgressionService } from './cars-progression.service';
 
 export class GameInfo {
 
@@ -31,13 +32,16 @@ export class GameInfo {
         return this.carsService.getPlayerCar();
     }
 
-    constructor(private carsService: CarsService) { }
+    constructor(
+        private carsService: CarsService,
+        private carsProgressionService: CarsProgressionService) { }
 
     public startTimer(): void {
         this.startTime = Date.now() / 1000;
     }
 
-    public getCurrentRank() {
-
+    public getCurrentRank(): number {
+        // TODO fetch from carsService
+        return 1;
     }
 }
