@@ -15,7 +15,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         super(Track.WIDTH_MAX, Track.HEIGHT_MAX, widthSegments, heightSegments);
 
         const rawTerrain = this.generateRawTerrain();
-        this.terrainHeights = rawTerrain;
+        this.terrainHeights = this.flattenTerrainNearTrack(rawTerrain, track);
     }
 
     public get(index: number): number {
@@ -69,6 +69,10 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
         }
         return terrainHeights;
+    }
+
+    private flattenTerrainNearTrack(rawTerrain: number[], track: Line[]): number[] {
+        return rawTerrain;
     }
 
 }
