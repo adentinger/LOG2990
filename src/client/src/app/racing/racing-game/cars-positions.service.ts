@@ -8,7 +8,6 @@ export class CarsPositionsService {
 
     public initialize(gameInfo: GameInfo) {
         this.gameInfo = gameInfo;
-        setInterval(() => console.log(this.playerCoordinates), 3000);
     }
 
     public get playerCoordinates(): THREE.Vector {

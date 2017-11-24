@@ -1,11 +1,10 @@
 import * as THREE from 'three';
-import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
+import { CollisionInfo } from '../../physic/collidable';
 import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
 import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { CarPartsLoader } from '../car/car-parts-loader';
 import { Car } from '../car/car';
-import { Loadable } from '../../../../loadable';
 import { TextureLoader } from '../../../services/texture-loader';
 import { Obstacle } from './obstacle';
 

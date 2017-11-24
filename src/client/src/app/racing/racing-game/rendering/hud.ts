@@ -65,8 +65,7 @@ export class HUD {
         const size = this.getSize(this.context);
 
         this.context.clearRect(0, 0, size.width, size.height);
-        this.context.font = HUD.getFont(HUD.TEXT_HEIGTH * size.height);
-        this.context.fillStyle = HUD.TEXT_COLOR;
+        this.setupTextStyle();
 
         this.drawLapCount(this.context, game);
         this.drawLapTime(this.context, game);
@@ -143,6 +142,14 @@ export class HUD {
 
     private getTextPosition(context: CanvasRenderingContext2D, proportionalPosition: THREE.Vector2): THREE.Vector2 {
         return proportionalPosition.clone().multiply(this.getSize(context));
+    }
+
+    private setupTextStyle(): void {
+        const size = this.getSize(this.context);
+        this.context.font = HUD.getFont(HUD.TEXT_HEIGTH * size.height);
+        this.context.fillStyle = HUD.TEXT_COLOR;
+        this.context.shadowBlur = 5;
+        this.context.shadowColor = 'black';
     }
 
     private getTime(time: Seconds): Time {
