@@ -12,8 +12,8 @@ import { Track } from '../../../track';
 import '../../../../../../../common/src/math/clamp';
 
 export class AiCarController extends CarController {
-    private static readonly UPDATE_PERIODE = 5; // cycles
-    private static readonly THRESHOLD_TO_SLOW: Meters = 20;
+    private static readonly UPDATE_PERIODE = 2; // cycles
+    private static readonly THRESHOLD_TO_SLOW: Meters = 30;
 
     private cycleCount = 0;
 
@@ -36,7 +36,7 @@ export class AiCarController extends CarController {
     }
 
     private getAngularSpeedForTrack(projection: Projection): number {
-        const TARGET_DISTANCE_FROM_CAR: Meters = 30;
+        const TARGET_DISTANCE_FROM_CAR: Meters = 10;
 
         const carPosition = this.getPointFromVector(this.car.position);
 
@@ -55,7 +55,7 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-		const MAX_VALUE = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
+		const MAX_VALUE = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED*1.5;
         return Math.clamp(7 * sens * angle, -MAX_VALUE, MAX_VALUE);
     }
 
@@ -63,7 +63,7 @@ export class AiCarController extends CarController {
 		const distanceToEndOfSegment = projection.segment.length * Math.clamp(1 - projection.interpolation, 0, 1);
 		const nextSegmentIndex = (this.trackLines.findIndex(line => line.equals(projection.segment)) + 1) % this.trackLines.length;
 		const angleFactor = Math.clamp(1 - this.getVectorFromPoint(projection.segment.translation).angleTo(
-			this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation)) / (3 * Math.PI / 2), 0, 1);
+			this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation)) / (3 * Math.PI / 2), 0, 1) ** 0.5;
 		const speedFactor = (distanceToEndOfSegment < AiCarController.THRESHOLD_TO_SLOW) ?
 			angleFactor * (2 * distanceToEndOfSegment + AiCarController.THRESHOLD_TO_SLOW) / (3 * AiCarController.THRESHOLD_TO_SLOW) : 1;
         return CarPhysic.DEFAULT_TARGET_SPEED * speedFactor;
