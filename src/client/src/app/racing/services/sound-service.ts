@@ -36,12 +36,12 @@ export class SoundService implements Loadable {
     private static readonly SOUND_LOADER = new THREE.AudioLoader();
     private static readonly AUDIO_LISTENER = new THREE.AudioListener();
 
-    private static readonly COLLISION_TO_SOUND_MAPPING: Map<Class<CollidableMesh>, Sound> =  new Map([
-        [Pothole, Sound.POTHOLE],
-        [Puddle, Sound.PUDDLE],
-        [SpeedBooster, Sound.BOOST_START],
-        [Car, Sound.CAR_CRASH]
-    ] as [Class<CollidableMesh>, Sound][]);
+    private static readonly COLLISION_TO_SOUND_MAPPING: Map<Class<CollidableMesh>, Sound[]> = new Map([
+        [Pothole, [Sound.POTHOLE]],
+        [Puddle, [Sound.PUDDLE]],
+        [SpeedBooster, [Sound.BOOST_START, Sound.BOOST_END]],
+        [Car, [Sound.CAR_CRASH]]
+    ] as [Class<CollidableMesh>, Sound[]][]);
 
     private static readonly SOUND_PROMISES =
         SoundService.loadSounds(...SoundService.SOUNDS.map((sound) => SoundService.URL_PREFIX + sound));
@@ -82,17 +82,32 @@ export class SoundService implements Loadable {
     private onCollision(event: EventManager.Event<CollisionInfo>): void {
         const collision = event.data;
         if (collision.target instanceof Car && !this.soundBuffer.has(collision.target)) {
-            for (const [collidableClass, sound] of SoundService.COLLISION_TO_SOUND_MAPPING) {
-                if (collision.source instanceof collidableClass && collision.target.eventAudios.has(sound)) {
-                    const audio = collision.target.eventAudios.get(sound);
-                    console.log(audio);
-                    this.soundBuffer.add(collision.target);
-                    audio.setVolume(1.3);
-                    audio.play();
-                    const duration = audio['buffer'].duration * 1000;
-                    setTimeout(() => {
-                        this.soundBuffer.delete(collision.target as Car);
-                    }, duration);
+            const car = collision.target as Car;
+            for (const [collidableClass, sounds] of SoundService.COLLISION_TO_SOUND_MAPPING) {
+                let currentSoundIndex = 0;
+                let duration = 0;
+                if (collision.source instanceof collidableClass) {
+                    const playNextSound = () => {
+                        if (car.eventAudios.has(sounds[currentSoundIndex])) {
+                            const audio = car.eventAudios.get(sounds[currentSoundIndex]);
+                            this.soundBuffer.add(car);
+                            audio.setVolume(1.3);
+                            audio.play();
+                            duration = audio['buffer'].duration * 1000;
+                            setTimeout(() => {
+                                if (++currentSoundIndex < sounds.length) {
+                                    playNextSound();
+                                }
+                                else {
+                                    this.soundBuffer.delete(car);
+                                }
+                            }, duration);
+                        }
+                        else {
+                            this.soundBuffer.delete(car);
+                        }
+                    };
+                    playNextSound();
                 }
             }
         }

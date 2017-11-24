@@ -51,6 +51,7 @@ export class Car extends UserControllableCollidableMesh implements Loadable, Sou
     public readonly constantAudios: Map<Sound, THREE.PositionalAudio> = new Map();
     public readonly eventSounds: Sound[] = [Sound.CAR_CRASH,
                                             Sound.BOOST_START,
+                                            Sound.BOOST_END,
                                             Sound.POTHOLE,
                                             Sound.PUDDLE];
     public readonly constantSounds: Sound[] = [Sound.CAR_ENGINE];

@@ -61,18 +61,24 @@ export class RenderableMap extends PhysicMesh {
         const angleOfFirstSegment: Radians = -new THREE.Vector2(this.mapPoints[1].x - this.mapPoints[0].x,
             this.mapPoints[1].y - this.mapPoints[0].y).angle() - Math.PI / 2;
 
+        const numberOfLines = 2;
         const numberOfCars: number = cars.length;
+        const numberOfCarsPerLine = numberOfCars / numberOfLines;
         const startingLineCoordinates = new THREE.Vector3(this.mapPoints[0].x, 0.0, this.mapPoints[0].y);
-        const WIDTH_POSITION_INCREMENT = Track.SEGMENT_WIDTH / 4;
-        const LENGTH_POSITION_INCREMENT = 4;
-        const carPlacementOffset: number = (-0.5 * numberOfCars + ((numberOfCars % 2 !== 0) ? - 0.5 : 0)) * WIDTH_POSITION_INCREMENT;
+        const WIDTH_POSITION_INCREMENT = Track.SEGMENT_WIDTH / (numberOfCarsPerLine + 1);
+        const LENGTH_POSITION_INCREMENT = Track.SEGMENT_WIDTH;
         const position = new THREE.Vector3(1);
-        position.add(new THREE.Vector3(carPlacementOffset, 0.0, 0.0));
-        cars.forEach((car) => {
+        position.add(new THREE.Vector3(-WIDTH_POSITION_INCREMENT / 2, 0.0, -LENGTH_POSITION_INCREMENT));
+        cars.forEach((car, index) => {
             car.rotation.set(0, angleOfFirstSegment, 0);
             car.position.copy(position).applyEuler(new THREE.Euler(0, angleOfFirstSegment, 0));
             car.position.add(startingLineCoordinates);
-            position.add(new THREE.Vector3(WIDTH_POSITION_INCREMENT, 0.0, LENGTH_POSITION_INCREMENT));
+            if (index % numberOfLines === numberOfCarsPerLine - 1) {
+                position.add(new THREE.Vector3(-WIDTH_POSITION_INCREMENT, 0.0, LENGTH_POSITION_INCREMENT));
+            }
+            else {
+                position.add(new THREE.Vector3(WIDTH_POSITION_INCREMENT, 0.0, 0.0));
+            }
         });
         this.add(...cars);
     }
