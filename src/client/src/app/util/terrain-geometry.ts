@@ -17,7 +17,6 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         const terrainDisplacement = this.flattenTerrainNearTrack(rawTerrainDispalcement, track);
 
         this.vertices.forEach((vertex, index) => {
-            console.log(terrainDisplacement[index], index);
             vertex.z += terrainDisplacement[index];
         });
     }
@@ -80,9 +79,36 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         this.vertices.forEach((vertex, index) => {
             const position = new Point(vertex.x, vertex.z);
             const projection = MapPositionAlgorithms.getClosestProjection(position, track);
-            terrainDisplacement.push(rawTerrainDisplacement[index]);
+            terrainDisplacement.push(
+                this.flattenSinglePosition(rawTerrainDisplacement[index], projection.distanceToSegment)
+            );
         });
         return terrainDisplacement;
+    }
+
+    private flattenSinglePosition(rawDisplacement: number, distanceToTrack: number): number {
+        // For formula, see doc/architectures/formula_displacement_factor.jpg
+        const distaneMin = Track.SEGMENT_WIDTH / 2;
+        const distanceAtModulation = Track.SEGMENT_WIDTH * 1.2;
+        const distanceAtMax = Track.SEGMENT_WIDTH * 10;
+
+        const factorMedium = 0.1;
+
+        let displacementFactor: number;
+        if (distanceToTrack < distaneMin) {
+            displacementFactor = -0.1;
+        }
+        else if (distanceToTrack < distanceAtModulation) {
+            displacementFactor = factorMedium;
+        }
+        else if (distanceToTrack < distanceAtMax) {
+            displacementFactor =
+                -Math.exp(-distanceToTrack + distanceAtModulation + Math.log(1 - factorMedium)) + 1;
+        }
+        else {
+            displacementFactor = 1;
+        }
+        return rawDisplacement * displacementFactor;
     }
 
 }
