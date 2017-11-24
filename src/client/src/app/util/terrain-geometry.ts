@@ -16,6 +16,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         const terrainDisplacement = this.flattenTerrainNearTrack(rawTerrainDispalcement, track);
 
         this.vertices.forEach((vertex, index) => {
+            console.log(terrainDisplacement[index], index);
             vertex.z += terrainDisplacement[index];
         });
     }
@@ -50,27 +51,31 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
         // THE SOFTWARE.
 
-        const terrainHeights = [];
         const numberOfWidthVertices  = widthSegments  + 1;
         const numberOfHeightVertices = heightSegments + 1;
+        const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
+        const terrainDisplacementUint8 = new Uint8Array(size);
 
         const perlin = new ImprovedNoise();
         const z = Math.random() * 100;
 
-        const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
         let quality = 1;
         for (let j = 0; j < 4; j ++) {
 
             for (let i = 0; i < size; i ++) {
                 const x = i % widthSegments, y = (i / heightSegments);
                 const height = Math.abs(perlin.noise(x / quality, y / quality, z) * quality * 1.75);
-                terrainHeights.push(height);
+                terrainDisplacementUint8[i] = height;
             }
 
             quality *= 5;
 
         }
-        return terrainHeights;
+
+        // Convert Uint8 buffer to number array.
+        const terrainDisplacement: number[] = [];
+        terrainDisplacementUint8.forEach(height => terrainDisplacement.push(Number(height)));
+        return terrainDisplacement;
     }
 
     private flattenTerrainNearTrack(rawTerrain: number[], track: Line[]): number[] {
