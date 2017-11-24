@@ -62,7 +62,7 @@ export class RenderableMap extends PhysicMesh {
         decorationGenerator.placeDecorationsOnMap(this);
 
         const invisibleWallsGenerator = new InvisibleWallsGenerator();
-        invisibleWallsGenerator.placeInvisibleWallsOnMap(this);
+        invisibleWallsGenerator.placeInvisibleWallOnBothSideOfMap(this);
 
         this.waitToLoad = Promise.all([
             this.plane.waitToLoad,
