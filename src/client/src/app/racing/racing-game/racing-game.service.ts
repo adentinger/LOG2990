@@ -109,10 +109,10 @@ export class RacingGameService {
             this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
-            this.soundService.setAbmiantSound(Sound.TETRIS);
-            this.waitToLoad.then(() => {
-                this.soundService.playAmbiantSound(true);
-            });
+            this.soundService.setAbmiantSound(Sound.START_SOUND);
+            this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
+                .then(() => this.soundService.setAbmiantSound(Sound.TETRIS))
+                .then(() => this.soundService.playAmbiantSound(true));
         }, () => logger.warn('Initialization interrupted'));
     }
 

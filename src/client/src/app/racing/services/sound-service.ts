@@ -137,18 +137,25 @@ export class SoundService implements Loadable {
         delete this.registeredListener.listener;
     }
 
-    public setAbmiantSound(soundIndex: Sound): void {
+    public setAbmiantSound(soundIndex: Sound): Promise<void> {
         this.stopAmbiantSound();
-        SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
+        return SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             this.ambientAudio.setBuffer(buffer);
         });
     }
 
-    public playAmbiantSound(looping: boolean = false): void {
+    public playAmbiantSound(looping: true): void;
+    public playAmbiantSound(looping: false): Promise<void>;
+    public playAmbiantSound(looping: boolean = false): Promise<void> | void {
         this.stopAmbiantSound();
         this.ambientAudio.setLoop(looping);
         this.ambientAudio.play();
-        this.ambientAudio.setVolume(0);
+        this.ambientAudio.setVolume(0.6);
+        if (!looping) {
+            return new Promise((resolve, reject) => {
+                setTimeout(resolve, this.ambientAudio['buffer'].duration * 1000);
+            });
+        }
     }
 
     public stopAmbiantSound(): void {
