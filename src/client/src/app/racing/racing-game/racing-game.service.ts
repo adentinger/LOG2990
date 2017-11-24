@@ -18,20 +18,19 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
+import { CarController } from './physic/ai/car-controller';
+import { UserCarController } from './physic/ai/user-car-controller';
+import { AiCarController } from './physic/ai/ai-car-controller';
 
 const logger = Logger.getLogger();
 
 @Injectable()
 export class RacingGameService {
-    public static readonly DEFAULT_CONTROLLABLE_CAR_IDX = 2;
-
     public readonly renderer: RacingRenderer;
-
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
     private readonly info: GameInfo;
-
 
     private map: RenderableMap;
 
@@ -58,10 +57,10 @@ export class RacingGameService {
         this.userInputs = userInputs;
 
         const userCar = this.carsService.getPlayerCar();
-        userCar.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCar);
 
-        this.carsService.initialize(this.soundService);
+
+        this.carsService.initialize(this.soundService, userInputs, this.map.mapLines);
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
 
@@ -74,6 +73,8 @@ export class RacingGameService {
             this.renderer.startRendering();
             this.info.startTimer();
             this.soundService.setAbmiantSound(Sound.TETRIS);
+
+            this.carsService.startControllers();
             this.waitToLoad.then(() => {
                 this.soundService.playAmbiantSound(true);
             });

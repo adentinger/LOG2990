@@ -107,7 +107,7 @@ export class SoundService implements Loadable {
         });
         this.registeredEmitters.clear();
 
-        if ('onListenerRemove' in this.registeredListener) {
+        if (this.registeredListener != null && 'onListenerRemove' in this.registeredListener) {
             this.registeredListener.onListenerRemove(SoundService.AUDIO_LISTENER);
         }
         delete this.registeredListener.listener;

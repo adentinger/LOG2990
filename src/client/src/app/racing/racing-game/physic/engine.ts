@@ -36,7 +36,7 @@ export class PhysicEngine {
 
     public start(): void {
         if (this.timer === null) {
-            let now = Date.now(), last = now;
+            let now: number, last = Date.now();
             this.timer = setInterval(() => {
                 now = Date.now();
                 const deltaTimeMs = now - last;
