@@ -2,9 +2,12 @@ import * as THREE from 'three';
 import { Track } from '../../track';
 import { PhysicMesh } from '../physic/object';
 import { loadTexture } from '../../../util/textures';
+import { TerrainGenerator } from '../../../util/terrain-generator';
+import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { Line, Point } from '../../../../../../common/src/math/index';
 
-const NUMBER_OF_WIDTH_DIVISIONS  = Track.WIDTH_MAX;
-const NUMBER_OF_HEIGHT_DIVISIONS = Track.HEIGHT_MAX;
+const NUMBER_OF_WIDTH_DIVISIONS  = Math.ceil( Track.WIDTH_MAX / 10);
+const NUMBER_OF_HEIGHT_DIVISIONS = Math.ceil(Track.HEIGHT_MAX / 10);
 
 export class RacingGamePlane extends PhysicMesh {
     private static readonly GRASS_URL = '/assets/racing/textures/grass.png';
@@ -14,15 +17,8 @@ export class RacingGamePlane extends PhysicMesh {
     public readonly velocity = new THREE.Vector3();
     public readonly waitToLoad: Promise<void>;
 
-    constructor() {
+    constructor(trackSegments: Line[]) {
         super();
-
-        this.geometry = new THREE.PlaneGeometry(
-            Track.WIDTH_MAX,
-            Track.HEIGHT_MAX,
-            NUMBER_OF_WIDTH_DIVISIONS,
-            NUMBER_OF_HEIGHT_DIVISIONS
-        );
 
         this.waitToLoad = RacingGamePlane.GRASS_TEXTURE_PROMISE.then((texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -38,6 +34,24 @@ export class RacingGamePlane extends PhysicMesh {
 
         this.rotateX(-Math.PI / 2);
         this.receiveShadow = true;
+
+        this.makeTerrain(trackSegments);
     }
 
+    private makeTerrain(trackSegments: Line[]): void {
+        const geometry = new THREE.PlaneGeometry(
+            Track.WIDTH_MAX,
+            Track.HEIGHT_MAX,
+            NUMBER_OF_WIDTH_DIVISIONS,
+            NUMBER_OF_HEIGHT_DIVISIONS
+        );
+        const vertices = geometry.vertices;
+        const terrainGeneration = new TerrainGenerator(NUMBER_OF_WIDTH_DIVISIONS + 1, NUMBER_OF_HEIGHT_DIVISIONS + 1);
+
+        vertices.forEach((vertex, index) => {
+            vertex.z += terrainGeneration.terrainHeights[index];
+        });
+
+        this.geometry = geometry;
+    }
 }
