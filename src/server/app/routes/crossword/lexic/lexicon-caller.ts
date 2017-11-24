@@ -64,7 +64,20 @@ export class LexiconCaller {
 
     public getDefinitions(word: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            resolve(['CHUCK NORRIS IS SO COOL', 'CHUCK NORRIS SOLVES GRIDS IN HIS SLEEP']);
+            const url = LexiconCaller.BASE_URL + '/definitions/' + word;
+            http.get(url, (response: http.IncomingMessage) => {
+                let data = '';
+                response.on('data', (chunk) => data += chunk);
+                response.on('end', () => {
+                    try {
+                        resolve(JSON.parse(data));
+                    }
+                    catch (e) {
+                        reject();
+                    }
+                });
+                response.on('error', reject);
+            }).setTimeout(0).end();
         });
     }
 }

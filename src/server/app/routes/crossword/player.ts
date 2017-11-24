@@ -23,4 +23,8 @@ export class Player {
                this.socketIdInternal === that.socketIdInternal;
     }
 
+    public clone(): Player {
+        return new Player(this.nameInternal, this.socketIdInternal);
+    }
+
 }

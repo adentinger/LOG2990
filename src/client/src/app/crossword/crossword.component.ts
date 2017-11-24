@@ -18,7 +18,7 @@ export class CrosswordComponent implements OnDestroy {
     constructor(private gameManagerService: GameManagerService) { }
 
     public ngOnDestroy(): void {
-        this.gameManagerService.resetGame();
+        this.gameManagerService.finalize();
     }
 
 }

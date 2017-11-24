@@ -6,6 +6,7 @@ import { LexiconCaller } from '../lexic/lexicon-caller';
 import { Player } from '../player';
 import { Word } from '../word';
 import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Logger } from '../../../../../common/src/index';
 
 export interface DefinitionWithIndex {
     definition: Definition;
@@ -26,8 +27,14 @@ export abstract class GameData {
 
     protected difficulty: Difficulty;
     protected grid: Grid = new Grid();
+    protected definitionsInternal: DefinitionWithIndex[] = [];
+    protected logger = Logger.getLogger('GameData');
 
-    private definitionsInternal: DefinitionWithIndex[] = [];
+    private initializedInternal: Promise<void>;
+
+    public get initialized(): Promise<void> {
+        return this.initializedInternal;
+    }
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
@@ -39,6 +46,7 @@ export abstract class GameData {
 
     constructor(difficulty: Difficulty) {
         this.difficulty = difficulty;
+        this.initialize();
     }
 
     public getGridWords(player: Player, opponent: Player): GridWord[] {
@@ -55,9 +63,13 @@ export abstract class GameData {
         return gridWords;
     }
 
-    public async initialize(): Promise<void> {
-        this.grid = await this.fetchGrid();
-        await this.setDefinitions();
+    public initialize(): void {
+        this.initializedInternal = this.fetchGrid().then(grid => {
+            this.grid = grid;
+            return this.fetchDefinitionsOf(grid);
+        }).then(definitions => {
+            this.definitionsInternal = definitions;
+        });
     }
 
     public validateWord(gridWordGuess: GridWord, player: Player): boolean {
@@ -77,13 +89,15 @@ export abstract class GameData {
         return found;
     }
 
-    protected async setDefinitions(): Promise<void> {
+    protected async fetchDefinitionsOf(grid: Grid): Promise<DefinitionWithIndex[]> {
+        this.logger.log('Getting definitions...');
+
         const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
-        for (let i = 0; i < this.grid.words.length; ++i) {
-            const word = this.grid.words[i];
+        for (let i = 0; i < grid.words.length; ++i) {
+            const word = grid.words[i];
 
             let index;
             if (word.direction === Direction.horizontal) {
@@ -102,22 +116,31 @@ export abstract class GameData {
             definitions.push(definitionWithIndex);
         }
 
-        this.definitionsInternal = definitions;
+        this.logger.log('Got definitions');
+        return definitions;
     }
 
     private async fetchGrid(): Promise<Grid> {
+        let grid: Grid;
+
         switch (this.difficulty) {
             case Difficulty.easy: {
-                return await GridBanks.getInstance().getEasyGrid();
+                grid = await GridBanks.getInstance().getEasyGrid();
+                break;
             }
             case Difficulty.normal: {
-                return await GridBanks.getInstance().getNormalGrid();
+                grid = await GridBanks.getInstance().getNormalGrid();
+                break;
             }
             case Difficulty.hard: {
-                return await GridBanks.getInstance().getHardGrid();
+                grid = await GridBanks.getInstance().getHardGrid();
+                break;
             }
             default: throw new Error(`Unknown difficulty: ${this.difficulty}`);
         }
+
+        this.logger.log('Fetched grid:\n' + grid.toString());
+        return grid;
     }
 
     private async getDefinitionOfWord(word: Word): Promise<Definition> {

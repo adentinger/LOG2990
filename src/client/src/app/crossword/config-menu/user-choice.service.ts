@@ -32,4 +32,13 @@ export class UserChoiceService {
         };
     }
 
+    public reinitialize(): void {
+        this.gameMode = undefined;
+        this.playerNumber = undefined;
+        this.createOrJoin = undefined;
+        this.difficulty = undefined;
+        this.chosenGame = undefined;
+        this.playerName = '';
+    }
+
 }

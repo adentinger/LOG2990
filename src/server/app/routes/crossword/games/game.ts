@@ -15,7 +15,6 @@ export abstract class Game {
 
     public readonly id: GameId;
 
-    protected readonly initialized: Promise<void>;
     protected started = false;
 
     protected readonly dataInternal: GameData;
@@ -31,9 +30,6 @@ export abstract class Game {
 
         this.id = Game.idCounter++;
         this.maxPlayers = configs.playerNumber;
-
-        this.initialized =
-            this.data.initialize().catch(warn(logger));
     }
 
     public get data(): GameData {
@@ -61,14 +57,6 @@ export abstract class Game {
 
             // Actually add player
             this.players.push(player);
-            this.initialized.then(() => {
-                this.communicationHandler.clearPlayerGrid(player);
-                this.communicationHandler.sendGridWords(
-                    player,
-                    this.dataInternal.wordsViewedByPlayer(player)
-                );
-                this.communicationHandler.sendDefinitions(player, this.dataInternal.definitions);
-            }).catch(warn(logger));
 
             // Start game if max players reached.
             if (this.players.length === this.maxPlayers) {
@@ -133,9 +121,22 @@ export abstract class Game {
     }
 
     protected start(): void {
-        this.players.forEach((player) => {
-            this.communicationHandler.sendGameStart(this.players);
-        });
+        this.dataInternal.initialized.then(() => {
+
+            this.players.forEach(player => {
+                this.communicationHandler.clearPlayerGrid(player);
+                this.communicationHandler.sendGridWords(
+                    player,
+                    this.dataInternal.wordsViewedByPlayer(player)
+                );
+                this.communicationHandler.sendDefinitions(player, this.dataInternal.definitions);
+            });
+
+            this.players.forEach((player) => {
+                this.communicationHandler.sendGameStart(this.players);
+            });
+
+        }).catch(warn(logger));
     }
 
 }
