@@ -9,20 +9,20 @@ const heightSegments = Math.ceil(Track.HEIGHT_MAX / 10);
 
 export class TerrainGeometry extends THREE.PlaneGeometry {
 
-    private readonly terrainHeights: Uint8Array;
+    private readonly terrainHeights: number[] = [];
 
     constructor(track: Line[]) {
         super(Track.WIDTH_MAX, Track.HEIGHT_MAX, widthSegments, heightSegments);
-        const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
-        this.terrainHeights = new Uint8Array(size);
-        this.generateHights();
+
+        const rawTerrain = this.generateHights();
+        this.terrainHeights = rawTerrain;
     }
 
     public get(index: number): number {
         return this.terrainHeights[index];
     }
 
-    private generateHights(): void {
+    private generateHights(): number[] {
         // METHOD PARTLY TAKEN FROM:
         // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_terrain.html
 
@@ -48,23 +48,26 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
         // THE SOFTWARE.
 
-        const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
+        const terrainHeights = [];
         const numberOfWidthVertices  = widthSegments  + 1;
         const numberOfHeightVertices = heightSegments + 1;
 
         const perlin = new ImprovedNoise();
         const z = Math.random() * 100;
 
+        const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
         let quality = 1;
         for (let j = 0; j < 4; j ++) {
 
             for (let i = 0; i < size; i ++) {
                 const x = i % widthSegments, y = (i / heightSegments);
-                this.terrainHeights[i] += Math.abs(perlin.noise(x / quality, y / quality, z) * quality * 1.75);
+                const height = Math.abs(perlin.noise(x / quality, y / quality, z) * quality * 1.75);
+                terrainHeights.push(height);
             }
 
             quality *= 5;
 
         }
+        return terrainHeights;
     }
 }
