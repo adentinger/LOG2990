@@ -103,6 +103,8 @@ export class RacingGameService {
         const userCarController = this.controllers[this.controlledCarIdx] as UserCarController;
         userCarController.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCarController.car);
+
+        this.controllers.forEach(controller => controller.setTrackLines(this.map.mapLines));
         this.reloadSounds();
 
         this.cars.forEach(this.soundService.registerEmitter, this.soundService);
@@ -119,10 +121,7 @@ export class RacingGameService {
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.TETRIS);
 
-            // this.controllers.forEach(controller => controller.setTrackLines(this.map.mapLines) && controller.start());
-            this.controllers[this.controlledCarIdx].start();
-            this.controllers[+!this.controlledCarIdx].setTrackLines(this.map.mapLines);
-            this.controllers[+!this.controlledCarIdx].start();
+            this.controllers.forEach(controller => controller.start());
             this.waitToLoad.then(() => {
                 this.soundService.playAmbiantSound(true);
             });
