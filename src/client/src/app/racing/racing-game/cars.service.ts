@@ -18,6 +18,7 @@ import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Projection } from '../../util/projection';
+import { CarsProgressionService } from './cars-progression.service';
 
 
 @Injectable()
@@ -38,13 +39,14 @@ export class CarsService implements Loadable {
 
     private progressionUpdateCounter = 0;
     private userControllerIndex: number = Math.floor(Math.random() * CarsService.CAR_COUNT);
-    private mapLines: Line[];
 
     public get cars(): Car[] {
         return this.controllers.map((controller) => controller.car);
     }
 
-    public constructor(eventManager: EventManager) {
+    public constructor(
+        private eventManager: EventManager,
+        private carsProgressionService: CarsProgressionService) {
         for (let index = 0; index < CarsService.CAR_COUNT; ++index) {
             this.controllers.push(index === this.userControllerIndex ?
                 new UserCarController(new Car(CarsService.CAR_COLORS[index])) :
@@ -64,7 +66,7 @@ export class CarsService implements Loadable {
         this.cars.forEach(soundService.registerEmitter, soundService);
         (this.controllers[this.userControllerIndex] as UserCarController).setUIInput(userInput);
         this.controllers.forEach(controller => controller.setTrackLines(mapLines));
-        this.mapLines = mapLines;
+        this.carsProgressionService.initialize(this.controllers, mapLines);
     }
 
     public finalize() {
@@ -107,28 +109,4 @@ export class CarsService implements Loadable {
         this.controllers.forEach(controller => controller.start());
     }
 
-    @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
-    private updateCarsProgression(event: EventManager.Event<{ deltaTime: Seconds }>): void {
-        if (++this.progressionUpdateCounter === 30) {
-            this.progressionUpdateCounter = 0;
-            for (const controller of this.controllers) {
-                this.carsProgression.set(controller.car, this.computeCarProgression(controller.car, this.mapLines));
-            }
-            this.carsProgression.forEach((prog) => {
-                console.log(prog);
-            });
-        }
-    }
-
-    private computeCarProgression(car: Car, mapLines: Line[]): Progression {
-        const projection: Projection = MapPositionAlgorithms.getClosestProjection(new Point(car.position.x, car.position.y), mapLines);
-        let progression: Progression = 0;
-        for (let i = 0; i < mapLines.length; ++i) {
-            if (projection.segment === mapLines[i]) {
-                progression += i;
-            }
-        }
-        progression += projection.interpolation;
-        return progression;
-    }
 }

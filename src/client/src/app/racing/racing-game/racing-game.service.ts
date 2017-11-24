@@ -21,6 +21,7 @@ import { GameInfo } from './game-info';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
+import { CarsProgressionService } from './cars-progression.service';
 
 const logger = Logger.getLogger();
 
@@ -40,8 +41,9 @@ export class RacingGameService {
         private mapService: MapService,
         private eventManager: EventManager,
         private soundService: SoundService,
-        private carsService: CarsService) {
-        this.info = new GameInfo(this.carsService);
+        private carsService: CarsService,
+        private carsProgressionService: CarsProgressionService) {
+        this.info = new GameInfo(this.carsService, this.carsProgressionService);
         this.waitToLoad = Promise.all([
             this.carsService.waitToLoad,
             this.soundService.waitToLoad

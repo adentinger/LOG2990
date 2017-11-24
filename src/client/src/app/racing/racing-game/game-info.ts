@@ -41,7 +41,7 @@ export class GameInfo {
     }
 
     public getCurrentRank(): number {
-        // TODO fetch from carsService
+        // TODO fetch from carsProgressionService
         return 1;
     }
 }
