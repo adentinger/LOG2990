@@ -21,10 +21,6 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         });
     }
 
-    public get(index: number): number {
-        return 0;
-    }
-
     private generateRawDisplacement(): number[] {
         // METHOD PARTLY TAKEN FROM:
         // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_terrain.html
