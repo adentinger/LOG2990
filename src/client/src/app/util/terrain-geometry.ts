@@ -9,20 +9,18 @@ const heightSegments = Math.ceil(Track.HEIGHT_MAX / 10);
 
 export class TerrainGeometry extends THREE.PlaneGeometry {
 
-    private readonly terrainHeights: number[] = [];
-
     constructor(track: Line[]) {
         super(Track.WIDTH_MAX, Track.HEIGHT_MAX, widthSegments, heightSegments);
 
-        const rawTerrain = this.generateRawTerrain();
-        this.terrainHeights = this.flattenTerrainNearTrack(rawTerrain, track);
+        const rawTerrainDispalcement = this.generateRawDisplacement();
+        const terrainDisplacement = this.flattenTerrainNearTrack(rawTerrainDispalcement, track);
     }
 
     public get(index: number): number {
-        return this.terrainHeights[index];
+        return 0;
     }
 
-    private generateRawTerrain(): number[] {
+    private generateRawDisplacement(): number[] {
         // METHOD PARTLY TAKEN FROM:
         // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_terrain.html
 
