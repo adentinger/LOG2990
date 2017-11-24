@@ -14,7 +14,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
     constructor(track: Line[]) {
         super(Track.WIDTH_MAX, Track.HEIGHT_MAX, widthSegments, heightSegments);
 
-        const rawTerrain = this.generateHights();
+        const rawTerrain = this.generateRawTerrain();
         this.terrainHeights = rawTerrain;
     }
 
@@ -22,7 +22,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         return this.terrainHeights[index];
     }
 
-    private generateHights(): number[] {
+    private generateRawTerrain(): number[] {
         // METHOD PARTLY TAKEN FROM:
         // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_terrain.html
 
@@ -70,4 +70,5 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         }
         return terrainHeights;
     }
+
 }
