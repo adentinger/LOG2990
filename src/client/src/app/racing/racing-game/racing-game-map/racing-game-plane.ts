@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Track } from '../../track';
 import { PhysicMesh } from '../physic/object';
 import { loadTexture } from '../../../util/textures';
-import { TerrainGenerator } from '../../../util/terrain-generator';
+import { TerrainGeometry } from '../../../util/terrain-geometry';
 import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
 import { Line, Point } from '../../../../../../common/src/math/index';
 
@@ -46,7 +46,7 @@ export class RacingGamePlane extends PhysicMesh {
             NUMBER_OF_HEIGHT_DIVISIONS
         );
         const vertices = geometry.vertices;
-        const terrainGeneration = new TerrainGenerator(NUMBER_OF_WIDTH_DIVISIONS + 1, NUMBER_OF_HEIGHT_DIVISIONS + 1);
+        const terrainGeneration = new TerrainGeometry(NUMBER_OF_WIDTH_DIVISIONS + 1, NUMBER_OF_HEIGHT_DIVISIONS + 1);
 
         vertices.forEach((vertex, index) => {
             vertex.z += terrainGeneration.get(index);

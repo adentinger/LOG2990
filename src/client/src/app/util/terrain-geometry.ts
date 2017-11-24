@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import * as ImprovedNoise from 'improved-noise';
 
-export class TerrainGenerator {
+export class TerrainGeometry {
 
     private readonly terrainHeights: Uint8Array;
 
