@@ -25,6 +25,8 @@ import { CarsProgressionService } from './cars-progression.service';
 
 const logger = Logger.getLogger();
 
+export const GAME_START_EVENT = 'racing-start';
+
 @Injectable()
 export class RacingGameService {
     public readonly renderer: RacingRenderer;
@@ -73,13 +75,23 @@ export class RacingGameService {
         ]).then(() => {
             this.physicEngine.start();
             this.renderer.startRendering();
-            this.info.startTimer();
-            this.soundService.setAbmiantSound(Sound.TETRIS);
+            // this.soundService.setAbmiantSound(Sound.TETRIS);
 
-            this.carsService.startControllers();
-            this.waitToLoad.then(() => {
-                this.soundService.playAmbiantSound(true);
-            });
+            // this.carsService.startControllers();
+            // this.waitToLoad.then(() => {
+            //     this.soundService.playAmbiantSound(true);
+            // });
+            this.info.startTimer();
+            this.soundService.setAbmiantSound(Sound.START_SOUND);
+            this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
+                .then(() => {
+                    const event: EventManager.Event<void> = { name: GAME_START_EVENT, data: void 0 };
+                    this.eventManager.fireEvent(event.name, event);
+                    return this.soundService.setAbmiantSound(Sound.TETRIS);
+                }).then(() => {
+                    this.soundService.playAmbiantSound(true);
+                    this.carsService.startControllers();
+                });
         }, () => logger.warn('Initialization interrupted'));
     }
 

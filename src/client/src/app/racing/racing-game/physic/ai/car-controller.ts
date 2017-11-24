@@ -1,5 +1,4 @@
 import { Car } from '../../models/car/car';
-import { EventManager } from '../../../../event-manager.service';
 import { Line } from '../../../../../../../common/src/math';
 
 export enum CarControllerState {

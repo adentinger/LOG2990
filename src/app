@@ -35,7 +35,7 @@ elif [ $1 = "test" ]; then
 	npm test
 	cd ../client/
 	echo "[client] testing..."
-	npm test
+	npm test -- --single-run --log-level NONE
 	cd ..
 elif [ $1 = "update" ]; then
     cd ./common/
