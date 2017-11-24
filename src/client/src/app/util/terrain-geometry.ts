@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import * as ImprovedNoise from 'improved-noise';
 
 import { Track } from '../racing/track';
-import { Line } from '../../../../common/src/math/index';
+import { Line, Point } from '../../../../common/src/math/index';
+import { MapPositionAlgorithms } from './map-position-algorithms';
 
 const widthSegments  = Math.ceil( Track.WIDTH_MAX / 10);
 const heightSegments = Math.ceil(Track.HEIGHT_MAX / 10);
@@ -74,8 +75,14 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         return terrainDisplacement;
     }
 
-    private flattenTerrainNearTrack(rawTerrain: number[], track: Line[]): number[] {
-        return rawTerrain;
+    private flattenTerrainNearTrack(rawTerrainDisplacement: number[], track: Line[]): number[] {
+        const terrainDisplacement: number[] = [];
+        this.vertices.forEach((vertex, index) => {
+            const position = new Point(vertex.x, vertex.z);
+            const projection = MapPositionAlgorithms.getClosestProjection(position, track);
+            terrainDisplacement.push(rawTerrainDisplacement[index]);
+        });
+        return terrainDisplacement;
     }
 
 }
