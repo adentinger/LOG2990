@@ -7,6 +7,7 @@ import { PhysicEngine } from './physic/engine';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
+import { SoundService } from '../services/sound-service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -19,7 +20,8 @@ describe('RacingGameService', () => {
                 {provide: ConnectionBackend, useClass: MockBackend},
                 {provide: RequestOptions, useClass: BaseRequestOptions},
                 Http,
-                UIInputs
+                UIInputs,
+                SoundService
             ]
         });
     });

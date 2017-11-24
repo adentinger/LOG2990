@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 
-import { Logger } from '../../../../../../../common/src';
 import { UserControllableCollidableMesh } from '../../physic/user-controllable-collidable';
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Loadable } from '../../../../loadable';
@@ -18,7 +17,6 @@ export interface CarLights {
     lightRight: THREE.Light;
 }
 
-const logger = Logger.getLogger('Car');
 const MIN_RATE = 0.4;
 
 export class Car extends UserControllableCollidableMesh implements Loadable, SoundEmitter {

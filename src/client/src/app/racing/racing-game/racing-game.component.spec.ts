@@ -9,6 +9,7 @@ import { HttpModule } from '@angular/http';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { PhysicEngine } from './physic/engine';
+import { SoundService } from '../services/sound-service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -26,7 +27,8 @@ describe('RacingGameComponent', () => {
                 RacingGameService,
                 MapService,
                 EventManager,
-                PhysicEngine
+                PhysicEngine,
+                SoundService
             ]
         })
             .compileComponents();
