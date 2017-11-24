@@ -49,7 +49,7 @@ export class RacingGamePlane extends PhysicMesh {
         const terrainGeneration = new TerrainGenerator(NUMBER_OF_WIDTH_DIVISIONS + 1, NUMBER_OF_HEIGHT_DIVISIONS + 1);
 
         vertices.forEach((vertex, index) => {
-            vertex.z += terrainGeneration.terrainHeights[index];
+            vertex.z += terrainGeneration.get(index);
         });
 
         this.geometry = geometry;
