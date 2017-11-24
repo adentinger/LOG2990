@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 import { CarController, CarControllerState } from './car-controller';
 import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
@@ -7,8 +9,6 @@ import { CarPhysic } from '../../models/car/car-physic';
 import { MapPositionAlgorithms } from '../../../../util/map-position-algorithms';
 import { Projection } from '../../../../util/projection';
 import { Point, Vector } from '../../../../../../../common/src/math';
-import * as THREE from 'three';
-import { Track } from '../../../track';
 import '../../../../../../../common/src/math/clamp';
 
 export class AiCarController extends CarController {
