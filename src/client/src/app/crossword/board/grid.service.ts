@@ -31,6 +31,7 @@ export class GridService {
 
     public reinitialize(): void {
         this.grid.clear();
+
         // This mock is meant to stay as an initial view
         mockHorizontalGridWords().forEach((word) => {
             this.grid.addWord(word);
@@ -39,6 +40,11 @@ export class GridService {
             this.grid.addWord(word);
         });
 
+        const mockSelection = {direction: Direction.vertical, id: 2};
+        this.selectionService.reinitialize();
+        this.selectionService.updateSelectedGridWord(mockSelection);
+
+        this.onChange();
     }
 
     public get words(): GridWord[] {
@@ -60,7 +66,7 @@ export class GridService {
 
     public setUserInput(word: GridWord): void {
         this.grid.userInput = word;
-        if (word.length === word.string.length) {
+        if (word.length === word.string.length && word.length !== 0) {
             this.sendWordToServer(word);
         }
     }
@@ -84,6 +90,8 @@ export class GridService {
     @PacketHandler(GridWordPacket)
     // tslint:disable-next-line:no-unused-variable
     private updateGridWord(event: PacketEvent<GridWordPacket>): void {
+        this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
+        this.gameService.onShowWords.next(false);
         this.grid.addWord(event.value.gridword);
         this.onChange();
     }
@@ -91,6 +99,8 @@ export class GridService {
     @PacketHandler(ClearGridPacket)
     // tslint:disable-next-line:no-unused-variable
     private clearGrid(): void {
+        this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
+        this.gameService.onShowWords.next(false);
         this.grid.clear();
         this.onChange();
     }
@@ -108,11 +118,7 @@ export class GridService {
             this.selectionService.updateSelectedGridWord(SelectionService.NO_SELECTION);
         }
         if (this.getPlayerWordsFoundCount() + this.getOpponentWordsFoundCount() >= this.grid.numberOfWords) {
-            this.gameService.state = GameState.finished;
-            this.gameService.finishGame(
-                this.getPlayerWordsFoundCount(),
-                this.getOpponentWordsFoundCount()
-            );
+            this.gameService.state.next(GameState.finished);
         }
         this.onChange();
     }

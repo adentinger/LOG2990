@@ -37,7 +37,7 @@ export class Line {
      * Get the interpolated point between the origin and the destination.
      * @param proportion The proportion of the line. Must be between 0 and 1.
      */
-    public interpollate(proportion: number): Point {
+    public interpolate(proportion: number): Point {
         const x = this.origin.x + (this.destination.x - this.origin.x) * (proportion);
         const y = this.origin.y + (this.destination.y - this.origin.y) * (proportion);
         return new Point(x, y);

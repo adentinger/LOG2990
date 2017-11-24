@@ -1,5 +1,7 @@
 export class Player {
 
+    public static readonly NO_PLAYER = new Player(null, null);
+
     private nameInternal: string;
     private socketIdInternal: string;
 
@@ -14,6 +16,15 @@ export class Player {
     constructor(name: string, socketId: string) {
         this.nameInternal = name;
         this.socketIdInternal = socketId;
+    }
+
+    public equals(that: Player): boolean {
+        return this.nameInternal === that.nameInternal &&
+               this.socketIdInternal === that.socketIdInternal;
+    }
+
+    public clone(): Player {
+        return new Player(this.nameInternal, this.socketIdInternal);
     }
 
 }

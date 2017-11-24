@@ -1,59 +1,103 @@
 import { Difficulty, Direction, Owner } from '../../../../../common/src/crossword/crossword-enums';
-import { GridWord } from '../../../../../common/src/crossword/grid-word';
 import { GridBanks } from '../grid-bank/grid-banks';
 import { Grid } from '../grid-generator/grid';
 import { Definition } from '../../../../../common/src/crossword/definition';
 import { LexiconCaller } from '../lexic/lexicon-caller';
+import { Player } from '../player';
+import { Word } from '../word';
+import { GridWord } from '../../../../../common/src/crossword/grid-word';
+import { Logger } from '../../../../../common/src/index';
 
 export interface DefinitionWithIndex {
     definition: Definition;
     index: number;
 }
 
-export class GameData {
+/**
+ * @class GameData
+ * @description Contains a grid and has the responsibility of managing it,
+ * and updating it if requested.
+ *
+ * Internally, this class contains instances of the Word class, but for the outside
+ * world, only GridWords exist. This means, however, that classes that use the GameData
+ * class have to specify for which user they want to get GridWords, because a GridWord's
+ * owner is either the 'player' or their 'opponent'.
+ */
+export abstract class GameData {
 
-    private wordsInternal: GridWord[] = [];
-    private definitionsInternal: DefinitionWithIndex[] = [];
+    protected difficulty: Difficulty;
+    protected grid: Grid = new Grid();
+    protected definitionsInternal: DefinitionWithIndex[] = [];
+    protected logger = Logger.getLogger('GameData');
 
-    public async initialize(difficulty: Difficulty): Promise<void> {
-        await this.initializeWords(difficulty);
-        await this.initializeDefinitions(difficulty);
-    }
+    private initializedInternal: Promise<void>;
 
-    public get words(): GridWord[] {
-        return this.wordsInternal.slice();
-    }
-
-    public get emptyWords(): GridWord[] {
-        return this.wordsInternal.map((word) => {
-            return new GridWord(
-                word.id,
-                word.y,
-                word.x,
-                word.length,
-                word.direction,
-                Owner.none,
-                ''
-            );
-        });
+    public get initialized(): Promise<void> {
+        return this.initializedInternal;
     }
 
     public get definitions(): DefinitionWithIndex[] {
         return this.definitionsInternal.slice();
     }
 
-    private async initializeWords(difficulty: Difficulty): Promise<void> {
-        const grid = await this.fetchGrid(difficulty);
-        this.wordsInternal = this.convertGridToGridWords(grid);
+    public get wordsLeftToFind(): Word[] {
+        return this.grid.words.filter(word => word.owner !== Player.NO_PLAYER);
     }
 
-    private async initializeDefinitions(difficulty: Difficulty): Promise<void> {
-        const DEFINITIONS: DefinitionWithIndex[] = [];
+    constructor(difficulty: Difficulty) {
+        this.difficulty = difficulty;
+        this.initialize();
+    }
+
+    public getGridWords(player: Player, opponent: Player): GridWord[] {
+        return this.grid.toGridWords(player);
+    }
+
+    public wordsViewedByPlayer(player: Player): GridWord[] {
+        const gridWords = this.grid.toGridWords(player);
+        gridWords.forEach(gridWord => {
+            if (gridWord.owner === Owner.none) {
+                gridWord.string = '';
+            }
+        });
+        return gridWords;
+    }
+
+    public initialize(): void {
+        this.initializedInternal = this.fetchGrid().then(grid => {
+            this.grid = grid;
+            return this.fetchDefinitionsOf(grid);
+        }).then(definitions => {
+            this.definitionsInternal = definitions;
+        });
+    }
+
+    public validateWord(gridWordGuess: GridWord, player: Player): boolean {
+        const wordGuess = Word.fromGridWord(gridWordGuess, player, Player.NO_PLAYER);
+        const index = this.grid.words.findIndex(
+            (existingWord) => {
+                return existingWord.direction === wordGuess.direction &&
+                       existingWord.value === wordGuess.value &&
+                       existingWord.position.equals(wordGuess.position);
+            });
+        const found = index >= 0;
+
+        if (found) {
+            this.grid.words[index].owner = player;
+        }
+
+        return found;
+    }
+
+    protected async fetchDefinitionsOf(grid: Grid): Promise<DefinitionWithIndex[]> {
+        this.logger.log('Getting definitions...');
+
+        const definitions: DefinitionWithIndex[] = [];
 
         let currentHorizontalId = 1;
         let currentVerticalId = 1;
-        for (let i = 0; i < this.wordsInternal.length; ++i) {
-            const word = this.wordsInternal[i];
+        for (let i = 0; i < grid.words.length; ++i) {
+            const word = grid.words[i];
 
             let index;
             if (word.direction === Direction.horizontal) {
@@ -65,72 +109,50 @@ export class GameData {
                 ++currentVerticalId;
             }
 
-            const DEFINITION_WITH_INDEX = {
-                definition: await this.getDefinitionOfWord(word, difficulty),
+            const definitionWithIndex = {
+                definition: await this.getDefinitionOfWord(word),
                 index: index
             };
-            DEFINITIONS.push(DEFINITION_WITH_INDEX);
+            definitions.push(definitionWithIndex);
         }
 
-        this.definitionsInternal = DEFINITIONS;
+        this.logger.log('Got definitions');
+        return definitions;
     }
 
-    private async fetchGrid(difficulty: Difficulty): Promise<Grid> {
-        switch (difficulty) {
+    private async fetchGrid(): Promise<Grid> {
+        let grid: Grid;
+
+        switch (this.difficulty) {
             case Difficulty.easy: {
-                return await GridBanks.getInstance().getEasyGrid();
+                grid = await GridBanks.getInstance().getEasyGrid();
+                break;
             }
-            case Difficulty.medium: {
-                return await GridBanks.getInstance().getNormalGrid();
+            case Difficulty.normal: {
+                grid = await GridBanks.getInstance().getNormalGrid();
+                break;
             }
             case Difficulty.hard: {
-                return await GridBanks.getInstance().getHardGrid();
+                grid = await GridBanks.getInstance().getHardGrid();
+                break;
             }
-            default: throw new Error(`Unknown difficulty: ${difficulty}`);
+            default: throw new Error(`Unknown difficulty: ${this.difficulty}`);
         }
+
+        this.logger.log('Fetched grid:\n' + grid.toString());
+        return grid;
     }
 
-    private convertGridToGridWords(grid: Grid): GridWord[] {
-        const HORIZONTAL_WORDS: GridWord[] =
-            grid.across.map(
-                (word, index) =>
-                    new GridWord(
-                        index + 1,
-                        word.position.row,
-                        word.position.column,
-                        word.value.length,
-                        Direction.horizontal,
-                        Owner.none,
-                        word.value
-                    )
-            );
-        const VERTICAL_WORDS: GridWord[] =
-            grid.vertical.map(
-                (word, index) =>
-                    new GridWord(
-                        index + 1,
-                        word.position.row,
-                        word.position.column,
-                        word.value.length,
-                        Direction.vertical,
-                        Owner.none,
-                        word.value
-                    )
-            );
-
-        return HORIZONTAL_WORDS.concat(VERTICAL_WORDS);
-    }
-
-    private async getDefinitionOfWord(word: GridWord, difficulty: Difficulty): Promise<Definition> {
-        const definitions = await LexiconCaller.getInstance().getDefinitions(word.string);
+    private async getDefinitionOfWord(word: Word): Promise<Definition> {
+        const definitions = await LexiconCaller.getInstance().getDefinitions(word.value);
 
         let definitionString: string;
-        switch (difficulty) {
+        switch (this.difficulty) {
             case Difficulty.easy: {
                 definitionString = definitions[0];
                 break;
             }
-            case Difficulty.medium: // fallthrough
+            case Difficulty.normal: // fallthrough
             case Difficulty.hard: {
                 if (definitions.length > 1) {
                     definitions.shift();
@@ -145,8 +167,8 @@ export class GameData {
             }
         }
 
-        const regex = new RegExp(`(^|\\W)${word.string}(s?(?:\\W|$))`, 'gmi');
-        const replacement = '_'.repeat(word.string.length);
+        const regex = new RegExp(`(^|\\W)${word.value}(s?(?:\\W|$))`, 'gmi');
+        const replacement = '_'.repeat(word.value.length);
         definitionString = definitionString.replace(regex, `$1${replacement}$2`);
 
         const definition = new Definition(

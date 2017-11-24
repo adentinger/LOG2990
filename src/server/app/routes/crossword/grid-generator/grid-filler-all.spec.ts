@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { GridFillerFirstSection } from './grid-filler-first-section';
 import { DifficultyEasy } from '../../../../../common/src/crossword/difficulty-easy';
-import { NormalWordSuggestionsGetter } from './normal-word-suggestions-getter';
+import { WordSuggestionsGetter } from './word-suggestions-getter';
 import { GridFiller } from './grid-filler';
 import { Constructor } from '../../../../../common/src';
 import { GridFillerSecondSection } from './grid-filler-second-section';
@@ -16,7 +16,7 @@ function testGridFiller<T extends GridFiller>(testName: string,
 
         beforeEach(() => {
             filler = new constructor(
-                new NormalWordSuggestionsGetter(new DifficultyEasy()));
+                new WordSuggestionsGetter(new DifficultyEasy()));
         });
 
         it('should be created', () => {

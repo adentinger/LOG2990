@@ -4,7 +4,7 @@ import { Owner, Direction } from '../../../../../common/src/crossword/crossword-
 import { GameFilter } from '../../../../../common/src/crossword/game-filter';
 import { GameData } from './game-data';
 import { CommunicationHandler } from './communication-handler';
-import { Player } from './player';
+import { Player } from '../player';
 import { Logger, warn } from '../../../../../common/src';
 
 const logger = Logger.getLogger('Crossword Game');
@@ -15,24 +15,21 @@ export abstract class Game {
 
     public readonly id: GameId;
 
-    protected readonly initialized: Promise<void>;
     protected started = false;
 
-    protected readonly dataInternal: GameData = new GameData();
+    protected readonly dataInternal: GameData;
     protected readonly players: Player[] = [];
     protected readonly maxPlayers: PlayerNumber;
     protected readonly configurationInternal: CrosswordGameConfigs;
     protected communicationHandler: CommunicationHandler;
 
-    constructor(configs: CrosswordGameConfigs) {
+    constructor(configs: CrosswordGameConfigs, data: GameData) {
         this.communicationHandler = new CommunicationHandler();
         this.configurationInternal = configs;
+        this.dataInternal = data;
 
         this.id = Game.idCounter++;
         this.maxPlayers = configs.playerNumber;
-
-        this.initialized =
-            this.data.initialize(configs.difficulty).catch(warn(logger));
     }
 
     public get data(): GameData {
@@ -60,11 +57,6 @@ export abstract class Game {
 
             // Actually add player
             this.players.push(player);
-            this.initialized.then(() => {
-                this.communicationHandler.clearPlayerGrid(player.socketId);
-                this.communicationHandler.sendGridWords(player.socketId, this.dataInternal.emptyWords);
-                this.communicationHandler.sendDefinitions(player.socketId, this.dataInternal.definitions);
-            }).catch(warn(logger));
 
             // Start game if max players reached.
             if (this.players.length === this.maxPlayers) {
@@ -92,17 +84,9 @@ export abstract class Game {
             this.maxPlayers === filter.playerNumber;
     }
 
-    public validateUserAnswer(wordGuess: GridWord, socketId: string): boolean {
-        const DIRECTION = wordGuess.direction;
-        const STRING = wordGuess.string;
-
-        const FOUND = this.dataInternal.words.findIndex(
-            (word) => {
-                return word.direction === DIRECTION &&
-                    word.string === STRING;
-            }) >= 0;
-        if (FOUND) {
-            this.sendWordFound(wordGuess, socketId);
+    public validateUserAnswer(wordGuess: GridWord, player: Player): boolean {
+        if (this.dataInternal.validateWord(wordGuess, player)) {
+            this.sendWordFound(wordGuess, player.socketId);
             return true;
         }
         return false;
@@ -115,7 +99,7 @@ export abstract class Game {
     }
 
     protected sendWordFound(foundWord: GridWord, finderId: string): void {
-        foundWord.owner = Owner.player1;
+        foundWord.owner = Owner.player;
         const finderPlayer =
             this.players.find(player => player.socketId === finderId);
         const opponent =
@@ -137,9 +121,22 @@ export abstract class Game {
     }
 
     protected start(): void {
-        this.players.forEach((player) => {
-            this.communicationHandler.sendGameStart(this.players);
-        });
+        this.dataInternal.initialized.then(() => {
+
+            this.players.forEach(player => {
+                this.communicationHandler.clearPlayerGrid(player);
+                this.communicationHandler.sendGridWords(
+                    player,
+                    this.dataInternal.wordsViewedByPlayer(player)
+                );
+                this.communicationHandler.sendDefinitions(player, this.dataInternal.definitions);
+            });
+
+            this.players.forEach((player) => {
+                this.communicationHandler.sendGameStart(this.players);
+            });
+
+        }).catch(warn(logger));
     }
 
 }

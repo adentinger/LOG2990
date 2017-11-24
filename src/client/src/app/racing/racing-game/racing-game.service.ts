@@ -16,8 +16,11 @@ import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
+import { CarsPositionsService } from './cars-positions.service';
 
 const logger = Logger.getLogger();
+
+export const GAME_START_EVENT = 'racing-start';
 
 @Injectable()
 export class RacingGameService {
@@ -77,7 +80,8 @@ export class RacingGameService {
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         private eventManager: EventManager,
-        private soundService: SoundService) {
+        private soundService: SoundService,
+        private carsPositionsService: CarsPositionsService) {
         this.waitToLoad = Promise.all([
             ...this.cars.map(car => car.waitToLoad),
             this.soundService.waitToLoad
@@ -85,9 +89,10 @@ export class RacingGameService {
         this.waitToFinalize = this.finalizeSubject.asObservable();
         this.renderer = new RacingRenderer(eventManager, this);
         eventManager.registerClass(this);
+        this.carsPositionsService.initialize(this);
     }
 
-    public initialise(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
+    public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
         this.renderer.initialize(container, hudCanvas);
         this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;
@@ -111,8 +116,11 @@ export class RacingGameService {
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.START_SOUND);
             this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
-                .then(() => this.soundService.setAbmiantSound(Sound.TETRIS))
-                .then(() => this.soundService.playAmbiantSound(true));
+                .then(() => {
+                    const event: EventManager.Event<void> = {name: GAME_START_EVENT, data: void 0};
+                    this.eventManager.fireEvent(event.name, event);
+                    return this.soundService.setAbmiantSound(Sound.TETRIS);
+                }).then(() => this.soundService.playAmbiantSound(true));
         }, () => logger.warn('Initialization interrupted'));
     }
 
@@ -170,13 +178,6 @@ export class RacingGameService {
 
     public toggleDayMode(): void {
         this.renderer.toggleDayMode();
-    }
-
-    public switchCar(): void {
-        this.controlledCar.removeUIInput();
-        this.controlledCarIdx = (this.controlledCarIdx + 1) % this.cars.length;
-        this.controlledCar.setUIInput(this.userInputs);
-        this.renderer.setCamerasTarget(this.controlledCar);
     }
 
     @EventManager.Listener(KEYDOWN_EVENT)

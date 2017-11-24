@@ -8,26 +8,32 @@ import { PacketManagerClient } from '../packet-manager-client';
 import { SelectedWordPacket } from '../../../../common/src/crossword/packets/selected-word.packet';
 import '../../../../common/src/crossword/packets/selected-word.parser';
 import { PacketHandler, PacketEvent, registerHandlers } from '../../../../common/src/index';
-import { Direction } from '../../../../common/src/crossword/crossword-enums';
+import { Direction, Owner } from '../../../../common/src/crossword/crossword-enums';
 
 @Injectable()
 export class SelectionService {
 
     public static readonly NO_SELECTION: WordByIdAndDirection = {id: -1, direction: Direction.horizontal};
 
-    private selectionValueInternal =
-        new SelectedGridWords(SelectionService.NO_SELECTION, SelectionService.NO_SELECTION);
+    private selectionValueInternal: SelectedGridWords;
     private selectionSubject = new Subject<SelectedGridWords>();
     private serverSubscription: Subscription;
 
     constructor(private packetManager: PacketManagerClient) {
         registerHandlers(this, this.packetManager);
+
         this.selectionSubject.subscribe((selection) => {
             this.selectionValueInternal = selection;
         });
         this.serverSubscription = this.selectionSubject.subscribe((selection) => {
             this.sendSelectionToServer();
         });
+
+        this.reinitialize();
+    }
+
+    public reinitialize(): void {
+        this.selectionSubject.next(new SelectedGridWords(SelectionService.NO_SELECTION, SelectionService.NO_SELECTION));
     }
 
     public finalize(): void {
@@ -42,10 +48,17 @@ export class SelectionService {
         return this.selectionValueInternal;
     }
 
-    public isDefinitionSelected(definition: Definition): boolean {
-        return this.selectionValue.player != null &&
-               definition.index === this.selectionValue.player.id &&
-               definition.direction === this.selectionValue.player.direction;
+    public isDefinitionSelected(definition: Definition, player: Owner): boolean {
+        let selection: WordByIdAndDirection;
+        if (player === Owner.player) {
+            selection = this.selectionValueInternal.player;
+        }
+        else {
+            selection = this.selectionValueInternal.opponent;
+        }
+        return selection != null &&
+               definition.index === selection.id &&
+               definition.direction === selection.direction;
     }
 
     public updateSelectedGridWord(word: WordByIdAndDirection): void {

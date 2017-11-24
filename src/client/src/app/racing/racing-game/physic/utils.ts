@@ -4,7 +4,7 @@ import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import { Point, Line } from '../../../../../../common/src/math';
 import { EventManager } from '../../../event-manager.service';
 
-const UP = new THREE.Vector3(0, 1, 0);
+export const UP_DIRECTION = new THREE.Vector3(0, 1, 0);
 
 export const COLLISION_EVENT = 'physic-collision';
 
@@ -73,11 +73,11 @@ export class PhysicUtils {
 
         const lineVector = this.getVector3FromPoint(intersectionLine.translation);
         // The point of application of the force (against the target's position)
-        const applicationPoint = this.getVector2FromPoint(intersectionLine.interpollate(0.5))
+        const applicationPoint = this.getVector2FromPoint(intersectionLine.interpolate(0.5))
             .sub(this.getVector2FromVector3(target.position));
 
         // Check if the points are in the rigth order (to have them point clockwise against the target)
-        const order = lineVector.clone().cross(UP).dot(this.getVector3FromVector2(applicationPoint));
+        const order = lineVector.clone().cross(UP_DIRECTION).dot(this.getVector3FromVector2(applicationPoint));
         if (order > 0) {
             lineVector.negate();
         }
@@ -92,7 +92,7 @@ export class PhysicUtils {
         const scalarForce = sourceMass * scalarAcceleration; // F = m*a
 
         const force: THREE.Vector2 = this.getVector2FromVector3(
-            lineVector.normalize().cross(UP).multiplyScalar(scalarForce)
+            lineVector.normalize().cross(UP_DIRECTION).multiplyScalar(scalarForce)
         );
 
         collision = {

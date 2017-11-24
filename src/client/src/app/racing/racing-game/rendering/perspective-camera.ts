@@ -41,7 +41,7 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundL
         this.target = object;
     }
 
-    public setupPerspectiveView(): void {
+    private setupPerspectiveView(): void {
         this.rotation.order = 'YXZ';
         this.position.copy(PerspectiveCamera.DEFAULT_POSITION);
         this.rotation.set(0, 0, 0);

@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { Seconds } from '../../../types';
 import { EventManager } from '../../../event-manager.service';
 
-export { PhysicUtils } from './utils';
+export * from './utils';
 
 export const BEFORE_PHYSIC_UPDATE_EVENT = 'beforephysicupdate';
 export const AFTER_PHYSIC_UPDATE_EVENT = 'afterphysicupdate';
@@ -16,10 +16,10 @@ export class PhysicEngine {
     private physicUtils: PhysicUtils;
     private timer: any = null;
 
-    private sampleSize = PhysicEngine.UPDATE_FREQUENCY * 5;
+    private sampleSize = 20;
     private deltaTimes: Seconds[] = [];
     public get tps(): number {
-        return this.deltaTimes.length / this.deltaTimes.reduce((accumulator, value) => accumulator + value, 0);
+        return (this.deltaTimes.length / this.deltaTimes.reduce((accumulator, value) => accumulator + value, 0)) || 0;
     }
 
     constructor(private eventManager: EventManager) {
@@ -42,7 +42,7 @@ export class PhysicEngine {
                 const deltaTimeMs = now - last;
                 this.updateWorld(deltaTimeMs / 1000);
                 if (this.deltaTimes.length >= this.sampleSize) {
-                    this.deltaTimes.shift();
+                    this.deltaTimes.splice(0, this.deltaTimes.length - this.sampleSize + 1);
                 }
                 this.deltaTimes.push(deltaTimeMs / 1000);
                 last = now;
@@ -58,9 +58,9 @@ export class PhysicEngine {
     }
 
     private updateWorld(deltaTime: Seconds): void {
-        this.eventManager.fireEvent(BEFORE_PHYSIC_UPDATE_EVENT, {name: BEFORE_PHYSIC_UPDATE_EVENT, data: {}});
+        this.eventManager.fireEvent(BEFORE_PHYSIC_UPDATE_EVENT, {name: BEFORE_PHYSIC_UPDATE_EVENT, data: {deltaTime}});
         const objects = this.physicUtils.getAllPhysicObjects();
         objects.forEach((object) => object.updatePhysic(this.physicUtils, deltaTime));
-        this.eventManager.fireEvent(AFTER_PHYSIC_UPDATE_EVENT, {name: AFTER_PHYSIC_UPDATE_EVENT, data: {}});
+        this.eventManager.fireEvent(AFTER_PHYSIC_UPDATE_EVENT, {name: AFTER_PHYSIC_UPDATE_EVENT, data: {deltaTime}});
     }
 }

@@ -17,6 +17,9 @@ import { Pothole } from '../models/obstacles/pothole';
 import { EventManager } from '../../../event-manager.service';
 import { Puddle } from '../models/obstacles/puddle';
 import { SpeedBooster } from '../models/obstacles/speed-booster';
+import { DecorationGenerator } from '../decoratio-generator/decoration-generator';
+import { Vector } from '../../../../../../common/src/math/vector';
+import { Obstacle } from '../models/obstacles/obstacle';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -51,9 +54,17 @@ export class RenderableMap extends PhysicMesh {
 
         const waitForJunctions = this.placeJunctionsOnMap();
         const waitForSegments = this.placeSegmentsOnMap();
-        this.placeObstaclesOnMap();
+        const waitForObstacles = this.placeObstaclesOnMap();
 
-        this.waitToLoad = Promise.all([this.plane.waitToLoad, waitForJunctions, waitForSegments]).then(() => { });
+        const decorationGenerator = new DecorationGenerator();
+        decorationGenerator.placeDecorationsOnMap(this);
+
+        this.waitToLoad = Promise.all([
+            this.plane.waitToLoad,
+            waitForJunctions,
+            waitForSegments,
+            waitForObstacles
+        ]).then(() => { });
     }
 
     public addCars(...cars: Car[]) {
@@ -101,7 +112,7 @@ export class RenderableMap extends PhysicMesh {
         for (const line of lines) {
             const segmentLength = line.translation.norm();
             const angle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
-            const middlePoint = line.interpollate(0.5);
+            const middlePoint = line.interpolate(0.5);
             const segment = new RacetrackSegment(segmentLength);
 
             segment.rotation.y = angle;
@@ -113,12 +124,15 @@ export class RenderableMap extends PhysicMesh {
         return Promise.all(waitForSegments).then(() => { });
     }
 
-    private placeObstaclesOnMap(): void {
+    private placeObstaclesOnMap(): Promise<void> {
+        const waitForObstacles: Promise<void>[] = [];
         const obstacles: SerializedItem[] = [...this.mapPotholes, ...this.mapPuddles, ...this.mapSpeedBoosts];
-        obstacles.forEach((obstacle) => this.placeObstacleOnMap(obstacle));
+        obstacles.forEach((obstacle) => waitForObstacles.push(this.placeObstacleOnMap(obstacle)));
+
+        return Promise.all(waitForObstacles).then(() => { });
     }
 
-    private placeObstacleOnMap(item: SerializedItem): void {
+    private placeObstacleOnMap(item: SerializedItem): Promise<void> {
         const ITEM_WIDTH: Meters = 2;
         const lines = this.mapLines;
         let position: Meters = item.position;
@@ -127,25 +141,25 @@ export class RenderableMap extends PhysicMesh {
                 position -= line.translation.norm();
             }
             else {
-                const point = line.interpollate(position / line.translation.norm());
+                const point = line.interpolate(position / line.translation.norm());
                 const lineAngle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
                 const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * (Track.SEGMENT_WIDTH - ITEM_WIDTH))
                     .applyAxisAngle(UP, lineAngle);
                 const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y)
                     .add(randomCoordinateVariation);
-                const mesh = this.getMeshFromItem(item);
-                if (mesh != null) {
-                    mesh.position.copy(coordinate);
-                    mesh.rotation.y = lineAngle;
-                    this.add(mesh);
+                const obstacle = this.getMeshFromItem(item);
+                if (obstacle != null) {
+                    obstacle.position.copy(coordinate);
+                    obstacle.rotation.y = lineAngle;
+                    this.add(obstacle);
                 }
-                break;
+                return obstacle.waitToLoad;
             }
         }
     }
 
-    private getMeshFromItem(item: SerializedItem): THREE.Mesh {
-        let mesh: THREE.Mesh = null;
+    private getMeshFromItem(item: SerializedItem): Obstacle {
+        let mesh: Obstacle = null;
         if (item.type === 'pothole') {
             mesh = new Pothole(this.eventManager);
         }
@@ -157,5 +171,16 @@ export class RenderableMap extends PhysicMesh {
             mesh = new SpeedBooster(this.eventManager);
         }
         return mesh;
+    }
+
+    public computeLength(): number {
+        const POINTS = this.mapPoints;
+        let length = 0;
+        for (let i = 0; i < POINTS.length - 1; i++) {
+            const VECTOR = Vector.fromPoints(POINTS[i], POINTS[i + 1]);
+            length += VECTOR.norm();
+        }
+        length += Vector.fromPoints(POINTS[0], POINTS[this.mapPoints.length - 1]).norm();
+        return length;
     }
 }

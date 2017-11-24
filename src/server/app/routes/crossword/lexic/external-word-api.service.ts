@@ -4,7 +4,7 @@ import { Logger } from '../../../../../common/src/logger';
 const logger = Logger.getLogger();
 
 export class ExternalWordApiService {
-    private static readonly FREQUENCY_API_KEY = '509a8efe219607991700e030dbd01768e4a6b86cfa513bcc9';
+    private static readonly FREQUENCY_API_KEY = 'e2fdb2b702080badcd0030252c30fa651ce456b92b2e1dc02';
     private static readonly FREQUENCY_REQUEST_BASE: http.RequestOptions = {
         hostname: 'api.wordnik.com',
         port: '80',
@@ -20,7 +20,7 @@ export class ExternalWordApiService {
                 ...requestOptions
             };
             const req = http.request(REQUEST_OPTIONS);
-            req.setTimeout(0).socket.on('error', () => {
+            req.on('error', () => {
                 logger.log('SOCKET ERROR HANDLED');
             });
             req.on('response', (res: http.IncomingMessage) => {
@@ -44,7 +44,10 @@ export class ExternalWordApiService {
                 return ((DEFINITIONS as Array<any>)
                     .sort((a, b) => +a.sequence - +b.sequence)
                     .map((element) => <string>element.text));
-            } else {
+            } else if (DEFINITIONS.length === 0) {
+                return ['No definition this word on Wordnik.'];
+            }
+            else {
                 throw DEFINITIONS as Error;
             }
         });

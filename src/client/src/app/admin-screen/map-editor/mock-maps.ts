@@ -4,6 +4,11 @@ import { Pothole } from './pothole';
 import { Puddle } from './puddle';
 import { SpeedBoost } from './speed-boost';
 import { Point } from '../../../../../common/src/math/point';
+import { RenderableMap } from '../../racing/racing-game/racing-game-map/renderable-map';
+import { EventManager } from '../../event-manager.service';
+import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
+import { MapConverterService } from './map-converter.service';
+import { RacingUnitConversionService } from './racing-unit-conversion.service';
 
 export class MockMaps {
 
@@ -71,6 +76,12 @@ export class MockMaps {
                        [],
                        [],
                        []);
+    }
+
+    public renderableMap(): RenderableMap {
+        const serializedMap = new MapConverterService(new RacingUnitConversionService()).serialize(this.functionalMap1());
+        const eventManager = EventManager.getInstance();
+        return new RenderableMap(serializedMap, eventManager);
     }
 
 }

@@ -5,24 +5,21 @@ body {
 table {
   border-collapse: separate;
   background:#fff;
-  border-radius: 5px;
   margin:5px auto;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.400);
   margin-right: 8px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-thead {
-  border-radius: 5px;
-}
 
 thead th {
   color:rgb(255, 255, 255);
   padding: 5px 5px 5px 5px;
   text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
-  background-color: rgb(80, 80, 255);
+  background-color: rgb(117, 117, 255);
   border-top: 1px solid gray;
   text-align: center;
-  border-top-right-radius: 5px;
 }
 
 tbody tr td {
@@ -32,7 +29,6 @@ tbody tr td {
   border-bottom:1px solid #cfcfcf;
   border-left: 1px solid rgba(0, 0, 0, 0.200);
   text-align: center;
-  
 }
 
 tbody tr:nth-child(2n) {
@@ -41,8 +37,6 @@ tbody tr:nth-child(2n) {
 
 tbody tr:last-child td {
   border-bottom:none;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
 }
 
 .category {
@@ -53,4 +47,12 @@ tbody tr:last-child td {
 
 .table-wrap {
   display: flex;
+}
+
+.player {
+  background-color: rgba(0, 47, 255, 0.2) !important;
+}
+
+.opponent {
+  background-color: rgba(255, 0, 0, 0.2) !important;
 }

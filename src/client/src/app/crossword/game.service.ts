@@ -13,13 +13,14 @@ import { GameMode } from '../../../../common/src/crossword/crossword-enums';
 
 export enum GameState {
     configuring,
+    waiting,
     started,
     finished
 }
 
 /**
  * @class GameService
- * Represents the current game. Has the resposibilities of:
+ * @description Represents the current game. Has the resposibilities of:
  * 1) Containing the game's data
  * 2) Sending all socket packets from the client to the server
  * The response from the server usually goes directly to the appropriate
@@ -28,17 +29,26 @@ export enum GameState {
 @Injectable()
 export class GameService {
 
-    public state = GameState.configuring;
+    private stateValueInternal: GameState;
+    private stateInternal = new Subject<GameState>();
 
     private cheatModeOn = false;
     private isShowWordsOnInternal = false;
     private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private dataInternal = new GameData();
+    private dataInternal: GameData;
 
     public get data(): GameData {
         return this.dataInternal.clone();
+    }
+
+    public get stateValue(): GameState {
+        return this.stateValueInternal;
+    }
+
+    public get state(): Subject<GameState> {
+        return this.stateInternal;
     }
 
     constructor(private packetManager: PacketManagerClient,
@@ -46,10 +56,16 @@ export class GameService {
         this.onShowWordsInternal.subscribe((value) => {
             this.isShowWordsOnInternal = value;
         });
+        this.stateInternal.subscribe(state => this.stateValueInternal = state);
+        this.stateInternal.next(GameState.configuring);
+        this.reinitialize();
+
         registerHandlers(this, packetManager);
     }
 
     public joinGame(id: number, playerName: string): void {
+        this.dataInternal.currentNumberOfPlayers = 1;
+
         if (!this.dataInternal.id) {
             this.dataInternal.id = id;
             this.dataInternal.playerName = playerName;
@@ -60,23 +76,15 @@ export class GameService {
         }
     }
 
-    public finishGame(wordsFound: number, opponentWordsFound: number): void {
-        let message: string;
-        if (wordsFound > opponentWordsFound) {
-            message = 'Congratulations ; you win!';
-        }
-        else {
-            message = 'Congratulations ; you (almost) won!';
-        }
-        alert(message);
+    public reinitialize(): void {
+        this.dataInternal = new GameData();
     }
 
     public finalize(): void {
         this.cheatModeOn = false;
         this.changeTimerValueOn = false;
         this.dataInternal = new GameData();
-        this.state = GameState.configuring;
-        this.userChoiceService.finalize();
+        this.stateInternal.next(GameState.configuring);
         this.packetManager.sendPacket(GameLeavePacket, new GameLeavePacket());
     }
 
@@ -110,6 +118,7 @@ export class GameService {
     // tslint:disable-next-line:no-unused-variable
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
         this.dataInternal.opponentName = event.value.playerName;
+        ++this.dataInternal.currentNumberOfPlayers;
     }
 
     @PacketHandler(GameStartPacket)
@@ -117,7 +126,7 @@ export class GameService {
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
         this.dataInternal.mode = this.userChoiceService.gameMode;
         this.dataInternal.difficulty = this.userChoiceService.difficulty;
-        this.dataInternal.numberOfPlayers = this.userChoiceService.playerNumber;
+        this.dataInternal.maxNumberOfPlayers = this.userChoiceService.playerNumber;
     }
 
 }

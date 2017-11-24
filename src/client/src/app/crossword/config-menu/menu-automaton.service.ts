@@ -35,10 +35,6 @@ export class MenuAutomatonService {
     private stateInternal: MenuState = null;
     private configEndInternal = new Subject<void>();
 
-    constructor(private userChoiceService: UserChoiceService) {
-        this.initialize();
-    }
-
     public get state(): MenuState {
         return this.stateInternal;
     }
@@ -49,6 +45,48 @@ export class MenuAutomatonService {
 
     public get configEnd(): Subject<void> {
         return this.configEndInternal;
+    }
+
+    constructor(private userChoiceService: UserChoiceService) {
+        this.initialize();
+    }
+
+    public chooseOption(option: Option): void {
+        const index = this.state.options.findIndex(
+            optionOfState => optionOfState === option
+        );
+        const found = index >= 0;
+        if (found) {
+            if (this.state.canMoveToNextState()) {
+                this.changeState(option.nextState, option);
+            }
+        }
+        else {
+            throw new Error(`Option inexistant.`);
+        }
+    }
+
+    public goBack(): void {
+        if (this.path.length >= 1) {
+            const oldState = this.state;
+            this.userChoiceService[this.stateInternal.fieldName] = undefined;
+            this.stateInternal = this.path.pop().state;
+            oldState.leave.next();
+            this.stateInternal.arrive.next();
+        }
+        else {
+            throw new Error('Cannot go back: already at the initial configuration menu');
+        }
+    }
+
+    public canGoBack(): boolean {
+        return this.path.length > 0;
+    }
+
+    public goBackToInitialState(): void {
+        while (this.canGoBack()) {
+            this.goBack();
+        }
     }
 
     private initialize(): void {
@@ -76,7 +114,7 @@ export class MenuAutomatonService {
         this.states.playerNumber.addOption({name: 'Two players', nextState: this.states.createOrJoin, value: 2});
 
         this.states.difficulty.addOption({name: 'Easy', nextState: this.states.confirm, value: Difficulty.easy});
-        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.medium});
+        this.states.difficulty.addOption({name: 'Normal', nextState: this.states.confirm, value: Difficulty.normal});
         this.states.difficulty.addOption({name: 'Hard', nextState: this.states.confirm, value: Difficulty.hard});
 
         this.states.createOrJoin.addOption({name: 'Create game', nextState: this.states.difficulty, value: CreateOrJoin.create});
@@ -94,21 +132,6 @@ export class MenuAutomatonService {
         this.path = [];
     }
 
-    public chooseOption(option: Option): void {
-        const index = this.state.options.findIndex(
-            optionOfState => optionOfState === option
-        );
-        const found = index >= 0;
-        if (found) {
-            if (this.state.canMoveToNextState()) {
-                this.changeState(option.nextState, option);
-            }
-        }
-        else {
-            throw new Error(`Option inexistant.`);
-        }
-    }
-
     private changeState(newState: MenuState, option: Option): void {
         const oldState = this.state;
         if (this.stateInternal.fieldName !== null) {
@@ -123,23 +146,6 @@ export class MenuAutomatonService {
         if (this.state === MenuState.none) {
             this.configEndInternal.next();
         }
-    }
-
-    public goBack(): void {
-        if (this.path.length >= 1) {
-            const oldState = this.state;
-            this.userChoiceService[this.stateInternal.fieldName] = undefined;
-            this.stateInternal = this.path.pop().state;
-            oldState.leave.next();
-            this.stateInternal.arrive.next();
-        }
-        else {
-            throw new Error('Cannot go back: already at the initial configuration menu');
-        }
-    }
-
-    public canGoBack(): boolean {
-        return this.path.length > 0;
     }
 
 }

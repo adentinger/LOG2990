@@ -24,21 +24,21 @@ export class UserChoiceService {
 
     constructor() { }
 
-    public finalize(): void {
-        delete this.gameMode;
-        delete this.chosenGame;
-        delete this.createOrJoin;
-        delete this.difficulty;
-        delete this.playerName;
-        delete this.playerNumber;
-    }
-
     public toGameConfiguration(): CrosswordGameConfigs {
         return {
             gameMode: this.gameMode,
             difficulty: this.difficulty,
             playerNumber: this.playerNumber
         };
+    }
+
+    public reinitialize(): void {
+        this.gameMode = undefined;
+        this.playerNumber = undefined;
+        this.createOrJoin = undefined;
+        this.difficulty = undefined;
+        this.chosenGame = undefined;
+        this.playerName = '';
     }
 
 }

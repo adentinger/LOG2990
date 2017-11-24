@@ -13,4 +13,8 @@ export class WordPosition {
                this.column === that.column;
     }
 
+    public clone(): WordPosition {
+        return new WordPosition(this.row, this.column);
+    }
+
 }
