@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as ImprovedNoise from 'improved-noise';
 
 import { Track } from '../racing/track';
+import { Line } from '../../../../common/src/math/index';
 
 const widthSegments  = Math.ceil( Track.WIDTH_MAX / 10);
 const heightSegments = Math.ceil(Track.HEIGHT_MAX / 10);
@@ -10,7 +11,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
     private readonly terrainHeights: Uint8Array;
 
-    constructor() {
+    constructor(track: Line[]) {
         super(Track.WIDTH_MAX, Track.HEIGHT_MAX, widthSegments, heightSegments);
         const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
         this.terrainHeights = new Uint8Array(size);
