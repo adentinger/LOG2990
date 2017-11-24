@@ -36,6 +36,7 @@
     "three": "~0.87.0",
     "three-obj-loader": ">= 1.1.0",
     "three-mtl-loader": ">= 1.0.0",
+    "improved-noise": "~0.0.3",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
