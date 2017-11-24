@@ -14,6 +14,10 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
         const rawTerrainDispalcement = this.generateRawDisplacement();
         const terrainDisplacement = this.flattenTerrainNearTrack(rawTerrainDispalcement, track);
+
+        this.vertices.forEach((vertex, index) => {
+            vertex.z += terrainDisplacement[index];
+        });
     }
 
     public get(index: number): number {
