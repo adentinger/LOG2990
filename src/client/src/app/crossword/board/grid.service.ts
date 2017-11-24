@@ -41,6 +41,7 @@ export class GridService {
         });
 
         const mockSelection = {direction: Direction.vertical, id: 2};
+        this.selectionService.reinitialize();
         this.selectionService.updateSelectedGridWord(mockSelection);
 
         this.onChange();

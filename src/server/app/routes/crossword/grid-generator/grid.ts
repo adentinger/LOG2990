@@ -12,7 +12,7 @@ export class Grid {
     public words: Word[] = [];
 
     constructor(wordsToInclude: Word[] = []) {
-        this.words = wordsToInclude.slice();
+        this.words = wordsToInclude.map(word => word.clone());
     }
 
     public fillUsing(filler: GridFiller): Promise<void> {
@@ -38,10 +38,12 @@ export class Grid {
             if (word.direction === Direction.horizontal) {
                 id = horizontalId++;
             }
-            else {
+            else if (word.direction === Direction.vertical) {
                 id = verticalId++;
             }
-
+            else {
+                throw new Error(`Unknown direction: ${word.direction}`);
+            }
 
             // Owner
             let owner: Owner;
@@ -55,7 +57,7 @@ export class Grid {
                 owner = Owner.opponent;
             }
 
-            return new GridWord(
+            const gridWord = new GridWord(
                 id,
                 word.position.row,
                 word.position.column,
@@ -64,6 +66,7 @@ export class Grid {
                 owner,
                 word.value
             );
+            return gridWord;
         });
     }
 

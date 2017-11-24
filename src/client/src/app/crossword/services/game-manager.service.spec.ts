@@ -11,6 +11,7 @@ import { WaitingService } from '../config-menu/waiting/waiting.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { SelectionService } from '../selection.service';
+import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 
 describe('GameManagerService', () => {
 
@@ -28,7 +29,8 @@ describe('GameManagerService', () => {
                 DefinitionsService,
                 GridService,
                 WaitingService,
-                SelectionService
+                SelectionService,
+                MenuAutomatonService
             ]
         });
     });

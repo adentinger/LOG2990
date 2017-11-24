@@ -37,7 +37,7 @@ export class GameService {
     private onShowWordsInternal = new Subject<boolean>();
     private changeTimerValueOn = false;
 
-    private dataInternal = new GameData();
+    private dataInternal: GameData;
 
     public get data(): GameData {
         return this.dataInternal.clone();
@@ -58,10 +58,14 @@ export class GameService {
         });
         this.stateInternal.subscribe(state => this.stateValueInternal = state);
         this.stateInternal.next(GameState.configuring);
+        this.reinitialize();
+
         registerHandlers(this, packetManager);
     }
 
     public joinGame(id: number, playerName: string): void {
+        this.dataInternal.currentNumberOfPlayers = 1;
+
         if (!this.dataInternal.id) {
             this.dataInternal.id = id;
             this.dataInternal.playerName = playerName;
@@ -72,15 +76,8 @@ export class GameService {
         }
     }
 
-    public finishGame(wordsFound: number, opponentWordsFound: number): void {
-        let message: string;
-        if (wordsFound > opponentWordsFound) {
-            message = 'Congratulations ; you win!';
-        }
-        else {
-            message = 'Congratulations ; you (almost) won!';
-        }
-        alert(message);
+    public reinitialize(): void {
+        this.dataInternal = new GameData();
     }
 
     public finalize(): void {
@@ -121,6 +118,7 @@ export class GameService {
     // tslint:disable-next-line:no-unused-variable
     private opponentJoined(event: PacketEvent<GameJoinPacket>): void {
         this.dataInternal.opponentName = event.value.playerName;
+        ++this.dataInternal.currentNumberOfPlayers;
     }
 
     @PacketHandler(GameStartPacket)
@@ -128,7 +126,7 @@ export class GameService {
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
         this.dataInternal.mode = this.userChoiceService.gameMode;
         this.dataInternal.difficulty = this.userChoiceService.difficulty;
-        this.dataInternal.numberOfPlayers = this.userChoiceService.playerNumber;
+        this.dataInternal.maxNumberOfPlayers = this.userChoiceService.playerNumber;
     }
 
 }

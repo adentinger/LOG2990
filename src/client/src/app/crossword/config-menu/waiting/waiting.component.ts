@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WaitingService } from './waiting.service';
+import { GameService } from '../../game.service';
 
 @Component({
     selector: 'app-waiting',
@@ -8,7 +9,17 @@ import { WaitingService } from './waiting.service';
 })
 export class WaitingComponent implements OnInit {
 
-    constructor(public waitingService: WaitingService) { }
+    public get waitingText(): string {
+        if (this.gameService.data.currentNumberOfPlayers < this.gameService.data.maxNumberOfPlayers) {
+            return 'Waiting for more awesome players to join...';
+        }
+        else {
+            return 'Waiting for some cool data to arrive...';
+        }
+    }
+
+    constructor(public waitingService: WaitingService,
+                private gameService: GameService) { }
 
     public ngOnInit(): void {
     }

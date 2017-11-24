@@ -6,13 +6,14 @@ import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridService } from '../board/grid.service';
+import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 
 /**
  * @class GameManagerService
  * @description Has the responsibility of managing the key moments of a game's life :
  * 1) Creation
  * 2) Completion
- * 3) Reset
+ * 3) Reset and deletion
  * This service was basically created to solve circular dependency problems between
  * GameService and GameHttpService. Yes, this probably denotes a slight architectural problem.
  */
@@ -24,7 +25,8 @@ export class GameManagerService {
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
-                private gridService: GridService) {
+                private gridService: GridService,
+                private menuAutomatonService: MenuAutomatonService) {
         this.gameService.state.subscribe((state) => {
             switch (state) {
                 case GameState.waiting: {
@@ -40,6 +42,13 @@ export class GameManagerService {
                 }
             }
         });
+    }
+
+    public finalize(): void {
+        this.menuAutomatonService.goBackToInitialState();
+        this.definitionsService.clearDefinitions();
+        this.gameService.finalize();
+        this.gridService.reinitialize();
     }
 
     private startGame(): void {
@@ -73,19 +82,29 @@ export class GameManagerService {
         else {
             message = 'Congratulations ; you equaled your opponent!';
         }
-        if (this.gameService.data.numberOfPlayers === 1) {
+        if (this.gameService.data.maxNumberOfPlayers === 1) {
             message += '\nStart over with the same settings?';
             if (confirm(message)) {
                 this.resetGame();
                 this.startGame();
             }
+            else {
+                this.resetUserConfiguration();
+            }
         }
         else {
+            this.resetUserConfiguration();
             alert(message);
         }
     }
 
-    public resetGame(): void {
+    private resetUserConfiguration(): void {
+        this.gameService.reinitialize();
+        this.userChoiceService.reinitialize();
+        this.menuAutomatonService.goBackToInitialState();
+    }
+
+    private resetGame(): void {
         this.definitionsService.clearDefinitions();
         this.gameService.finalize();
         this.gridService.reinitialize();

@@ -13,6 +13,7 @@ import { RacingGameService } from './racing-game/racing-game.service';
 import { PhysicEngine } from './racing-game/physic/engine';
 import { SoundService } from './services/sound-service';
 import { CarsService } from './racing-game/cars.service';
+import { TextureLoader, textureLoaderValue } from './services/texture-loader';
 
 @NgModule({
     imports: [
@@ -35,7 +36,8 @@ import { CarsService } from './racing-game/cars.service';
         RacingGameService,
         PhysicEngine,
         SoundService,
-        CarsService
+        CarsService,
+        { provide: TextureLoader, useValue: textureLoaderValue }
     ]
 })
 export class RacingModule { }
