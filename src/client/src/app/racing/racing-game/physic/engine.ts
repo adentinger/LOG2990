@@ -13,7 +13,7 @@ export const AFTER_PHYSIC_UPDATE_EVENT = 'afterphysicupdate';
 @Injectable()
 export class PhysicEngine {
     public static readonly UPDATE_FREQUENCY = 70; // Hz
-    public static readonly MAX_DELTA_TIME: Seconds = 0.05;
+    public static readonly MAX_DELTA_TIME: Seconds = 1 / 40;
 
     private physicUtils: PhysicUtils;
     private timer: any = null;
