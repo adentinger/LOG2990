@@ -51,11 +51,11 @@ export class PhysicUtils {
     }
 
     private getCollision(target: Collidable, source: Collidable): CollisionInfo {
-        let collision: CollisionInfo = null;
-
-        if (target === source) {
+        if (target === source || !this.areEnoughCloseToCollide(target, source)) {
             return null;
         }
+
+        let collision: CollisionInfo = null;
 
         const targetLines: Line[] = this.getBoundingLines(target);
         const sourceLines: Line[] = this.getBoundingLines(source);
@@ -104,6 +104,12 @@ export class PhysicUtils {
 
         this.eventManager.fireEvent(COLLISION_EVENT, { name: COLLISION_EVENT, data: collision });
         return collision;
+    }
+
+    private areEnoughCloseToCollide(target: Collidable, source: Collidable): boolean {
+        const targetRadius = PhysicUtils.getObjectDimensions(target).length() / 2;
+        const sourceRadius = PhysicUtils.getObjectDimensions(source).length() / 2;
+        return target.position.distanceTo(source.position) <= targetRadius + sourceRadius;
     }
 
     private getFirstIntersection(targetLines: Line[], sourceLines: Line[]): [Line, Line, Point][] {

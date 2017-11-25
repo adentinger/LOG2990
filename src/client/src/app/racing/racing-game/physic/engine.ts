@@ -3,6 +3,7 @@ import { PhysicUtils } from './utils';
 import * as THREE from 'three';
 import { Seconds } from '../../../types';
 import { EventManager } from '../../../event-manager.service';
+import '../../../../../../common/src/math/clamp';
 
 export * from './utils';
 
@@ -12,6 +13,7 @@ export const AFTER_PHYSIC_UPDATE_EVENT = 'afterphysicupdate';
 @Injectable()
 export class PhysicEngine {
     public static readonly UPDATE_FREQUENCY = 70; // Hz
+    public static readonly MAX_DELTA_TIME: Seconds = 0.05;
 
     private physicUtils: PhysicUtils;
     private timer: any = null;
@@ -36,11 +38,11 @@ export class PhysicEngine {
 
     public start(): void {
         if (this.timer === null) {
-            let now = Date.now(), last = now;
+            let now: number, last = Date.now();
             this.timer = setInterval(() => {
                 now = Date.now();
                 const deltaTimeMs = now - last;
-                this.updateWorld(deltaTimeMs / 1000);
+                this.updateWorld(Math.clamp(deltaTimeMs / 1000, 0, PhysicEngine.MAX_DELTA_TIME));
                 if (this.deltaTimes.length >= this.sampleSize) {
                     this.deltaTimes.splice(0, this.deltaTimes.length - this.sampleSize + 1);
                 }

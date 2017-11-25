@@ -17,8 +17,13 @@ import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
 import { CarsPositionsService } from './cars-positions.service';
+import { CarController } from './physic/ai/car-controller';
+import { UserCarController } from './physic/ai/user-car-controller';
+import { AiCarController } from './physic/ai/ai-car-controller';
 
 const logger = Logger.getLogger();
+
+export const GAME_START_EVENT = 'racing-start';
 
 @Injectable()
 export class RacingGameService {
@@ -32,6 +37,8 @@ export class RacingGameService {
         new Car(new THREE.Color('blue')),
         new Car(new THREE.Color('red'))
     ];
+    private readonly controllers: CarController[] = this.cars.map((car, idx) =>
+        idx === this.controlledCarIdx ? new UserCarController(car) : new AiCarController(car));
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
@@ -95,9 +102,11 @@ export class RacingGameService {
         this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;
 
-        const userCar = this.cars[RacingGameService.DEFAULT_CONTROLLABLE_CAR_IDX];
-        userCar.setUIInput(userInputs);
-        this.renderer.setCamerasTarget(userCar);
+        const userCarController = this.controllers[this.controlledCarIdx] as UserCarController;
+        userCarController.setUIInput(userInputs);
+        this.renderer.setCamerasTarget(userCarController.car);
+
+        this.controllers.forEach(controller => controller.setTrackLines(this.map.mapLines));
         this.reloadSounds();
 
         this.cars.forEach(this.soundService.registerEmitter, this.soundService);
@@ -112,10 +121,16 @@ export class RacingGameService {
             this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
-            this.soundService.setAbmiantSound(Sound.TETRIS);
-            this.waitToLoad.then(() => {
-                this.soundService.playAmbiantSound(true);
-            });
+            this.soundService.setAbmiantSound(Sound.START_SOUND);
+            this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
+                .then(() => {
+                    const event: EventManager.Event<void> = {name: GAME_START_EVENT, data: void 0};
+                    this.eventManager.fireEvent(event.name, event);
+                    return this.soundService.setAbmiantSound(Sound.TETRIS);
+                }).then(() => {
+                    this.soundService.playAmbiantSound(true);
+                    this.controllers.forEach(controller => controller.start());
+                });
         }, () => logger.warn('Initialization interrupted'));
     }
 
@@ -127,7 +142,12 @@ export class RacingGameService {
 
         this.cars.forEach(car => {
             car.stopSounds();
-            car.removeUIInput();
+        });
+        this.controllers.forEach((controller, idx) => {
+            controller.stop();
+            if (controller instanceof UserCarController) {
+                controller.removeUIInput();
+            }
         });
 
         this.userInputs = null;
