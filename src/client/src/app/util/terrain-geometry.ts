@@ -57,7 +57,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
     private flattenTerrainNearTrack(rawTerrainDisplacement: number[], track: Line[]): number[] {
         const terrainDisplacement: number[] = new Array(rawTerrainDisplacement.length);
         this.vertices.forEach((vertex, index) => {
-            const position = new Point(vertex.x, vertex.z);
+            const position = new Point(vertex.x, vertex.y);
             const projection = MapPositionAlgorithms.getClosestProjection(position, track);
             terrainDisplacement[index] =
                 this.flattenSinglePosition(rawTerrainDisplacement[index], projection.distanceToSegment);
