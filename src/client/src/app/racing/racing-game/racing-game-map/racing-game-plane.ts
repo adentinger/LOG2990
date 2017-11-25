@@ -17,8 +17,12 @@ export class RacingGamePlane extends PhysicMesh {
     public readonly velocity = new THREE.Vector3();
     public readonly waitToLoad: Promise<void>;
 
-    constructor(trackSegments: Line[]) {
+    constructor(trackSegments: Line[], trackCenterPosition: THREE.Vector3) {
         super();
+
+        this.position.copy(trackCenterPosition);
+        this.rotateX(-Math.PI / 2);
+        this.receiveShadow = true;
 
         this.waitToLoad = RacingGamePlane.GRASS_TEXTURE_PROMISE.then((texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -30,11 +34,21 @@ export class RacingGamePlane extends PhysicMesh {
                 side: THREE.FrontSide,
                 shininess: 1
             });
-            this.geometry = new TerrainGeometry(trackSegments);
+            this.geometry =
+                new TerrainGeometry(this.makeAllSegmentsRelativeToPlaneCenter(trackSegments));
         }).then(() => {});
+    }
 
-        this.rotateX(-Math.PI / 2);
-        this.receiveShadow = true;
+    private makeAllSegmentsRelativeToPlaneCenter(trackSegments: Line[]): Line[] {
+        const relativeTrackSegments = trackSegments.map(segment => this.makeSegmentRelativeToPlaneCenter(segment));
+        return relativeTrackSegments;
+    }
+
+    private makeSegmentRelativeToPlaneCenter(segment: Line): Line {
+        const positionPoint = new Point(this.position.x, this.position.z);
+        const relativeOrigin = segment.origin.clone().substract(positionPoint);
+        const relativeDestination = segment.destination.clone().substract(positionPoint);
+        return new Line(relativeOrigin, relativeDestination);
     }
 
 }

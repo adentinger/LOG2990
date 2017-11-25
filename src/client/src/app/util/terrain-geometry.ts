@@ -65,7 +65,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
     private flattenTerrainNearTrack(rawTerrainDisplacement: number[], track: Line[]): number[] {
         const terrainDisplacement: number[] = new Array(rawTerrainDisplacement.length);
         this.vertices.forEach((vertex, index) => {
-            const position = new Point(vertex.x, vertex.y);
+            const position = new Point(vertex.x, -vertex.y);
             const projection = MapPositionAlgorithms.getClosestProjection(position, track);
             terrainDisplacement[index] =
                 this.flattenSinglePosition(rawTerrainDisplacement[index], projection.distanceToSegment);
@@ -75,15 +75,15 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
     private flattenSinglePosition(rawDisplacement: number, distanceToTrack: number): number {
         // For formula, see doc/architectures/formula_displacement_factor.jpg
-        const distaneMin = Track.SEGMENT_WIDTH / 2;
-        const distanceAtModulation = Track.SEGMENT_WIDTH * 1.2;
+        const distaneMin = Track.SEGMENT_WIDTH;
+        const distanceAtModulation = Track.SEGMENT_WIDTH * 2.4;
         const distanceAtMax = Track.SEGMENT_WIDTH * 10;
 
         const factorMedium = 0.1;
 
         let displacementFactor: number;
         if (distanceToTrack < distaneMin) {
-            displacementFactor = -0.1;
+            displacementFactor = 0;
         }
         else if (distanceToTrack < distanceAtModulation) {
             displacementFactor = factorMedium;

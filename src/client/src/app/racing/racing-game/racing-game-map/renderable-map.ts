@@ -48,8 +48,7 @@ export class RenderableMap extends PhysicMesh {
         this.mapPuddles = map.puddles;
         this.mapSpeedBoosts = map.speedBoosts;
 
-        this.plane = new RacingGamePlane(this.mapLines);
-        this.plane.position.set(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2);
+        this.plane = new RacingGamePlane(this.mapLines, new THREE.Vector3(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2));
         this.add(this.plane);
 
         const waitForJunctions = this.placeJunctionsOnMap();
