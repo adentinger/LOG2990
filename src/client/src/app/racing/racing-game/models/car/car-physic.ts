@@ -20,7 +20,7 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     public static readonly DEFAULT_ACCELERATION = 20; // m/s^2
     public static readonly DEFAULT_TARGET_SPEED = 30; // m/s
 
-    public static readonly DEFAULT_ANGULAR_ACCELERATION = 3 * Math.PI; // rad/s^2
+    public static readonly DEFAULT_ANGULAR_ACCELERATION = 2 * Math.PI; // rad/s^2
     public static readonly DEFAULT_TARGET_ANGULAR_SPEED = 3 * Math.PI / 4; // rad/s
 
     protected acceleration = CarPhysic.DEFAULT_ACCELERATION;
@@ -42,7 +42,7 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     }
 
     public get angularSpeed(): number {
-        return this.velocity.dot(this.front);
+        return this.angularVelocity.dot(UP_DIRECTION);
     }
 
     public set angularSpeed(value: number) {
@@ -90,13 +90,11 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     }
 
     private updateAngularSpeed(deltaTime: Seconds): void {
-        let angularSpeed = this.angularVelocity.dot(UP_DIRECTION);
-        const speedDifference = (this.targetAngularSpeed - angularSpeed);
+        const speedDifference = (this.targetAngularSpeed - this.angularSpeed);
         let angularAccelerationFactor = speedDifference / Math.abs(this.targetAngularSpeed);
         angularAccelerationFactor = this.targetAngularSpeed === 0 ? Math.sign(speedDifference) : angularAccelerationFactor;
         const angularAcceleration = angularAccelerationFactor * this.angularAcceleration;
 
-        angularSpeed += angularAcceleration * deltaTime;
-        this.angularVelocity.copy(UP_DIRECTION).multiplyScalar(angularSpeed);
+        this.angularSpeed += angularAcceleration * deltaTime;
     }
 }
