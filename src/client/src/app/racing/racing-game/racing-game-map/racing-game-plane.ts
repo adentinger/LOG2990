@@ -6,9 +6,6 @@ import { TerrainGeometry } from '../../../util/terrain-geometry';
 import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
 import { Line, Point } from '../../../../../../common/src/math/index';
 
-const NUMBER_OF_WIDTH_DIVISIONS  = Math.ceil( Track.WIDTH_MAX / 10);
-const NUMBER_OF_HEIGHT_DIVISIONS = Math.ceil(Track.HEIGHT_MAX / 10);
-
 export class RacingGamePlane extends PhysicMesh {
     private static readonly GRASS_URL = '/assets/racing/textures/grass.png';
 
