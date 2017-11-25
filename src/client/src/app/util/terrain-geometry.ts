@@ -5,8 +5,8 @@ import { Track } from '../racing/track';
 import { Line, Point } from '../../../../common/src/math/index';
 import { MapPositionAlgorithms } from './map-position-algorithms';
 
-const widthSegments  = Math.ceil( Track.WIDTH_MAX / 10);
-const heightSegments = Math.ceil(Track.HEIGHT_MAX / 10);
+const widthSegments  = Math.ceil( Track.WIDTH_MAX / 3);
+const heightSegments = Math.ceil(Track.HEIGHT_MAX / 3);
 
 /**
  * @class TerrainGeometry
