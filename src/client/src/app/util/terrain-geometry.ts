@@ -4,7 +4,6 @@ import * as ImprovedNoise from 'improved-noise';
 import { Track } from '../racing/track';
 import { Line, Point } from '../../../../common/src/math/index';
 import { MapPositionAlgorithms } from './map-position-algorithms';
-import { SIZE_UINT8 } from '../../../../common/src/index';
 
 /**
  * @class TerrainGeometry
