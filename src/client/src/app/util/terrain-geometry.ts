@@ -8,8 +8,16 @@ import { MapPositionAlgorithms } from './map-position-algorithms';
 const widthSegments  = Math.ceil( Track.WIDTH_MAX / 10);
 const heightSegments = Math.ceil(Track.HEIGHT_MAX / 10);
 
+/**
+ * @class TerrainGeometry
+ * @description Creates and contains the geometry of the racing game's
+ * terrain, taking the racing track into account.
+ */
 export class TerrainGeometry extends THREE.PlaneGeometry {
 
+    /**
+     * @argument track The track. Must be relative to the geometry's center (0, 0, 0).
+     */
     constructor(track: Line[]) {
         super(Track.WIDTH_MAX, Track.HEIGHT_MAX, widthSegments, heightSegments);
 
