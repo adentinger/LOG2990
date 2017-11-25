@@ -29,7 +29,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
         const numberOfWidthVertices  = widthSegments  + 1;
         const numberOfHeightVertices = heightSegments + 1;
-        const size = Track.WIDTH_MAX * Track.HEIGHT_MAX;
+        const size = numberOfWidthVertices * numberOfHeightVertices;
         const terrainDisplacementUint8 = new Uint8Array(size);
 
         const perlin = new ImprovedNoise();
@@ -39,7 +39,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         for (let j = 0; j < 4; j ++) {
 
             for (let i = 0; i < size; i ++) {
-                const x = i % widthSegments, y = (i / heightSegments);
+                const x = i % numberOfWidthVertices, y = (i / numberOfHeightVertices);
                 const height = Math.abs(perlin.noise(x / quality, y / quality, z) * quality * 1.75);
                 terrainDisplacementUint8[i] = height;
             }
@@ -55,13 +55,12 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
     }
 
     private flattenTerrainNearTrack(rawTerrainDisplacement: number[], track: Line[]): number[] {
-        const terrainDisplacement: number[] = [];
+        const terrainDisplacement: number[] = new Array(rawTerrainDisplacement.length);
         this.vertices.forEach((vertex, index) => {
             const position = new Point(vertex.x, vertex.z);
             const projection = MapPositionAlgorithms.getClosestProjection(position, track);
-            terrainDisplacement.push(
-                this.flattenSinglePosition(rawTerrainDisplacement[index], projection.distanceToSegment)
-            );
+            terrainDisplacement[index] =
+                this.flattenSinglePosition(rawTerrainDisplacement[index], projection.distanceToSegment);
         });
         return terrainDisplacement;
     }
