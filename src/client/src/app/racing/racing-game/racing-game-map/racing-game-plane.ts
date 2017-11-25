@@ -30,12 +30,11 @@ export class RacingGamePlane extends PhysicMesh {
                 side: THREE.FrontSide,
                 shininess: 1
             });
+            this.geometry = new TerrainGeometry(trackSegments);
         }).then(() => {});
 
         this.rotateX(-Math.PI / 2);
         this.receiveShadow = true;
-
-        this.geometry = new TerrainGeometry(trackSegments);
     }
 
 }
