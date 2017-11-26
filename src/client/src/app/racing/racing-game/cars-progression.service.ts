@@ -22,8 +22,10 @@ enum LapState {
  * (On a linear scale)
  */
 export class CarsProgressionService {
-    private progressionUpdateCounter = 0;
 
+    public userLapCompletion = 0;
+
+    private progressionUpdateCounter = 0;
     private carProgressions: Map<Car, Progression> = new Map();
     private carLapStates: Map<Car, LapState> = new Map();
     private controllers: CarController[] = [];
@@ -37,6 +39,7 @@ export class CarsProgressionService {
 
     public initialize(controllers: CarController[], mapLines: Line[]): void {
         this.mapLength = mapLines.map((line) => line.length).reduce((sum, val) => sum + val);
+        this.mapLines = mapLines;
         this.controllers = controllers;
         for (const controller of controllers) {
             this.carProgressions.set(controller.car, 0);
@@ -55,7 +58,8 @@ export class CarsProgressionService {
     private updateCarsProgression(event: EventManager.Event<{ deltaTime: Seconds }>): void {
         if (++this.progressionUpdateCounter === 30) {
             this.progressionUpdateCounter = 0;
-            //
+            // console.log(Math.round(this.computeLapProgression(this.userCar) * 100) + ' / ' + 100);
+            this.userLapCompletion = Math.round(this.computeLapProgression(this.userCar) * 100);
         }
     }
 
@@ -66,9 +70,11 @@ export class CarsProgressionService {
     private computeLapProgression(car: Car): LapProgression {
         let progression: LapProgression = 0;
         const projection: Projection = MapPositionAlgorithms.getClosestProjection(
-            new Point(car.position.x, car.position.y), this.mapLines);
+            new Point(car.position.x, car.position.z), this.mapLines);
 
         const currentSegment: number = this.mapLines.indexOf(projection.segment);
+
+        // console.log('current segment = ' + projection.segment.origin.x + ' , ' + projection.segment.origin.y);
 
         // Add completed segments
         for (let i = 0; i < currentSegment; ++i) {

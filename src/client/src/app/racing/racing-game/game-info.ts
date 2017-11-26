@@ -15,6 +15,10 @@ export class GameInfo {
         return 1;
     }
 
+    public get userLapCompletion(): number {
+        return this.carsProgressionService.userLapCompletion;
+    }
+
     public getPosition(car: Car): Progression {
         return 0;
     }
