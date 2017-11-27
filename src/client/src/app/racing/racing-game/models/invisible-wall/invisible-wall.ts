@@ -25,6 +25,7 @@ export class InvisibleWall extends CollidableMesh {
         const newLength = this.length + ajustment;
         const scale = newLength / this.length;
         this.geometry.scale(this.length * scale, 10 * scale, 10 * scale);
+        this.position.subScalar(ajustment);
     }
 
     @EventManager.Listener(COLLISION_EVENT)
