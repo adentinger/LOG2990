@@ -5,26 +5,22 @@ import { isDynamicCollidable } from '../../physic/dynamic-collidable';
 import * as THREE from 'three';
 import { Kilograms } from '../../../../types';
 import { Line } from '../../../../../../../common/src/math/index';
-import { Vector3 } from 'three';
 
 const SLOW_FACTOR = 0.2;
 
-export class InvisibleWall extends CollidableMesh {
+/* export class InvisibleWall extends CollidableMesh {
 
     public readonly mass: Kilograms = Infinity;
 
-    constructor(public readonly length: number, line: Line) {
+    constructor(public readonly length: number) {
         super(new THREE.PlaneGeometry( length, 10 , 10 ));
         this.material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide, wireframe: true});
-        const middlePoint = line.interpolate(0.25);
-        this.position.set(middlePoint.x, this.position.y, middlePoint.y);
         // this.visible = false;
     }
 
-    public ajustPosition(ajustment: number): void {
-        const newLength = this.length + ajustment;
-        const scale = newLength / this.length;
-        this.geometry.scale(this.length * scale, 10 * scale, 10 * scale);
+    public setPosition(line: Line): void {
+        const middlePoint = line.interpolate(0.25);
+        this.position.set(middlePoint.x, this.position.y, middlePoint.y);
     }
 
     @EventManager.Listener(COLLISION_EVENT)
@@ -36,4 +32,4 @@ export class InvisibleWall extends CollidableMesh {
         }
     }
 
-}
+} */
