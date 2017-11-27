@@ -13,7 +13,7 @@ export class InvisibleWall extends CollidableMesh {
 
     constructor(public readonly length: number) {
         super(new THREE.PlaneGeometry( length, 10 , 10 ));
-        this.material = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide});
+        this.material = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide, wireframe: true});
         // this.visible = false;
     }
 
