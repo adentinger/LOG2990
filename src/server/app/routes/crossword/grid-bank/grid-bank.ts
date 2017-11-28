@@ -117,7 +117,7 @@ export abstract class GridBank {
                     new Word(word.value, new WordPosition(word.position.row, word.position.column), word.direction, Player.NO_PLAYER)
             );
         }
-        else {
+        else if (document.hasOwnProperty('across') && document.hasOwnProperty('vertical')) {
             // For the grids generated using the old code
             const across = document.across.map(
                 (word: Word) =>
@@ -128,6 +128,11 @@ export abstract class GridBank {
                     new Word(word.value, new WordPosition(word.position.row, word.position.column), Direction.vertical, Player.NO_PLAYER)
             );
             grid.words = across.concat(vertical);
+        }
+        else {
+            this.logger.error(
+                'ERROR: Got document that doesn\'t look like a grid:' + JSON.stringify(document)
+            );
         }
 
         return grid;
