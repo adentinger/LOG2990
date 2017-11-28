@@ -2,6 +2,7 @@ import { Line } from '../../../../common/src/math/line';
 import { Point } from '../../../../common/src/math/point';
 import { MapPositionAlgorithms } from './map-position-algorithms';
 import { Projection } from './projection';
+import { Meters } from '../types';
 
 // Simple Map for testing
 const points = [new Point(3.0, 3.0),
@@ -19,6 +20,15 @@ new Line(points[4], points[5]),
 new Line(points[5], points[0])];
 
 describe('Map position algorithms', () => {
+    const pointEqualityTester = (first, second): boolean | void => {
+        if (first instanceof Point && second instanceof Point) {
+            return first.equals(second);
+        }
+    };
+
+    beforeEach(() => {
+        jasmine.addCustomEqualityTester(pointEqualityTester);
+    });
 
     /**
      * getProjectionOnLine
@@ -84,5 +94,33 @@ describe('Map position algorithms', () => {
         expect(closestInterpolation.distanceToSegment).toEqual(1.0);
         expect(closestInterpolation.segment).toEqual(lines[1]);
         expect(closestInterpolation.interpolation).toEqual(2.0 / 5.0);
+    });
+
+    const correctionFactor = 10;
+    it('should calculate the point at a given distance from the begining of a track', () => {
+        const distance1: Meters = 10;
+        const distance2: Meters = lines[0].length;
+        const distance3: Meters = lines.reduce((length, line) =>
+            (length * correctionFactor + line.length * correctionFactor) / (correctionFactor), 0);
+        const expectedPoint1 = new Point(lines[1].origin.x + (10 - lines[0].length), lines[1].origin.y);
+        const expectedPoint2 = lines[0].destination;
+        const expectedPoint3 = lines[0].origin;
+
+        const pointOnTrack1 = MapPositionAlgorithms.getPointAtGivenDistance(distance1, lines);
+        const pointOnTrack2 = MapPositionAlgorithms.getPointAtGivenDistance(distance2, lines);
+        const pointOnTrack3 = MapPositionAlgorithms.getPointAtGivenDistance(distance3, lines);
+
+        expect(pointOnTrack1).toEqual(expectedPoint1);
+
+        expect(pointOnTrack2).toEqual(expectedPoint2);
+
+        expect(pointOnTrack3.x).toBeCloseTo(expectedPoint3.x);
+        expect(pointOnTrack3.y).toBeCloseTo(expectedPoint3.y);
+    });
+
+    it('should calculate the total length of a track', () => {
+        const trackLength = MapPositionAlgorithms.getTrackLength(lines);
+
+        expect(trackLength).toEqual(lines.reduce((length, line) => length + line.length, 0));
     });
 });

@@ -6,6 +6,7 @@ import { Map } from '../../admin-screen/map-editor/map';
 import { SerializedPothole } from '../../../../../common/src/racing/serialized-pothole';
 import { SerializedPuddle } from '../../../../../common/src/racing/serialized-puddle';
 import { SerializedSpeedBoost } from '../../../../../common/src/racing/serialized-speed-boost';
+import { Point } from '../../../../../common/src/math/index';
 
 @Injectable()
 export class MapService {
@@ -48,7 +49,7 @@ export class MapService {
                                      json.sumRatings,
                                      json.numberOfRatings,
                                      json.numberOfPlays,
-                                     json.points,
+                                     json.points.map(point => new Point(point.x, point.y)),
                                      json.potholes.map(pothole => new SerializedPothole(pothole.position)),
                                      json.puddles.map(puddle => new SerializedPuddle(puddle.position)),
                                      json.speedBoosts.map(speedBoost => new SerializedSpeedBoost(speedBoost.position)),

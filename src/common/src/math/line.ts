@@ -33,6 +33,10 @@ export class Line {
                 this.destination.equals(that.origin));
     }
 
+    public get length(): number {
+        return this.translation.norm();
+    }
+
     /**
      * Get the interpolated point between the origin and the destination.
      * @param proportion The proportion of the line. Must be between 0 and 1.

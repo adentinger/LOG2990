@@ -84,7 +84,7 @@ export class EventManager {
         const LISTENERS = this.eventListeners.get(type);
         if (LISTENERS !== undefined) {
             for (const listener of LISTENERS) {
-                listener(event);
+                setTimeout(listener(event), 0); // Make it asynchronous
             }
         }
         this.fireEventOnce(type, event);
@@ -94,7 +94,7 @@ export class EventManager {
         const LISTENERS = this.eventListenersOnce.get(type);
         if (LISTENERS !== undefined) {
             for (const listener of LISTENERS) {
-                listener(event);
+                setTimeout(listener(event), 0);
             }
             LISTENERS.clear();
         }

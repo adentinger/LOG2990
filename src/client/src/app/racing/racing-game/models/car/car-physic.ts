@@ -3,13 +3,7 @@ import * as THREE from 'three';
 import { DynamicCollidableMesh } from '../../physic/dynamic-collidable';
 import { Seconds } from '../../../../types';
 import { UP_DIRECTION } from '../../physic/engine';
-import { UIInputs, KEYBOARD_EVENT } from '../../../services/ui-input.service';
 import { EventManager } from '../../../../event-manager.service';
-
-const KEY_FORWARD = 'w';
-const KEY_BACK = 's';
-const KEY_RIGHT = 'd';
-const KEY_LEFT = 'a';
 
 // The front direction when the rotation is 0.
 const INITIAL_FRONT = new THREE.Vector3(0, 0, -1);
@@ -35,8 +29,6 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     protected angularAcceleration = CarPhysic.DEFAULT_ANGULAR_ACCELERATION;
     public targetAngularSpeed = 0; // rad/s
 
-    protected userInputs: UIInputs;
-
     public get front(): THREE.Vector3 {
         return INITIAL_FRONT.clone().applyEuler(this.rotation);
     }
@@ -45,21 +37,21 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
         return this.velocity.dot(this.front);
     }
 
+    public set speed(value: number) {
+        this.velocity.copy(this.front).multiplyScalar(value);
+    }
+
+    public get angularSpeed(): number {
+        return this.velocity.dot(this.front);
+    }
+
+    public set angularSpeed(value: number) {
+        this.angularVelocity.copy(UP_DIRECTION).multiplyScalar(value);
+    }
+
     public constructor() {
         super();
         EventManager.getInstance().registerClass(this, CarPhysic.prototype);
-    }
-
-    public setUIInput(userInputService: UIInputs): void {
-        this.userInputs = userInputService;
-    }
-
-    public removeUIInput(): void {
-        delete this.userInputs;
-    }
-
-    public hasUIInput(): boolean {
-        return this.userInputs != null;
     }
 
     public updateVelocity(deltaTime: Seconds): void {
@@ -85,18 +77,16 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
     }
 
     private updateVelocityDirection(): void {
-        this.velocity.copy(this.front.multiplyScalar(this.speed));
+        this.speed = this.speed;
     }
 
     private updateSpeed(deltaTime: Seconds) {
-        let speed = this.speed;
-        const speedDifference = (this.targetSpeed - speed);
+        const speedDifference = (this.targetSpeed - this.speed);
         let accelerationFactor = speedDifference / Math.abs(this.targetSpeed);
         accelerationFactor = this.targetSpeed === 0 ? Math.sign(speedDifference) : accelerationFactor;
         const acceleration = accelerationFactor * this.acceleration;
 
-        speed += acceleration * deltaTime;
-        this.velocity.copy(this.front.multiplyScalar(speed));
+        this.speed += acceleration * deltaTime;
     }
 
     private updateAngularSpeed(deltaTime: Seconds): void {
@@ -108,27 +98,5 @@ export abstract class CarPhysic extends DynamicCollidableMesh {
 
         angularSpeed += angularAcceleration * deltaTime;
         this.angularVelocity.copy(UP_DIRECTION).multiplyScalar(angularSpeed);
-    }
-
-    @EventManager.Listener(KEYBOARD_EVENT)
-    // tslint:disable-next-line:no-unused-variable
-    private updateTargetVelocities(): void {
-        if (this.userInputs != null) {
-            this.targetSpeed = 0;
-            if (this.userInputs.isKeyPressed(KEY_FORWARD)) {
-                this.targetSpeed += CarPhysic.DEFAULT_TARGET_SPEED;
-            }
-            if (this.userInputs.isKeyPressed(KEY_BACK)) {
-                this.targetSpeed -= CarPhysic.DEFAULT_TARGET_SPEED;
-            }
-
-            this.targetAngularSpeed = 0;
-            if (this.userInputs.isKeyPressed(KEY_RIGHT)) {
-                this.targetAngularSpeed -= CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
-            }
-            if (this.userInputs.isKeyPressed(KEY_LEFT)) {
-                this.targetAngularSpeed += CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED;
-            }
-        }
     }
 }
