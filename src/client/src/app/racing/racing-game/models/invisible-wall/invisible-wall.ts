@@ -11,21 +11,14 @@ const SLOW_FACTOR = 0.2;
 
 export class InvisibleWall extends CollidableMesh {
 
-    public readonly mass: Kilograms = 1000;
+    public readonly mass: Kilograms = Infinity;
 
     constructor(public readonly length: number, line: Line) {
-        super(new THREE.PlaneGeometry( length, 10 , 10 ));
+        super(new THREE.CubeGeometry( length, 10 , 0.5 ));
         this.material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide, wireframe: true});
         const middlePoint = line.interpolate(0.25);
         this.position.set(middlePoint.x, this.position.y, middlePoint.y);
         // this.visible = false;
-    }
-
-    public ajustPosition(ajustment: number): void {
-        const newLength = this.length + ajustment;
-        const scale = newLength / this.length;
-        this.geometry.scale(this.length * scale, 10 * scale, 10 * scale);
-        this.position.subScalar(ajustment);
     }
 
     @EventManager.Listener(COLLISION_EVENT)

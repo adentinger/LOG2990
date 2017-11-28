@@ -16,9 +16,6 @@ enum TrackSide {
 
 export class InvisibleWallsGenerator {
 
-    private invisibleWalls: InvisibleWall[] = [];
-    private wallsLength: number[] = [];
-
     constructor(private readonly map: RenderableMap) {
 
     }
@@ -28,30 +25,26 @@ export class InvisibleWallsGenerator {
         this.placeInvisibleWallOnASideOfMap(TrackSide.RIGHT);
     }
 
-    private calculateWallPosition() {
-
-    }
-
     private placeInvisibleWallOnASideOfMap(trackSide: TrackSide): void {
         const lines = this.map.mapLines;
-        for (let i = 0; i < lines.length - 1; i++) {
+        for (let i = 0; i < lines.length; i++) {
             const wallLengthToSubstract = this.calculateWallLengthToSubstract(i);
-            const invisibleWallLength = (lines[i].translation.norm() / 2) + wallLengthToSubstract;
+            const invisibleWallLength = (lines[i].translation.norm() / 2) + trackSide * wallLengthToSubstract;
             const secondInvisibleWall = new InvisibleWall(invisibleWallLength, lines[i]);
             const angle = -(new THREE.Vector2(lines[i].translation.x, lines[i].translation.y).angle());
-            const middlePoint = lines[i].interpolate(0.75 + wallLengthToSubstract / ( 2 * lines[i].translation.norm()));
+            const middlePoint = lines[i].interpolate(0.75 + trackSide * wallLengthToSubstract / ( 2 * lines[i].translation.norm()));
             secondInvisibleWall.position.set(middlePoint.x, secondInvisibleWall.position.y, middlePoint.y);
             secondInvisibleWall.rotateY(angle);
             secondInvisibleWall.geometry.translate(0, 0, segmentTranslation * trackSide);
             this.map.add(secondInvisibleWall);
         }
 
-        for (let i = 0; i < lines.length - 1; i++) {
+        for (let i = 0; i < lines.length; i++) {
             const wallLengthToSubstract = this.calculateWallLengthToSubstract2(i);
-            const invisibleWallLength = (lines[i].translation.norm() / 2) + wallLengthToSubstract;
+            const invisibleWallLength = (lines[i].translation.norm() / 2) + trackSide * wallLengthToSubstract;
             const firstInvisibleWall = new InvisibleWall(invisibleWallLength, lines[i]);
             const angle = -(new THREE.Vector2(lines[i].translation.x, lines[i].translation.y).angle());
-            const middlePoint = lines[i].interpolate(0.25 - wallLengthToSubstract / ( 2 * lines[i].translation.norm()));
+            const middlePoint = lines[i].interpolate(0.25 - trackSide * wallLengthToSubstract / ( 2 * lines[i].translation.norm()));
             firstInvisibleWall.position.set(middlePoint.x, firstInvisibleWall.position.y, middlePoint.y);
             firstInvisibleWall.rotateY(angle);
             firstInvisibleWall.geometry.translate(0, 0, segmentTranslation * trackSide);
@@ -91,13 +84,22 @@ export class InvisibleWallsGenerator {
 
     private calculateWallLengthToSubstract2(i: number): number {
         const lines = this.map.mapLines;
-        if (i !== 0) {
-            const firstAbsoluteAngle = this.calculateAbsoluteAngle(lines[i - 1]);
-            const secondAbsoluteAngle = this.calculateAbsoluteAngle(lines[(i) % lines.length]);
+
+        let firstAbsoluteAngle = 0;
+        let secondAbsoluteAngle = 0;
+
+        if (i === 0) {
+            firstAbsoluteAngle = this.calculateAbsoluteAngle(lines[lines.length - 1]);
+            secondAbsoluteAngle = this.calculateAbsoluteAngle(lines[(i) % lines.length]);
+        }
+
+        if (i > 0) {
+            firstAbsoluteAngle = this.calculateAbsoluteAngle(lines[i - 1]);
+            secondAbsoluteAngle = this.calculateAbsoluteAngle(lines[(i) % lines.length]);
+        }
             const relativeAngle = this.calculateRelativeAngle(firstAbsoluteAngle, secondAbsoluteAngle);
             const alphaAngle = this.calculateAlphaAngle(relativeAngle);
             return this.calculateWallIntersectionAjustment(Track.SEGMENT_WIDTH, alphaAngle);
-        }
     }
 
 }
