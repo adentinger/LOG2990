@@ -16,7 +16,7 @@ export class InvisibleWall extends CollidableMesh {
 
     constructor(public readonly length: number) {
         super(new THREE.CubeGeometry( length, 10 , 1 ));
-        this.visible = false;
+        this.visible = true;
         EventManager.getInstance().registerClass(this, InvisibleWall.prototype);
     }
 

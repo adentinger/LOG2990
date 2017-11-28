@@ -5,9 +5,11 @@ import { Track } from '../../track';
 import { Tree } from '../models/decoration/tree';
 import { Building } from '../models/decoration/building';
 import { Vector } from '../../../../../../common/src/math/vector';
-import { Line, Point } from '../../../../../../common/src/math/index';
+import { Line } from '../../../../../../common/src/math/index';
 
 const segmentTranslation = Track.SEGMENT_WIDTH / 2;
+const startingInterpolationLowerWall = 0.25;
+const startingInterpolationUpperWall = 0.75;
 
 enum TrackSide {
     LEFT = -1,
@@ -77,17 +79,19 @@ export class InvisibleWallsGenerator {
 
     private calculateInterpolation(trackSide: TrackSide, trackPosition: TrackPosition,
             wallLengthToSubstract: number, lineIndex: number): number {
-        if (trackPosition === 0) {
-            return (0.25 - trackSide * wallLengthToSubstract / ( 2 * this.map.mapLines[lineIndex].translation.norm()));
+        if (trackPosition === TrackPosition.DOWN) {
+            return (startingInterpolationLowerWall - trackSide * wallLengthToSubstract
+                / ( 2 * this.map.mapLines[lineIndex].translation.norm()));
         }
-        else if (trackPosition === 1) {
-            return (0.75 + trackSide * wallLengthToSubstract / ( 2 * this.map.mapLines[lineIndex].translation.norm()));
+        else if (trackPosition === TrackPosition.UP) {
+            return (startingInterpolationUpperWall + trackSide * wallLengthToSubstract
+                / ( 2 * this.map.mapLines[lineIndex].translation.norm()));
         }
     }
 
     private getAbsoluteAngleOfSegments(trackPosition: TrackPosition, lineIndex: number): number[] {
         const firstAndSecondAbsoluteAngle = [];
-        if (trackPosition === 0) {
+        if (trackPosition === TrackPosition.DOWN) {
             if (lineIndex > 0) {
                 firstAndSecondAbsoluteAngle.push(this.calculateAbsoluteAngle(this.map.mapLines[lineIndex - 1]));
             }
@@ -96,7 +100,7 @@ export class InvisibleWallsGenerator {
             }
             firstAndSecondAbsoluteAngle.push(this.calculateAbsoluteAngle(this.map.mapLines[(lineIndex)]));
         }
-        else if (trackPosition === 1) {
+        else if (trackPosition === TrackPosition.UP) {
             firstAndSecondAbsoluteAngle.push(this.calculateAbsoluteAngle(this.map.mapLines[lineIndex]));
             firstAndSecondAbsoluteAngle.push(this.calculateAbsoluteAngle(this.map.mapLines[(lineIndex + 1) % this.map.mapLines.length]));
         }
