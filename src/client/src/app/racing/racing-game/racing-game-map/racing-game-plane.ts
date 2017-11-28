@@ -31,7 +31,10 @@ export class RacingGamePlane extends THREE.Mesh {
             });
             this.geometry =
                 new TerrainGeometry(this.makeAllSegmentsRelativeToPlaneCenter(trackSegments));
-        }).then(() => {});
+            (this.geometry as TerrainGeometry).verticesNeedUpdate = true;
+            (this.geometry as TerrainGeometry).computeMorphNormals();
+            (this.geometry as TerrainGeometry).computeVertexNormals();
+        }).then(() => { });
     }
 
     private makeAllSegmentsRelativeToPlaneCenter(trackSegments: Line[]): Line[] {
