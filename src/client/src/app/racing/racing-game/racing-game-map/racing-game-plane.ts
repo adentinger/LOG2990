@@ -3,12 +3,11 @@ import { Track } from '../../track';
 import { PhysicMesh } from '../physic/object';
 import { loadTexture } from '../../../util/textures';
 
-export class RacingGamePlane extends PhysicMesh {
+export class RacingGamePlane extends THREE.Mesh {
     private static readonly GRASS_URL = '/assets/racing/textures/grass.png';
 
     private static readonly GRASS_TEXTURE_PROMISE = loadTexture(RacingGamePlane.GRASS_URL);
 
-    public readonly velocity = new THREE.Vector3();
     public readonly waitToLoad: Promise<void>;
 
     constructor() {

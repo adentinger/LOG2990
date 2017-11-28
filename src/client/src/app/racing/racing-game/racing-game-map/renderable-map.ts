@@ -32,11 +32,17 @@ export class RenderableMap extends PhysicMesh {
     public mapPuddles: SerializedPuddle[];
     public mapSpeedBoosts: SerializedSpeedBoost[];
 
-    private readonly plane: RacingGamePlane;
     public readonly waitToLoad: Promise<void>;
+    private readonly plane: RacingGamePlane;
+
+    private mapObstaclesInternal: Obstacle[] = [];
 
     public get mapLines(): Line[] {
         return this.mapPoints.map((point, i, points) => new Line(point, points[(i + 1) % points.length]));
+    }
+
+    public get mapObstacles(): Obstacle[] {
+        return this.mapObstaclesInternal.slice();
     }
 
     constructor(map: SerializedMap, private eventManager: EventManager) {
@@ -152,6 +158,7 @@ export class RenderableMap extends PhysicMesh {
                     obstacle.position.copy(coordinate);
                     obstacle.rotation.y = lineAngle;
                     this.add(obstacle);
+                    this.mapObstaclesInternal.push(obstacle);
                 }
                 return obstacle.waitToLoad;
             }

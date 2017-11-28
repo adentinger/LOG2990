@@ -1,5 +1,7 @@
 import { Car } from '../../models/car/car';
 import { Line } from '../../../../../../../common/src/math';
+import { RenderableMap } from '../../racing-game-map/renderable-map';
+import { Obstacle } from '../../models/obstacles/obstacle';
 
 export enum CarControllerState {
     DISABLED,
@@ -9,6 +11,7 @@ export enum CarControllerState {
 export abstract class CarController {
     protected state = CarControllerState.DISABLED;
     protected readonly trackLines: Line[] = [];
+    protected readonly obstacles: Obstacle[] = [];
 
     public constructor(public readonly car: Car) {
         car.targetSpeed = 0;
@@ -29,8 +32,12 @@ export abstract class CarController {
         this.state = CarControllerState.DISABLED;
     }
 
-    public setTrackLines(lines: Line[]): void {
-        this.trackLines.splice(0); // clear array
-        this.trackLines.push(...lines);
+    public setupContoller(map: RenderableMap): void {
+        // Clear arrays
+        this.trackLines.splice(0);
+        this.obstacles.splice(0);
+
+        this.trackLines.push(...map.mapLines);
+        this.obstacles.push(...map.mapObstacles);
     }
 }
