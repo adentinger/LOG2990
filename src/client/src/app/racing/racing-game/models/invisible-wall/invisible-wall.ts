@@ -6,26 +6,25 @@ import * as THREE from 'three';
 import { Kilograms } from '../../../../types';
 import { Line } from '../../../../../../../common/src/math/index';
 import { Vector3 } from 'three';
+import { Car } from '../car/car';
 
-const SLOW_FACTOR = 0.2;
+const SLOW_FACTOR = 0.8;
 
 export class InvisibleWall extends CollidableMesh {
 
     public readonly mass: Kilograms = Infinity;
 
-    constructor(public readonly length: number, line: Line) {
-        super(new THREE.CubeGeometry( length, 10 , 0.5 ));
-        this.material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide, wireframe: true});
-        const middlePoint = line.interpolate(0.25);
-        this.position.set(middlePoint.x, this.position.y, middlePoint.y);
-        // this.visible = false;
+    constructor(public readonly length: number) {
+        super(new THREE.CubeGeometry( length, 10 , 1 ));
+        this.visible = false;
+        EventManager.getInstance().registerClass(this, InvisibleWall.prototype);
     }
 
     @EventManager.Listener(COLLISION_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private onCollision(event: EventManager.Event<CollisionInfo>) {
         const collision = event.data;
-        if (collision.source === this && isDynamicCollidable(collision.target)) {
+        if (collision.source === this && collision.target instanceof Car) {
             collision.target.velocity.multiplyScalar(SLOW_FACTOR);
         }
     }

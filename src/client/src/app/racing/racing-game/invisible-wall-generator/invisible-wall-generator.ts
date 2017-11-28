@@ -30,7 +30,7 @@ export class InvisibleWallsGenerator {
         for (let i = 0; i < lines.length; i++) {
             const wallLengthToSubstract = this.calculateWallLengthToSubstract(i);
             const invisibleWallLength = (lines[i].translation.norm() / 2) + trackSide * wallLengthToSubstract;
-            const secondInvisibleWall = new InvisibleWall(invisibleWallLength, lines[i]);
+            const secondInvisibleWall = new InvisibleWall(invisibleWallLength);
             const angle = -(new THREE.Vector2(lines[i].translation.x, lines[i].translation.y).angle());
             const middlePoint = lines[i].interpolate(0.75 + trackSide * wallLengthToSubstract / ( 2 * lines[i].translation.norm()));
             secondInvisibleWall.position.set(middlePoint.x, secondInvisibleWall.position.y, middlePoint.y);
@@ -42,7 +42,7 @@ export class InvisibleWallsGenerator {
         for (let i = 0; i < lines.length; i++) {
             const wallLengthToSubstract = this.calculateWallLengthToSubstract2(i);
             const invisibleWallLength = (lines[i].translation.norm() / 2) + trackSide * wallLengthToSubstract;
-            const firstInvisibleWall = new InvisibleWall(invisibleWallLength, lines[i]);
+            const firstInvisibleWall = new InvisibleWall(invisibleWallLength);
             const angle = -(new THREE.Vector2(lines[i].translation.x, lines[i].translation.y).angle());
             const middlePoint = lines[i].interpolate(0.25 - trackSide * wallLengthToSubstract / ( 2 * lines[i].translation.norm()));
             firstInvisibleWall.position.set(middlePoint.x, firstInvisibleWall.position.y, middlePoint.y);
