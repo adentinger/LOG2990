@@ -28,6 +28,7 @@ export const GAME_START_EVENT = 'racing-start';
 @Injectable()
 export class RacingGameService {
     public static readonly DEFAULT_CONTROLLABLE_CAR_IDX = 2;
+    public static readonly COUNTDOWN_DURATION: Seconds = 3.2;
 
     public readonly renderer: RacingRenderer;
     protected controlledCarIdx = RacingGameService.DEFAULT_CONTROLLABLE_CAR_IDX;
@@ -118,17 +119,22 @@ export class RacingGameService {
             this.waitToLoad,
             this.waitToFinalize.toPromise().then(() => { throw void (0); })
         ]).then(() => {
-            this.physicEngine.start();
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.START_SOUND);
-            this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
+            this.waitToLoad.then(() => {
+                this.soundService.playAmbiantSound(false)
+                    .then(() => this.soundService.setAbmiantSound(Sound.TETRIS))
+                    .then(() => {
+                        this.soundService.playAmbiantSound(true);
+                    });
+                return new Promise((resolve) => setTimeout(resolve, RacingGameService.COUNTDOWN_DURATION * 1000));
+            })
                 .then(() => {
+                    this.physicEngine.start();
+                    this.startTime = Date.now() / 1000;
                     const event: EventManager.Event<void> = {name: GAME_START_EVENT, data: void 0};
                     this.eventManager.fireEvent(event.name, event);
-                    return this.soundService.setAbmiantSound(Sound.TETRIS);
-                }).then(() => {
-                    this.soundService.playAmbiantSound(true);
                     this.controllers.forEach(controller => controller.start());
                 });
         }, () => logger.warn('Initialization interrupted'));
