@@ -8,8 +8,8 @@ import { Line } from '../../../../../../../common/src/math/index';
 
 const SLOW_FACTOR = 0.2;
 
-/* export class InvisibleWall extends CollidableMesh {
-
+export class InvisibleWall extends CollidableMesh {
+/*
     public readonly mass: Kilograms = Infinity;
 
     constructor(public readonly length: number) {
@@ -31,5 +31,5 @@ const SLOW_FACTOR = 0.2;
             collision.target.velocity.multiplyScalar(SLOW_FACTOR);
         }
     }
-
-} */
+*/
+}

@@ -11,7 +11,7 @@ const SLOW_FACTOR = 0.2;
 
 export class InvisibleWall extends CollidableMesh {
 
-    public readonly mass: Kilograms = Infinity;
+    public readonly mass: Kilograms = 1000;
 
     constructor(public readonly length: number, line: Line) {
         super(new THREE.PlaneGeometry( length, 10 , 10 ));
