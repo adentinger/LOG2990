@@ -17,9 +17,11 @@ import { Pothole } from '../models/obstacles/pothole';
 import { EventManager } from '../../../event-manager.service';
 import { Puddle } from '../models/obstacles/puddle';
 import { SpeedBooster } from '../models/obstacles/speed-booster';
-import { DecorationGenerator } from '../decoratio-generator/decoration-generator';
+import { DecorationGenerator } from '../decoration-generator/decoration-generator';
 import { Vector } from '../../../../../../common/src/math/vector';
 import { Obstacle } from '../models/obstacles/obstacle';
+import { InvisibleWall } from '../models/invisible-wall/invisible-wall';
+import { InvisibleWallsGenerator } from '../invisible-walls-generator/invisible-walls-generator';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -57,6 +59,9 @@ export class RenderableMap extends PhysicMesh {
 
         const decorationGenerator = new DecorationGenerator();
         decorationGenerator.placeDecorationsOnMap(this);
+
+        const invisibleWallsGenerator = new InvisibleWallsGenerator(this);
+        invisibleWallsGenerator.placeInvisibleWallOnBothSideOfMap();
 
         this.waitToLoad = Promise.all([
             this.plane.waitToLoad,
