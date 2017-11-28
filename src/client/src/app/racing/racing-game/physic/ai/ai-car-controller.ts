@@ -32,9 +32,6 @@ export class AiCarController extends CarController {
             const projection = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
             this.car.angularSpeed = this.getAngularSpeedForTrack(projection);
             this.car.targetSpeed = this.getTargetSpeed(projection);
-            // if (this.car['color'].equals(new THREE.Color('green'))) {
-            //     console.log(this.car.targetSpeed);
-            // }
         }
     }
 
