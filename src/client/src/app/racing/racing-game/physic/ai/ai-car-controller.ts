@@ -32,6 +32,9 @@ export class AiCarController extends CarController {
             const projection = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
             this.car.angularSpeed = this.getAngularSpeedForTrack(projection);
             this.car.targetSpeed = this.getTargetSpeed(projection);
+            // if (this.car['color'].equals(new THREE.Color('green'))) {
+            //     console.log(this.car.targetSpeed);
+            // }
         }
     }
 
@@ -60,12 +63,16 @@ export class AiCarController extends CarController {
     }
 
     private getTargetSpeed(projection: Projection): number {
+        const MIN_ANGLE = Math.PI / 4, MAX_ANGLE = 3 * Math.PI / 4;
         const distanceToEndOfSegment = projection.segment.length * Math.clamp(1 - projection.interpolation, 0, 1);
         const nextSegmentIndex = (this.trackLines.findIndex(line => line.equals(projection.segment)) + 1) % this.trackLines.length;
-        const angleFactor = Math.clamp(1 - this.getVectorFromPoint(projection.segment.translation).angleTo(
-            this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation)) / (3 * Math.PI / 2), 0, 1) ** 0.5;
+        const angle = this.getVectorFromPoint(projection.segment.translation).angleTo(
+            this.getVectorFromPoint(this.trackLines[nextSegmentIndex].translation));
+        const angleRatio = Math.clamp(angle - MIN_ANGLE, 0, MAX_ANGLE - MIN_ANGLE) / (MAX_ANGLE - MIN_ANGLE);
+        const angleFactor = Math.clamp(1 - angleRatio, 0, 1);
         const speedFactor = (distanceToEndOfSegment < AiCarController.THRESHOLD_TO_SLOW) ?
-            angleFactor * (2 * distanceToEndOfSegment + AiCarController.THRESHOLD_TO_SLOW) / (3 * AiCarController.THRESHOLD_TO_SLOW) : 1;
+            ((1 - angleFactor) * distanceToEndOfSegment + angleFactor * AiCarController.THRESHOLD_TO_SLOW) /
+                (AiCarController.THRESHOLD_TO_SLOW) : 1;
         return CarPhysic.DEFAULT_TARGET_SPEED * speedFactor;
     }
 

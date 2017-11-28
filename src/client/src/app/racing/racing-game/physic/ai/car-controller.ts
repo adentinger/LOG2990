@@ -13,6 +13,8 @@ export abstract class CarController {
     public constructor(public readonly car: Car) {
         car.targetSpeed = 0;
         car.targetAngularSpeed = 0;
+        car.speed = 0;
+        car.angularSpeed = 0;
     }
 
     public start(): void {
