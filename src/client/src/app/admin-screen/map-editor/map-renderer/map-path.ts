@@ -48,8 +48,7 @@ export class MapPath implements Drawable {
                     return null;
                 }
             }
-            else { // I prefer a good ol' if-else, even though the else is not
-                   // necessary.
+            else {
                 return new FirstMapPoint(this.context, point.x, point.y);
             }
         }).filter(value => value !== null);
