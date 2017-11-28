@@ -44,6 +44,7 @@ export class AiCarController extends CarController {
             const carPosition = this.getPointFromVector(this.car.position);
             const projectionOfCar = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
             this.car.angularSpeed = this.getAngularSpeedForFollowingTrack(carPosition, projectionOfCar);
+            this.car.angularSpeed += this.getAngularSpeedForObstacles(carPosition);
             this.car.targetSpeed = this.getTargetSpeedForFollowingTrack(projectionOfCar);
         }
     }
@@ -90,17 +91,23 @@ export class AiCarController extends CarController {
         return CarPhysic.DEFAULT_TARGET_SPEED * speedFactor;
     }
 
-    private getAngularSpeedForObstacles(): number {
-        return 0;
+    private getAngularSpeedForObstacles(carPosition: Point): number {
+        let angularSpeed = 0;
+        this.obstacles.forEach((obstacle) => {
+            angularSpeed += this.getAngularSpeedForObstacle(carPosition, obstacle);
+        });
+        return angularSpeed;
     }
 
     private getAngularSpeedForObstacle(carPosition: Point, obstacle: Obstacle): number {
         let angularSpeed: number;
         const obstaclePosition = this.getPointFromVector(obstacle.position);
         const vectorToObstacle = this.getVectorToObstacle(carPosition, obstaclePosition);
-        const crossValue = this.car.front.cross(vectorToObstacle.clone().normalize()).length();
+        const crossValue = this.car.front.cross(vectorToObstacle.clone().normalize()).dot(UP_DIRECTION);
+        const dotValue = this.car.front.dot(vectorToObstacle.clone().normalize());
         const distanceToObstacle = Math.max(1, vectorToObstacle.length());
-        angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * crossValue * (5 / distanceToObstacle);
+        const obstacleWeight = OBSTACLE_WEIGHTS.get(obstacle.constructor) || 0;
+        angularSpeed = obstacleWeight * CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * dotValue * crossValue * (30 / distanceToObstacle);
         return Math.clamp(angularSpeed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
