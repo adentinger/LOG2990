@@ -107,11 +107,9 @@ export class PhysicUtils {
     }
 
     private areEnoughCloseToCollide(target: Collidable, source: Collidable): boolean {
-        target.geometry.boundingBox || target.geometry.computeBoundingBox();
-        source.geometry.boundingBox || source.geometry.computeBoundingBox();
-        const targetRadius = target.geometry.boundingBox.max.sub(target.geometry.boundingBox.min).length();
-        const sourceRadius = source.geometry.boundingBox.max.sub(source.geometry.boundingBox.min).length();
-        return target.position.distanceTo(source.position) <= targetRadius + sourceRadius;
+        const targetBox = new THREE.Box3().setFromObject(target);
+        const sourceBox = new THREE.Box3().setFromObject(source);
+        return targetBox.intersectsBox(sourceBox);
     }
 
     private getFirstIntersection(targetLines: Line[], sourceLines: Line[]): [Line, Line, Point][] {
