@@ -11,12 +11,13 @@ export class GameInfo {
     private startTime: Seconds;
     private lapTimesInternal = new Array(this.maxLap).fill(0);
 
-    public get lap(): number {
-        return 1;
+    public get userLapCompletionInPercent(): number {
+        return this.carsProgressionService.userLapProgressionInPercent;
     }
 
-    public get userLapCompletion(): number {
-        return this.carsProgressionService.userLapCompletion;
+    public get userLapNumber(): number {
+        // return Math.floor(this.carsProgressionService.userLapCompletion);
+        return this.carsProgressionService.userLapsCount;
     }
 
     public getPosition(car: Car): Progression {
@@ -24,7 +25,7 @@ export class GameInfo {
     }
 
     public get lapTimes(): Seconds[] {
-        this.lapTimesInternal[this.lap - 1] = Date.now() / 1000 - this.startTime;
+        // this.lapTimesInternal[this.lap - 1] = Date.now() / 1000 - this.startTime;
         return this.lapTimesInternal;
     }
 

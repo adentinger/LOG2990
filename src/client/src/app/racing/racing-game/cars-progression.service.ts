@@ -5,16 +5,13 @@ import { Seconds } from '../../types';
 import { CarController } from './physic/ai/car-controller';
 import { Car } from './models/car/car';
 import { Line } from '../../../../../common/src/math/line';
-import { Progression, LapProgression } from './racing-types';
+import { LapProgression } from './racing-types';
 import { Projection } from '../../util/projection';
 import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
+import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
-enum LapState {
-    firstHalf,
-    secondHalf,
-}
 
 @Injectable()
 /**
@@ -23,15 +20,24 @@ enum LapState {
  */
 export class CarsProgressionService {
 
-    public userLapCompletion = 0;
+    public carsLapProgression: Map<Car, number> = new Map();
+    public carsLapNumber: Map<Car, number> = new Map();
 
-    private progressionUpdateCounter = 0;
-    private carProgressions: Map<Car, Progression> = new Map();
-    private carLapStates: Map<Car, LapState> = new Map();
+    public get userLapsCount(): number {
+        return this.carsLapNumber.get(this.userCar);
+    }
+
+    public get userLapProgressionInPercent(): number {
+        return Math.floor((this.carsLapProgression.get(this.userCar) % 1) * 100);
+    }
+
+    private carsHalfMark: Map<Car, boolean> = new Map();
+
     private controllers: CarController[] = [];
+    private userCar: Car;
     private mapLines: Line[];
     private mapLength: number;
-    private userCar: Car;
+    private progressionUpdateCounter = 0;
 
     public constructor(private eventManager: EventManager) {
         eventManager.registerClass(this);
@@ -42,8 +48,9 @@ export class CarsProgressionService {
         this.mapLines = mapLines;
         this.controllers = controllers;
         for (const controller of controllers) {
-            this.carProgressions.set(controller.car, 0);
-            this.carLapStates.set(controller.car, 0);
+            this.carsLapProgression.set(controller.car, 0);
+            this.carsLapNumber.set(controller.car, 1);
+            this.carsHalfMark.set(controller.car, false);
             if (controller instanceof UserCarController) {
                 this.userCar = controller.car;
             }
@@ -58,8 +65,17 @@ export class CarsProgressionService {
     private updateCarsProgression(event: EventManager.Event<{ deltaTime: Seconds }>): void {
         if (++this.progressionUpdateCounter === 30) {
             this.progressionUpdateCounter = 0;
-            // console.log(Math.round(this.computeLapProgression(this.userCar) * 100) + ' / ' + 100);
-            this.userLapCompletion = Math.round(this.computeLapProgression(this.userCar) * 100);
+            for (const controller of this.controllers) {
+                const newLapProgression: number = this.computeLapProgression(controller.car);
+                if (newLapProgression > 0.45 && newLapProgression < 0.55) {
+                    this.carsHalfMark.set(controller.car, true);
+                }
+                else if (newLapProgression < 0.5 && this.carsHalfMark.get(controller.car)) {
+                    this.carsHalfMark.set(controller.car, false);
+                    this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
+                }
+                this.carsLapProgression.set(controller.car, this.computeLapProgression(controller.car));
+            }
         }
     }
 
@@ -74,8 +90,6 @@ export class CarsProgressionService {
 
         const currentSegment: number = this.mapLines.indexOf(projection.segment);
 
-        // console.log('current segment = ' + projection.segment.origin.x + ' , ' + projection.segment.origin.y);
-
         // Add completed segments
         for (let i = 0; i < currentSegment; ++i) {
             progression += this.mapLines[i].length;
@@ -88,5 +102,9 @@ export class CarsProgressionService {
         progression /= this.mapLength;
 
         return progression;
+    }
+
+    private toFixedLength(n: number): number {
+        return Math.floor(n * 100);
     }
 }

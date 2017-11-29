@@ -75,7 +75,7 @@ export class HUD {
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        this.context.fillText(`${game.lap}/${game.maxLap} laps     ${game.userLapCompletion}%`,
+        this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
             textPosition.x, textPosition.y);
 
     }
@@ -83,7 +83,7 @@ export class HUD {
     private drawLapTime(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_TIME_POSITION);
 
-        const lapTime = this.getTime(game.lapTimes[game.lap - 1]);
+        const lapTime = this.getTime(game.lapTimes[game.userLapNumber - 1]);
         const currentTime = this.formatTime(lapTime);
         this.context.fillText(`Lap time: ${currentTime}`,
             textPosition.x, textPosition.y);
