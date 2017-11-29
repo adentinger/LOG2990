@@ -17,12 +17,12 @@ import '../../../../../../../common/src/math/clamp';
 import { Puddle } from '../../models/obstacles/puddle';
 
 const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
-    [Pothole, -0.75],
+    [Pothole, -1],
     [Puddle, -1],
-    [SpeedBooster, 0.1]
+    [SpeedBooster, 0.2]
 ] as [Class<Obstacle>, number][]);
 
-const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.5;
+const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
     private static readonly UPDATE_PERIODE = 2; // cycles
@@ -58,7 +58,7 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-        return Math.clamp(7 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+        return Math.clamp(2 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getVectorToTarget(carPosition: Point, distanceFromBeginning: Meters): THREE.Vector3 {
@@ -129,13 +129,8 @@ export class AiCarController extends CarController {
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
             obstacleWeight *
             frontalAvoidanceFactor * lateralAvoidingDirection *
-            (DISTANCE_TO_START_AVOIDING / distanceToObstacle) ** 2;
+            Math.pow(DISTANCE_TO_START_AVOIDING / distanceToObstacle, 2);
         return Math.clamp(angularSpeed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
-    }
-
-    private getVectorToPoint(carPosition: Point, targetPoint: Point): THREE.Vector3 {
-        const point = new Point(targetPoint.x - carPosition.x, targetPoint.y - carPosition.y);
-        return this.convertToVector3(point);
     }
 
     private getAngularSpeedForOpponents(carPosition: Point): number {
@@ -146,7 +141,29 @@ export class AiCarController extends CarController {
     }
 
     private getAngularSpeedForOpponent(carPosition: Point, opponentCar: Car): number {
-        return 0;
+        const DISTANCE_TO_START_AVOIDING = 3;
+
+        let angularSpeed: number;
+        const opponentPosition = this.convertToVector(opponentCar.position);
+        const relativePosition = this.getVectorToPoint(carPosition, opponentPosition);
+        const relativeVelocity = opponentCar.velocity.clone().sub(this.car.velocity);
+        const normalizedRelativePosition = relativePosition.clone().normalize();
+        const normalizedRelativeVelocity = relativeVelocity.clone().normalize();
+
+        const direction = Math.pow((-normalizedRelativeVelocity.dot(normalizedRelativePosition) + 1) / 2, 2);
+        const lateralAvoidanceFactor = this.car.front.cross(normalizedRelativeVelocity).dot(UP_DIRECTION);
+        const frontalAvoidanceFactor = this.car.front.dot(normalizedRelativeVelocity);
+        const distanceToOpponent = Math.max(1, relativePosition.length());
+
+        angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
+            lateralAvoidanceFactor * direction *
+            Math.pow(DISTANCE_TO_START_AVOIDING / distanceToOpponent, 2);
+        return Math.clamp(angularSpeed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+    }
+
+    private getVectorToPoint(carPosition: Point, targetPoint: Point): THREE.Vector3 {
+        const point = new Point(targetPoint.x - carPosition.x, targetPoint.y - carPosition.y);
+        return this.convertToVector3(point);
     }
 
     private convertToVector3(point: Point): THREE.Vector3 {

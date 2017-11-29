@@ -121,7 +121,9 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
 
     private updateEnginePitch(): void {
         const PITCH_FACTOR = 1.2;
-        const playbackRate = PITCH_FACTOR * (this.velocity.length() / CarPhysic.DEFAULT_TARGET_SPEED) + MIN_RATE;
+        let currentSpeed = this.velocity.length();
+        currentSpeed = Number.isFinite(currentSpeed) ? currentSpeed : 0;
+        const playbackRate = PITCH_FACTOR * (currentSpeed / CarPhysic.DEFAULT_TARGET_SPEED) + MIN_RATE;
         if (this.constantAudios.has(Sound.CAR_ENGINE)) {
             this.constantAudios.get(Sound.CAR_ENGINE).setPlaybackRate(playbackRate);
         }
