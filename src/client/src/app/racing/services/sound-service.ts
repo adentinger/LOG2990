@@ -135,7 +135,9 @@ export class SoundService implements Loadable {
         if (this.registeredListener != null && 'onListenerRemove' in this.registeredListener) {
             this.registeredListener.onListenerRemove(SoundService.AUDIO_LISTENER);
         }
-        delete this.registeredListener.listener;
+        if (this.registeredListener.listener != null) {
+            delete this.registeredListener.listener;
+        }
     }
 
     public setAbmiantSound(soundIndex: Sound): Promise<void> {
