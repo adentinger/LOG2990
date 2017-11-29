@@ -40,7 +40,7 @@ export class AiCarController extends CarController {
     private onAfterPhysicUpdate(event: EventManager.Event<{ deltaTime: Seconds }>): void {
         if (++this.cycleCount >= AiCarController.UPDATE_PERIODE && this.state === CarControllerState.ENABLED) {
             this.cycleCount = 0;
-            const carPosition = this.getVectorFromVector3(this.car.position);
+            const carPosition = this.convertToVector(this.car.position);
             const projectionOfCar = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
 
             this.car.angularSpeed =
@@ -63,7 +63,7 @@ export class AiCarController extends CarController {
 
     private getVectorToTarget(carPosition: Point, distanceFromBeginning: Meters): THREE.Vector3 {
         const DISTANCE_OF_TARGET_FROM_CAR: Meters = 10;
-        return this.getVectorFromPoint(MapPositionAlgorithms.getPointAtGivenDistance(
+        return this.convertToVector3(MapPositionAlgorithms.getPointAtGivenDistance(
             distanceFromBeginning + DISTANCE_OF_TARGET_FROM_CAR, this.trackLines).substract(carPosition));
     }
 
@@ -88,8 +88,8 @@ export class AiCarController extends CarController {
         const nextSegmentIndex = (this.trackLines.findIndex(line => line.equals(projection.segment)) + 1) % this.trackLines.length;
         const nextSegment = this.trackLines[nextSegmentIndex];
 
-        const angleBetweenLines = this.getVectorFromPoint(projection.segment.translation).angleTo(
-            this.getVectorFromPoint(nextSegment.translation));
+        const angleBetweenLines = this.convertToVector3(projection.segment.translation).angleTo(
+            this.convertToVector3(nextSegment.translation));
         const normalizedAngle = Math.clamp(angleBetweenLines - MIN_ANGLE, 0, ANGLE_RANGE) / ANGLE_RANGE;
         const angleFactor = Math.clamp(1 - normalizedAngle, 0, 1);
 
@@ -115,8 +115,8 @@ export class AiCarController extends CarController {
             MAX_FRONT_AVOIDANCE = 1;
 
         let angularSpeed: number;
-        const obstaclePosition = this.getVectorFromVector3(obstacle.position);
-        const vectorToObstacle = this.getVectorToObstacle(carPosition, obstaclePosition);
+        const obstaclePosition = this.convertToVector(obstacle.position);
+        const vectorToObstacle = this.getVectorToPoint(carPosition, obstaclePosition);
         const normalizedVectorToObstacle = vectorToObstacle.clone().normalize();
         const obstacleWeight = OBSTACLE_WEIGHTS.get(obstacle.constructor) || DEFAULT_WEIGHT;
 
@@ -133,9 +133,9 @@ export class AiCarController extends CarController {
         return Math.clamp(angularSpeed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
-    private getVectorToObstacle(carPosition: Point, obstaclePosition: Point): THREE.Vector3 {
-        const point = new Point(obstaclePosition.x - carPosition.x, obstaclePosition.y - carPosition.y);
-        return this.getVectorFromPoint(point);
+    private getVectorToPoint(carPosition: Point, targetPoint: Point): THREE.Vector3 {
+        const point = new Point(targetPoint.x - carPosition.x, targetPoint.y - carPosition.y);
+        return this.convertToVector3(point);
     }
 
     private getAngularSpeedForOpponents(carPosition: Point): number {
@@ -149,11 +149,11 @@ export class AiCarController extends CarController {
         return 0;
     }
 
-    private getVectorFromPoint(point: Point): THREE.Vector3 {
+    private convertToVector3(point: Point): THREE.Vector3 {
         return new THREE.Vector3(point.x, 0, point.y);
     }
 
-    private getVectorFromVector3(vector: THREE.Vector3): Vector {
+    private convertToVector(vector: THREE.Vector3): Vector {
         return new Vector(vector.x, vector.z);
     }
 }
