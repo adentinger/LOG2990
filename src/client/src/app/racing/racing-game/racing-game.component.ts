@@ -23,7 +23,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
     private static readonly ZOOM_FACTOR = 1.025;
     private static readonly COLOR_FILTERS = ['normal', 'protanopia', 'protanomaly', 'deuteranopia',
-    'deuteranomaly', 'tritanopia', 'tritanomaly', 'achromatopsia', 'achromatomaly'];
+        'deuteranomaly', 'tritanopia', 'tritanomaly', 'achromatopsia', 'achromatomaly'];
 
     public gameLoaded = false;
     public colorFilterClass = RacingGameComponent.COLOR_FILTERS[0];
@@ -44,15 +44,15 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
+                this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });
-
-        this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
     public ngOnDestroy() {
+        this.gameLoaded = false;
         this.racingGame.finalize();
     }
 
