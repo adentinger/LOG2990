@@ -15,7 +15,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
-import { Sound } from '../services/sound';
+import { Sound } from './sound/sound';
 import { CarsPositionsService } from './cars-positions.service';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
@@ -117,31 +117,27 @@ export class RacingGameService {
         // If the game is stopping before it was loaded, then don't start anything.
         Promise.race([
             this.waitToLoad,
-            this.waitToFinalize.toPromise().then(() => { throw void (0); })
+            this.waitToFinalize.toPromise().then(() => { throw void 0; })
         ]).then(() => {
             this.renderer.startRendering();
             this.startTime = Date.now() / 1000;
             this.soundService.setAbmiantSound(Sound.START_SOUND);
-            this.waitToLoad.then(() => {
-                this.soundService.playAmbiantSound(false)
-                    .then(() => this.soundService.setAbmiantSound(Sound.TETRIS))
-                    .then(() => {
-                        this.soundService.playAmbiantSound(true);
-                    });
-                return new Promise((resolve) => setTimeout(resolve, RacingGameService.COUNTDOWN_DURATION * 1000));
-            })
-                .then(() => {
-                    this.physicEngine.start();
-                    this.startTime = Date.now() / 1000;
-                    const event: EventManager.Event<void> = {name: GAME_START_EVENT, data: void 0};
-                    this.eventManager.fireEvent(event.name, event);
-                    this.controllers.forEach(controller => controller.start());
-                });
-        }, () => logger.warn('Initialization interrupted'));
+        }, () => logger.warn('Initialization interrupted')).then(() => {
+            this.soundService.playAmbiantSound(false)
+                .then(() => this.soundService.setAbmiantSound(Sound.TETRIS))
+                .then(() => this.soundService.playAmbiantSound(true));
+            return new Promise((resolve) => setTimeout(resolve, RacingGameService.COUNTDOWN_DURATION * 1000));
+        }).then(() => {
+            this.physicEngine.start();
+            this.startTime = Date.now() / 1000;
+            const event: EventManager.Event<void> = { name: GAME_START_EVENT, data: void 0 };
+            this.eventManager.fireEvent(event.name, event);
+            this.controllers.forEach(controller => controller.start());
+        });
     }
 
     public finalize() {
-        this.finalizeSubject.next(); // Notify that the game (forcefully) Stops
+        this.finalizeSubject.next();
 
         this.physicEngine.stop();
         this.renderer.stopRendering();
