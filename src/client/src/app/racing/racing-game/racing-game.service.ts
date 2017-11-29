@@ -107,7 +107,7 @@ export class RacingGameService {
         userCarController.setUIInput(userInputs);
         this.renderer.setCamerasTarget(userCarController.car);
 
-        this.controllers.forEach(controller => controller.setupContoller(this.map));
+        this.controllers.forEach(controller => controller.setupContoller(this.map, this.cars));
         this.reloadSounds();
 
         this.cars.forEach(this.soundService.registerEmitter, this.soundService);

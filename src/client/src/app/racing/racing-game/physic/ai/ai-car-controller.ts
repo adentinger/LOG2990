@@ -43,8 +43,10 @@ export class AiCarController extends CarController {
             const carPosition = this.getVectorFromVector3(this.car.position);
             const projectionOfCar = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
 
-            this.car.angularSpeed = this.getAngularSpeedForFollowingTrack(carPosition, projectionOfCar);
-            this.car.angularSpeed += this.getAngularSpeedForObstacles(carPosition);
+            this.car.angularSpeed =
+                this.getAngularSpeedForFollowingTrack(carPosition, projectionOfCar) +
+                this.getAngularSpeedForObstacles(carPosition) +
+                this.getAngularSpeedForOpponents(carPosition);
             this.car.targetSpeed = this.getTargetSpeedForFollowingTrack(projectionOfCar);
         }
     }
@@ -134,6 +136,17 @@ export class AiCarController extends CarController {
     private getVectorToObstacle(carPosition: Point, obstaclePosition: Point): THREE.Vector3 {
         const point = new Point(obstaclePosition.x - carPosition.x, obstaclePosition.y - carPosition.y);
         return this.getVectorFromPoint(point);
+    }
+
+    private getAngularSpeedForOpponents(carPosition: Point): number {
+        let angularSpeed = 0;
+        this.opponentsCars.forEach((opponentCar) =>
+            angularSpeed += this.getAngularSpeedForOpponent(carPosition, opponentCar));
+        return angularSpeed;
+    }
+
+    private getAngularSpeedForOpponent(carPosition: Point, opponentCar: Car): number {
+        return 0;
     }
 
     private getVectorFromPoint(point: Point): THREE.Vector3 {

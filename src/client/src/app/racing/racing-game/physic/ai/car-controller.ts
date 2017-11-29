@@ -12,6 +12,7 @@ export abstract class CarController {
     protected state = CarControllerState.DISABLED;
     protected readonly trackLines: Line[] = [];
     protected readonly obstacles: Obstacle[] = [];
+    protected readonly opponentsCars: Car[] = [];
 
     public constructor(public readonly car: Car) {
         car.targetSpeed = 0;
@@ -32,12 +33,14 @@ export abstract class CarController {
         this.state = CarControllerState.DISABLED;
     }
 
-    public setupContoller(map: RenderableMap): void {
+    public setupContoller(map: RenderableMap, cars: Car[]): void {
         // Clear arrays
         this.trackLines.splice(0);
         this.obstacles.splice(0);
+        this.opponentsCars.splice(0);
 
         this.trackLines.push(...map.mapLines);
         this.obstacles.push(...map.mapObstacles);
+        this.opponentsCars.push(...cars.filter((car) => car !== this.car));
     }
 }
