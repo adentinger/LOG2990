@@ -39,6 +39,10 @@ export class RacingGameService {
 
     private userInputs: UIInputs = null;
 
+    public get lap(): number {
+        return this.info.maxLap;
+    }
+
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         private eventManager: EventManager,
