@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WaitingService } from './waiting.service';
-import { GameService } from '../../game.service';
+
+import { GameService, GameState } from '../../game.service';
 
 @Component({
     selector: 'app-waiting',
@@ -18,8 +18,11 @@ export class WaitingComponent implements OnInit {
         }
     }
 
-    constructor(public waitingService: WaitingService,
-                private gameService: GameService) { }
+    public get isWaiting(): boolean {
+        return this.gameService.stateValue === GameState.waiting;
+    }
+
+    constructor(private gameService: GameService) { }
 
     public ngOnInit(): void {
     }
