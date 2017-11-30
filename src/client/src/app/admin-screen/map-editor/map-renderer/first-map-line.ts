@@ -36,7 +36,7 @@ export class FirstMapLine extends AbstractMapLine {
             this.context.moveTo(currentPosition.x, currentPosition.y);
             currentPosition = currentPosition.plus(POSITION_INCREMENT);
             this.context.lineTo(currentPosition.x, currentPosition.y);
-            this.context.lineWidth = WIDTH;
+            this.context.lineWidth = this.width;
             this.context.strokeStyle = this.colors.getColorOf(currentColor);
             this.context.stroke();
             currentColor = (currentColor === 'line1') ? 'line2' : 'line1';
@@ -53,7 +53,7 @@ export class FirstMapLine extends AbstractMapLine {
                     .plus(this.translation.normalized().times(STARTING_GRID_LENGTH));
             this.context.moveTo(EXTENSION_START.x, EXTENSION_START.y);
             this.context.lineTo(this.destination.x, this.destination.y);
-            this.context.lineWidth = WIDTH;
+            this.context.lineWidth = this.width;
             this.context.strokeStyle = this.colors.getColorOf('line');
             this.context.stroke();
         }

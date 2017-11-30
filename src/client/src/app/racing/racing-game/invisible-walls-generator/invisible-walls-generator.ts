@@ -7,7 +7,7 @@ import { Building } from '../models/decoration/building';
 import { Vector } from '../../../../../../common/src/math/vector';
 import { Line } from '../../../../../../common/src/math/index';
 
-const segmentTranslation = Track.SEGMENT_WIDTH / 2;
+const segmentTranslation = (Track.SEGMENT_WIDTH + InvisibleWall.WALL_DEPTH) / 2;
 const startingInterpolationLowerWall = 0.25;
 const startingInterpolationUpperWall = 0.75;
 
