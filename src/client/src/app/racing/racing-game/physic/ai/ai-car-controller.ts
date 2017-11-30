@@ -58,7 +58,7 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-        return Math.clamp(2 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+        return Math.clamp(7 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getVectorToTarget(carPosition: Point, distanceFromBeginning: Meters): THREE.Vector3 {
