@@ -20,6 +20,10 @@ export class CarPartsLoader {
         'windows'
     ];
 
+    private static readonly COLORED_PART_NAMES = [
+        'body'
+    ];
+
     private static readonly SHININESS = 1000;
 
     // has to be public to be able to get the car's dimensions
@@ -50,10 +54,7 @@ export class CarPartsLoader {
 
     private static loadColoredCarParts(): Promise<THREE.Mesh[]> {
         const COLORED_CAR_PARTS: Promise<THREE.Mesh>[] = [];
-        const COLORED_PART_NAMES = [
-            'body'
-        ];
-        COLORED_PART_NAMES.forEach((partName) => {
+        CarPartsLoader.COLORED_PART_NAMES.forEach((partName) => {
             COLORED_CAR_PARTS.push(
                 this.loadCarPart(partName)
                     .then((bodyMesh) => {
