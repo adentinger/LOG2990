@@ -76,23 +76,33 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
     }
 
     private flattenSinglePosition(rawDisplacement: number, distanceToTrack: number): number {
+
         // For formula, see doc/architectures/formula_displacement_factor.jpg
-        const distaneMin = Track.SEGMENT_WIDTH;
-        const distanceAtModulation = Track.SEGMENT_WIDTH * 4;
-        const distanceAtMax = Track.SEGMENT_WIDTH * 20;
+
+        const c = 2 / Track.SEGMENT_WIDTH;
+        const d = 4;
+        const distanceMin = Track.SEGMENT_WIDTH;
+        const distanceAtModulation = Track.SEGMENT_WIDTH * 2;
+        const distanceAtMax = 2 * d / c + distanceAtModulation;
 
         const factorMedium = 0.02;
 
         let displacementFactor: number;
-        if (distanceToTrack < distaneMin) {
+        if (distanceToTrack < distanceMin) {
             displacementFactor = 0;
         }
         else if (distanceToTrack < distanceAtModulation) {
             displacementFactor = factorMedium;
         }
         else if (distanceToTrack < distanceAtMax) {
+            const arctanIncrement = 0.5;
             displacementFactor =
-                -Math.exp(-distanceToTrack + distanceAtModulation + Math.log(1 - factorMedium)) + 1;
+                (1 - factorMedium) *
+                (
+                    Math.atan(c * (distanceToTrack - distanceAtModulation) - d)
+                    / Math.PI + arctanIncrement
+                )
+                + factorMedium;
         }
         else {
             displacementFactor = 1;
