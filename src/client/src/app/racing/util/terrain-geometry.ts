@@ -13,8 +13,8 @@ import { MapPositionAlgorithms } from './map-position-algorithms';
 export class TerrainGeometry extends THREE.PlaneGeometry {
 
     private static readonly terrainDisplacementMax = 50;
-    private static readonly widthSegments  = Math.ceil( Track.WIDTH_MAX / 3);
-    private static readonly heightSegments = Math.ceil(Track.HEIGHT_MAX / 3);
+    private static readonly widthSegments  = Math.ceil( Track.WIDTH_MAX / 2);
+    private static readonly heightSegments = Math.ceil(Track.HEIGHT_MAX / 2);
 
     /**
      * @argument track The track. Must be relative to the geometry's center (0, 0, 0).

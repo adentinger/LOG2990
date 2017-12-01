@@ -3,10 +3,9 @@ import { IPhysicElement, isPhysicElement } from './object';
 import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import { Point, Line } from '../../../../../../common/src/math';
 import { EventManager } from '../../../event-manager.service';
+import { COLLISION_EVENT } from '../../constants';
 
 export const UP_DIRECTION = new THREE.Vector3(0, 1, 0);
-
-export const COLLISION_EVENT = 'physic-collision';
 
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg
@@ -24,6 +23,17 @@ export class PhysicUtils {
         obj.rotation.fromArray(rotation);
         box1.translate(obj.position.clone().negate());
         return new THREE.Vector3().subVectors(box1.max, box1.min);
+    }
+
+    public static getChildren(object: THREE.Object3D): THREE.Object3D[] {
+        const children: THREE.Object3D[] = [];
+        if (object) {
+            children.push(...object.children);
+            for (const child of object.children) {
+                children.push(...PhysicUtils.getChildren(child));
+            }
+        }
+        return children;
     }
 
     public setRoot(root: THREE.Object3D): void {
@@ -47,7 +57,7 @@ export class PhysicUtils {
 
     public getAllPhysicObjects(): IPhysicElement[] {
         const objects: THREE.Object3D[] = [this.root];
-        objects.push(...this.getChildren(this.root));
+        objects.push(...PhysicUtils.getChildren(this.root));
         return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
     }
 
@@ -199,17 +209,6 @@ export class PhysicUtils {
 
     private getVector3FromPoint(point: Point): THREE.Vector3 {
         return new THREE.Vector3(point.x, 0, point.y);
-    }
-
-    private getChildren(object: THREE.Object3D): THREE.Object3D[] {
-        const children: THREE.Object3D[] = [];
-        if (object) {
-            children.push(...object.children);
-            for (const child of object.children) {
-                children.push(...this.getChildren(child));
-            }
-        }
-        return children;
     }
 }
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { EventManager } from '../../event-manager.service';
-import { AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 import { Seconds } from '../../types';
 import { CarController } from './physic/ai/car-controller';
 import { Car } from './models/car/car';
@@ -10,11 +9,19 @@ import { Projection } from '../util/projection';
 import { MapPositionAlgorithms } from '../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
+import { AFTER_PHYSIC_UPDATE_EVENT } from '../constants';
 
+export const CAR_LAP_UPDATE = 'carlapupdate';
+
+export interface RaceCompletionInfo {
+    car: Car;
+    lap: number;
+    isUser: boolean;
+}
 
 @Injectable()
 /**
- * Keeps Track of the cars progression relative to the map
+ * Keeps Track of all cars progression relative to the map
  * (On a linear scale)
  */
 export class CarsProgressionService {
@@ -38,7 +45,7 @@ export class CarsProgressionService {
     private mapLength: number;
     private progressionUpdateCounter = 0;
 
-    public constructor(eventManager: EventManager) {
+    public constructor(private eventManager: EventManager) {
         eventManager.registerClass(this);
     }
 
@@ -56,8 +63,19 @@ export class CarsProgressionService {
         }
     }
 
+    private get cars(): Car[] {
+        return this.controllers.map((controller) => controller.car);
+    }
+
     public computeUserRank(): number {
-        return 1;
+        const sortedCars: Car[] = this.cars.sort(this.compareCarPosition.bind(this));
+        return sortedCars.indexOf(this.userCar) + 1;
+    }
+
+    private compareCarPosition(carA: Car, carB: Car): number {
+        const progressionA: number = this.carsLapNumber.get(carA) + this.carsLapProgression.get(carA);
+        const progressionB: number = this.carsLapNumber.get(carB) + this.carsLapProgression.get(carB);
+        return (progressionB - progressionA);
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
@@ -70,9 +88,18 @@ export class CarsProgressionService {
                 if (newLapProgression > 0.45 && newLapProgression < 0.55) {
                     this.carsHalfMark.set(controller.car, true);
                 }
-                else if (newLapProgression < 0.5 && this.carsHalfMark.get(controller.car)) {
+                else if (newLapProgression < 0.05 && this.carsHalfMark.get(controller.car)) {
                     this.carsHalfMark.set(controller.car, false);
                     this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
+                    const info: RaceCompletionInfo = {
+                        car: controller.car,
+                        lap: this.carsLapNumber.get(controller.car),
+                        isUser: (controller instanceof UserCarController)
+                    };
+                    this.eventManager.fireEvent(CAR_LAP_UPDATE, {
+                        name: CAR_LAP_UPDATE,
+                        data: info
+                    });
                 }
                 this.carsLapProgression.set(controller.car, this.computeLapProgression(controller.car));
             }

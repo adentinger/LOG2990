@@ -4,9 +4,11 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
+import { MapRatingComponent } from './game-result/map-rating/map-rating.component';
+import { KEYDOWN_EVENT } from '../constants';
 
 @Component({
     selector: 'app-racing-game',
@@ -34,6 +36,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
+    @ViewChild(MapRatingComponent)
+    private mapRating: MapRatingComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -44,15 +48,17 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
+                this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });
-
+        this.mapRating.ngOnInit();
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
     public ngOnDestroy() {
+        this.gameLoaded = false;
         this.racingGame.finalize();
     }
 
@@ -97,12 +103,25 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
         }
 
+        if (this.uiInputs.isKeyPressed('x')) {
+            this.displayable();
+        }
+
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
             this.uiInputs.isKeyPressed('f5');
 
         if (!areAllowedKeyCombinationsPressed) {
             return false; // Prevent Default behaviors
+        }
+    }
+
+    private displayable(): void {
+        if (!this.mapRating.displayable) {
+            this.mapRating.displayable = true;
+        }
+        else {
+            this.mapRating.displayable = false;
         }
     }
 

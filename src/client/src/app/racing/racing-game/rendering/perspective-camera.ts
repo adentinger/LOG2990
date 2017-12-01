@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { EventManager } from '../../../event-manager.service';
-import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../physic/engine';
 import { SoundListener } from '../sound/sound-listener';
+import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../constants';
 
 export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundListener {
     public static readonly DRIVER_POSITION = new THREE.Vector3(-0.25, 1.15, -0.1);
@@ -14,8 +14,8 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundL
     private static readonly HEIGHT: number = window.innerHeight;
     private static readonly ASPECT: number = PerspectiveCamera.WIDTH / PerspectiveCamera.HEIGHT;
     private static readonly NEAR: number = 0.05;
-    private static readonly FAR: number = 300;
-    private static readonly VIEW_ANGLE: number = 45;
+    private static readonly FAR: number = 400;
+    private static readonly VIEW_ANGLE: number = 45 * 1.025 ** 20;
 
     private target: THREE.Object3D;
     public readonly name: string;
