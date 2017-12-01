@@ -43,7 +43,6 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         const terrainDisplacementUint8 = new Uint8Array(size);
 
         const perlin = new ImprovedNoise();
-        const perlinNoiseMax = 256;
         const z = Math.random() * 100;
 
         let quality = 1;
@@ -60,6 +59,7 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
         }
 
         // Convert Uint8 buffer to number array.
+        const perlinNoiseMax = 256;
         const terrainDisplacement: number[] = [];
         terrainDisplacementUint8.forEach(height => terrainDisplacement.push(Number(height) / perlinNoiseMax));
         return terrainDisplacement;
