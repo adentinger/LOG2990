@@ -27,7 +27,6 @@ const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
     private static readonly UPDATE_PERIODE = 5; // cycles
-    private static readonly THRESHOLD_DISTANCE_TO_SLOW: Meters = 30;
 
     private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
     private mode: AiMode;
@@ -156,11 +155,13 @@ export class AiCarController extends CarController {
         const normalizedRelativeVelocity = relativeVelocity.clone().normalize();
 
         const direction = Math.pow((-normalizedRelativeVelocity.dot(normalizedRelativePosition) + 1) / 2, 2);
-        const lateralAvoidanceFactor = this.car.front.cross(normalizedRelativeVelocity).dot(UP_DIRECTION);
+        const lateralAvoidanceFactor = this.car.front.cross(relativeVelocity).dot(UP_DIRECTION) - direction;
+        const frontalAvoidanceFactor = /* Math.sign(Math.max(0.0,
+            this.car.front.dot(normalizedRelativePosition))) */ 1;
         const distanceToOpponent = Math.max(1, relativePosition.length());
 
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
-            lateralAvoidanceFactor * direction *
+            lateralAvoidanceFactor * frontalAvoidanceFactor * direction *
             Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 2);
         return Math.clamp(this.mode.angularSpeedForOpponentsFactor * angularSpeed,
             -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);

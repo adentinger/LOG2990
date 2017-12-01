@@ -8,24 +8,24 @@ export interface AiWeights {
 
 export class AiMode {
     public static readonly AMATEUR = new AiMode(
-        { track: 1, obstacles: -0.3, opponents: 0 },
-        3,
-        0.5,
-        1,
-        10,
-        5,
-        5,
-        2
+        { track: 1, obstacles: -1, opponents: 1 },    // weights
+        3,                                            // track factor
+        1,                                          // obstacles factor
+        1,                                            // opponents factor
+        10,                                           // distance to target
+        5,                                            // distance for slowing
+        5,                                            // distance to avoid obstacles
+        2                                             // distance to avoid opponents
     );
     public static readonly PROFESSIONAL = new AiMode(
-        { track: 1, obstacles: 0.55, opponents: 0.2 },
-        10,
-        1,
-        4,
-        10,
-        10,
-        10,
-        5
+        { track: 1, obstacles: 0.8, opponents: 1 }, // weights
+        10,                                           // track factor
+        1,                                            // obstacles factor
+        3,                                            // opponents factor
+        20,                                           // distance to target
+        10,                                           // distance for slowing
+        10,                                           // distance to avoid obstacles
+        6                                             // distance to avoid opponents
     );
 
     private constructor(
