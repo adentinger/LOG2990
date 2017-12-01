@@ -1,6 +1,13 @@
-<div class='outer' [ngClass]="{hide_me: !displayable, show_me: displayable}" (click)="displayable = !displayable"  >
-    <div class='map-rating-menu' >
-        <h1>test</h1>
+<div class = 'outer'   >
+    <div class = 'map-rating-menu' >
+        <h1>Map Rating</h1>
+        <div class = 'five-stars'>
+            <img [src] = 'stars[0]' (mouseenter) = 'OnMouseOver(0)' (mouseleave) = 'OnMouseOut()'>
+            <img [src] = 'stars[1]' (mouseenter) = 'OnMouseOver(1)' (mouseleave) = 'OnMouseOut()'>
+            <img [src] = 'stars[2]' (mouseenter) = 'OnMouseOver(2)' (mouseleave) = 'OnMouseOut()'>
+            <img [src] = 'stars[3]' (mouseenter) = 'OnMouseOver(3)' (mouseleave) = 'OnMouseOut()'>
+            <img [src] = 'stars[4]' (mouseenter) = 'OnMouseOver(4)' (mouseleave) = 'OnMouseOut()'>
+        </div>
     </div>
 </div>
 

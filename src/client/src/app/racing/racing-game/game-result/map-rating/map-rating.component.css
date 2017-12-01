@@ -17,6 +17,7 @@
     border-bottom: 5px solid #383434;
     padding-bottom: 10px;
     color: black;
+    text-align: center;
 }
 
 .outer {
@@ -36,4 +37,13 @@
 .show_me {
     visibility: visible;
 }
+
+img {
+    width: 10%;
+}
+
+.five-stars {
+    text-align: center;
+}
+
 
