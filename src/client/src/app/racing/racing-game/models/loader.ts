@@ -17,9 +17,9 @@ export class Loader {
             this.jsonLoader.load(
                 url,
                 (geometry, materials) => {
-                    const CAR_PART = new THREE.Mesh(geometry, materials[0]);
-                    CAR_PART.name = name;
-                    resolve(CAR_PART);
+                    const part = new THREE.Mesh(geometry, materials[0]);
+                    part.name = name;
+                    resolve(part);
                 },
                 () => { },
                 (reason) => { this.logger.warn(reason); reject(reason); }
