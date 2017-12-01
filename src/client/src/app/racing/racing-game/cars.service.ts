@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { Injectable } from '@angular/core';
 import { Car } from './models/car/car';
-import { Line } from '../../../../../common/src/math/line';
 import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
@@ -12,7 +11,11 @@ import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
+import { PhysicUtils } from './physic/utils';
+import { GAME_COMPLETED_EVENT } from '../constants';
 
+const CAR_OPACITY_DEFAULT = 1;
+const CAR_OPACITY_TRANSPARENT = 0.4;
 
 @Injectable()
 export class CarsService implements Loadable {
@@ -36,6 +39,10 @@ export class CarsService implements Loadable {
         return this.controllers.map((controller) => controller.car);
     }
 
+    public get controller(): CarController[] {
+        return this.controllers;
+    }
+
     public constructor(
         eventManager: EventManager,
         private carsProgressionService: CarsProgressionService) {
@@ -54,11 +61,16 @@ export class CarsService implements Loadable {
         eventManager.registerClass(this);
     }
 
-    public initialize(soundService: SoundService, userInput: UIInputs, mapLines: Line[]) {
+    public initialize(soundService: SoundService, userInput: UIInputs, map: RenderableMap) {
         this.cars.forEach(soundService.registerEmitter, soundService);
         (this.controllers[this.userControllerIndex] as UserCarController).setUIInput(userInput);
-        this.controllers.forEach(controller => controller.setTrackLines(mapLines));
-        this.carsProgressionService.initialize(this.controllers, mapLines);
+        this.controllers.forEach(controller => {
+            controller.setupContoller(map, this.cars);
+            if (controller instanceof AiCarController) {
+                controller.setMode(map.mapMode);
+            }
+        });
+        this.carsProgressionService.initialize(this.controllers, map.mapLines);
     }
 
     public finalize() {
@@ -99,6 +111,23 @@ export class CarsService implements Loadable {
 
     public startControllers(): void {
         this.controllers.forEach(controller => controller.start());
+    }
+
+    public toggleCarColorTransparent(carIndex: number): void {
+        (PhysicUtils.getChildren(this.controllers[carIndex].car).filter((child) => child instanceof THREE.Mesh) as THREE.Mesh[])
+            .forEach((mesh) => {
+                const material = (<THREE.Material>mesh.material);
+                material.transparent = material.transparent ? false : true;
+                material.opacity = material.transparent ? CAR_OPACITY_TRANSPARENT : CAR_OPACITY_DEFAULT;
+            });
+    }
+
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private ghostModeAfterFinalLineCross(event: EventManager.Event<void>) {
+        console.log('HI');
+        this.toggleCarColorTransparent(0);
+        this.controller[0].stop();
     }
 
 }

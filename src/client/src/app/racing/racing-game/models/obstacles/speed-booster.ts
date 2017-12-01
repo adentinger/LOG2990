@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import { CollisionInfo, Collidable } from '../../physic/collidable';
 import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
-import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { CarPartsLoader } from '../car/car-parts-loader';
 import { Car } from '../car/car';
 import { CarPhysic } from '../car/car-physic';
 import { TextureLoader } from '../../../services/texture-loader';
 import { Obstacle } from './obstacle';
+import { COLLISION_EVENT } from '../../../constants';
+import { PhysicUtils } from '../../physic/utils';
 
 export class SpeedBooster extends Obstacle {
     private static readonly TEXTURE_URL = '/assets/racing/textures/speed-boost.png';
@@ -47,10 +48,13 @@ export class SpeedBooster extends Obstacle {
                 this.boostedTargets.add(collision.target);
                 const car = <Car>collision.target;
                 car['acceleration'] = 0;
+                car['angularAcceleration'] *= 3;
                 car.velocity.copy(car.front.multiplyScalar(SpeedBooster.BOOST_SPEED));
                 setTimeout(() => {
                     car['acceleration'] = CarPhysic.DEFAULT_ACCELERATION;
+                    car['angularAcceleration'] /= 3;
                     this.boostedTargets.delete(collision.target);
+                    car.velocity.copy(car.front.multiplyScalar(CarPhysic.DEFAULT_TARGET_SPEED));
                 }, SpeedBooster.BOOST_INTERVAL);
             }
         }

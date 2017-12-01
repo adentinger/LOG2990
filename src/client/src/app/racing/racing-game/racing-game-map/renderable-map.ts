@@ -21,6 +21,7 @@ import { DecorationGenerator } from '../decoration-generator/decoration-generato
 import { Vector } from '../../../../../../common/src/math/vector';
 import { Obstacle } from '../models/obstacles/obstacle';
 import { InvisibleWallsGenerator } from '../invisible-walls-generator/invisible-walls-generator';
+import { AiMode } from '../physic/ai/ai-mode';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
@@ -34,12 +35,19 @@ export class RenderableMap extends PhysicMesh {
     public mapSpeedBoosts: SerializedSpeedBoost[];
     public mapRatings: number[] = [];
     public mapBestTimes: number[] = [];
+    public readonly mapMode: AiMode;
 
-    private readonly plane: RacingGamePlane;
     public readonly waitToLoad: Promise<void>;
+    private readonly plane: RacingGamePlane;
+
+    private mapObstaclesInternal: Obstacle[] = [];
 
     public get mapLines(): Line[] {
         return this.mapPoints.map((point, i, points) => new Line(point, points[(i + 1) % points.length]));
+    }
+
+    public get mapObstacles(): Obstacle[] {
+        return this.mapObstaclesInternal.slice();
     }
 
     constructor(map: SerializedMap, private eventManager: EventManager) {
@@ -50,6 +58,12 @@ export class RenderableMap extends PhysicMesh {
         this.mapPotholes = map.potholes;
         this.mapPuddles = map.puddles;
         this.mapSpeedBoosts = map.speedBoosts;
+        if (/professional/i.test(map.type)) {
+            this.mapMode = AiMode.PROFESSIONAL;
+        }
+        else {
+            this.mapMode = AiMode.AMATEUR;
+        }
 
         this.plane = new RacingGamePlane(this.mapLines, new THREE.Vector3(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2));
         this.add(this.plane);
@@ -139,6 +153,7 @@ export class RenderableMap extends PhysicMesh {
 
     private placeObstacleOnMap(item: SerializedItem): Promise<void> {
         const ITEM_WIDTH: Meters = 2;
+        const PLACEMENT_INTERVAL = 2 / 3 * Track.SEGMENT_WIDTH;
         const lines = this.mapLines;
         let position: Meters = item.position;
         for (const line of lines) {
@@ -148,7 +163,7 @@ export class RenderableMap extends PhysicMesh {
             else {
                 const point = line.interpolate(position / line.translation.norm());
                 const lineAngle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
-                const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * (Track.SEGMENT_WIDTH - ITEM_WIDTH))
+                const randomCoordinateVariation = new THREE.Vector3((Math.random() - 0.5) * (PLACEMENT_INTERVAL - ITEM_WIDTH))
                     .applyAxisAngle(UP, lineAngle);
                 const coordinate = new THREE.Vector3(point.x, RenderableMap.ITEM_HEIGHT, point.y)
                     .add(randomCoordinateVariation);
@@ -157,6 +172,7 @@ export class RenderableMap extends PhysicMesh {
                     obstacle.position.copy(coordinate);
                     obstacle.rotation.y = lineAngle;
                     this.add(obstacle);
+                    this.mapObstaclesInternal.push(obstacle);
                 }
                 return obstacle.waitToLoad;
             }

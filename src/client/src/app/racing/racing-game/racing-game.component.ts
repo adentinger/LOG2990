@@ -4,10 +4,14 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
+<<<<<<< HEAD
 import { MapRatingComponent } from './game-result/map-rating/map-rating.component';
+=======
+import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
+>>>>>>> dev
 
 @Component({
     selector: 'app-racing-game',
@@ -47,15 +51,20 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
             this.racingGame.loadMap(mapName).then(() => {
+                this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
             });
         });
+<<<<<<< HEAD
         this.mapRating.ngOnInit();
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
+=======
+>>>>>>> dev
     }
 
     public ngOnDestroy() {
+        this.gameLoaded = false;
         this.racingGame.finalize();
     }
 
