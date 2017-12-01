@@ -34,16 +34,7 @@ export class CarPartsLoader {
 
     private static loadCarPart(name: string): Promise<THREE.Mesh> {
         return this.LOADER.load(CarPartsLoader.BASE_PATH + name + CarPartsLoader.FILE_EXTENSION, name)
-                    .then(carPart => {
-                        carPart.geometry.computeVertexNormals();
-                        carPart.geometry['computeMorphNormals']();
-                        (carPart.material as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
-                        (carPart.material as THREE.MeshPhongMaterial).shininess = CarPartsLoader.SHININESS;
-                        (carPart.material as THREE.MeshPhongMaterial).emissiveIntensity = 0;
-                        carPart.receiveShadow = true;
-                        carPart.castShadow = true;
-                        return carPart;
-                    });
+                    .then(carPart => CarPartsLoader.improveMaterialPropertiesOf(carPart));
     }
 
     private static loadColoredCarParts(): Promise<THREE.Mesh[]> {
@@ -62,11 +53,23 @@ export class CarPartsLoader {
     }
 
     private static loadCarParts(partNames: string[]): Promise<THREE.Mesh[]> {
-        const CAR_PARTS = [];
-        for (const partName of partNames) {
-            CAR_PARTS.push(this.loadCarPart(partName));
-        }
-
-        return Promise.all(CAR_PARTS);
+        return this.LOADER.loadAll(CarPartsLoader.BASE_PATH, partNames).then(
+            parts => {
+                parts.forEach(part => CarPartsLoader.improveMaterialPropertiesOf(part));
+                return parts;
+            }
+        );
     }
+
+    private static improveMaterialPropertiesOf(carPart: THREE.Mesh): THREE.Mesh {
+        carPart.geometry.computeVertexNormals();
+        carPart.geometry['computeMorphNormals']();
+        (carPart.material as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
+        (carPart.material as THREE.MeshPhongMaterial).shininess = CarPartsLoader.SHININESS;
+        (carPart.material as THREE.MeshPhongMaterial).emissiveIntensity = 0;
+        carPart.receiveShadow = true;
+        carPart.castShadow = true;
+        return carPart;
+    }
+
 }
