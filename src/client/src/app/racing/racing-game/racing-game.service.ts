@@ -191,6 +191,13 @@ export class RacingGameService {
         });
     }
 
+    /**
+     * ghostMode
+     */
+    public ghostMode() {
+        //
+    }
+
     public toggleDayMode(): void {
         this.renderer.toggleDayMode();
     }

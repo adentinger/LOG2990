@@ -101,6 +101,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
         }
 
+        // GHOST MODE
+        if (this.uiInputs.isKeyPressed('g')) {
+            this.racingGame.ghostMode();
+        }
+
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
             this.uiInputs.isKeyPressed('f5');
