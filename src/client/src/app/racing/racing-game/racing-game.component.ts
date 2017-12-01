@@ -7,8 +7,12 @@ import { RacingGameService } from './racing-game.service';
 import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
+<<<<<<< HEAD
 import { MapRatingComponent } from './game-result/map-rating/map-rating.component';
 import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
+=======
+import { KEYDOWN_EVENT } from '../constants';
+>>>>>>> 5a51e778e9254fa1f06e78581c1e2844a0e97a35
 
 @Component({
     selector: 'app-racing-game',

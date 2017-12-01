@@ -125,7 +125,6 @@ export class CarsService implements Loadable {
     @EventManager.Listener(GAME_COMPLETED_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private ghostModeAfterFinalLineCross(event: EventManager.Event<void>) {
-        console.log('HI');
         this.toggleCarColorTransparent(0);
         this.controller[0].stop();
     }
