@@ -21,17 +21,19 @@ import { DecorationGenerator } from '../decoration-generator/decoration-generato
 import { Vector } from '../../../../../../common/src/math/vector';
 import { Obstacle } from '../models/obstacles/obstacle';
 import { InvisibleWallsGenerator } from '../invisible-walls-generator/invisible-walls-generator';
+import { AiMode } from '../physic/ai/ai-mode';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
 export class RenderableMap extends PhysicMesh {
     private static readonly ITEM_HEIGHT = 0.03;
 
-    public mapName: string;
-    public mapPoints: Point[];
-    public mapPotholes: SerializedPothole[];
-    public mapPuddles: SerializedPuddle[];
-    public mapSpeedBoosts: SerializedSpeedBoost[];
+    public readonly mapName: string;
+    public readonly mapMode: AiMode;
+    public readonly mapPoints: Point[];
+    public readonly mapPotholes: SerializedPothole[];
+    public readonly mapPuddles: SerializedPuddle[];
+    public readonly mapSpeedBoosts: SerializedSpeedBoost[];
 
     public readonly waitToLoad: Promise<void>;
     private readonly plane: RacingGamePlane;
@@ -54,6 +56,12 @@ export class RenderableMap extends PhysicMesh {
         this.mapPotholes = map.potholes;
         this.mapPuddles = map.puddles;
         this.mapSpeedBoosts = map.speedBoosts;
+        if (/professional/i.test(map.type)) {
+            this.mapMode = AiMode.PROFESSIONAL;
+        }
+        else {
+            this.mapMode = AiMode.AMATEUR;
+        }
 
         this.plane = new RacingGamePlane(this.mapLines, new THREE.Vector3(Track.WIDTH_MAX / 2, 0, Track.HEIGHT_MAX / 2));
         this.add(this.plane);

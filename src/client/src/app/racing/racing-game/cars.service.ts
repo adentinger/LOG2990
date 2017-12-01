@@ -56,7 +56,12 @@ export class CarsService implements Loadable {
     public initialize(soundService: SoundService, userInput: UIInputs, map: RenderableMap) {
         this.cars.forEach(soundService.registerEmitter, soundService);
         (this.controllers[this.userControllerIndex] as UserCarController).setUIInput(userInput);
-        this.controllers.forEach(controller => controller.setupContoller(map, this.cars));
+        this.controllers.forEach(controller => {
+            controller.setupContoller(map, this.cars);
+            if (controller instanceof AiCarController) {
+                controller.setMode(map.mapMode);
+            }
+        });
         this.carsProgressionService.initialize(this.controllers, map.mapLines);
     }
 

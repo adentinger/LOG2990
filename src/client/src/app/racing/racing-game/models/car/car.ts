@@ -31,7 +31,7 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
         new THREE.Vector3(0.50077, 0.63412, 1.8)
     ];
 
-    public readonly mass: Kilograms = 100;
+    public readonly mass: Kilograms = 200;
 
     protected lights: CarLights;
     protected breakLights: CarLights;

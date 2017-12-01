@@ -13,8 +13,9 @@ import { Obstacle } from '../../models/obstacles/obstacle';
 import { Class } from '../../../../../../../common/src';
 import { Pothole } from '../../models/obstacles/pothole';
 import { SpeedBooster } from '../../models/obstacles/speed-booster';
-import '../../../../../../../common/src/math/clamp';
 import { Puddle } from '../../models/obstacles/puddle';
+import { AiMode } from './ai-mode';
+import '../../../../../../../common/src/math/clamp';
 
 const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
     [Pothole, -1],
@@ -29,10 +30,15 @@ export class AiCarController extends CarController {
     private static readonly THRESHOLD_DISTANCE_TO_SLOW: Meters = 30;
 
     private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
+    private mode: AiMode;
 
     public constructor(car: Car) {
         super(car);
         EventManager.getInstance().registerClass(this, AiCarController.prototype);
+    }
+
+    public setMode(mode: AiMode): void {
+        this.mode = mode;
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
@@ -44,9 +50,9 @@ export class AiCarController extends CarController {
             const projectionOfCar = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
 
             this.car.angularSpeed =
-                this.getAngularSpeedForFollowingTrack(carPosition, projectionOfCar) +
-                this.getAngularSpeedForObstacles(carPosition) +
-                this.getAngularSpeedForOpponents(carPosition);
+                this.mode.angularWeights.track * this.getAngularSpeedForFollowingTrack(carPosition, projectionOfCar) +
+                this.mode.angularWeights.obstacles * this.getAngularSpeedForObstacles(carPosition) +
+                this.mode.angularWeights.opponents * this.getAngularSpeedForOpponents(carPosition);
             this.car.angularSpeed *= Math.max(0.0, Math.sign(this.car.velocity.dot(this.car.front)));
             this.car.targetSpeed = this.getTargetSpeedForFollowingTrack(projectionOfCar);
         }
@@ -59,13 +65,12 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-        return Math.clamp(5 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+        return Math.clamp(this.mode.angularSpeedForTrackFactor * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getVectorToTarget(carPosition: Point, distanceFromBeginning: Meters): THREE.Vector3 {
-        const DISTANCE_OF_TARGET_FROM_CAR: Meters = 10;
         return this.convertToVector3(MapPositionAlgorithms.getPointAtGivenDistance(
-            distanceFromBeginning + DISTANCE_OF_TARGET_FROM_CAR, this.trackLines).substract(carPosition));
+            distanceFromBeginning + this.mode.distanceOfTargetFromCar, this.trackLines).substract(carPosition));
     }
 
     private getDistanceFromBeginning(projectionOfCar: Projection): Meters {
@@ -94,9 +99,9 @@ export class AiCarController extends CarController {
         const normalizedAngle = Math.clamp(angleBetweenLines - MIN_ANGLE, 0, ANGLE_RANGE) / ANGLE_RANGE;
         const angleFactor = Math.clamp(1 - normalizedAngle, 0, 1);
 
-        const speedFactor = (distanceToEndOfSegment < AiCarController.THRESHOLD_DISTANCE_TO_SLOW) ?
-            ((1 - angleFactor) * distanceToEndOfSegment + angleFactor * AiCarController.THRESHOLD_DISTANCE_TO_SLOW) /
-            (AiCarController.THRESHOLD_DISTANCE_TO_SLOW) : 1;
+        const speedFactor = (distanceToEndOfSegment < this.mode.distanceToSlow) ?
+            ((1 - angleFactor) * distanceToEndOfSegment + angleFactor * this.mode.distanceToSlow) /
+            this.mode.distanceToSlow : 1;
 
         return CarPhysic.DEFAULT_TARGET_SPEED * speedFactor;
     }
@@ -131,7 +136,8 @@ export class AiCarController extends CarController {
             obstacleWeight *
             frontalAvoidanceFactor * lateralAvoidingDirection *
             Math.pow(DISTANCE_TO_START_AVOIDING / distanceToObstacle, 2);
-        return Math.clamp(angularSpeed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+        return Math.clamp(this.mode.angularSpeedForObstaclesFactor * angularSpeed,
+            -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getAngularSpeedForOpponents(carPosition: Point): number {
@@ -142,8 +148,6 @@ export class AiCarController extends CarController {
     }
 
     private getAngularSpeedForOpponent(carPosition: Point, opponentCar: Car): number {
-        const DISTANCE_TO_START_AVOIDING = 5;
-
         let angularSpeed: number;
         const opponentPosition = this.convertToVector(opponentCar.position);
         const relativePosition = this.getVectorToPoint(carPosition, opponentPosition);
@@ -157,8 +161,9 @@ export class AiCarController extends CarController {
 
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
             lateralAvoidanceFactor * direction *
-            Math.pow(DISTANCE_TO_START_AVOIDING / distanceToOpponent, 2);
-        return Math.clamp(angularSpeed, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+            Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 2);
+        return Math.clamp(this.mode.angularSpeedForOpponentsFactor * angularSpeed,
+            -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getVectorToPoint(carPosition: Point, targetPoint: Point): THREE.Vector3 {
