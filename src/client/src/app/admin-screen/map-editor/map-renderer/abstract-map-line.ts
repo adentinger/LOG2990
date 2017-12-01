@@ -2,6 +2,7 @@ import { Line } from '../../../../../../common/src/math/line';
 import { Drawable } from './drawable';
 import { Point } from '../../../../../../common/src/math/point';
 import { AbstractMapLineColors } from './abstract-map-line-colors';
+import { Track } from '../../../racing/track';
 
 export abstract class AbstractMapLine extends Line implements Drawable {
 
@@ -19,7 +20,7 @@ export abstract class AbstractMapLine extends Line implements Drawable {
         super(origin, destination);
         this.context = context;
         this.colors = colors;
-        this.width = width;
+        this.width = Track.SEGMENT_WIDTH;
     }
 
     public draw(): void {

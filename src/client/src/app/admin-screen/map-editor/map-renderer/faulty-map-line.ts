@@ -1,8 +1,9 @@
 import { AbstractMapLine } from './abstract-map-line';
 import { Point } from '../../../../../../common/src/math/point';
 import { FaultyMapLineColors } from './faulty-map-line-colors';
+import { Track } from '../../../racing/track';
 
-const WIDTH = 5;
+const WIDTH = Track.SEGMENT_WIDTH;
 
 export class FaultyMapLine extends AbstractMapLine {
 

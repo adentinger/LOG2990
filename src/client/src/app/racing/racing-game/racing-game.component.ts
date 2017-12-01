@@ -23,7 +23,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     public static readonly MAP_NAME_URL_PARAMETER = 'map-name';
     private static readonly ZOOM_FACTOR = 1.025;
     private static readonly COLOR_FILTERS = ['normal', 'protanopia', 'protanomaly', 'deuteranopia',
-    'deuteranomaly', 'tritanopia', 'tritanomaly', 'achromatopsia', 'achromatomaly'];
+        'deuteranomaly', 'tritanopia', 'tritanomaly', 'achromatopsia', 'achromatomaly'];
 
     public gameLoaded = false;
     public colorFilterClass = RacingGameComponent.COLOR_FILTERS[0];
@@ -74,10 +74,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
         if (this.uiInputs.isKeyPressed('n')) {
             this.racingGame.toggleDayMode();
-        }
-
-        if (this.uiInputs.isKeyPressed('e')) {
-            this.racingGame.reloadSounds();
         }
 
         if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {

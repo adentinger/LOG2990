@@ -27,6 +27,10 @@ export abstract class CarController {
         this.state = CarControllerState.DISABLED;
     }
 
+    public isControllerStateEnabled(): boolean {
+        return this.state === CarControllerState.ENABLED ? true : false;
+    }
+
     public setTrackLines(lines: Line[]): void {
         this.trackLines.splice(0); // clear array
         this.trackLines.push(...lines);

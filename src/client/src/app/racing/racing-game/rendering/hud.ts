@@ -17,7 +17,7 @@ export class HUD {
     private static readonly TEXT_OFFSET = 0.01;
     private static readonly INCREMENT = new THREE.Vector2(0, HUD.TEXT_HEIGTH + 2 * HUD.TEXT_OFFSET);
     private static readonly LAP_POSITION =
-    new THREE.Vector2(HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
+        new THREE.Vector2(HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
     private static readonly LAP_TIME_POSITION = HUD.LAP_POSITION.clone().add(HUD.INCREMENT);
     private static readonly GAME_TIME_POSITION = HUD.LAP_TIME_POSITION.clone().add(HUD.INCREMENT);
     private static readonly SPEED_POSITION = new THREE.Vector2(HUD.TEXT_OFFSET, 1 - (HUD.TEXT_OFFSET + HUD.TEXT_HEIGTH));
@@ -75,14 +75,15 @@ export class HUD {
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        this.context.fillText(`${game.lap}/${game.maxLap} laps; tps: ${game['physicEngine'].tps.toFixed(2)}`,
+        this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
             textPosition.x, textPosition.y);
+
     }
 
     private drawLapTime(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_TIME_POSITION);
 
-        const lapTime = this.getTime(game.lapTimes[game.lap - 1]);
+        const lapTime = this.getTime(game.lapTimes[game.userLapNumber - 1]);
         const currentTime = this.formatTime(lapTime);
         this.context.fillText(`Lap time: ${currentTime}`,
             textPosition.x, textPosition.y);
@@ -100,8 +101,9 @@ export class HUD {
     private drawRacePosition(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.RACE_PLACE_POSITION);
 
-        const position = game.positions.findIndex((car) => car === game.controlledCar) + 1;
-        const suffix = position > 3 ? 'th' : ( position === 3 ? 'rd' : (position === 2 ? 'nd' : 'st'));
+        const position = game.getPosition(game.controlledCar);
+
+        const suffix = position > 3 ? 'th' : (position === 3 ? 'rd' : (position === 2 ? 'nd' : 'st'));
 
         const text = `${position}${suffix}`;
         const textWidth = this.context.measureText(text).width;
