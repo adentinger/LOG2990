@@ -12,15 +12,16 @@ import { MapPositionAlgorithms } from './map-position-algorithms';
  */
 export class TerrainGeometry extends THREE.PlaneGeometry {
 
-    private static readonly terrainDisplacementMax = 50;
-    private static readonly widthSegments  = Math.ceil( Track.WIDTH_MAX / 2);
-    private static readonly heightSegments = Math.ceil(Track.HEIGHT_MAX / 2);
+    private static readonly VERTICES_PER_METER = 2.0;
+    private static readonly TERRAIN_DISPLACEMENT_MAX = 50;
+    private static readonly WIDTH_SEGMENTS  = Math.ceil( Track.WIDTH_MAX / TerrainGeometry.VERTICES_PER_METER);
+    private static readonly HEIGHT_SEGMENTS = Math.ceil(Track.HEIGHT_MAX / TerrainGeometry.VERTICES_PER_METER);
 
     /**
      * @argument track The track. Must be relative to the geometry's center (0, 0, 0).
      */
     constructor(track: Line[]) {
-        super(Track.WIDTH_MAX, Track.HEIGHT_MAX, TerrainGeometry.widthSegments, TerrainGeometry.heightSegments);
+        super(Track.WIDTH_MAX, Track.HEIGHT_MAX, TerrainGeometry.WIDTH_SEGMENTS, TerrainGeometry.HEIGHT_SEGMENTS);
 
         const rawTerrainDispalcement = this.generateRawDisplacement();
         const terrainDisplacement = this.flattenTerrainNearTrack(rawTerrainDispalcement, track);
@@ -36,8 +37,8 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
         // Copyright © 2010-2017 three.js authors (MIT License)
 
-        const numberOfWidthVertices  = TerrainGeometry.widthSegments  + 1;
-        const numberOfHeightVertices = TerrainGeometry.heightSegments + 1;
+        const numberOfWidthVertices  = TerrainGeometry.WIDTH_SEGMENTS  + 1;
+        const numberOfHeightVertices = TerrainGeometry.HEIGHT_SEGMENTS + 1;
         const size = numberOfWidthVertices * numberOfHeightVertices;
         const terrainDisplacementUint8 = new Uint8Array(size);
 
@@ -79,13 +80,13 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
 
         // For formula, see doc/architectures/formula_displacement_factor.jpg
 
-        const c = 2 / Track.SEGMENT_WIDTH;
-        const d = 4;
-        const distanceMin = Track.SEGMENT_WIDTH;
-        const distanceAtModulation = Track.SEGMENT_WIDTH * 2;
+        const c = 1.0 / Track.SEGMENT_WIDTH;
+        const d = 4.0;
+        const distanceMin = Track.SEGMENT_WIDTH / 2 + TerrainGeometry.VERTICES_PER_METER;
+        const distanceAtModulation = 1.0 * Track.SEGMENT_WIDTH;
         const distanceAtMax = 2 * d / c + distanceAtModulation;
 
-        const factorMedium = 0.02;
+        const factorMedium = 0.01;
 
         let displacementFactor: number;
         if (distanceToTrack < distanceMin) {
@@ -100,14 +101,15 @@ export class TerrainGeometry extends THREE.PlaneGeometry {
                 (1 - factorMedium) *
                 (
                     Math.atan(c * (distanceToTrack - distanceAtModulation) - d)
-                    / Math.PI + arctanIncrement
+                    / (2 * Math.atan(d))
+                    + arctanIncrement
                 )
                 + factorMedium;
         }
         else {
             displacementFactor = 1;
         }
-        return rawDisplacement * displacementFactor * TerrainGeometry.terrainDisplacementMax;
+        return rawDisplacement * displacementFactor * TerrainGeometry.TERRAIN_DISPLACEMENT_MAX;
     }
 
 }
