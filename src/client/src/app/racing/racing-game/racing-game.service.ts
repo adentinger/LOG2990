@@ -15,11 +15,12 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
-import { CarsProgressionService } from './cars-progression.service';
+import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
 
 const logger = Logger.getLogger();
 
 export const GAME_START_EVENT = 'racing-start';
+export const GAME_COMPLETED_EVENT = 'gamecompleted';
 
 @Injectable()
 export class RacingGameService {
@@ -34,6 +35,7 @@ export class RacingGameService {
     private userInputs: UIInputs = null;
 
     public get lap(): number {
+        console.log('game service is fetching lap value, which is : ' + this.info.maxLap);
         return this.info.maxLap;
     }
 
@@ -155,4 +157,18 @@ export class RacingGameService {
         }
     }
 
+    @EventManager.Listener(USER_LAP_UPDATE)
+    // tslint:disable-next-line:no-unused-variable
+    private checkIfRaceCompleted(event: EventManager.Event<UserLapInfo>) {
+        if (event.data.lap >= this.info.maxLap) {
+            console.log('GAME COMPLETED');
+            this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
+                name: GAME_COMPLETED_EVENT,
+                data: void 0
+                /**
+                 *  put .Event<void> in listener
+                 */
+            });
+        }
+    }
 }
