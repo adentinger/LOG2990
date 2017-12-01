@@ -73,10 +73,8 @@ export class GameDataDynamic extends GameData {
                 });
             }
             else {
-                return {
-                    grid: grid,
-                    definitions: []
-                };
+                // Mutation cancelled ; don't change our data.
+                return this.mutationPromise;
             }
         });
     }

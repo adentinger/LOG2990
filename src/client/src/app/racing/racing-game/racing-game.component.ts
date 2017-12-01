@@ -76,10 +76,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.racingGame.toggleDayMode();
         }
 
-        if (this.uiInputs.isKeyPressed('e')) {
-            this.racingGame.reloadSounds();
-        }
-
         if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
             const currentCamera = this.racingGame.renderer.currentCamera;
             this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= RacingGameComponent.ZOOM_FACTOR;

@@ -21,9 +21,10 @@ export abstract class DynamicCollidableMesh extends DynamicPhysicMesh implements
         forceDirections.forEach(([position, force]) => {
             const torque = position.clone().cross(force);
             const r = position.length();
-            const momentOfInertia = (r ** 2) * this.mass; // I = r^2 * m
+            let momentOfInertia = (r ** 2) * this.mass; // I = r^2 * m
+            momentOfInertia = momentOfInertia !== 0 ? momentOfInertia : 1;
 
-            const acceleration = force.clone().divideScalar(this.mass); // F = m*a  =>  a = F/m
+            const acceleration = force.clone().divideScalar(this.mass !== 0 ? this.mass : 1); // F = m*a  =>  a = F/m
             const angularAcceleration = torque.clone().divideScalar(momentOfInertia); // ­tau = I*alpha  =>  alpha = tau/I
 
             this.velocity.addScaledVector(acceleration, deltaTime);

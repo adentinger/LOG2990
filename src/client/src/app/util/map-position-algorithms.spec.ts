@@ -55,17 +55,6 @@ describe('Map position algorithms', () => {
         expect(projection.interpolation).toEqual(0.25);
     });
 
-    it('should calculate a negative interpolation given a point and a line', () => {
-        const line = new Line(new Point(8.0, 2.0), new Point(11.0, 2.0));
-        const point = new Point(6.0, 4.0);
-
-        const projection = MapPositionAlgorithms.getProjectionOnLine(point, line);
-
-        expect(projection.segment).toEqual(line);
-        expect(projection.interpolation).toEqual(-2 / 3);
-        expect(projection.distanceToSegment).toEqual(2);
-    });
-
     /**
      * getAllProjections
      */

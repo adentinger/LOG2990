@@ -7,8 +7,9 @@ import { PhysicEngine } from './physic/engine';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
-import { CarsPositionsService } from './cars-positions.service';
 import { SoundService } from '../services/sound-service';
+import { CarsProgressionService } from './cars-progression.service';
+import { CarsService } from './cars.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -22,7 +23,8 @@ describe('RacingGameService', () => {
                 { provide: RequestOptions, useClass: BaseRequestOptions },
                 Http,
                 UIInputs,
-                CarsPositionsService,
+                CarsService,
+                CarsProgressionService,
                 SoundService
             ]
         });

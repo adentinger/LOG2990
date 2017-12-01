@@ -124,6 +124,7 @@ export class GameService {
     @PacketHandler(GameStartPacket)
     // tslint:disable-next-line:no-unused-variable
     private gameStarted(event: PacketEvent<GameStartPacket>): void {
+        this.stateInternal.next(GameState.started);
         this.dataInternal.mode = this.userChoiceService.gameMode;
         this.dataInternal.difficulty = this.userChoiceService.difficulty;
         this.dataInternal.maxNumberOfPlayers = this.userChoiceService.playerNumber;

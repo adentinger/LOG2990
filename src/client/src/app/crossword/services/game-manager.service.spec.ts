@@ -7,7 +7,6 @@ import { UserChoiceService } from '../config-menu/user-choice.service';
 import { GameHttpService } from './game-http.service';
 import { DefinitionsService } from '../definition-field/definitions.service';
 import { GridService } from '../board/grid.service';
-import { WaitingService } from '../config-menu/waiting/waiting.service';
 import { PacketManagerClient } from '../../packet-manager-client';
 import { packetManagerClient } from '../../packet-manager.service';
 import { SelectionService } from '../selection.service';
@@ -28,7 +27,6 @@ describe('GameManagerService', () => {
                 UserChoiceService,
                 DefinitionsService,
                 GridService,
-                WaitingService,
                 SelectionService,
                 MenuAutomatonService
             ]

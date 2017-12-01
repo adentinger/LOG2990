@@ -25,7 +25,6 @@ import { AdminConfigComponent } from './admin-screen/admin-config/admin-config.c
 import { AdminConfigService } from './admin-screen/admin-config.service';
 import { EventManager, eventManagerValue } from './event-manager.service';
 import { ItemGenerator } from './admin-screen/map-editor/items/item-generator';
-import { CarsPositionsService } from './racing/racing-game/cars-positions.service';
 import { RacingGameService } from './racing/racing-game/racing-game.service';
 import { PhysicEngine } from './racing/racing-game/physic/engine';
 import { SoundService } from './racing/services/sound-service';
@@ -56,12 +55,10 @@ import { TextureLoader, textureLoaderValue } from './racing/services/texture-loa
         AdminConfigService,
         { provide: EventManager, useValue: eventManagerValue },
         ItemGenerator,
-        CarsPositionsService,
         MapService,
         RacingGameService,
         PhysicEngine,
         SoundService,
-        CarsPositionsService,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ],
     bootstrap: [AppComponent]
