@@ -10,20 +10,21 @@ import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
-import { Sound } from '../services/sound';
+import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
 import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
-
-const logger = Logger.getLogger();
+import { Seconds } from '../../types';
 
 export const GAME_START_EVENT = 'racing-start';
 export const GAME_COMPLETED_EVENT = 'gamecompleted';
 
 @Injectable()
 export class RacingGameService {
+    public static readonly DEFAULT_CONTROLLABLE_CAR_IDX = 2;
+    public static readonly COUNTDOWN_DURATION: Seconds = 3.2;
+
     public readonly renderer: RacingRenderer;
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
@@ -63,40 +64,43 @@ export class RacingGameService {
         const userCar = this.carsService.getPlayerCar();
         this.renderer.setCamerasTarget(userCar);
 
-
-        this.carsService.initialize(this.soundService, userInputs, this.map.mapLines);
+        this.carsService.initialize(this.soundService, userInputs, this.map);
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
 
         // If the game is stopping before it was loaded, then don't start anything.
+        const finalizePromise = new Promise<void>((resolve, reject) => {
+            this.waitToFinalize.subscribe(resolve, reject, resolve);
+        }).then(() => Promise.reject('Initialization canceled'));
         Promise.race([
-            this.waitToLoad,
-            this.waitToFinalize.toPromise().then(() => { throw void (0); })
+            finalizePromise,
+            this.waitToLoad
         ]).then(() => {
-            this.physicEngine.start();
             this.renderer.startRendering();
-            // this.soundService.setAbmiantSound(Sound.TETRIS);
-
-            // this.carsService.startControllers();
-            // this.waitToLoad.then(() => {
-            //     this.soundService.playAmbiantSound(true);
-            // });
-            this.info.startTimer();
-            this.soundService.setAbmiantSound(Sound.START_SOUND);
-            this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
-                .then(() => {
-                    const event: EventManager.Event<void> = { name: GAME_START_EVENT, data: void 0 };
-                    this.eventManager.fireEvent(event.name, event);
-                    return this.soundService.setAbmiantSound(Sound.TETRIS);
-                }).then(() => {
-                    this.soundService.playAmbiantSound(true);
-                    this.carsService.startControllers();
-                });
-        }, () => logger.warn('Initialization interrupted'));
+            return Promise.race([
+                finalizePromise,
+                this.soundService.setAbmiantSound(Sound.START_SOUND)
+            ]);
+        }).then(() => {
+            this.info.startTimer(RacingGameService.COUNTDOWN_DURATION);
+            Promise.race([finalizePromise, this.soundService.playAmbiantSound(false)])
+                .then(() => Promise.race([finalizePromise, this.soundService.setAbmiantSound(Sound.TETRIS)]))
+                .then(() => this.soundService.playAmbiantSound(true))
+                .catch(() => { });
+            return Promise.race([
+                finalizePromise,
+                new Promise((resolve) => setTimeout(resolve, RacingGameService.COUNTDOWN_DURATION * 1000))
+            ]);
+        }).then(() => {
+            this.physicEngine.start();
+            const event: EventManager.Event<void> = { name: GAME_START_EVENT, data: void 0 };
+            this.eventManager.fireEvent(event.name, event);
+            this.carsService.startControllers();
+        }).catch(() => { });
     }
 
     public finalize() {
-        this.finalizeSubject.next(); // Notify that the game (forcefully) Stops
+        this.finalizeSubject.next();
 
         this.physicEngine.stop();
         this.renderer.stopRendering();
