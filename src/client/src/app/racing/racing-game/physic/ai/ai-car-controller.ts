@@ -6,8 +6,8 @@ import { EventManager } from '../../../../event-manager.service';
 import { Seconds, Meters } from '../../../../types';
 import { AFTER_PHYSIC_UPDATE_EVENT, UP_DIRECTION } from '../engine';
 import { CarPhysic } from '../../models/car/car-physic';
-import { MapPositionAlgorithms } from '../../../../util/map-position-algorithms';
-import { Projection } from '../../../../util/projection';
+import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { Projection } from '../../../util/projection';
 import { Point, Vector } from '../../../../../../../common/src/math';
 import '../../../../../../../common/src/math/clamp';
 

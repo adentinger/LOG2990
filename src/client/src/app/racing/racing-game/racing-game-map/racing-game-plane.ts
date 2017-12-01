@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { Track } from '../../track';
 import { PhysicMesh } from '../physic/object';
-import { loadTexture } from '../../../util/textures';
-import { TerrainGeometry } from '../../../util/terrain-geometry';
+import { loadTexture } from '../../util/textures';
+import { TerrainGeometry } from '../../util/terrain-geometry';
 import { Line, Point } from '../../../../../../common/src/math/index';
 
 export class RacingGamePlane extends PhysicMesh {
