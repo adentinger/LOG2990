@@ -39,5 +39,9 @@ export class MapRatingComponent implements OnInit {
     public OnMouseOut(): void {
         this.stars.fill(this.emptyStarImageSource);
     }
+
+    public onClick(index: number) {
+        console.log('test');
+    }
 }
 
