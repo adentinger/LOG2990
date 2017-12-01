@@ -22,7 +22,6 @@ export class DecorationGenerator {
     public placeDecorationsOnMap(map: RenderableMap): void {
         const mapLength = map.computeLength();
         const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
-        // const mapPointsIntervalCoordinate: THREE.Vector3[] = [];
         const decorations: Decoration[] = [];
 
         for (let intervalIndex = 0 ; intervalIndex <= numberOfPoints; intervalIndex++) {
