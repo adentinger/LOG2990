@@ -14,6 +14,7 @@ import { Sound, SoundType } from '../racing-game/sound/sound';
 import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
 import { InvisibleWall } from '../racing-game/models/invisible-wall/invisible-wall';
 import { COLLISION_EVENT, GAME_COMPLETED_EVENT } from '../constants';
+import { getCallers } from '../../../../../common/src/index';
 
 const logger = Logger.getLogger('Sound');
 
@@ -152,9 +153,9 @@ export class SoundService implements Loadable {
     }
 
     public setAbmiantSound(soundIndex: Sound): Promise<void> {
-        this.stopAmbiantSound();
         if (soundIndex < 0) {
             this.ambientAudio.setBuffer(null);
+            this.stopAmbiantSound();
             return Promise.resolve();
         }
         return SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
@@ -165,21 +166,37 @@ export class SoundService implements Loadable {
     public playAmbiantSound(looping: true): void;
     public playAmbiantSound(looping: false): Promise<void>;
     public playAmbiantSound(looping: boolean = false): Promise<void> | void {
-        this.stopAmbiantSound();
-        this.ambientAudio.setLoop(looping);
-        this.ambientAudio.play();
-        this.ambientAudio.setVolume(0.6);
+        const promise = this.stopAmbiantSound().then(() => {
+            this.ambientAudio.setLoop(looping);
+            this.ambientAudio.play();
+            this.ambientAudio.setVolume(0.6);
+        });
         if (!looping) {
-            return new Promise((resolve, reject) => {
-                setTimeout(resolve, this.ambientAudio['buffer'].duration * 1000);
-            });
+            return promise.then(() =>
+                new Promise<void>((resolve, reject) => {
+                    setTimeout(resolve, this.ambientAudio['buffer'].duration * 1000);
+                })
+            );
         }
     }
 
-    public stopAmbiantSound(): void {
+    public stopAmbiantSound(): Promise<void> {
         if (this.ambientAudio.isPlaying) {
+            const promise = new Promise<void>((resolve) => {
+                const previousOnEnded = this.ambientAudio.onEnded;
+                this.ambientAudio.onEnded = () => {
+                    this.ambientAudio.onEnded = previousOnEnded;
+                    if (typeof previousOnEnded === 'function') {
+                        this.ambientAudio.onEnded();
+                    }
+                    resolve();
+                };
+                resolve();
+            });
             this.ambientAudio.stop();
+            return promise;
         }
+        return Promise.resolve();
     }
 
     public registerEmitter(emitter: SoundEmitter): void {

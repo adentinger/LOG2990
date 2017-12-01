@@ -17,9 +17,6 @@ import { GameInfo } from './game-info';
 import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
 import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT } from '../constants';
-import { Logger } from '../../../../../common/src/logger';
-
-const logger = Logger.getLogger();
 
 @Injectable()
 export class RacingGameService {
