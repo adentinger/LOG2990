@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import * as THREE from 'three';
 
 import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import { DayMode } from './day-mode/day-mode-manager';
 import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
-import { Seconds } from '../../types';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
@@ -18,9 +15,6 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
-import { CarController } from './physic/ai/car-controller';
-import { UserCarController } from './physic/ai/user-car-controller';
-import { AiCarController } from './physic/ai/ai-car-controller';
 import { CarsProgressionService } from './cars-progression.service';
 
 const logger = Logger.getLogger();

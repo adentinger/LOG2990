@@ -1,23 +1,16 @@
 import * as THREE from 'three';
 import { Injectable } from '@angular/core';
 import { Car } from './models/car/car';
-import { RacingGameService } from './racing-game.service';
-import { Point } from '../../../../../common/src/math/point';
 import { Line } from '../../../../../common/src/math/line';
-import { GameInfo } from './game-info';
 import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { Progression } from './racing-types';
 import { EventManager } from '../../event-manager.service';
-import { Seconds } from '../../types';
-import { AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
-import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
-import { Projection } from '../../util/projection';
 import { CarsProgressionService } from './cars-progression.service';
 
 
@@ -37,7 +30,6 @@ export class CarsService implements Loadable {
     private readonly carsProgression: Map<Car, Progression> = new Map();
     private readonly controllers: CarController[] = [];
 
-    private progressionUpdateCounter = 0;
     private userControllerIndex: number = Math.floor(Math.random() * CarsService.CAR_COUNT);
 
     public get cars(): Car[] {
@@ -45,7 +37,7 @@ export class CarsService implements Loadable {
     }
 
     public constructor(
-        private eventManager: EventManager,
+        eventManager: EventManager,
         private carsProgressionService: CarsProgressionService) {
         for (let index = 0; index < CarsService.CAR_COUNT; ++index) {
             this.controllers.push(index === this.userControllerIndex ?
@@ -89,7 +81,7 @@ export class CarsService implements Loadable {
         return this.carsProgression;
     }
 
-    private getMapLength(): number {
+    public getMapLength(): number {
         return 0; // MOCK
     }
 

@@ -8,7 +8,6 @@ import { EventManager } from '../../../event-manager.service';
 import { Lighting } from '../models/lighting/lighting';
 import { RenderableMap } from '../racing-game-map/renderable-map';
 import { HUD } from './hud';
-import { RacingGameService } from '../racing-game.service';
 import { GameInfo } from '../game-info';
 
 export type CameraId = 0 | 1;

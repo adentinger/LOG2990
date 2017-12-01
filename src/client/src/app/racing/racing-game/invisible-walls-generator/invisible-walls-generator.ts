@@ -2,9 +2,6 @@ import * as THREE from 'three';
 import { RenderableMap } from '../racing-game-map/renderable-map';
 import { InvisibleWall } from '../models/invisible-wall/invisible-wall';
 import { Track } from '../../track';
-import { Tree } from '../models/decoration/tree';
-import { Building } from '../models/decoration/building';
-import { Vector } from '../../../../../../common/src/math/vector';
 import { Line } from '../../../../../../common/src/math/index';
 
 const segmentTranslation = (Track.SEGMENT_WIDTH + InvisibleWall.WALL_DEPTH) / 2;

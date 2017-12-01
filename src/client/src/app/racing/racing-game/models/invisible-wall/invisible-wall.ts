@@ -1,11 +1,8 @@
 import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
 import { COLLISION_EVENT } from '../../physic/utils';
 import { EventManager } from '../../../../event-manager.service';
-import { isDynamicCollidable } from '../../physic/dynamic-collidable';
 import * as THREE from 'three';
 import { Kilograms, Meters } from '../../../../types';
-import { Line } from '../../../../../../../common/src/math/index';
-import { Vector3 } from 'three';
 import { Car } from '../car/car';
 
 const SLOW_FACTOR = 0.8;

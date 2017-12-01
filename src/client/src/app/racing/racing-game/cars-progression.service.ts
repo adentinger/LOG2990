@@ -10,7 +10,6 @@ import { Projection } from '../../util/projection';
 import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
-import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
 
 @Injectable()
@@ -39,7 +38,7 @@ export class CarsProgressionService {
     private mapLength: number;
     private progressionUpdateCounter = 0;
 
-    public constructor(private eventManager: EventManager) {
+    public constructor(eventManager: EventManager) {
         eventManager.registerClass(this);
     }
 
@@ -62,6 +61,7 @@ export class CarsProgressionService {
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
+    // tslint:disable-next-line:no-unused-variable
     private updateCarsProgression(event: EventManager.Event<{ deltaTime: Seconds }>): void {
         if (++this.progressionUpdateCounter === 30) {
             this.progressionUpdateCounter = 0;
@@ -77,10 +77,6 @@ export class CarsProgressionService {
                 this.carsLapProgression.set(controller.car, this.computeLapProgression(controller.car));
             }
         }
-    }
-
-    private computeCurrentLap(car: Car): number {
-        return 0;
     }
 
     private computeLapProgression(car: Car): LapProgression {
@@ -102,9 +98,5 @@ export class CarsProgressionService {
         progression /= this.mapLength;
 
         return progression;
-    }
-
-    private toFixedLength(n: number): number {
-        return Math.floor(n * 100);
     }
 }

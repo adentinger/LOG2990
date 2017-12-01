@@ -4,7 +4,6 @@ import { Projection } from './projection';
 import { Vector } from '../../../../common/src/math/vector';
 import '../../../../common/src/math/clamp';
 import { Meters } from '../types';
-import { Progression } from '../racing/racing-game/racing-types';
 
 export class MapPositionAlgorithms {
 
