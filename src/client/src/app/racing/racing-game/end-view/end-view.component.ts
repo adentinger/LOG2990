@@ -1,15 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import 'rxjs/add/operator/switchMap';
-import { RenderableMap } from '../../racing-game-map/renderable-map';
+import { RenderableMap } from '../racing-game-map/renderable-map';
 
 @Component({
-    selector: 'app-best-time',
-    templateUrl: './best-time.component.html',
-    styleUrls: ['./best-time.component.css']
+    selector: 'app-end-view',
+    templateUrl: './end-view.component.html',
+    styleUrls: ['./end-view.component.css']
 })
 
-export class BestTimeComponent implements OnInit {
+export class EndViewComponent implements OnInit {
 
     @Input() public map: RenderableMap;
     public displayable;
@@ -20,4 +20,3 @@ export class BestTimeComponent implements OnInit {
         this.displayable = false;
     }
 }
-
