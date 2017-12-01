@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 
-import { Logger } from 'common/src/index';
+import { Logger } from '../../../../../../common/src/index';
 
 export class Loader {
 
@@ -10,7 +10,7 @@ export class Loader {
 
     constructor() { }
 
-    private loadCarPart(url: string, name: string): Promise<THREE.Mesh> {
+    public load(url: string, name: string): Promise<THREE.Mesh> {
         return new Promise((resolve, reject) => {
             this.jsonLoader.load(
                 url,
