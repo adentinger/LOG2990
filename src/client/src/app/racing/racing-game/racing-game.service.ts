@@ -16,10 +16,12 @@ import { Observable } from 'rxjs/Observable';
 import { Logger } from '../../../../../common/src/logger';
 import { SoundService } from '../services/sound-service';
 import { Sound } from '../services/sound';
-import { CarsPositionsService } from './cars-positions.service';
+import { CarsService } from './cars.service';
+import { GameInfo } from './game-info';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
+import { CarsProgressionService } from './cars-progression.service';
 
 const logger = Logger.getLogger();
 
@@ -27,74 +29,34 @@ export const GAME_START_EVENT = 'racing-start';
 
 @Injectable()
 export class RacingGameService {
-    public static readonly DEFAULT_CONTROLLABLE_CAR_IDX = 2;
-
     public readonly renderer: RacingRenderer;
-    protected controlledCarIdx = RacingGameService.DEFAULT_CONTROLLABLE_CAR_IDX;
-    private readonly cars: Car[] = [
-        new Car(new THREE.Color('green')),
-        new Car(new THREE.Color('yellow')),
-        new Car(new THREE.Color('blue')),
-        new Car(new THREE.Color('red'))
-    ];
-    private readonly controllers: CarController[] = this.cars.map((car, idx) =>
-        idx === this.controlledCarIdx ? new UserCarController(car) : new AiCarController(car));
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
-
-    private startTime: Seconds;
-    private lapTimesInternal = new Array(this.maxLap).fill(0);
-    private maxLapInternal = 3;
+    private readonly info: GameInfo;
 
     private map: RenderableMap;
 
     private userInputs: UIInputs = null;
 
-    public get controlledCar(): Car {
-        return this.cars[this.controlledCarIdx];
-    }
-
     public get lap(): number {
-        // Mocked
-        return 1;
-    }
-
-    public get maxLap(): number {
-        return this.maxLapInternal;
-    }
-
-    public get positions(): Car[] {
-        // Mocked
-        return this.cars;
-    }
-
-    public get lapTimes(): Seconds[] {
-        this.lapTimesInternal[this.lap - 1] = Date.now() / 1000 - this.startTime;
-        return this.lapTimesInternal;
-    }
-
-    public get totalTime(): Seconds {
-        return Date.now() / 1000 - this.startTime;
-    }
-
-    public get dayMode(): DayMode {
-        return this.renderer.dayMode;
+        return this.info.maxLap;
     }
 
     constructor(private physicEngine: PhysicEngine,
         private mapService: MapService,
         private eventManager: EventManager,
         private soundService: SoundService,
-        private carsPositionsService: CarsPositionsService) {
+        private carsService: CarsService,
+        private carsProgressionService: CarsProgressionService) {
+        this.info = new GameInfo(this.carsService, this.carsProgressionService);
         this.waitToLoad = Promise.all([
-            ...this.cars.map(car => car.waitToLoad),
+            this.carsService.waitToLoad,
             this.soundService.waitToLoad
         ]).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
-        this.renderer = new RacingRenderer(eventManager, this);
+        this.renderer = new RacingRenderer(eventManager, this.info);
         eventManager.registerClass(this);
-        this.carsPositionsService.initialize(this);
     }
 
     public initialize(container: HTMLDivElement, hudCanvas: HTMLCanvasElement, userInputs: UIInputs): void {
@@ -102,14 +64,11 @@ export class RacingGameService {
         this.soundService.initialize(this.renderer.getBothCameras()[0]);
         this.userInputs = userInputs;
 
-        const userCarController = this.controllers[this.controlledCarIdx] as UserCarController;
-        userCarController.setUIInput(userInputs);
-        this.renderer.setCamerasTarget(userCarController.car);
+        const userCar = this.carsService.getPlayerCar();
+        this.renderer.setCamerasTarget(userCar);
 
-        this.controllers.forEach(controller => controller.setTrackLines(this.map.mapLines));
-        this.reloadSounds();
 
-        this.cars.forEach(this.soundService.registerEmitter, this.soundService);
+        this.carsService.initialize(this.soundService, userInputs, this.map.mapLines);
 
         this.renderer.updateDayMode(RacingRenderer.DEFAULT_DAYMODE);
 
@@ -120,16 +79,22 @@ export class RacingGameService {
         ]).then(() => {
             this.physicEngine.start();
             this.renderer.startRendering();
-            this.startTime = Date.now() / 1000;
+            // this.soundService.setAbmiantSound(Sound.TETRIS);
+
+            // this.carsService.startControllers();
+            // this.waitToLoad.then(() => {
+            //     this.soundService.playAmbiantSound(true);
+            // });
+            this.info.startTimer();
             this.soundService.setAbmiantSound(Sound.START_SOUND);
             this.waitToLoad.then(() => this.soundService.playAmbiantSound(false))
                 .then(() => {
-                    const event: EventManager.Event<void> = {name: GAME_START_EVENT, data: void 0};
+                    const event: EventManager.Event<void> = { name: GAME_START_EVENT, data: void 0 };
                     this.eventManager.fireEvent(event.name, event);
                     return this.soundService.setAbmiantSound(Sound.TETRIS);
                 }).then(() => {
                     this.soundService.playAmbiantSound(true);
-                    this.controllers.forEach(controller => controller.start());
+                    this.carsService.startControllers();
                 });
         }, () => logger.warn('Initialization interrupted'));
     }
@@ -140,16 +105,7 @@ export class RacingGameService {
         this.physicEngine.stop();
         this.renderer.stopRendering();
 
-        this.cars.forEach(car => {
-            car.stopSounds();
-        });
-        this.controllers.forEach((controller, idx) => {
-            controller.stop();
-            if (controller instanceof UserCarController) {
-                controller.removeUIInput();
-            }
-        });
-
+        this.carsService.finalize();
         this.userInputs = null;
 
         this.physicEngine.finalize();
@@ -164,7 +120,7 @@ export class RacingGameService {
 
     private setMap(map: SerializedMap): Promise<void> {
         if (this.map) {
-            this.cars.forEach(this.map.remove, this.map);
+            this.carsService.removeFromMap(this.map);
             this.renderer.removeMap(this.map);
         }
 
@@ -172,23 +128,12 @@ export class RacingGameService {
         this.physicEngine.initialize(this.map);
         this.renderer.addMap(this.map);
 
-        this.map.addCars(...this.cars);
+        this.carsService.addToMap(this.map);
         return this.map.waitToLoad.then(() => { });
-    }
-
-    public getCars(): Car[] {
-        return Array.from(this.cars);
     }
 
     public updateRendererSize(width: number, height: number) {
         this.renderer.updateSize(width, height);
-    }
-
-    public reloadSounds() {
-        this.cars.forEach(car => {
-            car.stopSounds();
-            car.startSounds();
-        });
     }
 
     public toggleDayMode(): void {
@@ -204,7 +149,7 @@ export class RacingGameService {
         const keys = new Set(keysArray);
 
         if (this.userInputs && keys.has(event.data.key) && this.userInputs.isKeyPressed(event.data.key)) {
-            this.maxLapInternal = +event.data.key;
+            this.info.maxLap = +event.data.key;
         }
     }
 

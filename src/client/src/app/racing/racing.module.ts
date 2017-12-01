@@ -12,8 +12,9 @@ import { UIInputs } from './services/ui-input.service';
 import { RacingGameService } from './racing-game/racing-game.service';
 import { PhysicEngine } from './racing-game/physic/engine';
 import { SoundService } from './services/sound-service';
-import { CarsPositionsService } from './racing-game/cars-positions.service';
+import { CarsService } from './racing-game/cars.service';
 import { TextureLoader, textureLoaderValue } from './services/texture-loader';
+import { CarsProgressionService } from './racing-game/cars-progression.service';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { TextureLoader, textureLoaderValue } from './services/texture-loader';
         RacingGameService,
         PhysicEngine,
         SoundService,
-        CarsPositionsService,
+        CarsService,
+        CarsProgressionService,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ]
 })

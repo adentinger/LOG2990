@@ -4,6 +4,7 @@ import { Projection } from './projection';
 import { Vector } from '../../../../common/src/math/vector';
 import '../../../../common/src/math/clamp';
 import { Meters } from '../types';
+import { Progression } from '../racing/racing-game/racing-types';
 
 export class MapPositionAlgorithms {
 
@@ -53,6 +54,11 @@ export class MapPositionAlgorithms {
         });
         return lineAtDistance.interpolate(distance / lineAtDistance.length);
     }
+
+    // public static getProgressOnWholeTrack(position: Point, lines: Line[]): Progression {
+    //     const projection: Projection = MapPositionAlgorithms.getClosestProjection(position, lines);
+    //     let progression: Progression = lines.findIndex((line) => line === projection.segment);
+    // }
 
     public static getTrackLength(lines: Line[]): Meters {
         return lines.reduce((accumulatedLength, line) => accumulatedLength + line.length, 0);
