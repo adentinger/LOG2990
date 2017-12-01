@@ -11,11 +11,11 @@ export class Tree extends Decoration {
         'oak_green1_leaves', 'oak_green2_leaves', 'oak_trunk'
     ];
 
-    private static readonly PARTS = Decoration.loader.loadAll(Tree.BASE_PATH, Tree.PART_NAMES);
+    public static readonly WAIT_TO_LOAD = Decoration.loader.loadAll(Tree.BASE_PATH, Tree.PART_NAMES);
 
     constructor() {
         super();
-        Tree.PARTS.then(parts => this.addParts(parts));
+        Tree.WAIT_TO_LOAD.then(parts => this.addParts(parts));
     }
 
 }

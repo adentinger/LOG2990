@@ -9,10 +9,10 @@ export class Bush extends Decoration {
         'fir_trunk', 'fir_leaves'
     ];
 
-    private static readonly PARTS = Decoration.loader.loadAll(Bush.BASE_PATH, Bush.PART_NAMES);
+    public static readonly WAIT_TO_LOAD = Decoration.loader.loadAll(Bush.BASE_PATH, Bush.PART_NAMES);
 
     constructor() {
         super();
-        Bush.PARTS.then(parts => this.addParts(parts));
+        Bush.WAIT_TO_LOAD.then(parts => this.addParts(parts));
     }
 }
