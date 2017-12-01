@@ -11,23 +11,11 @@ export class Tree extends Decoration {
         'oak_green1_leaves', 'oak_green2_leaves', 'oak_trunk'
     ];
 
-    private static readonly LOADER = new Loader();
-
-    public static readonly TREE_PARTS = Tree.LOADER.loadAll(Tree.BASE_PATH, Tree.PART_NAMES);
+    private static readonly PARTS = Decoration.loader.loadAll(Tree.BASE_PATH, Tree.PART_NAMES);
 
     constructor() {
         super();
-        this.addTreeParts();
-    }
-
-    private addTreeParts(): void {
-        Tree.TREE_PARTS.then(parts => {
-            const clonedParts = parts.map(part => {
-                return part.clone();
-            });
-            clonedParts.forEach(part => part.material = (part.material as THREE.Material).clone());
-            this.add(... clonedParts);
-        });
+        Tree.PARTS.then(parts => this.addParts(parts));
     }
 
 }
