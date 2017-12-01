@@ -15,7 +15,6 @@ import { SoundService } from './services/sound-service';
 import { CarsService } from './racing-game/cars.service';
 import { TextureLoader, textureLoaderValue } from './services/texture-loader';
 import { CarsProgressionService } from './racing-game/cars-progression.service';
-import { LoaderService } from './racing-game/models/loader.service';
 
 @NgModule({
     imports: [
@@ -40,7 +39,6 @@ import { LoaderService } from './racing-game/models/loader.service';
         SoundService,
         CarsService,
         CarsProgressionService,
-        LoaderService,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ]
 })

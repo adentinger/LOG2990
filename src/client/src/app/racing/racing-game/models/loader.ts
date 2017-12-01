@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 
-import { Logger } from '../../../../../../common/src/index';
+import { Logger } from 'common/src/index';
 
-@Injectable()
-export class LoaderService {
+export class Loader {
 
     private readonly jsonLoader = new THREE.JSONLoader();
     private readonly logger = Logger.getLogger('LoaderService');
