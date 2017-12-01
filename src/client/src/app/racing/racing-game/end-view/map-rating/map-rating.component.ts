@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import 'rxjs/add/operator/switchMap';
-import { RenderableMap } from '../../racing-game-map/renderable-map';
 import { BestTimeComponent } from '../best-time/best-time.component';
+import { RenderableMap } from '../../racing-game-map/renderable-map';
 
 @Component({
     selector: 'app-map-rating',
@@ -47,4 +47,3 @@ export class MapRatingComponent implements OnInit {
         this.displayable = false;
     }
 }
-
