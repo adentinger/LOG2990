@@ -14,6 +14,7 @@ import { Puddle } from '../racing-game/models/obstacles/puddle';
 import { Sound, SoundType } from './sound';
 import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
 import { InvisibleWall } from '../racing-game/models/invisible-wall/invisible-wall';
+import { GAME_COMPLETED_EVENT } from '../racing-game/events';
 
 const logger = Logger.getLogger('Sound');
 
@@ -113,6 +114,13 @@ export class SoundService implements Loadable {
                 }
             }
         }
+    }
+
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    public onRaceEnding(event: EventManager.Event<void>): void {
+        this.setAbmiantSound(Sound.AIR_HORN);
+        this.playAmbiantSound(false);
     }
 
     public initialize(listener: SoundListener): void {
