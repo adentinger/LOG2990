@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Logger } from '../../../../../../../common/src';
+import { Loader } from '../loader';
 
 const logger = Logger.getLogger('Car');
 const JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
@@ -7,6 +8,7 @@ const JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
 export class CarPartsLoader {
     private static readonly BASE_PATH = 'assets/racing/car_model/';
     private static readonly FILE_EXTENSION = '.json';
+    private static readonly LOADER = new Loader();
 
     private static readonly PART_NAMES = [
         'air_intake',
@@ -31,25 +33,17 @@ export class CarPartsLoader {
     public static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = CarPartsLoader.loadColoredCarParts();
 
     private static loadCarPart(name: string): Promise<THREE.Mesh> {
-        return new Promise((resolve, reject) => {
-            JSON_LOADER.load(
-                CarPartsLoader.BASE_PATH + name + CarPartsLoader.FILE_EXTENSION,
-                (geometry, materials) => {
-                    const CAR_PART = new THREE.Mesh(geometry, materials[0]);
-                    CAR_PART.name = name;
-                    geometry.computeVertexNormals();
-                    geometry['computeMorphNormals']();
-                    (materials[0] as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
-                    (materials[0] as THREE.MeshPhongMaterial).shininess = CarPartsLoader.SHININESS;
-                    (materials[0] as THREE.MeshPhongMaterial).emissiveIntensity = 0;
-                    CAR_PART.receiveShadow = true;
-                    CAR_PART.castShadow = true;
-                    resolve(CAR_PART);
-                },
-                () => { },
-                (reason) => { logger.warn(reason); reject(reason); }
-            );
-        });
+        return this.LOADER.load(CarPartsLoader.BASE_PATH + name + CarPartsLoader.FILE_EXTENSION, name)
+                    .then(carPart => {
+                        carPart.geometry.computeVertexNormals();
+                        carPart.geometry['computeMorphNormals']();
+                        (carPart.material as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
+                        (carPart.material as THREE.MeshPhongMaterial).shininess = CarPartsLoader.SHININESS;
+                        (carPart.material as THREE.MeshPhongMaterial).emissiveIntensity = 0;
+                        carPart.receiveShadow = true;
+                        carPart.castShadow = true;
+                        return carPart;
+                    });
     }
 
     private static loadColoredCarParts(): Promise<THREE.Mesh[]> {
