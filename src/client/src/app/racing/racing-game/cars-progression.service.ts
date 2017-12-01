@@ -16,6 +16,7 @@ export const CAR_LAP_UPDATE = 'carlapupdate';
 export interface RaceCompletionInfo {
     car: Car;
     lap: number;
+    isUser: boolean;
 }
 
 @Injectable()
@@ -81,7 +82,8 @@ export class CarsProgressionService {
                     this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
                     const info: RaceCompletionInfo = {
                         car: controller.car,
-                        lap: this.carsLapNumber.get(controller.car)
+                        lap: this.carsLapNumber.get(controller.car),
+                        isUser: (controller instanceof UserCarController)
                     };
                     this.eventManager.fireEvent(CAR_LAP_UPDATE, {
                         name: CAR_LAP_UPDATE,

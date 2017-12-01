@@ -14,12 +14,9 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
-import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
+import { CarsProgressionService, CAR_LAP_UPDATE, RaceCompletionInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
-import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT } from '../constants';
-import { Logger } from '../../../../../common/src/logger';
-
-const logger = Logger.getLogger();
+import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT, CAR_COMPLETED_RACE } from '../constants';
 
 @Injectable()
 export class RacingGameService {
@@ -154,18 +151,22 @@ export class RacingGameService {
         }
     }
 
-    @EventManager.Listener(USER_LAP_UPDATE)
+    @EventManager.Listener(CAR_LAP_UPDATE)
     // tslint:disable-next-line:no-unused-variable
-    private checkIfRaceCompleted(event: EventManager.Event<UserLapInfo>) {
+    private handleCarCompletedRace(event: EventManager.Event<RaceCompletionInfo>) {
         if (event.data.lap >= this.info.maxLap) {
-            console.log('GAME COMPLETED');
-            this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
-                name: GAME_COMPLETED_EVENT,
-                data: void 0
-                /**
-                 *  put .Event<void> in listener
-                 */
+            console.log('* Race Completed By A Car *');
+            this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
+                name: CAR_COMPLETED_RACE,
+                data: event.data.car
             });
+            if (event.data.isUser) {
+                console.log('** Race Completed By User **');
+                this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
+                    name: GAME_COMPLETED_EVENT,
+                    data: void 0
+                });
+            }
         }
     }
 }
