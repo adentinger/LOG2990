@@ -1,5 +1,6 @@
 export enum Sound {
-    TETRIS,
+    NONE = -1,
+    TETRIS = 0,
     CAR_ENGINE,
     CAR_CRASH,
     START_SOUND,

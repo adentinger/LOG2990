@@ -47,10 +47,13 @@ export class SpeedBooster extends Obstacle {
                 this.boostedTargets.add(collision.target);
                 const car = <Car>collision.target;
                 car['acceleration'] = 0;
+                car['angularAcceleration'] *= 3;
                 car.velocity.copy(car.front.multiplyScalar(SpeedBooster.BOOST_SPEED));
                 setTimeout(() => {
                     car['acceleration'] = CarPhysic.DEFAULT_ACCELERATION;
+                    car['angularAcceleration'] /= 3;
                     this.boostedTargets.delete(collision.target);
+                    car.velocity.copy(car.front.multiplyScalar(CarPhysic.DEFAULT_TARGET_SPEED));
                 }, SpeedBooster.BOOST_INTERVAL);
             }
         }

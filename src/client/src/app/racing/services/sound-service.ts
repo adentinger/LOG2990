@@ -11,7 +11,7 @@ import { Car } from '../racing-game/models/car/car';
 import { Class } from '../../../../../common/src/utils';
 import { Pothole } from '../racing-game/models/obstacles/pothole';
 import { Puddle } from '../racing-game/models/obstacles/puddle';
-import { Sound, SoundType } from './sound';
+import { Sound, SoundType } from '../racing-game/sound/sound';
 import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
 import { InvisibleWall } from '../racing-game/models/invisible-wall/invisible-wall';
 import { GAME_COMPLETED_EVENT } from '../racing-game/events';
@@ -119,8 +119,11 @@ export class SoundService implements Loadable {
     @EventManager.Listener(GAME_COMPLETED_EVENT)
     // tslint:disable-next-line:no-unused-variable
     public onRaceEnding(event: EventManager.Event<void>): void {
-        this.setAbmiantSound(Sound.AIR_HORN);
-        this.playAmbiantSound(false);
+        this.setAbmiantSound(Sound.NONE)
+            .then(() => this.setAbmiantSound(Sound.AIR_HORN))
+            .then(() => this.playAmbiantSound(false))
+            .then(() => this.setAbmiantSound(Sound.END_OF_RACE))
+            .then(() => this.playAmbiantSound(true));
     }
 
     public initialize(listener: SoundListener): void {
@@ -129,6 +132,7 @@ export class SoundService implements Loadable {
 
     public finalize(): void {
         this.stopAmbiantSound();
+        this.setAbmiantSound(Sound.NONE);
         this.registeredEmitters.forEach((emitter: SoundEmitter) => {
             if (emitter.eventAudios != null) {
                 emitter.eventAudios.forEach((audio) => audio.stop());
@@ -144,11 +148,17 @@ export class SoundService implements Loadable {
         if (this.registeredListener != null && 'onListenerRemove' in this.registeredListener) {
             this.registeredListener.onListenerRemove(SoundService.AUDIO_LISTENER);
         }
-        delete this.registeredListener.listener;
+        if (this.registeredListener != null && this.registeredListener.listener != null) {
+            delete this.registeredListener.listener;
+        }
     }
 
     public setAbmiantSound(soundIndex: Sound): Promise<void> {
         this.stopAmbiantSound();
+        if (soundIndex < 0) {
+            this.ambientAudio.setBuffer(null);
+            return Promise.resolve();
+        }
         return SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             this.ambientAudio.setBuffer(buffer);
         });
@@ -170,6 +180,7 @@ export class SoundService implements Loadable {
 
     public stopAmbiantSound(): void {
         if (this.ambientAudio.isPlaying) {
+            console.log('stopping ambient sound', this.ambientAudio.startTime);
             this.ambientAudio.stop();
         }
     }

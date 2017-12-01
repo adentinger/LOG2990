@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { Injectable } from '@angular/core';
 import { Car } from './models/car/car';
-import { Line } from '../../../../../common/src/math/line';
 import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
@@ -54,11 +53,16 @@ export class CarsService implements Loadable {
         eventManager.registerClass(this);
     }
 
-    public initialize(soundService: SoundService, userInput: UIInputs, mapLines: Line[]) {
+    public initialize(soundService: SoundService, userInput: UIInputs, map: RenderableMap) {
         this.cars.forEach(soundService.registerEmitter, soundService);
         (this.controllers[this.userControllerIndex] as UserCarController).setUIInput(userInput);
-        this.controllers.forEach(controller => controller.setTrackLines(mapLines));
-        this.carsProgressionService.initialize(this.controllers, mapLines);
+        this.controllers.forEach(controller => {
+            controller.setupContoller(map, this.cars);
+            if (controller instanceof AiCarController) {
+                controller.setMode(map.mapMode);
+            }
+        });
+        this.carsProgressionService.initialize(this.controllers, map.mapLines);
     }
 
     public finalize() {
