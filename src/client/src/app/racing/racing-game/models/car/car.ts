@@ -53,7 +53,7 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
 
-    constructor(private color: THREE.Color) {
+    constructor(public readonly color: THREE.Color) {
         super();
         this.addLights();
         this.waitToLoad = this.addCarParts(color);

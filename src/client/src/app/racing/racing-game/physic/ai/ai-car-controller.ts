@@ -25,10 +25,10 @@ const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
 const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
-    private static readonly UPDATE_PERIODE = 2; // cycles
+    private static readonly UPDATE_PERIODE = 3; // cycles
     private static readonly THRESHOLD_DISTANCE_TO_SLOW: Meters = 30;
 
-    private cycleCount = 0;
+    private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
 
     public constructor(car: Car) {
         super(car);
@@ -58,7 +58,7 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-        return Math.clamp(7 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+        return Math.clamp(10 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getVectorToTarget(carPosition: Point, distanceFromBeginning: Meters): THREE.Vector3 {
@@ -141,7 +141,7 @@ export class AiCarController extends CarController {
     }
 
     private getAngularSpeedForOpponent(carPosition: Point, opponentCar: Car): number {
-        const DISTANCE_TO_START_AVOIDING = 3;
+        const DISTANCE_TO_START_AVOIDING = 5;
 
         let angularSpeed: number;
         const opponentPosition = this.convertToVector(opponentCar.position);
@@ -152,7 +152,6 @@ export class AiCarController extends CarController {
 
         const direction = Math.pow((-normalizedRelativeVelocity.dot(normalizedRelativePosition) + 1) / 2, 2);
         const lateralAvoidanceFactor = this.car.front.cross(normalizedRelativeVelocity).dot(UP_DIRECTION);
-        const frontalAvoidanceFactor = this.car.front.dot(normalizedRelativeVelocity);
         const distanceToOpponent = Math.max(1, relativePosition.length());
 
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
