@@ -28,7 +28,7 @@ export class CarPartsLoader {
 
     private static readonly SHININESS = 1000;
 
-    // has to be public to be able to get the car's dimensions
+    // Used to get the car's dimensions.
     public static readonly CAR_PARTS: Promise<THREE.Mesh[]> = CarPartsLoader.loadCarParts(CarPartsLoader.PART_NAMES);
     public static readonly CAR_COLORED_PARTS: Promise<THREE.Mesh[]> = CarPartsLoader.loadColoredCarParts();
 
