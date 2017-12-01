@@ -20,9 +20,9 @@ export class GameInfo {
         return this.carsProgressionService.userLapsCount;
     }
 
-    public getPosition(car: Car): Progression {
-        return 0;
-    }
+    // public getPosition(car: Car): Progression {
+    //     return 0;
+    // }
 
     public get lapTimes(): Seconds[] {
         // this.lapTimesInternal[this.lap - 1] = Date.now() / 1000 - this.startTime;
