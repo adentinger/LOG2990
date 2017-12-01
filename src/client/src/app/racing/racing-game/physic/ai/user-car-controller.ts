@@ -1,8 +1,9 @@
 import { CarController, CarControllerState } from './car-controller';
-import { UIInputs, KEYBOARD_EVENT } from '../../../services/ui-input.service';
+import { UIInputs } from '../../../services/ui-input.service';
 import { EventManager } from '../../../../event-manager.service';
 import { CarPhysic } from '../../models/car/car-physic';
 import { Car } from '../../models/car/car';
+import { KEYBOARD_EVENT } from '../../../constants';
 
 const KEY_FORWARD = 'w';
 const KEY_BACK = 's';

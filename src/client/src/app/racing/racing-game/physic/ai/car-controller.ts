@@ -23,6 +23,7 @@ export abstract class CarController {
 
     public start(): void {
         this.state = CarControllerState.ENABLED;
+        this.car.setMassBackToDefault();
     }
 
     public stop(): void {
@@ -30,6 +31,7 @@ export abstract class CarController {
             this.car.targetSpeed = 0;
             this.car.targetAngularSpeed = 0;
         }
+        this.car.removeCarMass();
         this.state = CarControllerState.DISABLED;
     }
 
@@ -46,5 +48,10 @@ export abstract class CarController {
         this.trackLines.push(...map.mapLines);
         this.obstacles.push(...map.mapObstacles);
         this.opponentsCars.push(...cars.filter((car) => car !== this.car));
+    }
+
+    public setTrackLines(lines: Line[]): void {
+        this.trackLines.splice(0); // clear array
+        this.trackLines.push(...lines);
     }
 }

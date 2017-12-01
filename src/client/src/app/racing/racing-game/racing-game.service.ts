@@ -4,7 +4,7 @@ import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
@@ -16,9 +16,10 @@ import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
 import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
+import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT } from '../constants';
+import { Logger } from '../../../../../common/src/logger';
 
-export const GAME_START_EVENT = 'racing-start';
-export const GAME_COMPLETED_EVENT = 'gamecompleted';
+const logger = Logger.getLogger();
 
 @Injectable()
 export class RacingGameService {
@@ -134,35 +135,6 @@ export class RacingGameService {
 
     public updateRendererSize(width: number, height: number) {
         this.renderer.updateSize(width, height);
-    }
-
-    /**
-     * ghostMode
-     */
-    public ghostMode() {
-        (<THREE.MeshPhongMaterial>this.carsService.cars[0].material).transparent = true;
-        (<THREE.MeshPhongMaterial>this.carsService.cars[0].material).opacity = 0.1;
-        console.log((<THREE.MeshPhongMaterial>this.carsService.cars[0].material));
-
-        if (this.carsService.controller[0].isControllerStateEnabled()) {
-            this.carsService.controller[0].stop();
-            this.carsService.controller[0].car.removeCarMass();
-        }
-        else {
-            this.carsService.controller[0].start();
-            this.carsService.controller[0].car.setMassBackToDefault();
-        }
-/*
-        this.carsService.controller.forEach(carController => {
-            if (carController.isControllerStateEnabled()) {
-                carController.stop();
-                carController.car.removeCarMass();
-            }
-            else {
-                carController.start();
-                carController.car.setMassBackToDefault();
-            }
-        });*/
     }
 
     public toggleDayMode(): void {

@@ -4,9 +4,10 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 
 import { RacingGameService } from './racing-game.service';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
+import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
 
 @Component({
     selector: 'app-racing-game',
@@ -95,11 +96,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         if (this.uiInputs.isKeyPressed('f')) {
             const indexOfFilter = this.toggleNextColorFilter();
             this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
-        }
-
-        // GHOST MODE
-        if (this.uiInputs.isKeyPressed('g')) {
-            this.racingGame.ghostMode();
         }
 
         const areAllowedKeyCombinationsPressed =
