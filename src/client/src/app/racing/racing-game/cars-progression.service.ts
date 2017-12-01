@@ -61,8 +61,19 @@ export class CarsProgressionService {
         }
     }
 
+    private get cars(): Car[] {
+        return this.controllers.map((controller) => controller.car);
+    }
+
     public computeUserRank(): number {
-        return 1;
+        const sortedCars: Car[] = this.cars.sort(this.compareCarPosition.bind(this));
+        return sortedCars.indexOf(this.userCar) + 1;
+    }
+
+    private compareCarPosition(carA: Car, carB: Car): number {
+        const progressionA: number = this.carsLapNumber.get(carA) + this.carsLapProgression.get(carA);
+        const progressionB: number = this.carsLapNumber.get(carB) + this.carsLapProgression.get(carB);
+        return (progressionB - progressionA);
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)

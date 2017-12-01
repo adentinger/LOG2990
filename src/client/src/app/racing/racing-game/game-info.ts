@@ -1,7 +1,6 @@
 import { Car } from './models/car/car';
 import { Seconds } from '../../types';
 import { CarsService } from './cars.service';
-import { Progression } from './racing-types';
 import { CarsProgressionService } from './cars-progression.service';
 
 export class GameInfo {
