@@ -12,6 +12,8 @@ import { PhysicUtils } from '../../physic/engine';
 import { SoundEmitter } from '../../sound/sound-emitter';
 import { Sound } from '../../sound/sound';
 
+const DEFAULT_MASS = 300;
+
 export interface CarLights {
     lightLeft: THREE.Light;
     lightRight: THREE.Light;
@@ -31,7 +33,7 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
         new THREE.Vector3(0.50077, 0.63412, 1.8)
     ];
 
-    public readonly mass: Kilograms = 300;
+    public mass: Kilograms = DEFAULT_MASS;
 
     protected lights: CarLights;
     protected breakLights: CarLights;
@@ -74,6 +76,14 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
 
     public onAudioRemove(sound: Sound, audio: THREE.PositionalAudio): void {
         this.remove(audio);
+    }
+
+    public removeCarMass(): void {
+        this.mass = 0;
+    }
+
+    public setMassBackToDefault(): void {
+        this.mass = DEFAULT_MASS;
     }
 
     private async addCarParts(color: THREE.Color): Promise<void> {

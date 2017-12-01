@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { EventManager } from '../../event-manager.service';
-import { AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 import { Seconds } from '../../types';
 import { CarController } from './physic/ai/car-controller';
 import { Car } from './models/car/car';
@@ -10,6 +9,7 @@ import { Projection } from '../../util/projection';
 import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
+import { AFTER_PHYSIC_UPDATE_EVENT } from '../constants';
 
 export const USER_LAP_UPDATE = 'userlapupdate';
 

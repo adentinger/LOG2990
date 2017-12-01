@@ -4,7 +4,7 @@ import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
@@ -16,7 +16,10 @@ import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
 import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
-import { GAME_START_EVENT, GAME_COMPLETED_EVENT } from './events';
+import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT } from '../constants';
+import { Logger } from '../../../../../common/src/logger';
+
+const logger = Logger.getLogger();
 
 @Injectable()
 export class RacingGameService {
@@ -34,7 +37,6 @@ export class RacingGameService {
     private userInputs: UIInputs = null;
 
     public get lap(): number {
-        console.log('game service is fetching lap value, which is : ' + this.info.maxLap);
         return this.info.maxLap;
     }
 
@@ -155,7 +157,6 @@ export class RacingGameService {
     // tslint:disable-next-line:no-unused-variable
     private checkIfRaceCompleted(event: EventManager.Event<UserLapInfo>) {
         if (event.data.lap >= this.info.maxLap) {
-            console.log('GAME COMPLETED');
             this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
                 name: GAME_COMPLETED_EVENT,
                 data: void 0

@@ -45,7 +45,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
     }
 
     constructor(eventManager: EventManager, private game: GameInfo) {
-        super({ antialias: true });
+        super({ antialias: true, alpha: true, clearColor: 0x000000});
         this.shadowMap.enabled = false;
         this.shadowMap.type = THREE.PCFSoftShadowMap;
 
