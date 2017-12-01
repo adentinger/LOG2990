@@ -147,4 +147,8 @@ export class RacingGameService {
         }
     }
 
+    public addRatingToMap(rating: number): void {
+        this.map.mapRatings.push(rating);
+    }
+
 }

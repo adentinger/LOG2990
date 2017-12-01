@@ -15,6 +15,8 @@ import { SoundService } from './services/sound-service';
 import { CarsService } from './racing-game/cars.service';
 import { TextureLoader, textureLoaderValue } from './services/texture-loader';
 import { CarsProgressionService } from './racing-game/cars-progression.service';
+import { MapRatingComponent } from './racing-game/game-result/map-rating/map-rating.component';
+import { BestTimeComponent } from './racing-game/game-result/best-time/best-time.component';
 
 @NgModule({
     imports: [
@@ -30,6 +32,8 @@ import { CarsProgressionService } from './racing-game/cars-progression.service';
         RacingGameComponent,
         MapBestTimeComponent,
         MapThumbnailComponent,
+        MapRatingComponent,
+        BestTimeComponent,
         UIInputs
     ],
     providers: [
