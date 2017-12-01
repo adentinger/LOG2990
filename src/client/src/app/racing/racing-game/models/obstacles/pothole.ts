@@ -20,7 +20,7 @@ export class Pothole extends Obstacle {
     private static readonly POTHOLE_TEXTURE_PROMISE = TextureLoader.getInstance().load(Pothole.TEXTURE_URL);
     private static readonly MIN_SPEED = 10; // m/s
 
-    private static readonly SLOW_FACTOR = 0.98;
+    private static readonly SLOW_FACTOR = 0.9;
     private static readonly SHAKE_AMPLITUDE = Math.PI / 240;
     private static readonly TRACK_HEIGHT = 0.03;
     private static readonly SIZE_TO_CAR_PROPORTION = 0.25;

@@ -10,7 +10,7 @@ import { Kilograms, Seconds } from '../../../../types';
 import { DayMode } from '../../day-mode/day-mode';
 import { PhysicUtils } from '../../physic/engine';
 import { SoundEmitter } from '../../sound/sound-emitter';
-import { Sound } from '../../../services/sound';
+import { Sound } from '../../sound/sound';
 
 export interface CarLights {
     lightLeft: THREE.Light;
@@ -31,7 +31,7 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
         new THREE.Vector3(0.50077, 0.63412, 1.8)
     ];
 
-    public readonly mass: Kilograms = 100;
+    public readonly mass: Kilograms = 300;
 
     protected lights: CarLights;
     protected breakLights: CarLights;
@@ -53,10 +53,10 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
 
-    constructor(carColor: THREE.Color) {
+    constructor(public readonly color: THREE.Color) {
         super();
         this.addLights();
-        this.waitToLoad = this.addCarParts(carColor);
+        this.waitToLoad = this.addCarParts(color);
         this.waitToLoad.then(() => {
             this.breaklightsMesh = this.getObjectByName('brake_light') as THREE.Mesh;
             this.dimensions.copy(PhysicUtils.getObjectDimensions(this));
@@ -121,7 +121,9 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
 
     private updateEnginePitch(): void {
         const PITCH_FACTOR = 1.2;
-        const playbackRate = PITCH_FACTOR * (this.velocity.length() / CarPhysic.DEFAULT_TARGET_SPEED) + MIN_RATE;
+        let currentSpeed = this.velocity.length();
+        currentSpeed = Number.isFinite(currentSpeed) ? currentSpeed : 0;
+        const playbackRate = PITCH_FACTOR * (currentSpeed / CarPhysic.DEFAULT_TARGET_SPEED) + MIN_RATE;
         if (this.constantAudios.has(Sound.CAR_ENGINE)) {
             this.constantAudios.get(Sound.CAR_ENGINE).setPlaybackRate(playbackRate);
         }

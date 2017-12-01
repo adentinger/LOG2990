@@ -14,8 +14,8 @@ export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundL
     private static readonly HEIGHT: number = window.innerHeight;
     private static readonly ASPECT: number = PerspectiveCamera.WIDTH / PerspectiveCamera.HEIGHT;
     private static readonly NEAR: number = 0.05;
-    private static readonly FAR: number = 300;
-    private static readonly VIEW_ANGLE: number = 45;
+    private static readonly FAR: number = 400;
+    private static readonly VIEW_ANGLE: number = 45 * 1.025 ** 20;
 
     private target: THREE.Object3D;
     public readonly name: string;
