@@ -7,11 +7,8 @@ import { RacingGameService } from './racing-game.service';
 import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
-<<<<<<< HEAD
 import { MapRatingComponent } from './game-result/map-rating/map-rating.component';
-=======
 import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
->>>>>>> dev
 
 @Component({
     selector: 'app-racing-game',
@@ -56,11 +53,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.updateRendererSize();
             });
         });
-<<<<<<< HEAD
         this.mapRating.ngOnInit();
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
-=======
->>>>>>> dev
     }
 
     public ngOnDestroy() {
