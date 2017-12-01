@@ -5,6 +5,8 @@ import { Logger } from '../../../../../../common/src/index';
 
 export class Loader {
 
+    private static readonly FILE_EXTENSION = '.json';
+
     private readonly jsonLoader = new THREE.JSONLoader();
     private readonly logger = Logger.getLogger('LoaderService');
 
@@ -23,6 +25,16 @@ export class Loader {
                 (reason) => { this.logger.warn(reason); reject(reason); }
             );
         });
+    }
+
+    public loadAll(basePath: string, partNames: string[]): Promise<THREE.Mesh[]> {
+        const parts = [];
+        for (const partName of partNames) {
+            const url = basePath + partName + Loader.FILE_EXTENSION;
+            parts.push(this.load(url, partName));
+        }
+
+        return Promise.all(parts);
     }
 
 }
