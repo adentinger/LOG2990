@@ -6,13 +6,13 @@ import { SoundListener } from '../racing-game/sound/sound-listener';
 import { Loadable } from '../../loadable';
 import { EventManager } from '../../event-manager.service';
 import { CollisionInfo, Collidable, CollidableMesh } from '../racing-game/physic/collidable';
-import { COLLISION_EVENT } from '../racing-game/physic/utils';
 import { Car } from '../racing-game/models/car/car';
 import { Class } from '../../../../../common/src/utils';
 import { Pothole } from '../racing-game/models/obstacles/pothole';
 import { Puddle } from '../racing-game/models/obstacles/puddle';
 import { Sound, SoundType } from './sound';
 import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
+import { COLLISION_EVENT } from '../constants';
 
 const logger = Logger.getLogger('Sound');
 

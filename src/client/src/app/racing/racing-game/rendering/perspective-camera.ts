@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { EventManager } from '../../../event-manager.service';
-import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../physic/engine';
 import { SoundListener } from '../sound/sound-listener';
+import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../constants';
 
 export class PerspectiveCamera extends THREE.PerspectiveCamera implements SoundListener {
     public static readonly DRIVER_POSITION = new THREE.Vector3(-0.25, 1.15, -0.1);

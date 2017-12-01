@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import { CollisionInfo, Collidable } from '../../physic/collidable';
 import { Meters } from '../../../../types';
 import { EventManager } from '../../../../event-manager.service';
-import { COLLISION_EVENT, PhysicUtils } from '../../physic/utils';
 import { CarPartsLoader } from '../car/car-parts-loader';
 import { Car } from '../car/car';
 import { CarPhysic } from '../car/car-physic';
 import { TextureLoader } from '../../../services/texture-loader';
 import { Obstacle } from './obstacle';
+import { COLLISION_EVENT } from '../../../constants';
+import { PhysicUtils } from '../../physic/utils';
 
 export class SpeedBooster extends Obstacle {
     private static readonly TEXTURE_URL = '/assets/racing/textures/speed-boost.png';

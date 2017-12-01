@@ -3,10 +3,9 @@ import { IPhysicElement, isPhysicElement } from './object';
 import { Collidable, isCollidable, CollisionInfo } from './collidable';
 import { Point, Line } from '../../../../../../common/src/math';
 import { EventManager } from '../../../event-manager.service';
+import { COLLISION_EVENT } from '../../constants';
 
 export const UP_DIRECTION = new THREE.Vector3(0, 1, 0);
-
-export const COLLISION_EVENT = 'physic-collision';
 
 export class PhysicUtils {
     public static readonly G = new THREE.Vector3(0, -9.81, 0); // N/kg

@@ -4,7 +4,7 @@ import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
@@ -16,11 +16,9 @@ import { Sound } from '../services/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
 import { CarsProgressionService, USER_LAP_UPDATE, UserLapInfo } from './cars-progression.service';
+import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT } from '../constants';
 
 const logger = Logger.getLogger();
-
-export const GAME_START_EVENT = 'racing-start';
-export const GAME_COMPLETED_EVENT = 'gamecompleted';
 
 @Injectable()
 export class RacingGameService {
@@ -130,14 +128,6 @@ export class RacingGameService {
 
     public updateRendererSize(width: number, height: number) {
         this.renderer.updateSize(width, height);
-    }
-
-    /**
-     * ghostMode
-     */
-    public ghostMode() {
-        this.carsService.toggleCarColorTransparent();
-        this.carsService.controller[0].stop();
     }
 
     public toggleDayMode(): void {

@@ -2,13 +2,12 @@ import * as THREE from 'three';
 import { Obstacle } from './obstacle';
 import { CollisionInfo } from '../../physic/collidable';
 import { EventManager } from '../../../../event-manager.service';
-import { COLLISION_EVENT } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
 import { PhysicUtils } from '../../physic/utils';
 import { CarPartsLoader } from '../car/car-parts-loader';
-import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { PerspectiveCamera } from '../../rendering/perspective-camera';
 import { TextureLoader } from '../../../services/texture-loader';
+import { COLLISION_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../../constants';
 
 export class Pothole extends Obstacle {
     private static readonly TEXTURE_URL = '/assets/racing/textures/pothole.png';

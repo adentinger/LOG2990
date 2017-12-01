@@ -1,9 +1,9 @@
 import { CollidableMesh, CollisionInfo } from '../../physic/collidable';
-import { COLLISION_EVENT } from '../../physic/utils';
 import { EventManager } from '../../../../event-manager.service';
 import * as THREE from 'three';
 import { Kilograms, Meters } from '../../../../types';
 import { Car } from '../car/car';
+import { COLLISION_EVENT } from '../../../constants';
 
 const SLOW_FACTOR = 0.8;
 
