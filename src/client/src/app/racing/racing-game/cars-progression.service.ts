@@ -11,10 +11,15 @@ import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
 
+export const USER_LAP_UPDATE = 'userlapupdate';
+
+export interface UserLapInfo {
+    lap: number;
+}
 
 @Injectable()
 /**
- * Keeps Track of the cars progression relative to the map
+ * Keeps Track of all cars progression relative to the map
  * (On a linear scale)
  */
 export class CarsProgressionService {
@@ -38,7 +43,7 @@ export class CarsProgressionService {
     private mapLength: number;
     private progressionUpdateCounter = 0;
 
-    public constructor(eventManager: EventManager) {
+    public constructor(private eventManager: EventManager) {
         eventManager.registerClass(this);
     }
 
@@ -73,6 +78,13 @@ export class CarsProgressionService {
                 else if (newLapProgression < 0.5 && this.carsHalfMark.get(controller.car)) {
                     this.carsHalfMark.set(controller.car, false);
                     this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
+                    if (controller instanceof UserCarController) {
+                        const lapData: UserLapInfo = { lap: this.carsLapNumber.get(controller.car) };
+                        this.eventManager.fireEvent(USER_LAP_UPDATE, {
+                            name: USER_LAP_UPDATE,
+                            data: lapData
+                        });
+                    }
                 }
                 this.carsLapProgression.set(controller.car, this.computeLapProgression(controller.car));
             }
