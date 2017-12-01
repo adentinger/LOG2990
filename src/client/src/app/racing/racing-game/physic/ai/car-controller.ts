@@ -17,6 +17,7 @@ export abstract class CarController {
 
     public start(): void {
         this.state = CarControllerState.ENABLED;
+        this.car.setMassBackToDefault();
     }
 
     public stop(): void {
@@ -24,11 +25,8 @@ export abstract class CarController {
             this.car.targetSpeed = 0;
             this.car.targetAngularSpeed = 0;
         }
+        this.car.removeCarMass();
         this.state = CarControllerState.DISABLED;
-    }
-
-    public isControllerStateEnabled(): boolean {
-        return this.state === CarControllerState.ENABLED ? true : false;
     }
 
     public setTrackLines(lines: Line[]): void {

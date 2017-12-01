@@ -12,7 +12,10 @@ import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
+import { PhysicUtils } from './physic/utils';
 
+const CAR_OPACITY_DEFAULT = 1;
+const CAR_OPACITY_TRANSPARENT = 0.4;
 
 @Injectable()
 export class CarsService implements Loadable {
@@ -103,6 +106,15 @@ export class CarsService implements Loadable {
 
     public startControllers(): void {
         this.controllers.forEach(controller => controller.start());
+    }
+
+    public toggleCarColorTransparent(): void {
+        (PhysicUtils.getChildren(this.controllers[0].car).filter((child) => child instanceof THREE.Mesh) as THREE.Mesh[])
+            .forEach((mesh) => {
+                const material = (<THREE.Material>mesh.material);
+                material.transparent = material.transparent ? false : true;
+                material.opacity = material.transparent ? CAR_OPACITY_TRANSPARENT : CAR_OPACITY_DEFAULT;
+            });
     }
 
 }

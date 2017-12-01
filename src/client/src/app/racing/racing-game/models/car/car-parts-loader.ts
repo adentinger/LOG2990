@@ -30,12 +30,13 @@ export class CarPartsLoader {
         return new Promise((resolve, reject) => {
             JSON_LOADER.load(
                 CarPartsLoader.BASE_PATH + name + CarPartsLoader.FILE_EXTENSION,
-                (geometry, materials) => {
+                (geometry: THREE.Geometry, materials) => {
                     const CAR_PART = new THREE.Mesh(geometry, materials[0]);
                     CAR_PART.name = name;
                     geometry.computeVertexNormals();
-                    geometry['computeMorphNormals']();
-                    (materials[0] as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
+                    geometry.computeMorphNormals();
+                    (materials[0] as THREE.MeshPhongMaterial).blending = THREE.NormalBlending;
+                    (materials[0] as THREE.MeshPhongMaterial).transparent = false;
                     (materials[0] as THREE.MeshPhongMaterial).shininess = CarPartsLoader.SHININESS;
                     (materials[0] as THREE.MeshPhongMaterial).emissiveIntensity = 0;
                     CAR_PART.receiveShadow = true;

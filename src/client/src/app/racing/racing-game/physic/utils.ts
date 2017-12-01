@@ -26,6 +26,17 @@ export class PhysicUtils {
         return new THREE.Vector3().subVectors(box1.max, box1.min);
     }
 
+    public static getChildren(object: THREE.Object3D): THREE.Object3D[] {
+        const children: THREE.Object3D[] = [];
+        if (object) {
+            children.push(...object.children);
+            for (const child of object.children) {
+                children.push(...PhysicUtils.getChildren(child));
+            }
+        }
+        return children;
+    }
+
     public setRoot(root: THREE.Object3D): void {
         this.root = root;
     }
@@ -47,7 +58,7 @@ export class PhysicUtils {
 
     public getAllPhysicObjects(): IPhysicElement[] {
         const objects: THREE.Object3D[] = [this.root];
-        objects.push(...this.getChildren(this.root));
+        objects.push(...PhysicUtils.getChildren(this.root));
         return objects.filter((child) => isPhysicElement(child)) as IPhysicElement[];
     }
 
@@ -199,17 +210,6 @@ export class PhysicUtils {
 
     private getVector3FromPoint(point: Point): THREE.Vector3 {
         return new THREE.Vector3(point.x, 0, point.y);
-    }
-
-    private getChildren(object: THREE.Object3D): THREE.Object3D[] {
-        const children: THREE.Object3D[] = [];
-        if (object) {
-            children.push(...object.children);
-            for (const child of object.children) {
-                children.push(...this.getChildren(child));
-            }
-        }
-        return children;
     }
 }
 

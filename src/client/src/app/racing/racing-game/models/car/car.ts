@@ -12,7 +12,7 @@ import { PhysicUtils } from '../../physic/engine';
 import { SoundEmitter } from '../../sound/sound-emitter';
 import { Sound } from '../../../services/sound';
 
-const DEFAULT_MASS = 100;
+const DEFAULT_MASS = 300;
 
 export interface CarLights {
     lightLeft: THREE.Light;

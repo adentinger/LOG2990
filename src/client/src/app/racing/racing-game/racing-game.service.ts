@@ -134,29 +134,8 @@ export class RacingGameService {
      * ghostMode
      */
     public ghostMode() {
-        (<THREE.MeshPhongMaterial>this.carsService.cars[0].material).transparent = true;
-        (<THREE.MeshPhongMaterial>this.carsService.cars[0].material).opacity = 0.1;
-        console.log((<THREE.MeshPhongMaterial>this.carsService.cars[0].material));
-
-        if (this.carsService.controller[0].isControllerStateEnabled()) {
-            this.carsService.controller[0].stop();
-            this.carsService.controller[0].car.removeCarMass();
-        }
-        else {
-            this.carsService.controller[0].start();
-            this.carsService.controller[0].car.setMassBackToDefault();
-        }
-/*
-        this.carsService.controller.forEach(carController => {
-            if (carController.isControllerStateEnabled()) {
-                carController.stop();
-                carController.car.removeCarMass();
-            }
-            else {
-                carController.start();
-                carController.car.setMassBackToDefault();
-            }
-        });*/
+        this.carsService.toggleCarColorTransparent();
+        this.carsService.controller[0].stop();
     }
 
     public toggleDayMode(): void {
