@@ -13,7 +13,8 @@ export class MapPositionAlgorithms {
         const lineVector: Vector = new Vector(line.destination.x - origin.x, line.destination.y - origin.y);
 
         const dot: number = pointVector.scalar(lineVector);
-        const interpolation: number = dot / this.squaredNorm(lineVector);
+        let interpolation: number = dot / this.squaredNorm(lineVector);
+        interpolation = Math.clamp(interpolation, 0, 1);
 
         const interpolationPoint: Point = line.interpolate(interpolation);
 
@@ -26,13 +27,7 @@ export class MapPositionAlgorithms {
         const projections: Projection[] = this.getAllProjections(position, lines);
         let closestProjection = projections[0];
         for (const projection of projections) {
-            const projectionPoint = closestProjection.segment.interpolate(Math.clamp(closestProjection.interpolation, 0, 1));
-            const pointOnLine = projectionPoint.substract(position);
-            const distance = new Vector(pointOnLine.x, pointOnLine.y).norm();
-            const projectionPoint2 = projection.segment.interpolate(Math.clamp(projection.interpolation, 0, 1));
-            const pointOnLine2 = projectionPoint2.substract(position);
-            const distance2 = new Vector(pointOnLine2.x, pointOnLine2.y).norm();
-            if (distance2 < distance) {
+            if (projection.distanceToSegment < closestProjection.distanceToSegment) {
                 closestProjection = projection;
             }
         }
@@ -58,6 +53,11 @@ export class MapPositionAlgorithms {
         });
         return lineAtDistance.interpolate(distance / lineAtDistance.length);
     }
+
+    // public static getProgressOnWholeTrack(position: Point, lines: Line[]): Progression {
+    //     const projection: Projection = MapPositionAlgorithms.getClosestProjection(position, lines);
+    //     let progression: Progression = lines.findIndex((line) => line === projection.segment);
+    // }
 
     public static getTrackLength(lines: Line[]): Meters {
         return lines.reduce((accumulatedLength, line) => accumulatedLength + line.length, 0);

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { WaitingService } from '../config-menu/waiting/waiting.service';
 import { UserChoiceService, CreateOrJoin } from '../config-menu/user-choice.service';
 import { GameService, GameState } from '../game.service';
 import { GameHttpService } from './game-http.service';
@@ -20,8 +19,7 @@ import { MenuAutomatonService } from '../config-menu/menu-automaton.service';
 @Injectable()
 export class GameManagerService {
 
-    constructor(private waitingService: WaitingService,
-                private userChoiceService: UserChoiceService,
+    constructor(private userChoiceService: UserChoiceService,
                 private gameService: GameService,
                 private gameHttpService: GameHttpService,
                 private definitionsService: DefinitionsService,
@@ -52,7 +50,6 @@ export class GameManagerService {
     }
 
     private startGame(): void {
-        this.waitingService.isWaiting.next(true);
         const isJoiningGame = this.userChoiceService.createOrJoin === CreateOrJoin.join;
         if (isJoiningGame) {
             this.gameService.joinGame(

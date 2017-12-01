@@ -13,6 +13,7 @@ export class PhysicUtils {
     private static readonly SPRING_CONSTANT = 1; // N*m^2
 
     private root: THREE.Object3D;
+    private boundingBoxes: Map<Collidable, THREE.Box3> = new Map();
 
     constructor(private eventManager: EventManager) { }
 
@@ -107,9 +108,13 @@ export class PhysicUtils {
     }
 
     private areEnoughCloseToCollide(target: Collidable, source: Collidable): boolean {
-        const targetRadius = PhysicUtils.getObjectDimensions(target).length() / 2;
-        const sourceRadius = PhysicUtils.getObjectDimensions(source).length() / 2;
-        return target.position.distanceTo(source.position) <= targetRadius + sourceRadius;
+        if (!this.boundingBoxes.has(target) || !this.boundingBoxes.has(source)) {
+            this.getBoundingBoxFromCollidable(target);
+            this.getBoundingBoxFromCollidable(source);
+        }
+        const targetRadius = this.boundingBoxes.get(target).getBoundingSphere().radius;
+        const sourceRadius = this.boundingBoxes.get(source).getBoundingSphere().radius;
+        return target.position.distanceTo(source.position) < targetRadius + sourceRadius;
     }
 
     private getFirstIntersection(targetLines: Line[], sourceLines: Line[]): [Line, Line, Point][] {
@@ -135,7 +140,10 @@ export class PhysicUtils {
     private getBoundingLines(collidable: Collidable): Line[] {
         const targetLines: Line[] = [];
 
-        const box: THREE.Box3 = this.getBoundingBoxFromCollidable(collidable);
+        if (!this.boundingBoxes.has(collidable)) {
+            this.getBoundingBoxFromCollidable(collidable);
+        }
+        const box: THREE.Box3 = this.boundingBoxes.get(collidable) || new THREE.Box3();
 
         // Corners in counter clockwise order (positive rotation)
         const corners: Point[] = [
@@ -160,7 +168,7 @@ export class PhysicUtils {
         return targetLines;
     }
 
-    private getBoundingBoxFromCollidable(collidable: Collidable): THREE.Box3 {
+    private getBoundingBoxFromCollidable(collidable: Collidable): void {
         const box = new THREE.Box3();
         collidable.geometry.computeBoundingSphere();
         if (collidable.geometry.boundingSphere.radius > 0) {
@@ -174,7 +182,7 @@ export class PhysicUtils {
             collidable.rotation.copy(originalRotation);
             box.translate(collidable.position.clone().negate());
         }
-        return box;
+        this.boundingBoxes.set(collidable, box);
     }
 
     private getVector2FromVector3(vector: THREE.Vector3): THREE.Vector2 {

@@ -17,7 +17,7 @@ export class DecorationFactory {
 
     public getClassInstance(className: DecorationType): Decoration {
         switch (className) {
-            case DecorationType.TREE:  return new Tree();
+            case DecorationType.TREE: return new Tree();
             case DecorationType.BUSH: return new Bush();
             case DecorationType.BUILDING: return new Building();
         }

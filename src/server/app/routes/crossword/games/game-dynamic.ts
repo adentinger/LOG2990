@@ -66,6 +66,7 @@ export class GameDynamic extends Game {
             if (this.dataInternal.wordsLeftToFind.length > 0) {
                 // Reset timer
                 this.resetTimer();
+                this.startTimer();
             }
             else {
                 this.stopTimer();

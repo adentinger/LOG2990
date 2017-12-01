@@ -11,8 +11,9 @@ import { MapService } from '../services/map.service';
 import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { PhysicEngine } from './physic/engine';
-import { CarsPositionsService } from './cars-positions.service';
 import { SoundService } from '../services/sound-service';
+import { CarsService } from './cars.service';
+import { CarsProgressionService } from './cars-progression.service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -32,7 +33,8 @@ describe('RacingGameComponent', () => {
                 MapService,
                 EventManager,
                 PhysicEngine,
-                CarsPositionsService,
+                CarsService,
+                CarsProgressionService,
                 SoundService
             ]
         })
