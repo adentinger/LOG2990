@@ -25,7 +25,7 @@ const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
 const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
-    private static readonly UPDATE_PERIODE = 3; // cycles
+    private static readonly UPDATE_PERIODE = 5; // cycles
     private static readonly THRESHOLD_DISTANCE_TO_SLOW: Meters = 30;
 
     private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
@@ -47,6 +47,7 @@ export class AiCarController extends CarController {
                 this.getAngularSpeedForFollowingTrack(carPosition, projectionOfCar) +
                 this.getAngularSpeedForObstacles(carPosition) +
                 this.getAngularSpeedForOpponents(carPosition);
+            this.car.angularSpeed *= Math.max(0.0, Math.sign(this.car.velocity.dot(this.car.front)));
             this.car.targetSpeed = this.getTargetSpeedForFollowingTrack(projectionOfCar);
         }
     }
@@ -58,7 +59,7 @@ export class AiCarController extends CarController {
         const angle = this.car.front.angleTo(targetVector);
         const sens = Math.sign(this.car.front.cross(targetVector).dot(UP_DIRECTION));
 
-        return Math.clamp(10 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
+        return Math.clamp(5 * sens * angle, -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }
 
     private getVectorToTarget(carPosition: Point, distanceFromBeginning: Meters): THREE.Vector3 {
