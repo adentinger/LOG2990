@@ -13,6 +13,7 @@ import { Pothole } from '../racing-game/models/obstacles/pothole';
 import { Puddle } from '../racing-game/models/obstacles/puddle';
 import { Sound, SoundType } from './sound';
 import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
+import { InvisibleWall } from '../racing-game/models/invisible-wall/invisible-wall';
 
 const logger = Logger.getLogger('Sound');
 
@@ -40,7 +41,8 @@ export class SoundService implements Loadable {
         [Pothole, [Sound.POTHOLE]],
         [Puddle, [Sound.PUDDLE]],
         [SpeedBooster, [Sound.BOOST_START, Sound.BOOST_END]],
-        [Car, [Sound.CAR_CRASH]]
+        [Car, [Sound.CAR_CRASH]],
+        [InvisibleWall, [Sound.CAR_HITTING_WALL]]
     ] as [Class<CollidableMesh>, Sound[]][]);
 
     private static readonly SOUND_PROMISES =

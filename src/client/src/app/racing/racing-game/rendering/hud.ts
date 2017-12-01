@@ -12,6 +12,7 @@ export interface Time {
 export class HUD {
     private static readonly FONT_FAMILLY = 'system-ui';
     private static readonly TEXT_COLOR = '#ffd700';
+    private static readonly NUMBER_OF_SECONDS_BEFORE_START = 3;
 
     private static readonly TEXT_HEIGTH = 0.05; // height (proportion of the screen height), normalized between 0 and 1
     private static readonly TEXT_OFFSET = 0.01;
@@ -127,9 +128,8 @@ export class HUD {
     private drawStartTimer(context: CanvasRenderingContext2D, game: GameInfo) {
         const textPosition = this.getTextPosition(context, HUD.START_TIMER_POSITION);
         const screenSize = this.getSize(context);
-        console.log('Drawing timer');
 
-        const countDown = Math.ceil(game.startTime - Date.now() / 1000);
+        const countDown = Math.ceil(game.startTime + HUD.NUMBER_OF_SECONDS_BEFORE_START - Date.now() / 1000);
         const text = `${countDown > 0 ? countDown : (countDown === 0 ? 'GO' : '')}`;
         const textWidth = this.context.measureText(text).width;
         const textHeight = HUD.TEXT_HEIGTH * screenSize.height;
