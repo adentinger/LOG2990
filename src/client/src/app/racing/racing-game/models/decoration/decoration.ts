@@ -4,7 +4,7 @@ import { Loader } from '../loader';
 
 export abstract class Decoration extends THREE.Mesh {
 
-    private static readonly SHININESS = 10;
+    private static readonly SHININESS = 1;
 
     protected static readonly loader = new Loader();
 
