@@ -2,13 +2,12 @@ import * as THREE from 'three';
 import { Obstacle } from './obstacle';
 import { CollisionInfo } from '../../physic/collidable';
 import { EventManager } from '../../../../event-manager.service';
-import { COLLISION_EVENT } from '../../physic/utils';
 import { isDynamicCollidable, DynamicCollidable } from '../../physic/dynamic-collidable';
 import { PhysicUtils } from '../../physic/utils';
 import { CarPartsLoader } from '../car/car-parts-loader';
-import { AFTER_PHYSIC_UPDATE_EVENT } from '../../physic/engine';
 import { PerspectiveCamera } from '../../rendering/perspective-camera';
 import { TextureLoader } from '../../../services/texture-loader';
+import { COLLISION_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../../constants';
 
 export class Pothole extends Obstacle {
     private static readonly TEXTURE_URL = '/assets/racing/textures/pothole.png';
@@ -20,7 +19,7 @@ export class Pothole extends Obstacle {
     private static readonly POTHOLE_TEXTURE_PROMISE = TextureLoader.getInstance().load(Pothole.TEXTURE_URL);
     private static readonly MIN_SPEED = 10; // m/s
 
-    private static readonly SLOW_FACTOR = 0.98;
+    private static readonly SLOW_FACTOR = 0.9;
     private static readonly SHAKE_AMPLITUDE = Math.PI / 240;
     private static readonly TRACK_HEIGHT = 0.03;
     private static readonly SIZE_TO_CAR_PROPORTION = 0.25;

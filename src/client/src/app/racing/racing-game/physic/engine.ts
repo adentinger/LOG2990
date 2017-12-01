@@ -4,11 +4,9 @@ import * as THREE from 'three';
 import { Seconds } from '../../../types';
 import { EventManager } from '../../../event-manager.service';
 import '../../../../../../common/src/math/clamp';
+import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../constants';
 
 export * from './utils';
-
-export const BEFORE_PHYSIC_UPDATE_EVENT = 'beforephysicupdate';
-export const AFTER_PHYSIC_UPDATE_EVENT = 'afterphysicupdate';
 
 @Injectable()
 export class PhysicEngine {

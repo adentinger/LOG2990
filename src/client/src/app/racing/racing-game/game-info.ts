@@ -44,7 +44,7 @@ export class GameInfo {
         private carsService: CarsService,
         private carsProgressionService: CarsProgressionService) { }
 
-    public startTimer(): void {
-        this.startTime = Date.now() / 1000;
+    public startTimer(delay: Seconds = 0): void {
+        this.startTime = Date.now() / 1000 + delay;
     }
 }

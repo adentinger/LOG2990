@@ -1,5 +1,6 @@
 import { HostListener, Directive } from '@angular/core';
 import { EventManager } from '../../event-manager.service';
+import { KEYDOWN_EVENT, KEYBOARD_EVENT, INPUT_EVENT, KEYUP_EVENT, MOUSEDOWN_EVENT, MOUSE_EVENT, MOUSEUP_EVENT } from '../constants';
 
 export enum MouseButton {
     /**
@@ -15,14 +16,6 @@ export enum MouseButton {
      */
     SECONDARY
 }
-
-export const INPUT_EVENT = 'userinput';
-export const KEYBOARD_EVENT = 'userinput-keyboard';
-export const KEYDOWN_EVENT = 'userinput-keydown';
-export const KEYUP_EVENT = 'userinput-keyup';
-export const MOUSE_EVENT = 'userinput-mouse';
-export const MOUSEDOWN_EVENT = 'userinput-mousedown';
-export const MOUSEUP_EVENT = 'userinput-mouseup';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[catchInputs]', exportAs: '$inputs' })

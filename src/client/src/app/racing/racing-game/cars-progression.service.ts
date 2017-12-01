@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { EventManager } from '../../event-manager.service';
-import { AFTER_PHYSIC_UPDATE_EVENT } from './physic/engine';
 import { Seconds } from '../../types';
 import { CarController } from './physic/ai/car-controller';
 import { Car } from './models/car/car';
@@ -10,11 +9,14 @@ import { Projection } from '../../util/projection';
 import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
+import { AFTER_PHYSIC_UPDATE_EVENT } from '../constants';
 
-export const USER_LAP_UPDATE = 'userlapupdate';
+export const CAR_LAP_UPDATE = 'carlapupdate';
 
-export interface UserLapInfo {
+export interface RaceCompletionInfo {
+    car: Car;
     lap: number;
+    isUser: boolean;
 }
 
 @Injectable()
@@ -86,16 +88,18 @@ export class CarsProgressionService {
                 if (newLapProgression > 0.45 && newLapProgression < 0.55) {
                     this.carsHalfMark.set(controller.car, true);
                 }
-                else if (newLapProgression < 0.5 && this.carsHalfMark.get(controller.car)) {
+                else if (newLapProgression < 0.05 && this.carsHalfMark.get(controller.car)) {
                     this.carsHalfMark.set(controller.car, false);
                     this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
-                    if (controller instanceof UserCarController) {
-                        const lapData: UserLapInfo = { lap: this.carsLapNumber.get(controller.car) };
-                        this.eventManager.fireEvent(USER_LAP_UPDATE, {
-                            name: USER_LAP_UPDATE,
-                            data: lapData
-                        });
-                    }
+                    const info: RaceCompletionInfo = {
+                        car: controller.car,
+                        lap: this.carsLapNumber.get(controller.car),
+                        isUser: (controller instanceof UserCarController)
+                    };
+                    this.eventManager.fireEvent(CAR_LAP_UPDATE, {
+                        name: CAR_LAP_UPDATE,
+                        data: info
+                    });
                 }
                 this.carsLapProgression.set(controller.car, this.computeLapProgression(controller.car));
             }
