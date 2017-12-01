@@ -17,7 +17,7 @@ export class BestTimeComponent implements OnInit {
     constructor() { }
 
     public ngOnInit(): void {
-        this.displayable = true;
+        this.displayable = false;
     }
 }
 

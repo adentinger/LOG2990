@@ -1,4 +1,4 @@
-<div class = 'outer'   >
+<div class = 'outer' *ngIf="displayable" [ngClass]="{hide_me: !displayable, show_me: displayable}" >
     <div class = 'map-rating-menu' >
         <h1>Map Rating</h1>
         <div class = 'five-stars'>
@@ -8,6 +8,8 @@
             <img [src] = 'stars[3]' (mouseenter) = 'OnMouseOver(3)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(3)'>
             <img [src] = 'stars[4]' (mouseenter) = 'OnMouseOver(4)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(4)'>
         </div>
+        <button (click) = 'displayBestTimeComponent()'>Next</button>
+        <app-best-time></app-best-time>
     </div>
 </div>
 
