@@ -30,7 +30,7 @@ export class MockMaps {
     }
 
     public functionalMap2(): Map {
-        return new Map(new Path([new Point(0, 0), new Point(10, 0), new Point(0, 10), new Point(0, 0)]),
+        return new Map(new Path([new Point(0, 0), new Point(100, 0), new Point(0, 100), new Point(0, 0)]),
                        MockMaps.MIN_LINE_LENGTH,
                        'name',
                        'description',
@@ -79,7 +79,7 @@ export class MockMaps {
     }
 
     public renderableMap(): RenderableMap {
-        const serializedMap = new MapConverterService(new RacingUnitConversionService()).serialize(this.functionalMap1());
+        const serializedMap = new MapConverterService(new RacingUnitConversionService()).serialize(this.functionalMap2());
         const eventManager = EventManager.getInstance();
         return new RenderableMap(serializedMap, eventManager);
     }
