@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import 'rxjs/add/operator/switchMap';
 import { BestTimeComponent } from '../best-time/best-time.component';
 import { RenderableMap } from '../../racing-game-map/renderable-map';
 
@@ -19,7 +18,7 @@ export class MapRatingComponent implements OnInit {
     private readonly filledStarImageSource = '/assets/racing/stars-rating/filled-star.png';
     private readonly emptyStarImageSource = '/assets/racing/stars-rating/empty-star.png';
     public stars: string[] = [];
-    private numberOfStarsClicked = 0;
+    private numberOfStarsClicked;
 
     constructor() {  }
 
@@ -39,8 +38,10 @@ export class MapRatingComponent implements OnInit {
 
     public mouseOutOfStar(): void {
         this.stars.fill(this.emptyStarImageSource);
-        for (let i = 0 ; i <=  this.numberOfStarsClicked; i++) {
-            this.stars[i] = this.filledStarImageSource;
+        if (this.numberOfStarsClicked >= 0 && this.numberOfStarsClicked !== null) {
+            for (let i = 0 ; i <=  this.numberOfStarsClicked; i++) {
+                this.stars[i] = this.filledStarImageSource;
+            }
         }
     }
 
