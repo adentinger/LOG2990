@@ -25,8 +25,8 @@ export class DecorationGenerator {
     private static readonly DECORATION_FACTORY = new DecorationFactory();
     private static readonly MAX_PLACEMENT_TRIES = 20;
 
-    public placeDecorationsOnMap(map: RenderableMap): void {
-        Promise.all([Tree.WAIT_TO_LOAD, Bush.WAIT_TO_LOAD]).then(async () => {
+    public placeDecorationsOnMap(map: RenderableMap): Promise<void> {
+        return Promise.all([Tree.WAIT_TO_LOAD, Bush.WAIT_TO_LOAD]).then(async () => {
             const mapLength = map.computeLength();
             const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
             const allDecorationsData: DecorationData[] = [];
