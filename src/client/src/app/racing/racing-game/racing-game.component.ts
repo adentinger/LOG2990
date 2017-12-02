@@ -54,7 +54,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             });
         });
         this.mapRating.ngOnInit();
-        this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
     public ngOnDestroy() {
