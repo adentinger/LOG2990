@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BestTimeComponent } from '../best-time/best-time.component';
 import { RenderableMap } from '../../racing-game-map/renderable-map';
+import { EndViewComponent } from '../end-view.component';
 
 @Component({
     selector: 'app-map-rating',
@@ -20,7 +21,7 @@ export class MapRatingComponent implements OnInit {
     public stars: string[] = [];
     private numberOfStarsClicked;
 
-    constructor() {  }
+    constructor(private endView: EndViewComponent) {  }
 
     public ngOnInit(): void {
         this.displayable = false;
@@ -50,7 +51,6 @@ export class MapRatingComponent implements OnInit {
     }
 
     public displayBestTimeComponent(): void {
-        this.bestTime.displayable = true;
-        this.displayable = false;
+        this.endView.displayGameResult = false;
     }
 }

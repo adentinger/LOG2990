@@ -1,7 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-import 'rxjs/add/operator/switchMap';
-import { RenderableMap } from '../racing-game-map/renderable-map';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-end-view',
@@ -9,14 +6,9 @@ import { RenderableMap } from '../racing-game-map/renderable-map';
     styleUrls: ['./end-view.component.css']
 })
 
-export class EndViewComponent implements OnInit {
+export class EndViewComponent {
 
-    @Input() public map: RenderableMap;
-    public displayable;
+    @Input() public displayGameResult;
 
     constructor() { }
-
-    public ngOnInit(): void {
-        this.displayable = false;
-    }
 }

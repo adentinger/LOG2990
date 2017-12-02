@@ -9,6 +9,7 @@ import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
 import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
+import { EndViewComponent } from './end-view/end-view.component';
 
 @Component({
     selector: 'app-racing-game',
@@ -36,8 +37,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
-    @ViewChild(MapRatingComponent)
-    private mapRating: MapRatingComponent;
+    @ViewChild(EndViewComponent)
+    private endView: EndViewComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -53,7 +54,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.updateRendererSize();
             });
         });
-        this.mapRating.ngOnInit();
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
@@ -117,12 +117,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private displayable(): void {
-        if (!this.mapRating.displayable) {
-            this.mapRating.displayable = true;
-        }
-        else {
-            this.mapRating.displayable = false;
-        }
+        this.endView.displayGameResult = true;
     }
 
     private toggleNextColorFilter(): number {
