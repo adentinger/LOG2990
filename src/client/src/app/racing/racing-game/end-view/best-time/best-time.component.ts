@@ -10,14 +10,15 @@ import { RenderableMap } from '../../racing-game-map/renderable-map';
 export class BestTimeComponent implements OnInit {
 
     @Input() public map: RenderableMap;
-    private isOnTopFive = true;
+    // private isOnTopFive = true;
 
     constructor() { }
 
     public ngOnInit(): void {
-    }
-
-    private verifyIfOnTopFive(): void {
 
     }
+
+    // private verifyIfOnTopFive(): void {
+
+    // }
 }

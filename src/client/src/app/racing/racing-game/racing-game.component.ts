@@ -7,7 +7,7 @@ import { RacingGameService } from './racing-game.service';
 import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
-import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
+import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
 import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 import { EndViewComponent } from './end-view/end-view.component';
 import { BestTimeComponent } from './end-view/best-time/best-time.component';
@@ -139,4 +139,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         return false; // Prevent Default behaviors
     }
 
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private displayEndGameMenu(event: EventManager.Event<void>) {
+        this.displayable();
+    }
 }
