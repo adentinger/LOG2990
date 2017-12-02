@@ -119,10 +119,10 @@ export class SoundService implements Loadable {
     @EventManager.Listener(GAME_COMPLETED_EVENT)
     // tslint:disable-next-line:no-unused-variable
     public onRaceEnding(event: EventManager.Event<void>): void {
-        this.setAbmiantSound(Sound.NONE)
-            .then(() => this.setAbmiantSound(Sound.AIR_HORN))
+        this.stopAmbiantSound()
+            .then(() => this.setAmbiantSound(Sound.AIR_HORN))
             .then(() => this.playAmbiantSound(false))
-            .then(() => this.setAbmiantSound(Sound.END_OF_RACE))
+            .then(() => this.setAmbiantSound(Sound.END_OF_RACE))
             .then(() => this.playAmbiantSound(true));
     }
 
@@ -131,7 +131,8 @@ export class SoundService implements Loadable {
     }
 
     public finalize(): void {
-        this.setAbmiantSound(Sound.NONE);
+        console.log('finalize');
+        this.setAmbiantSound(Sound.NONE);
         this.registeredEmitters.forEach((emitter: SoundEmitter) => {
             if (emitter.eventAudios != null) {
                 emitter.eventAudios.forEach((audio) => audio.stop());
@@ -152,10 +153,12 @@ export class SoundService implements Loadable {
         }
     }
 
-    public setAbmiantSound(soundIndex: Sound): Promise<void> {
+    public setAmbiantSound(soundIndex: Sound): Promise<void> {
         if (soundIndex < 0) {
-            this.ambientAudio.setBuffer(null);
+            // console.log((this.ambientAudio));
             this.stopAmbiantSound();
+            this.ambientAudio.setBuffer(null);
+            // console.log((this.ambientAudio));
             return Promise.resolve();
         }
         return SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
@@ -166,17 +169,13 @@ export class SoundService implements Loadable {
     public playAmbiantSound(looping: true): void;
     public playAmbiantSound(looping: false): Promise<void>;
     public playAmbiantSound(looping: boolean = false): Promise<void> | void {
-        const promise = this.stopAmbiantSound().then(() => {
-            this.ambientAudio.setLoop(looping);
-            this.ambientAudio.play();
-            this.ambientAudio.setVolume(0.6);
-        });
+        this.ambientAudio.setLoop(looping);
+        this.ambientAudio.play();
+        this.ambientAudio.setVolume(0.6);
         if (!looping) {
-            return promise.then(() =>
-                new Promise<void>((resolve, reject) => {
-                    setTimeout(resolve, this.ambientAudio['buffer'].duration * 1000);
-                })
-            );
+            return new Promise<void>((resolve, reject) => {
+                setTimeout(resolve, this.ambientAudio['buffer'].duration * 1000);
+            });
         }
     }
 
@@ -191,7 +190,6 @@ export class SoundService implements Loadable {
                     }
                     resolve();
                 };
-                resolve();
             });
             this.ambientAudio.stop();
             return promise;

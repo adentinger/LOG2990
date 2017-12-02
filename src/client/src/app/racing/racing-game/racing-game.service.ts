@@ -76,12 +76,12 @@ export class RacingGameService {
             this.renderer.startRendering();
             return Promise.race([
                 finalizePromise,
-                this.soundService.setAbmiantSound(Sound.START_SOUND)
+                this.soundService.setAmbiantSound(Sound.START_SOUND)
             ]);
         }).then(() => {
             this.info.startTimer(RacingGameService.COUNTDOWN_DURATION);
             Promise.race([finalizePromise, this.soundService.playAmbiantSound(false)])
-                .then(() => Promise.race([finalizePromise, this.soundService.setAbmiantSound(Sound.TETRIS)]))
+                .then(() => Promise.race([finalizePromise, this.soundService.setAmbiantSound(Sound.TETRIS)]))
                 .then(() => this.soundService.playAmbiantSound(true))
                 .catch(() => { });
             return Promise.race([
@@ -105,9 +105,9 @@ export class RacingGameService {
         this.carsService.finalize();
         this.userInputs = null;
 
+        this.soundService.finalize();
         this.physicEngine.finalize();
         this.renderer.finalize();
-        this.soundService.finalize();
     }
 
     public loadMap(mapName: string): Promise<void> {
