@@ -12,6 +12,6 @@ export class Bush extends Decoration {
 
     constructor() {
         super();
-        Bush.WAIT_TO_LOAD.then(parts => this.addParts(parts));
+        this.waitToChildrenAddedInternal = Bush.WAIT_TO_LOAD.then(parts => this.addParts(parts));
     }
 }

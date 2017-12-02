@@ -8,7 +8,11 @@ export abstract class Decoration extends THREE.Mesh {
 
     protected static readonly loader = new Loader();
 
-    public readonly isDecoration: true;
+    protected waitToChildrenAddedInternal = Promise.resolve();
+
+    public get waitToChildrenAdded(): Promise<void> {
+        return this.waitToChildrenAddedInternal;
+    }
 
     protected addParts(parts: THREE.Mesh[]): void {
         const clonedParts = parts.map(part => {

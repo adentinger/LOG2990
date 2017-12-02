@@ -12,7 +12,7 @@ export class Tree extends Decoration {
 
     constructor() {
         super();
-        Tree.WAIT_TO_LOAD.then(parts => this.addParts(parts));
+        this.waitToChildrenAddedInternal = Tree.WAIT_TO_LOAD.then(parts => this.addParts(parts));
     }
 
 }
