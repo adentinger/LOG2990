@@ -9,31 +9,34 @@ import { Projection } from '../../util/projection';
 import { Decoration } from '../models/decoration/decoration';
 import { Track } from '../../track';
 import { PhysicUtils } from '../physic/utils';
-
-const MAX_TRY_COUNT = 100;
+import { Tree } from '../models/decoration/tree';
+import { Bush } from '../models/decoration/bush';
 
 export class DecorationGenerator {
 
-    private static readonly ACCEPTABLE_RADIUS = 25;
-    private static readonly DECORATION_COUNT_PER_ZONE = 30;
+    private static readonly ACCEPTABLE_RADIUS = 1.5 * Track.SEGMENT_WIDTH;
+    private static readonly DECORATION_COUNT_PER_ZONE = 20;
     private static readonly CIRCLE_RADIUS_RADIAN = 2 * Math.PI;
     private static readonly DECORATION_FACTORY = new DecorationFactory();
+    private static readonly MAX_PLACEMENT_TRIES = 20;
 
     public placeDecorationsOnMap(map: RenderableMap): void {
-        const mapLength = map.computeLength();
-        const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
-        const decorations: Decoration[] = [];
+        Promise.all([Tree.WAIT_TO_LOAD, Bush.WAIT_TO_LOAD]).then(async () => {
+            const mapLength = map.computeLength();
+            const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
+            const decorations: Decoration[] = [];
 
-        for (let intervalIndex = 0 ; intervalIndex <= numberOfPoints; intervalIndex++) {
-            const interval = intervalIndex * (DecorationGenerator.ACCEPTABLE_RADIUS * 2);
-            const point = this.generateCoordinatePositionMap(interval, map);
-            this.placeDecorationsAround(point, map, decorations);
-        }
+            for (let intervalIndex = 0 ; intervalIndex <= numberOfPoints; intervalIndex++) {
+                const interval = intervalIndex * (DecorationGenerator.ACCEPTABLE_RADIUS * 2);
+                const point = this.generateCoordinatePositionMap(interval, map);
+                await this.placeDecorationsAround(point, map, decorations);
+            }
 
-        decorations.forEach((decoration) => {map.add(decoration); });
+            decorations.forEach((decoration) => map.add(decoration));
+        });
     }
 
-    private placeDecorationsAround(point: THREE.Vector3, map: RenderableMap, decorations: Decoration[]): void {
+    private async placeDecorationsAround(point: THREE.Vector3, map: RenderableMap, decorations: Decoration[]): Promise<void> {
         let coordinatePositionOnRadius: Vector3 = new THREE.Vector3();
         const pointOnMap: Vector3 = new THREE.Vector3();
         let decoration: Decoration;
@@ -42,12 +45,12 @@ export class DecorationGenerator {
             do {
                 coordinatePositionOnRadius = this.generateCoordinatePositionRadius();
                 pointOnMap.addVectors(point, coordinatePositionOnRadius);
-                decoration = this.generateRandomDecoration();
+                decoration = await this.generateRandomDecoration();
                 decoration.position.copy(pointOnMap);
                 decoration.rotation.y = this.generateRandomAngle();
             } while ((this.getIfDecorationSuperposed(decoration, decorations) || this.getIfOnTrack(decoration, map)) &&
-                tryCount++ < MAX_TRY_COUNT);
-            if (tryCount <= MAX_TRY_COUNT) {
+                tryCount++ < DecorationGenerator.MAX_PLACEMENT_TRIES);
+            if (tryCount <= DecorationGenerator.MAX_PLACEMENT_TRIES) {
                 decorations.push(decoration);
             }
         }
@@ -105,9 +108,10 @@ export class DecorationGenerator {
         return new THREE.Vector3(randomRadius * Math.cos(randomAngle), 0, randomRadius * Math.sin(randomAngle));
     }
 
-    private generateRandomDecoration(): Decoration {
+    private generateRandomDecoration(): Promise<Decoration> {
         const numberOfDecorationType = DecorationType.COUNT - 1;
         const randomIndex = Math.floor(Math.random() * numberOfDecorationType);
-        return DecorationGenerator.DECORATION_FACTORY.getClassInstance(randomIndex as DecorationType);
+        const decoration = DecorationGenerator.DECORATION_FACTORY.getClassInstance(randomIndex as DecorationType);
+        return decoration.waitToChildrenAdded.then(() => decoration);
     }
 }
