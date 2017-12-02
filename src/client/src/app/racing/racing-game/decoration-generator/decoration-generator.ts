@@ -42,7 +42,6 @@ export class DecorationGenerator {
     }
 
     private async placeDecorationsAround(point: THREE.Vector3, map: RenderableMap, allDecorationsData: DecorationData[]): Promise<void> {
-        const pointOnMap: Vector3 = new THREE.Vector3();
         for (let i = 0 ; i < DecorationGenerator.DECORATION_COUNT_PER_ZONE; i++) {
             this.tryPlacingSingleDecorationAround(point, map, allDecorationsData);
         }
