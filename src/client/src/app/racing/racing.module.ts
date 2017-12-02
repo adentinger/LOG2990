@@ -19,6 +19,8 @@ import { MapRatingComponent } from './racing-game/end-view/map-rating/map-rating
 import { BestTimeComponent } from './racing-game/end-view/best-time/best-time.component';
 import { GameResultsComponent } from './racing-game/end-view/game-results/game-results.component';
 import { EndViewComponent } from './racing-game/end-view/end-view.component';
+import { EndViewService } from './services/end-view.service';
+
 
 @NgModule({
     imports: [
@@ -47,6 +49,7 @@ import { EndViewComponent } from './racing-game/end-view/end-view.component';
         SoundService,
         CarsService,
         CarsProgressionService,
+        EndViewService,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ]
 })

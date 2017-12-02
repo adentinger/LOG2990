@@ -11,6 +11,7 @@ import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../c
 import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 import { EndViewComponent } from './end-view/end-view.component';
 import { BestTimeComponent } from './end-view/best-time/best-time.component';
+import { EndViewService } from '../services/end-view.service';
 
 @Component({
     selector: 'app-racing-game',
@@ -38,16 +39,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
-    @ViewChild(EndViewComponent)
-    private endView: EndViewComponent;
-    @ViewChild(MapRatingComponent)
-    private mapRating: MapRatingComponent;
-    @ViewChild(BestTimeComponent)
-    private bestTime: BestTimeComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
-        private eventManager: EventManager) {
+        private eventManager: EventManager,
+        private endViewService: EndViewService) {
         this.eventManager.registerClass(this);
     }
 
@@ -57,6 +53,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
+                this.endViewService.mapName = mapName;
             });
         });
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
@@ -122,9 +119,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private displayable(): void {
-        this.endView.displayGameResult = true;
-        // this.bestTime.map = this.racingGame.getMap;
-        // this.mapRating.map = this.racingGame.getMap;
+        this.endViewService.displayGameResult = true;
     }
 
     private toggleNextColorFilter(): number {

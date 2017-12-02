@@ -1,9 +1,9 @@
-<div class='outer' *ngIf="map" [ngClass]="{hide_me: !displayable, show_me: displayable}" (click)="displayable = !displayable"  >
+<div class='outer' *ngIf='map' [ngClass]='{hide_me: !displayable, show_me: displayable}' (click)='displayable = !displayable'  >
     <div class='best-time-menu' >
         <ol>
             <h1>{{map.name}}</h1>
-            <li *ngFor="let number of map.bestTimes">UserRanking-user: {{number}}</li> 
-            <button routerLink="racing-game/{{map.name}}">Play Map</button>
+            <li *ngFor='let number of map.bestTimes'>UserRanking-user: {{number}}</li> 
+            <button routerLink='racing-game/{{map.name}}'>Play Map</button>
         </ol>
     </div>
 </div>

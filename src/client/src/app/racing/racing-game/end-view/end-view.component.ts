@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { EndViewService } from '../../services/end-view.service';
 
 @Component({
     selector: 'app-end-view',
@@ -8,7 +9,9 @@ import { Component, Input } from '@angular/core';
 
 export class EndViewComponent {
 
-    @Input() public displayGameResult;
+    constructor(private endViewService: EndViewService) { }
 
-    constructor() { }
+    public displayBestTimeComponent(): void {
+        this.endViewService.displayGameResult = false;
+    }
 }
