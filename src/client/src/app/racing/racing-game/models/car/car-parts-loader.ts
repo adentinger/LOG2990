@@ -62,11 +62,16 @@ export class CarPartsLoader {
     }
 
     private static improveMaterialPropertiesOf(carPart: THREE.Mesh): THREE.Mesh {
-        carPart.geometry.computeVertexNormals();
-        carPart.geometry['computeMorphNormals']();
-        (carPart.material as THREE.MeshPhongMaterial).blending = THREE.NoBlending;
-        (carPart.material as THREE.MeshPhongMaterial).shininess = CarPartsLoader.SHININESS;
-        (carPart.material as THREE.MeshPhongMaterial).emissiveIntensity = 0;
+        const geometry = carPart.geometry as THREE.Geometry;
+        geometry.computeVertexNormals();
+        geometry.computeMorphNormals();
+
+        const material = (carPart.material as THREE.MeshPhongMaterial);
+        material.blending = THREE.NoBlending;
+        material.transparent = false;
+        material.shininess = CarPartsLoader.SHININESS;
+        material.emissiveIntensity = 0;
+
         carPart.receiveShadow = true;
         carPart.castShadow = true;
         return carPart;

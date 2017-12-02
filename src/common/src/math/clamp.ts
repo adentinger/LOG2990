@@ -9,4 +9,11 @@ declare interface Math {
     clamp(x: number, min: number, max: number): number;
 }
 
-Math.clamp = (x: number, min: number, max: number): number => x < min ? min : (x > max ? max : x);
+Math.clamp = (x: number, min: number, max: number): number => {
+    if (min > max) {
+        const swapBuffer = min;
+        min = max;
+        max = swapBuffer;
+    }
+    return x < min ? min : (x > max ? max : x);
+};

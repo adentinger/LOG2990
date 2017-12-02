@@ -1,8 +1,8 @@
-import { Line } from '../../../../common/src/math/line';
-import { Point } from '../../../../common/src/math/point';
+import { Line } from '../../../../../common/src/math/line';
+import { Point } from '../../../../../common/src/math/point';
 import { MapPositionAlgorithms } from './map-position-algorithms';
 import { Projection } from './projection';
-import { Meters } from '../types';
+import { Meters } from '../../types';
 
 // Simple Map for testing
 const points = [new Point(3.0, 3.0),
