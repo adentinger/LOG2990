@@ -62,4 +62,16 @@ export class MapsMiddleWare {
             });
     }
 
+    @Route('patch', '/:name/time/:time')
+    public updateMapBestTime(req: express.Request,
+                             res: express.Response): void {
+        console.log('Updated' + req.params.name + '\'s time:' + Math.round(req.params.time));
+    }
+
+    @Route('patch', '/:name/rating/:rating')
+    public updateMapRating(req: express.Request,
+                           res: express.Response): void {
+        console.log('Updated' + req.params.name + '\'s rating:' + Math.round(req.params.rating));
+    }
+
 }
