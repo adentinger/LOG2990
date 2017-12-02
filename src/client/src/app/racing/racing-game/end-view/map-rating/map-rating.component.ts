@@ -31,6 +31,7 @@ export class MapRatingComponent implements OnInit {
     }
 
     public mouseHoverStar(index: number): void {
+        this.stars.fill(this.emptyStarImageSource);
         for (let i = 0 ; i <= index; i++) {
             this.stars[i] = this.filledStarImageSource;
         }
@@ -45,7 +46,6 @@ export class MapRatingComponent implements OnInit {
 
     public clickOnStar(index: number) {
         this.numberOfStarsClicked = index;
-        console.log('test');
     }
 
     public displayBestTimeComponent(): void {
