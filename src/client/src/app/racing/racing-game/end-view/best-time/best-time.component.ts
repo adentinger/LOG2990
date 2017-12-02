@@ -1,6 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-
-import 'rxjs/add/operator/switchMap';
 import { RenderableMap } from '../../racing-game-map/renderable-map';
 
 @Component({
@@ -12,11 +10,15 @@ import { RenderableMap } from '../../racing-game-map/renderable-map';
 export class BestTimeComponent implements OnInit {
 
     @Input() public map: RenderableMap;
-    public displayable;
+    // private isOnTopFive = true;
 
     constructor() { }
 
     public ngOnInit(): void {
-        this.displayable = false;
+
     }
+
+    // private verifyIfOnTopFive(): void {
+
+    // }
 }

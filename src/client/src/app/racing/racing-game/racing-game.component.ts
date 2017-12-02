@@ -7,8 +7,10 @@ import { RacingGameService } from './racing-game.service';
 import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
-import { KEYDOWN_EVENT } from '../constants';
+import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
 import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
+import { EndViewComponent } from './end-view/end-view.component';
+import { BestTimeComponent } from './end-view/best-time/best-time.component';
 
 @Component({
     selector: 'app-racing-game',
@@ -36,8 +38,12 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
+    @ViewChild(EndViewComponent)
+    private endView: EndViewComponent;
     @ViewChild(MapRatingComponent)
     private mapRating: MapRatingComponent;
+    @ViewChild(BestTimeComponent)
+    private bestTime: BestTimeComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -53,7 +59,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.updateRendererSize();
             });
         });
-        this.mapRating.ngOnInit();
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
@@ -117,12 +122,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private displayable(): void {
-        if (!this.mapRating.displayable) {
-            this.mapRating.displayable = true;
-        }
-        else {
-            this.mapRating.displayable = false;
-        }
+        this.endView.displayGameResult = true;
+        // this.bestTime.map = this.racingGame.getMap;
+        // this.mapRating.map = this.racingGame.getMap;
     }
 
     private toggleNextColorFilter(): number {
@@ -137,4 +139,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         return false; // Prevent Default behaviors
     }
 
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private displayEndGameMenu(event: EventManager.Event<void>) {
+        this.displayable();
+    }
 }

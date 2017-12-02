@@ -1,0 +1,8 @@
+<div [ngSwitch] = 'displayGameResult'>
+    <div *ngSwitchCase = 'true'>
+        <app-map-rating></app-map-rating>
+    </div>
+    <div *ngSwitchCase = 'false'>
+        <app-best-time></app-best-time>
+    </div>
+</div>
