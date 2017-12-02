@@ -1,9 +1,7 @@
 import * as THREE from 'three';
-import { Logger } from '../../../../../../../common/src';
+
 import { Loader } from '../loader';
 
-const logger = Logger.getLogger('Car');
-const JSON_LOADER: THREE.JSONLoader = new THREE.JSONLoader();
 
 export class CarPartsLoader {
     private static readonly BASE_PATH = 'assets/racing/car_model/';

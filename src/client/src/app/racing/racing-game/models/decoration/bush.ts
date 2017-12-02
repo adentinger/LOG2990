@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { Decoration } from './decoration';
 
 export class Bush extends Decoration {

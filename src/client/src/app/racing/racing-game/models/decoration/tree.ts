@@ -1,7 +1,4 @@
-import * as THREE from 'three';
-
 import { Decoration } from './decoration';
-import { Loader } from '../loader';
 
 export class Tree extends Decoration {
 

@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 
 import { Logger } from '../../../../../../common/src/index';
