@@ -168,4 +168,8 @@ export class RacingGameService {
             });
         }
     }
+
+    /* public get getMap(): RenderableMap {
+        return this.map;
+    } */
 }

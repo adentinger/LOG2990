@@ -10,6 +10,7 @@ import { EventManager } from '../../event-manager.service';
 import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT } from '../constants';
 import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 import { EndViewComponent } from './end-view/end-view.component';
+import { BestTimeComponent } from './end-view/best-time/best-time.component';
 
 @Component({
     selector: 'app-racing-game',
@@ -39,6 +40,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private uiInputs: UIInputs;
     @ViewChild(EndViewComponent)
     private endView: EndViewComponent;
+    @ViewChild(MapRatingComponent)
+    private mapRating: MapRatingComponent;
+    @ViewChild(BestTimeComponent)
+    private bestTime: BestTimeComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -118,6 +123,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
 
     private displayable(): void {
         this.endView.displayGameResult = true;
+        // this.bestTime.map = this.racingGame.getMap;
+        // this.mapRating.map = this.racingGame.getMap;
     }
 
     private toggleNextColorFilter(): number {
