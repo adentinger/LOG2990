@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Track } from '../../../track';
-import { loadTexture } from '../../../../util/textures';
+import { loadTexture } from '../../../util/textures';
 
 export class RacetrackSegment extends THREE.Mesh {
     private static readonly GEOMETRY_ROTATION = 3 * Math.PI / 2;

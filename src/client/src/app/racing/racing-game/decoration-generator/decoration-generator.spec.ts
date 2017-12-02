@@ -2,7 +2,7 @@ import { DecorationGenerator } from './decoration-generator';
 import { RenderableMap } from '../racing-game-map/renderable-map';
 import { MockMaps } from '../../../admin-screen/map-editor/mock-maps';
 import { Decoration } from '../models/decoration/decoration';
-import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../../common/src/math/point';
 import { Track } from '../../track';
 import * as THREE from 'three';

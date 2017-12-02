@@ -1,9 +1,9 @@
-import { Line } from '../../../../common/src/math/line';
-import { Point } from '../../../../common/src/math/point';
+import { Line } from '../../../../../common/src/math/line';
+import { Point } from '../../../../../common/src/math/point';
 import { Projection } from './projection';
-import { Vector } from '../../../../common/src/math/vector';
-import '../../../../common/src/math/clamp';
-import { Meters } from '../types';
+import { Vector } from '../../../../../common/src/math/vector';
+import '../../../../../common/src/math/clamp';
+import { Meters } from '../../types';
 
 export class MapPositionAlgorithms {
 
