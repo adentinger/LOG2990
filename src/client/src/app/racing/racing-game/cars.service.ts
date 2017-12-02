@@ -5,14 +5,14 @@ import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { Progression } from './racing-types';
-import { EventManager } from '../../event-manager.service';
+import { EventManager, eventManagerValue } from '../../event-manager.service';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
 import { PhysicUtils } from './physic/utils';
-import { GAME_COMPLETED_EVENT } from '../constants';
+import { CAR_COMPLETED_RACE } from '../constants';
 
 const CAR_OPACITY_DEFAULT = 1;
 const CAR_OPACITY_TRANSPARENT = 0.4;
@@ -122,11 +122,15 @@ export class CarsService implements Loadable {
             });
     }
 
-    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    @EventManager.Listener(CAR_COMPLETED_RACE)
     // tslint:disable-next-line:no-unused-variable
-    private ghostModeAfterFinalLineCross(event: EventManager.Event<void>) {
-        this.toggleCarColorTransparent(0);
-        this.controller[0].stop();
+    private ghostModeAfterFinalLineCross(event: EventManager.Event<Car>): void {
+        let carIndex;
+        for (let i = 0; i < this.controller.length; i++) {
+            carIndex = this.controller[i].car === event.data ? i : carIndex;
+        }
+        this.toggleCarColorTransparent(carIndex);
+        this.controller[carIndex].stop();
     }
 
 }
