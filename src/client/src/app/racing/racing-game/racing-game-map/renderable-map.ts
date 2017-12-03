@@ -33,11 +33,10 @@ export class RenderableMap extends PhysicMesh {
     public mapPotholes: SerializedPothole[];
     public mapPuddles: SerializedPuddle[];
     public mapSpeedBoosts: SerializedSpeedBoost[];
-    public mapRatings: number[] = [];
-    public mapBestTimes: number[] = [];
     public readonly mapMode: AiMode;
 
     public readonly waitToLoad: Promise<void>;
+
     private readonly plane: RacingGamePlane;
 
     private mapObstaclesInternal: Obstacle[] = [];
