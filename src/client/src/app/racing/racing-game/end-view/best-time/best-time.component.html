@@ -4,12 +4,12 @@
         <li *ngFor = 'let bestTimes of map.mapBestTimes'>{{bestTimes}}</li>
     </ol> -->
     <div *ngIf = 'isOnTopFive'>
-    <h3>Congratulation, you managed to score in the top 5 best times</h3>
+    <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
     <input />
     <p>{{userName}}</p>
     <button>Enter</button>
     </div>
-    <button (click) = 'reloadPage()'>Play Again {{endViewService.mapName}}</button>
+    <button (click) = 'reloadPage()'>Play Again</button>
     <button routerLink='/'>Return Homepage</button>
 </div>
 

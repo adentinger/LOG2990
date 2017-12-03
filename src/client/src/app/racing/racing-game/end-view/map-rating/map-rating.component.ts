@@ -14,16 +14,14 @@ export class MapRatingComponent implements OnInit {
 
     @Input() public map: RenderableMap;
     private readonly NUMBER_OF_STARS = 5;
-    public displayable;
     private readonly filledStarImageSource = '/assets/racing/stars-rating/filled-star.png';
     private readonly emptyStarImageSource = '/assets/racing/stars-rating/empty-star.png';
     public stars: string[] = [];
-    private numberOfStarsClicked;
+    private numberOfStarClicked;
 
     constructor(private endViewService: EndViewService) {  }
 
     public ngOnInit(): void {
-        this.displayable = false;
         for (let i = 0 ; i < this.NUMBER_OF_STARS ; i++) {
             this.stars.push(this.emptyStarImageSource);
         }
@@ -38,14 +36,18 @@ export class MapRatingComponent implements OnInit {
 
     public mouseOutOfStar(): void {
         this.stars.fill(this.emptyStarImageSource);
-        if (this.numberOfStarsClicked >= 0 && this.numberOfStarsClicked !== null) {
-            for (let i = 0 ; i <=  this.numberOfStarsClicked; i++) {
+        if (this.numberOfStarClicked >= 0 && this.numberOfStarClicked !== null) {
+            for (let i = 0 ; i <=  this.numberOfStarClicked; i++) {
                 this.stars[i] = this.filledStarImageSource;
             }
         }
     }
 
     public clickOnStar(index: number) {
-        this.numberOfStarsClicked = index;
+        this.numberOfStarClicked = index;
+    }
+
+    public postUserMapRating(): void {
+
     }
 }
