@@ -96,13 +96,13 @@ export class MapDbService {
     }
 
     public getByName(name: string): Promise<SerializedMap> {
-        return this.getMapProperty(name, {_id: false})
+        return this.getMapProperties(name, {_id: false})
             .then(mapDocument => this.makeSerializedMapFrom(mapDocument));
     }
 
-    public getMapProperty(name: string, fields: Object): Promise<Object> {
+    public getMapProperties(name: string, properties: Object): Promise<Object> {
         return new Promise((resolve, reject) => {
-            this.mapCollection.findOne({name: name}, {fields: fields})
+            this.mapCollection.findOne({name: name}, {fields: properties})
             .then((mapFields: any) => {
                 if (mapFields) {
                     resolve(mapFields);
