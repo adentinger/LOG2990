@@ -117,6 +117,15 @@ export class MapDbService {
         });
     }
 
+    public setMapProperties(name: string, properties: Object): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.mapCollection.findOneAndUpdate({name: name}, {$set: properties})
+            .then(result => {
+                console.log(result);
+            });
+        });
+    }
+
     private makeMapDocumentFrom(serializedMap: SerializedMap): any {
         const MAP_DOCUMENT: any = serializedMap;
         MAP_DOCUMENT._id = serializedMap.name;
