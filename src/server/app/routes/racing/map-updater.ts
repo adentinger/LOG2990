@@ -16,10 +16,17 @@ export class MapUpdater {
     protected constructor() {}
 
     public updateTime(mapName: string, time: number): Promise<void> {
-        return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, bestTimes: true}).then((mapFields) => {
-            console.log('Updated ' + mapName + '\'s time: ' + time + ' sec');
-            console.log('best times:', mapFields['bestTimes']);
-        });
+        const isTimeValid = time > 0;
+        if (isTimeValid) {
+            return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, bestTimes: true}).then((mapFields) => {
+                const bestTimes = mapFields['bestTimes'];
+                console.log('Updated ' + mapName + '\'s time: ' + time + ' sec');
+                console.log('best times:', bestTimes);
+            });
+        }
+        else {
+            return Promise.reject(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public updateRating(mapName: string, rating: number): Promise<void> {
