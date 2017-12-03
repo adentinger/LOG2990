@@ -117,6 +117,10 @@ export class MapDbService {
         });
     }
 
+    public setMapProperties(name: string, properties: Object): Promise<void> {
+        return Promise.resolve();
+    }
+
     private makeMapDocumentFrom(serializedMap: SerializedMap): any {
         const MAP_DOCUMENT: any = serializedMap;
         MAP_DOCUMENT._id = serializedMap.name;
