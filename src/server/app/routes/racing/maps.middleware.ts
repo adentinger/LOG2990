@@ -66,12 +66,14 @@ export class MapsMiddleWare {
     public updateMapBestTime(req: express.Request,
                              res: express.Response): void {
         console.log('Updated' + req.params.name + '\'s time:' + Math.round(req.params.time));
+        res.sendStatus(HttpStatus.OK);
     }
 
     @Route('patch', '/:name/rating/:rating')
     public updateMapRating(req: express.Request,
                            res: express.Response): void {
         console.log('Updated' + req.params.name + '\'s rating:' + Math.round(req.params.rating));
+        res.sendStatus(HttpStatus.OK);
     }
 
 }
