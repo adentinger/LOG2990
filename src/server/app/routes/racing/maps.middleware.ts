@@ -5,6 +5,7 @@ import { HttpStatus, getStatusOrDefault } from '../../../../common/src';
 import { provideDatabase } from '../../app-db';
 import { MapDbService } from './map-db-service';
 import { SerializedMap } from '../../../../common/src/racing/serialized-map';
+import { MapUpdater } from './map-updater';
 
 @MiddleWare('/racing/maps')
 export class MapsMiddleWare {
@@ -65,15 +66,19 @@ export class MapsMiddleWare {
     @Route('patch', '/:name/time/:time')
     public updateMapBestTime(req: express.Request,
                              res: express.Response): void {
-        console.log('Updated' + req.params.name + '\'s time:' + Math.round(req.params.time));
-        res.sendStatus(HttpStatus.OK);
+        MapUpdater.getInstance()
+            .updateTime(req.params.name, Number(req.params.time))
+            .then(() => res.sendStatus(HttpStatus.OK))
+            .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
     @Route('patch', '/:name/rating/:rating')
     public updateMapRating(req: express.Request,
                            res: express.Response): void {
-        console.log('Updated' + req.params.name + '\'s rating:' + Math.round(req.params.rating));
-        res.sendStatus(HttpStatus.OK);
+        MapUpdater.getInstance()
+            .updateRating(req.params.name, Math.round(Number(req.params.rating)))
+            .then(() => res.sendStatus(HttpStatus.OK))
+            .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
 }
