@@ -80,7 +80,10 @@ export class MapsMiddleWare {
     @Route('patch', '/:name/plays')
     public incrementMapNumberOfPlays(req: express.Request,
                                      res: express.Response): void {
-        res.sendStatus(HttpStatus.OK);
+        MapUpdater.getInstance()
+            .incrementPlays(req.params.name)
+            .then(() => res.sendStatus(HttpStatus.OK))
+            .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
     @Route('patch', '/:name/best-times/:time')
