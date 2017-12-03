@@ -158,12 +158,10 @@ export class AiCarController extends CarController {
         const side = relativePosition.cross(this.car.front).dot(UP_DIRECTION) *
             Math.sign(-Math.min(0, normalizedRelativeVelocity.dot(normalizedRelativePosition)));
         const lateralAvoidanceFactor = side * relativeVelocity.length();
-        const frontalAvoidanceFactor = Math.abs(
-            this.car.front.dot(normalizedRelativePosition));
         const distanceToOpponent = Math.max(1, relativePosition.length());
 
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
-            lateralAvoidanceFactor /* * frontalAvoidanceFactor */ * direction *
+            lateralAvoidanceFactor * direction *
             Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 3);
         return Math.clamp(this.mode.angularSpeedForOpponentsFactor * angularSpeed,
             -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
