@@ -66,8 +66,15 @@ export class MapsMiddleWare {
     @Route('get', '/:name/best-times')
     public getMapBestTimes(req: express.Request,
                             res: express.Response): void {
-        res.status(HttpStatus.OK);
-        res.json([1.2, 15.8, 42.0, 80.1, 100.8]);
+        MapsMiddleWare.MAP_DB_SERVICE.getMapProperties(req.params.name, {_id: false, bestTimes: true})
+        .then(mapFields => {
+            const bestTimes: number[] = mapFields['bestTimes'];
+            res.statusCode = HttpStatus.OK;
+            res.json(bestTimes);
+        })
+        .catch((reason: any) => {
+            res.sendStatus(getStatusOrDefault(reason));
+        });
     }
 
     @Route('patch', '/:name/best-times/:time')
