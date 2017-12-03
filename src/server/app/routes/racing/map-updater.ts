@@ -23,9 +23,6 @@ export class MapUpdater {
         return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, numberOfPlays: true}).then((mapFields) => {
             const numberOfPlays: number = mapFields['numberOfPlays'] + 1;
 
-            console.log('Incremented ' + mapName + '\'s numberOfPlays.');
-            console.log('Number of plays:', numberOfPlays);
-
             return this.MAP_DB_SERVICE.setMapProperties(mapName, {numberOfPlays: numberOfPlays});
         });
     }
@@ -35,12 +32,10 @@ export class MapUpdater {
         if (isTimeValid) {
             return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, bestTimes: true}).then((mapFields) => {
                 const bestTimes: number[] = mapFields['bestTimes'];
+
                 bestTimes.push(time);
                 bestTimes.sort();
                 bestTimes.splice(MapUpdater.MAX_BEST_TIMES_SIZE);
-
-                console.log('Updated ' + mapName + '\'s time: ' + time + ' sec');
-                console.log('best times:', bestTimes);
 
                 return this.MAP_DB_SERVICE.setMapProperties(mapName, {bestTimes: bestTimes});
             });
@@ -61,9 +56,6 @@ export class MapUpdater {
 
                 const sumRatings = mapFields['sumRatings'] + rating;
                 const numberOfRatings = mapFields['numberOfRatings'] + 1;
-
-                console.log('Updated ' + mapName + '\'s rating: ' + rating + ' / 5');
-                console.log('sumRatings: ', sumRatings, 'numberOfRatings:', numberOfRatings);
 
                 return this.MAP_DB_SERVICE.setMapProperties(
                     mapName,
