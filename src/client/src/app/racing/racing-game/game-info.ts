@@ -11,7 +11,6 @@ export class GameInfo {
     public maxLap = 3;
 
     private startTime: Seconds;
-    // private lapTimesInternal: Seconds[] = new Array(this.maxLap).fill(0);
 
     private lapTimesTable: Map<Car, Seconds[]> = new Map(); // reduce pour total
 
