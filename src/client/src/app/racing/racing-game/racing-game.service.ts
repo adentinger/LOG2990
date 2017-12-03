@@ -155,13 +155,11 @@ export class RacingGameService {
     // tslint:disable-next-line:no-unused-variable
     private handleCarCompletedRace(event: EventManager.Event<RaceCompletionInfo>) {
         if (event.data.lap >= this.info.maxLap) {
-            console.log('* Race Completed By A Car *');
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
                 data: event.data.car
             });
             if (event.data.isUser) {
-                console.log('** Race Completed By User **');
                 this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
                     name: GAME_COMPLETED_EVENT,
                     data: void 0
