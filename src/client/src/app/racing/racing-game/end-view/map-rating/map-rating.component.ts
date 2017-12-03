@@ -12,40 +12,42 @@ import { EndViewService } from '../../../services/end-view.service';
 
 export class MapRatingComponent {
 
-    private readonly NUMBER_OF_STARS = 5;
-    private readonly FILLED_STAR_URL = '/assets/racing/stars-rating/filled-star.png';
-    private readonly EMPTY_STAR_URL = '/assets/racing/stars-rating/empty-star.png';
-    public stars: string[] = [];
+    private static readonly NUMBER_OF_STARS = 5;
+    private static readonly FILLED_STAR_URL = '/assets/racing/stars-rating/filled-star.png';
+    private static readonly EMPTY_STAR_URL = '/assets/racing/stars-rating/empty-star.png';
+    private stars: string[] = [];
     private indexOfStarClicked;
 
     constructor(private endViewService: EndViewService) {
-        for (let i = 0 ; i < this.NUMBER_OF_STARS ; i++) {
-            this.stars.push(this.EMPTY_STAR_URL);
+        for (let i = 0 ; i < MapRatingComponent.NUMBER_OF_STARS ; i++) {
+            this.stars.push(MapRatingComponent.EMPTY_STAR_URL);
         }
      }
 
     private mouseHoverStar(indexOfStar: number): void {
-        this.stars.fill(this.EMPTY_STAR_URL);
+        this.stars.fill(MapRatingComponent.EMPTY_STAR_URL);
         for (let i = 0 ; i <= indexOfStar; i++) {
-            this.stars[i] = this.FILLED_STAR_URL;
+            this.stars[i] = MapRatingComponent.FILLED_STAR_URL;
         }
     }
 
     private mouseOutOfStar(): void {
-        this.stars.fill(this.EMPTY_STAR_URL);
+        this.stars.fill(MapRatingComponent.EMPTY_STAR_URL);
         if (this.indexOfStarClicked >= 0 && this.indexOfStarClicked !== null) {
             for (let i = 0 ; i <= this.indexOfStarClicked; i++) {
-                this.stars[i] = this.FILLED_STAR_URL;
+                this.stars[i] = MapRatingComponent.FILLED_STAR_URL;
             }
         }
     }
 
-    private clickOnStar(indexOfStar: number) {
+    private clickOnStar(indexOfStar: number): void {
         this.indexOfStarClicked = indexOfStar;
     }
 
     private displayBestTimeComponent(): void {
-        this.endViewService.saveMapRating(this.indexOfStarClicked + 1);
+        if (this.indexOfStarClicked) {
+            this.endViewService.saveMapRating(this.indexOfStarClicked + 1);
+        }
         this.endViewService.displayGameResult = false;
     }
 }
