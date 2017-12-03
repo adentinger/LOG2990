@@ -2,7 +2,7 @@
     <div class='best-time-menu' >
         <ol>
             <h1>{{map.name}}</h1>
-            <li *ngFor="let number of map.bestTimes">UserRanking-user: {{number}}</li> 
+            <li *ngFor="let bestTime of map.bestTimes">{{bestTime.player.name}}: {{bestTime.value}}</li> 
             <button routerLink="racing-game/{{map.name}}">Play Map</button>
         </ol>
     </div>
