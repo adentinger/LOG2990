@@ -41,7 +41,7 @@ export class MapUpdater {
 
     public updateRating(mapName: string, rating: number): Promise<void> {
         const roundedRating = Math.round(rating);
-        const isRatingValid = roundedRating > MapUpdater.RATING_MIN && roundedRating < MapUpdater.RATING_MAX;
+        const isRatingValid = roundedRating >= MapUpdater.RATING_MIN && roundedRating <= MapUpdater.RATING_MAX;
 
         if (isRatingValid) {
             return this.MAP_DB_SERVICE
