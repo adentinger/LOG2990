@@ -112,6 +112,23 @@ export class MapDbService {
         });
     }
 
+    public getMapProperty(name: string, fields: Object): Promise<Object> {
+        return new Promise((resolve, reject) => {
+            this.mapCollection.findOne({name: name}, {fields: fields})
+            .then((mapFields: any) => {
+                if (mapFields) {
+                    resolve(mapFields);
+                }
+                else {
+                    reject(HttpStatus.NOT_FOUND);
+                }
+            })
+            .catch(() => {
+                reject(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
+        });
+    }
+
     private makeMapDocumentFrom(serializedMap: SerializedMap): any {
         const MAP_DOCUMENT: any = serializedMap;
         MAP_DOCUMENT._id = serializedMap.name;
