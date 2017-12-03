@@ -14,8 +14,8 @@ import { PhysicEngine } from './physic/engine';
 import { SoundService } from '../services/sound-service';
 import { CarsService } from './cars.service';
 import { CarsProgressionService } from './cars-progression.service';
-import { BestTimeComponent } from './game-result/best-time/best-time.component';
-import { MapRatingComponent } from './game-result/map-rating/map-rating.component';
+import { BestTimeComponent } from './end-view/best-time/best-time.component';
+import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
