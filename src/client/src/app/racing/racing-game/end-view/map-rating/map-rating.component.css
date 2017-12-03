@@ -1,41 +1,8 @@
-.map-rating-menu {
-    position: absolute;
-    top: 30%;
-    left: 35%;
-    background-color: rgb(112, 112, 112);
-    border-radius: 10px;
-    min-width: 300px;
-    min-height: 40%;
-    max-height: 90%;
-    width: 30%;
-    height: auto;
-    box-shadow: 0px 0px 10px 4px #333;
-    z-index: 2;
-}
-
 .map-rating-menu h1 {
     border-bottom: 5px solid #383434;
     padding-bottom: 10px;
     color: black;
     text-align: center;
-}
-
-.outer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background:#666;
-    opacity: 0.8;
-}
-
-.hide_me {
-    visibility:hidden;
-}
-
-.show_me {
-    visibility: visible;
 }
 
 img {
@@ -45,3 +12,4 @@ img {
 .five-stars {
     text-align: center;
 }
+

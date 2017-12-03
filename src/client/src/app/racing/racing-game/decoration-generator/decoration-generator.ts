@@ -9,64 +9,81 @@ import { Projection } from '../../util/projection';
 import { Decoration } from '../models/decoration/decoration';
 import { Track } from '../../track';
 import { PhysicUtils } from '../physic/utils';
+import { Tree } from '../models/decoration/tree';
+import { Bush } from '../models/decoration/bush';
 
-const MAX_TRY_COUNT = 100;
+interface DecorationData {
+    decoration: Decoration;
+    boundingBox: THREE.Box3;
+}
 
 export class DecorationGenerator {
 
-    private static readonly ACCEPTABLE_RADIUS = 25;
-    private static readonly DECORATION_COUNT_PER_ZONE = 30;
+    private static readonly ACCEPTABLE_RADIUS = 1.5 * Track.SEGMENT_WIDTH;
+    private static readonly DECORATION_COUNT_PER_ZONE = 20;
     private static readonly CIRCLE_RADIUS_RADIAN = 2 * Math.PI;
     private static readonly DECORATION_FACTORY = new DecorationFactory();
+    private static readonly MAX_PLACEMENT_TRIES = 20;
 
-    public placeDecorationsOnMap(map: RenderableMap): void {
-        const mapLength = map.computeLength();
-        const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
-        // const mapPointsIntervalCoordinate: THREE.Vector3[] = [];
-        const decorations: Decoration[] = [];
+    public placeDecorationsOnMap(map: RenderableMap): Promise<void> {
+        return Promise.all([Tree.WAIT_TO_LOAD, Bush.WAIT_TO_LOAD]).then(async () => {
+            const mapLength = map.computeLength();
+            const numberOfPoints = Math.floor(mapLength / (DecorationGenerator.ACCEPTABLE_RADIUS * 2));
+            const allDecorationsData: DecorationData[] = [];
 
-        for (let intervalIndex = 0 ; intervalIndex <= numberOfPoints; intervalIndex++) {
-            const interval = intervalIndex * (DecorationGenerator.ACCEPTABLE_RADIUS * 2);
-            const point = this.generateCoordinatePositionMap(interval, map);
-            this.placeDecorationsAround(point, map, decorations);
-        }
-
-        decorations.forEach((decoration) => {map.add(decoration); });
-    }
-
-    private placeDecorationsAround(point: THREE.Vector3, map: RenderableMap, decorations: Decoration[]): void {
-        let coordinatePositionOnRadius: Vector3 = new THREE.Vector3();
-        const pointOnMap: Vector3 = new THREE.Vector3();
-        let decoration: Decoration;
-        let tryCount = 0;
-        for (let i = 0 ; i < DecorationGenerator.DECORATION_COUNT_PER_ZONE; i++) {
-            do {
-                coordinatePositionOnRadius = this.generateCoordinatePositionRadius();
-                pointOnMap.addVectors(point, coordinatePositionOnRadius);
-                decoration = this.generateRandomDecoration();
-                decoration.position.copy(pointOnMap);
-                decoration.rotation.y = this.generateRandomAngle();
-            } while ((this.getIfDecorationSuperposed(decoration, decorations) || this.getIfOnTrack(decoration, map)) &&
-                tryCount++ < MAX_TRY_COUNT);
-            if (tryCount <= MAX_TRY_COUNT) {
-                decorations.push(decoration);
+            for (let intervalIndex = 0 ; intervalIndex <= numberOfPoints; intervalIndex++) {
+                const interval = intervalIndex * (DecorationGenerator.ACCEPTABLE_RADIUS * 2);
+                const point = this.generateCoordinatePositionMap(interval, map);
+                await this.placeDecorationsAround(point, map, allDecorationsData);
             }
+
+            allDecorationsData.forEach((decorationData) => map.add(decorationData.decoration));
+        });
+    }
+
+    private async placeDecorationsAround(point: THREE.Vector3, map: RenderableMap, allDecorationsData: DecorationData[]): Promise<void> {
+        for (let i = 0 ; i < DecorationGenerator.DECORATION_COUNT_PER_ZONE; i++) {
+            this.tryPlacingSingleDecorationAround(point, map, allDecorationsData);
         }
     }
 
-    private getIfDecorationSuperposed(decoration: Decoration, decorations: Decoration[]): boolean {
-        const box1 = new THREE.Box3().setFromObject(decoration);
-        for (const decorationOnMap of decorations) {
-            const box2 = new THREE.Box3().setFromObject(decorationOnMap);
-            if (box1.intersectsBox(box2)) {
+    private async tryPlacingSingleDecorationAround(point: THREE.Vector3,
+                                                   map: RenderableMap,
+                                                   allDecorationsData: DecorationData[]): Promise<void> {
+        const pointOnMap = new THREE.Vector3();
+        let decorationData: DecorationData;
+        let tryCount = 0;
+        do {
+            const decoration = await this.generateRandomDecoration();
+            const coordinatePositionOnRadius = this.generateCoordinatePositionRadius();
+            pointOnMap.addVectors(point, coordinatePositionOnRadius);
+            decoration.position.copy(pointOnMap);
+            decoration.rotation.y = this.generateRandomAngle();
+            decorationData = {
+                decoration: decoration,
+                boundingBox: new THREE.Box3().setFromObject(decoration)
+            };
+        } while ((this.getIfDecorationSuperposed(decorationData, allDecorationsData) || this.getIfOnTrack(decorationData, map)) &&
+            tryCount++ < DecorationGenerator.MAX_PLACEMENT_TRIES);
+
+        const placementSuccessful = tryCount <= DecorationGenerator.MAX_PLACEMENT_TRIES;
+        if (placementSuccessful) {
+            allDecorationsData.push(decorationData);
+        }
+    }
+
+    private getIfDecorationSuperposed(decorationData: DecorationData, allDecorationsData: DecorationData[]): boolean {
+        for (const decorationOnMap of allDecorationsData) {
+            if (decorationData.boundingBox.intersectsBox(decorationOnMap.boundingBox)) {
                 return true;
             }
         }
         return false;
     }
 
-    private getIfOnTrack(decoration: Decoration, map: RenderableMap): boolean {
+    private getIfOnTrack(decorationData: DecorationData, map: RenderableMap): boolean {
         const lines = map.mapLines;
+        const decoration = decorationData.decoration;
         const coordinatePoint = new Point(decoration.position.x, decoration.position.z);
         const decorationDimensions = PhysicUtils.getObjectDimensions(decoration);
         for (const line of lines) {
@@ -106,9 +123,11 @@ export class DecorationGenerator {
         return new THREE.Vector3(randomRadius * Math.cos(randomAngle), 0, randomRadius * Math.sin(randomAngle));
     }
 
-    private generateRandomDecoration(): Decoration {
+    private generateRandomDecoration(): Promise<Decoration> {
         const numberOfDecorationType = DecorationType.COUNT - 1;
         const randomIndex = Math.floor(Math.random() * numberOfDecorationType);
-        return DecorationGenerator.DECORATION_FACTORY.getClassInstance(randomIndex as DecorationType);
+        const decoration = DecorationGenerator.DECORATION_FACTORY.getClassInstance(randomIndex as DecorationType);
+        return decoration.waitToChildrenAdded.then(() => decoration);
     }
+
 }

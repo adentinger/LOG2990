@@ -96,11 +96,16 @@ export class MapDbService {
     }
 
     public getByName(name: string): Promise<SerializedMap> {
+        return this.getMapProperties(name, {_id: false})
+            .then(mapDocument => this.makeSerializedMapFrom(mapDocument));
+    }
+
+    public getMapProperties(name: string, properties: Object): Promise<Object> {
         return new Promise((resolve, reject) => {
-            this.mapCollection.findOne({_id: name})
-            .then((mapDocument) => {
-                if (mapDocument) {
-                    resolve(this.makeSerializedMapFrom(mapDocument));
+            this.mapCollection.findOne({name: name}, {fields: properties})
+            .then((mapFields: any) => {
+                if (mapFields) {
+                    resolve(mapFields);
                 }
                 else {
                     reject(HttpStatus.NOT_FOUND);
@@ -108,6 +113,15 @@ export class MapDbService {
             })
             .catch(() => {
                 reject(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
+        });
+    }
+
+    public setMapProperties(name: string, properties: Object): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.mapCollection.findOneAndUpdate({name: name}, {$set: properties})
+            .then(result => {
+                console.log(result);
             });
         });
     }

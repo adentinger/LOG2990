@@ -1,15 +1,14 @@
-<div class = 'outer'>
-    <div class='best-time-menu' >
-        <h1>Map top 5 Best time</h1>
-        <!-- <ol>
-            <li *ngFor = 'let bestTimes of map.mapBestTimes'>{{bestTimes}}</li>
-        </ol> -->
-        <div *ngIf = 'isOnTopFive'>
-        <h3>Congratulation, you managed to score in the top 5 best times</h3>
-        <input value = 'Enter your name' />
-        <button>Enter</button>
-        </div>
-        <button>Play Again</button>
-        <button>Return Homepage</button>
+<div class='best-time-menu' >
+    <h1>{{endViewService.mapName }} top 5 Best time</h1>
+    <ol>
+        <li *ngFor = 'let bestTime of endViewService.mapBestTimes'>{{bestTime}}</li>
+    </ol>
+    <div *ngIf = 'endViewService.userIsInMapBestTimes()'>
+    <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
+    <input type = 'text' (ngModel) = 'name'/>
+    <button (click) = 'endViewService.updateMapBestTime()'>Enter</button>
     </div>
+    <button (click) = 'reloadPage()'>Play Again</button>
+    <button routerLink='/'>Return Homepage</button>
 </div>
+

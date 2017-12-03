@@ -1,13 +1,8 @@
-<div class = 'outer'>
-  <div class = 'map-rating-menu' >
-      <h1>Map Rating</h1>
-      <div class = 'five-stars'>
-          <img [src] = 'stars[0]' (mouseenter) = 'mouseHoverStar(0)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(0)'>
-          <img [src] = 'stars[1]' (mouseenter) = 'mouseHoverStar(1)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(1)'>
-          <img [src] = 'stars[2]' (mouseenter) = 'mouseHoverStar(2)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(2)'>
-          <img [src] = 'stars[3]' (mouseenter) = 'mouseHoverStar(3)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(3)'>
-          <img [src] = 'stars[4]' (mouseenter) = 'mouseHoverStar(4)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(4)'>
-      </div>
-      <button (click) = 'displayBestTimeComponent()'>Next</button>
-  </div>
+<div class = 'map-rating-menu' >
+    <h1>Map Rating</h1>
+    <div class = 'five-stars'>
+        <img *ngFor = 'let index of [0, 1, 2, 3, 4]' [src] = 'stars[index]' (mouseenter) = 'mouseHoverStar(index)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(index)'>
+    </div>
+    <button (click) = 'displayBestTimeComponent()'>Next</button>
 </div>
+

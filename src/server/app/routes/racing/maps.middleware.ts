@@ -5,6 +5,7 @@ import { HttpStatus, getStatusOrDefault } from '../../../../common/src';
 import { provideDatabase } from '../../app-db';
 import { MapDbService } from './map-db-service';
 import { SerializedMap } from '../../../../common/src/racing/serialized-map';
+import { MapUpdater } from './map-updater';
 
 @MiddleWare('/racing/maps')
 export class MapsMiddleWare {
@@ -60,6 +61,47 @@ export class MapsMiddleWare {
             .catch((reason: any) => {
                 res.sendStatus(getStatusOrDefault(reason));
             });
+    }
+
+    @Route('get', '/:name/best-times')
+    public getMapBestTimes(req: express.Request,
+                            res: express.Response): void {
+        MapsMiddleWare.MAP_DB_SERVICE.getMapProperties(req.params.name, {_id: false, bestTimes: true})
+        .then(mapFields => {
+            const bestTimes: number[] = mapFields['bestTimes'];
+            res.statusCode = HttpStatus.OK;
+            res.json(bestTimes);
+        })
+        .catch((reason: any) => {
+            res.sendStatus(getStatusOrDefault(reason));
+        });
+    }
+
+    @Route('patch', '/:name/increment-plays')
+    public incrementMapNumberOfPlays(req: express.Request,
+                                     res: express.Response): void {
+        MapUpdater.getInstance()
+            .incrementPlays(req.params.name)
+            .then(() => res.sendStatus(HttpStatus.OK))
+            .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
+    }
+
+    @Route('patch', '/:name/best-times/:time')
+    public updateMapBestTime(req: express.Request,
+                             res: express.Response): void {
+        MapUpdater.getInstance()
+            .updateTime(req.params.name, Number(req.params.time))
+            .then(() => res.sendStatus(HttpStatus.OK))
+            .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
+    }
+
+    @Route('patch', '/:name/rating/:rating')
+    public updateMapRating(req: express.Request,
+                           res: express.Response): void {
+        MapUpdater.getInstance()
+            .updateRating(req.params.name, Math.round(Number(req.params.rating)))
+            .then(() => res.sendStatus(HttpStatus.OK))
+            .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
 }

@@ -25,8 +25,9 @@ describe('Decoration generator', () => {
     });
 
     it('Should add decorations on map', () => {
-        decorationGenerator.placeDecorationsOnMap(map);
-        expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
+        decorationGenerator.placeDecorationsOnMap(map).then(() => {
+            expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
+        });
     });
 
     it('Should not place decorations on track', () => {

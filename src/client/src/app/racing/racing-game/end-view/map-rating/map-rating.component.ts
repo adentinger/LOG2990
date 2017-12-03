@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BestTimeComponent } from '../best-time/best-time.component';
 import { RenderableMap } from '../../racing-game-map/renderable-map';
 import { EndViewComponent } from '../end-view.component';
+import { EndViewService } from '../../../services/end-view.service';
 
 @Component({
     selector: 'app-map-rating',
@@ -9,48 +10,45 @@ import { EndViewComponent } from '../end-view.component';
     styleUrls: ['./map-rating.component.css']
 })
 
-export class MapRatingComponent implements OnInit {
+export class MapRatingComponent {
 
-    @Input() public map: RenderableMap;
-    @ViewChild(BestTimeComponent)
-    private bestTime: BestTimeComponent;
-    private readonly NUMBER_OF_STARS = 5;
-    public displayable;
-    private readonly filledStarImageSource = '/assets/racing/stars-rating/filled-star.png';
-    private readonly emptyStarImageSource = '/assets/racing/stars-rating/empty-star.png';
-    public stars: string[] = [];
-    private numberOfStarsClicked;
+    private static readonly NUMBER_OF_STARS = 5;
+    private static readonly FILLED_STAR_URL = '/assets/racing/stars-rating/filled-star.png';
+    private static readonly EMPTY_STAR_URL = '/assets/racing/stars-rating/empty-star.png';
+    private stars: string[] = [];
+    private indexOfStarClicked;
 
-    constructor(private endView: EndViewComponent) {  }
+    constructor(private endViewService: EndViewService) {
+        for (let i = 0 ; i < MapRatingComponent.NUMBER_OF_STARS ; i++) {
+            this.stars.push(MapRatingComponent.EMPTY_STAR_URL);
+        }
+     }
 
-    public ngOnInit(): void {
-        this.displayable = false;
-        for (let i = 0 ; i < this.NUMBER_OF_STARS ; i++) {
-            this.stars.push(this.emptyStarImageSource);
+    private mouseHoverStar(indexOfStar: number): void {
+        this.stars.fill(MapRatingComponent.EMPTY_STAR_URL);
+        for (let i = 0 ; i <= indexOfStar; i++) {
+            this.stars[i] = MapRatingComponent.FILLED_STAR_URL;
         }
     }
 
-    public mouseHoverStar(index: number): void {
-        this.stars.fill(this.emptyStarImageSource);
-        for (let i = 0 ; i <= index; i++) {
-            this.stars[i] = this.filledStarImageSource;
-        }
-    }
-
-    public mouseOutOfStar(): void {
-        this.stars.fill(this.emptyStarImageSource);
-        if (this.numberOfStarsClicked >= 0 && this.numberOfStarsClicked !== null) {
-            for (let i = 0 ; i <=  this.numberOfStarsClicked; i++) {
-                this.stars[i] = this.filledStarImageSource;
+    private mouseOutOfStar(): void {
+        this.stars.fill(MapRatingComponent.EMPTY_STAR_URL);
+        if (this.indexOfStarClicked >= 0 && this.indexOfStarClicked !== null) {
+            for (let i = 0 ; i <= this.indexOfStarClicked; i++) {
+                this.stars[i] = MapRatingComponent.FILLED_STAR_URL;
             }
         }
     }
 
-    public clickOnStar(index: number) {
-        this.numberOfStarsClicked = index;
+    private clickOnStar(indexOfStar: number): void {
+        this.indexOfStarClicked = indexOfStar;
     }
 
-    public displayBestTimeComponent(): void {
-        this.endView.displayGameResult = false;
+    private  displayBestTimeComponent(): void {
+        if (this.indexOfStarClicked) {
+            this.endViewService.saveMapRating(this.indexOfStarClicked + 1);
+        }
+        this.endViewService.displayGameResult = false;
+        this.endViewService.setMapBestTimes();
     }
 }
