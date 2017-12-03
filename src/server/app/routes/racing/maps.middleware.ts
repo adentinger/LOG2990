@@ -77,7 +77,7 @@ export class MapsMiddleWare {
         });
     }
 
-    @Route('patch', '/:name/plays')
+    @Route('patch', '/:name/increment-plays')
     public incrementMapNumberOfPlays(req: express.Request,
                                      res: express.Response): void {
         MapUpdater.getInstance()
