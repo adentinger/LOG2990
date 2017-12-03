@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, NgZone } from '@angular/core';
 import { RenderableMap } from '../../racing-game-map/renderable-map';
 import { EndViewService } from '../../../services/end-view.service';
+import 'rxjs/add/operator/switch';
+
 
 @Component({
     selector: 'app-best-time',
@@ -10,5 +12,14 @@ import { EndViewService } from '../../../services/end-view.service';
 
 export class BestTimeComponent {
 
-    constructor(private endViewService: EndViewService) { }
+    @Input() public name;
+    private isOnTopFive = true;
+    constructor(private endViewService: EndViewService,
+    private zone: NgZone) {
+        this.name = '';
+    }
+
+    public reloadPage(): void {
+        this.zone.runOutsideAngular(() => location.reload());
+    }
 }

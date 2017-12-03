@@ -5,10 +5,11 @@
     </ol> -->
     <div *ngIf = 'isOnTopFive'>
     <h3>Congratulation, you managed to score in the top 5 best times</h3>
-    <input value = 'Enter your name' />
+    <input />
+    <p>{{userName}}</p>
     <button>Enter</button>
     </div>
-    <button>Play Again</button>
-    <button>Return Homepage</button>
+    <button (click) = 'reloadPage()'>Play Again {{endViewService.mapName}}</button>
+    <button routerLink='/'>Return Homepage</button>
 </div>
 
