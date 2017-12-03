@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Response } from '@angular/http/src/static_response';
+import { HttpResponse } from '@angular/common/http/src/response';
 
 
 interface RequestOptions {
@@ -20,16 +22,14 @@ export class EndViewService {
 
     public displayGameResult;
     public mapName;
-    public numberOfStar;
 
     constructor(private http: HttpClient) {
         this.displayGameResult = null;
         this.mapName = '';
     }
 
-    public patchMapRating(rating: number): void {
+    public saveMapRating(rating: number): void {
         const URL = EndViewService.ADDRESS + '/' + this.mapName + '/rating/' + rating;
-        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
-        console.log(URL, 'postMapRating');
+        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
     }
 }

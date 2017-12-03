@@ -10,41 +10,42 @@ import { EndViewService } from '../../../services/end-view.service';
     styleUrls: ['./map-rating.component.css']
 })
 
-export class MapRatingComponent implements OnInit {
+export class MapRatingComponent {
 
-    @Input() public map: RenderableMap;
     private readonly NUMBER_OF_STARS = 5;
-    private readonly filledStarImageSource = '/assets/racing/stars-rating/filled-star.png';
-    private readonly emptyStarImageSource = '/assets/racing/stars-rating/empty-star.png';
+    private readonly FILLED_STAR_URL = '/assets/racing/stars-rating/filled-star.png';
+    private readonly EMPTY_STAR_URL = '/assets/racing/stars-rating/empty-star.png';
     public stars: string[] = [];
-    private numberOfStarClicked;
+    private indexOfStarClicked;
 
-    constructor(private endViewService: EndViewService) {  }
-
-    public ngOnInit(): void {
+    constructor(private endViewService: EndViewService) {
         for (let i = 0 ; i < this.NUMBER_OF_STARS ; i++) {
-            this.stars.push(this.emptyStarImageSource);
+            this.stars.push(this.EMPTY_STAR_URL);
+        }
+     }
+
+    private mouseHoverStar(indexOfStar: number): void {
+        this.stars.fill(this.EMPTY_STAR_URL);
+        for (let i = 0 ; i <= indexOfStar; i++) {
+            this.stars[i] = this.FILLED_STAR_URL;
         }
     }
 
-    public mouseHoverStar(index: number): void {
-        this.stars.fill(this.emptyStarImageSource);
-        for (let i = 0 ; i <= index; i++) {
-            this.stars[i] = this.filledStarImageSource;
-        }
-    }
-
-    public mouseOutOfStar(): void {
-        this.stars.fill(this.emptyStarImageSource);
-        if (this.numberOfStarClicked >= 0 && this.numberOfStarClicked !== null) {
-            for (let i = 0 ; i <=  this.numberOfStarClicked; i++) {
-                this.stars[i] = this.filledStarImageSource;
+    private mouseOutOfStar(): void {
+        this.stars.fill(this.EMPTY_STAR_URL);
+        if (this.indexOfStarClicked >= 0 && this.indexOfStarClicked !== null) {
+            for (let i = 0 ; i <= this.indexOfStarClicked; i++) {
+                this.stars[i] = this.FILLED_STAR_URL;
             }
         }
     }
 
-    public clickOnStar(index: number) {
-        this.numberOfStarClicked = index;
-        this.endViewService.numberOfStar = index;
+    private clickOnStar(indexOfStar: number) {
+        this.indexOfStarClicked = indexOfStar;
+    }
+
+    private displayBestTimeComponent(): void {
+        this.endViewService.saveMapRating(this.indexOfStarClicked + 1);
+        this.endViewService.displayGameResult = false;
     }
 }
