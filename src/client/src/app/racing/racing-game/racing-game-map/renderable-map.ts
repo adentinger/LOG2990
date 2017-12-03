@@ -25,7 +25,7 @@ import { AiMode } from '../physic/ai/ai-mode';
 
 const UP = new THREE.Vector3(0, 1, 0);
 
-export class RenderableMap extends PhysicMesh {
+export class RenderableMap extends THREE.Mesh {
     private static readonly ITEM_HEIGHT = 0.03;
 
     public mapName: string;
