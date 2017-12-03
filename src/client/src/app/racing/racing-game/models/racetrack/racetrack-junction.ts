@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Track } from '../../../track';
-import { loadTexture } from '../../../../util/textures';
+import { loadTexture } from '../../../util/textures';
 
 export class RacetrackJunction extends THREE.Mesh {
     private static ASPHALT_URL = 'assets/racing/textures/ground_asphalt_old_07.png';

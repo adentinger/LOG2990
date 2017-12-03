@@ -4,10 +4,10 @@ import { CarController, CarControllerState } from './car-controller';
 import { Car } from '../../models/car/car';
 import { EventManager } from '../../../../event-manager.service';
 import { Seconds, Meters } from '../../../../types';
-import { AFTER_PHYSIC_UPDATE_EVENT, UP_DIRECTION } from '../engine';
+import { UP_DIRECTION } from '../engine';
 import { CarPhysic } from '../../models/car/car-physic';
-import { MapPositionAlgorithms } from '../../../../util/map-position-algorithms';
-import { Projection } from '../../../../util/projection';
+import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { Projection } from '../../../util/projection';
 import { Point, Vector } from '../../../../../../../common/src/math';
 import { Obstacle } from '../../models/obstacles/obstacle';
 import { Class } from '../../../../../../../common/src';
@@ -16,6 +16,7 @@ import { SpeedBooster } from '../../models/obstacles/speed-booster';
 import { Puddle } from '../../models/obstacles/puddle';
 import { AiMode } from './ai-mode';
 import '../../../../../../../common/src/math/clamp';
+import { AFTER_PHYSIC_UPDATE_EVENT } from '../../../constants';
 
 const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
     [Pothole, -1],

@@ -2,7 +2,7 @@ import { DecorationGenerator } from './decoration-generator';
 import { RenderableMap } from '../racing-game-map/renderable-map';
 import { MockMaps } from '../../../admin-screen/map-editor/mock-maps';
 import { Decoration } from '../models/decoration/decoration';
-import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { MapPositionAlgorithms } from '../../util/map-position-algorithms';
 import { Point } from '../../../../../../common/src/math/point';
 import { Track } from '../../track';
 import * as THREE from 'three';
@@ -25,8 +25,9 @@ describe('Decoration generator', () => {
     });
 
     it('Should add decorations on map', () => {
-        decorationGenerator.placeDecorationsOnMap(map);
-        expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
+        decorationGenerator.placeDecorationsOnMap(map).then(() => {
+            expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
+        });
     });
 
     it('Should not place decorations on track', () => {

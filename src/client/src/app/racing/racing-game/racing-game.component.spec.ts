@@ -14,6 +14,8 @@ import { PhysicEngine } from './physic/engine';
 import { SoundService } from '../services/sound-service';
 import { CarsService } from './cars.service';
 import { CarsProgressionService } from './cars-progression.service';
+import { BestTimeComponent } from './end-view/best-time/best-time.component';
+import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -26,7 +28,7 @@ describe('RacingGameComponent', () => {
                 HttpModule,
                 NoopAnimationsModule
             ],
-            declarations: [RacingGameComponent, UIInputs],
+            declarations: [RacingGameComponent, UIInputs, MapRatingComponent, BestTimeComponent],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/' },
                 RacingGameService,

@@ -28,12 +28,14 @@ const UP = new THREE.Vector3(0, 1, 0);
 export class RenderableMap extends PhysicMesh {
     private static readonly ITEM_HEIGHT = 0.03;
 
-    public readonly mapName: string;
+    public mapName: string;
+    public mapPoints: Point[];
+    public mapPotholes: SerializedPothole[];
+    public mapPuddles: SerializedPuddle[];
+    public mapSpeedBoosts: SerializedSpeedBoost[];
+    public mapRatings: number[] = [];
+    public mapBestTimes: number[] = [];
     public readonly mapMode: AiMode;
-    public readonly mapPoints: Point[];
-    public readonly mapPotholes: SerializedPothole[];
-    public readonly mapPuddles: SerializedPuddle[];
-    public readonly mapSpeedBoosts: SerializedSpeedBoost[];
 
     public readonly waitToLoad: Promise<void>;
     private readonly plane: RacingGamePlane;
@@ -70,17 +72,17 @@ export class RenderableMap extends PhysicMesh {
         const waitForSegments = this.placeSegmentsOnMap();
         const waitForObstacles = this.placeObstaclesOnMap();
 
-        const decorationGenerator = new DecorationGenerator();
-        decorationGenerator.placeDecorationsOnMap(this);
-
         const invisibleWallsGenerator = new InvisibleWallsGenerator(this);
         invisibleWallsGenerator.placeInvisibleWallOnBothSideOfMap();
+
+        const decorationGenerator = new DecorationGenerator();
 
         this.waitToLoad = Promise.all([
             this.plane.waitToLoad,
             waitForJunctions,
             waitForSegments,
-            waitForObstacles
+            waitForObstacles,
+            decorationGenerator.placeDecorationsOnMap(this)
         ]).then(() => { });
     }
 

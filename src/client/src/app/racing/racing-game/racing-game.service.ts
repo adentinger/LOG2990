@@ -4,7 +4,7 @@ import { RacingRenderer } from './rendering/racing-renderer';
 import { PhysicEngine } from './physic/engine';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { SerializedMap } from '../../../../../common/src/racing/serialized-map';
-import { UIInputs, KEYDOWN_EVENT } from '../services/ui-input.service';
+import { UIInputs } from '../services/ui-input.service';
 import { Car } from './models/car/car';
 import { EventManager } from '../../event-manager.service';
 import { MapService } from '../services/map.service';
@@ -14,10 +14,9 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
-import { CarsProgressionService } from './cars-progression.service';
+import { CarsProgressionService, CAR_LAP_UPDATE, RaceCompletionInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
-
-export const GAME_START_EVENT = 'racing-start';
+import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT, CAR_COMPLETED_RACE } from '../constants';
 
 @Injectable()
 export class RacingGameService {
@@ -35,6 +34,7 @@ export class RacingGameService {
     private userInputs: UIInputs = null;
 
     public get lap(): number {
+        console.log('game service is fetching lap value, which is : ' + this.info.maxLap);
         return this.info.maxLap;
     }
 
@@ -151,4 +151,22 @@ export class RacingGameService {
         }
     }
 
+    @EventManager.Listener(CAR_LAP_UPDATE)
+    // tslint:disable-next-line:no-unused-variable
+    private handleCarCompletedRace(event: EventManager.Event<RaceCompletionInfo>) {
+        if (event.data.lap >= this.info.maxLap) {
+            console.log('* Race Completed By A Car *');
+            this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
+                name: CAR_COMPLETED_RACE,
+                data: event.data.car
+            });
+            if (event.data.isUser) {
+                console.log('** Race Completed By User **');
+                this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
+                    name: GAME_COMPLETED_EVENT,
+                    data: void 0
+                });
+            }
+        }
+    }
 }

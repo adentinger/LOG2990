@@ -5,13 +5,17 @@ import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { Progression } from './racing-types';
-import { EventManager } from '../../event-manager.service';
+import { EventManager, eventManagerValue } from '../../event-manager.service';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
+import { PhysicUtils } from './physic/utils';
+import { CAR_COMPLETED_RACE } from '../constants';
 
+const CAR_OPACITY_DEFAULT = 1;
+const CAR_OPACITY_TRANSPARENT = 0.4;
 
 @Injectable()
 export class CarsService implements Loadable {
@@ -33,6 +37,10 @@ export class CarsService implements Loadable {
 
     public get cars(): Car[] {
         return this.controllers.map((controller) => controller.car);
+    }
+
+    public get controller(): CarController[] {
+        return this.controllers;
     }
 
     public constructor(
@@ -103,6 +111,26 @@ export class CarsService implements Loadable {
 
     public startControllers(): void {
         this.controllers.forEach(controller => controller.start());
+    }
+
+    public toggleCarColorTransparent(carIndex: number): void {
+        (PhysicUtils.getChildren(this.controllers[carIndex].car).filter((child) => child instanceof THREE.Mesh) as THREE.Mesh[])
+            .forEach((mesh) => {
+                const material = (<THREE.Material>mesh.material);
+                material.transparent = material.transparent ? false : true;
+                material.opacity = material.transparent ? CAR_OPACITY_TRANSPARENT : CAR_OPACITY_DEFAULT;
+            });
+    }
+
+    @EventManager.Listener(CAR_COMPLETED_RACE)
+    // tslint:disable-next-line:no-unused-variable
+    private ghostModeAfterFinalLineCross(event: EventManager.Event<Car>): void {
+        let carIndex;
+        for (let i = 0; i < this.controller.length; i++) {
+            carIndex = this.controller[i].car === event.data ? i : carIndex;
+        }
+        this.toggleCarColorTransparent(carIndex);
+        this.controller[carIndex].stop();
     }
 
 }
