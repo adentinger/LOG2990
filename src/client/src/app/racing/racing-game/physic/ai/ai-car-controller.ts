@@ -38,7 +38,6 @@ export class AiCarController extends CarController {
 
     public setMode(mode: AiMode): void {
         this.mode = mode;
-        console.log(mode);
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
