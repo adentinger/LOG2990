@@ -26,7 +26,7 @@ const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
 const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
-    private static readonly UPDATE_PERIODE = 5; // cycles
+    private static readonly UPDATE_PERIODE = 2; // cycles
 
     private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
     private mode: AiMode;
@@ -155,14 +155,16 @@ export class AiCarController extends CarController {
         const normalizedRelativeVelocity = relativeVelocity.clone().normalize();
 
         const direction = Math.pow((-normalizedRelativeVelocity.dot(normalizedRelativePosition) + 1) / 2, 2);
-        const lateralAvoidanceFactor = this.car.front.cross(relativeVelocity).dot(UP_DIRECTION) - direction;
-        const frontalAvoidanceFactor = /* Math.sign(Math.max(0.0,
-            this.car.front.dot(normalizedRelativePosition))) */ 1;
+        const side = relativePosition.cross(this.car.front).dot(UP_DIRECTION) *
+            Math.sign(-Math.min(0, normalizedRelativeVelocity.dot(normalizedRelativePosition)));
+        const lateralAvoidanceFactor = side * relativeVelocity.length();
+        const frontalAvoidanceFactor = Math.abs(
+            this.car.front.dot(normalizedRelativePosition));
         const distanceToOpponent = Math.max(1, relativePosition.length());
 
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
-            lateralAvoidanceFactor * frontalAvoidanceFactor * direction *
-            Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 2);
+            lateralAvoidanceFactor /* * frontalAvoidanceFactor */ * direction *
+            Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 3);
         return Math.clamp(this.mode.angularSpeedForOpponentsFactor * angularSpeed,
             -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }

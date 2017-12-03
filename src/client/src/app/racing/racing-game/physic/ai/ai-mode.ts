@@ -8,24 +8,24 @@ export interface AiWeights {
 
 export class AiMode {
     public static readonly AMATEUR = new AiMode(
-        { track: 1, obstacles: -1, opponents: 1 },    // weights
+        { track: 1, obstacles: -1, opponents: 0 },    // weights
         3,                                            // track factor
         1,                                          // obstacles factor
         1,                                            // opponents factor
-        10,                                           // distance to target
+        7,                                           // distance to target
         5,                                            // distance for slowing
         5,                                            // distance to avoid obstacles
-        2                                             // distance to avoid opponents
+        1                                             // distance to avoid opponents
     );
     public static readonly PROFESSIONAL = new AiMode(
-        { track: 1, obstacles: 0.8, opponents: 1 }, // weights
-        10,                                           // track factor
-        1,                                            // obstacles factor
-        3,                                            // opponents factor
-        20,                                           // distance to target
-        10,                                           // distance for slowing
+        { track: 2, obstacles: 1, opponents: 1 }, // weights
+        7,                                           // track factor
+        3,                                            // obstacles factor
+        5,                                            // opponents factor
+        15,                                           // distance to target
+        25,                                           // distance for slowing
         10,                                           // distance to avoid obstacles
-        6                                             // distance to avoid opponents
+        1.2                                             // distance to avoid opponents
     );
 
     private constructor(
