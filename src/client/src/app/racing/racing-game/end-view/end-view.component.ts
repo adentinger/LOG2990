@@ -12,6 +12,7 @@ export class EndViewComponent {
     constructor(private endViewService: EndViewService) { }
 
     public displayBestTimeComponent(): void {
+        this.endViewService.patchMapRating(this.endViewService.numberOfStar + 1);
         this.endViewService.displayGameResult = false;
     }
 }

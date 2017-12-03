@@ -45,9 +45,6 @@ export class MapRatingComponent implements OnInit {
 
     public clickOnStar(index: number) {
         this.numberOfStarClicked = index;
-    }
-
-    public postUserMapRating(): void {
-
+        this.endViewService.numberOfStar = index;
     }
 }

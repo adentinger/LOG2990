@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClient } from 'selenium-webdriver/http';
-import { HttpResponse } from '@angular/common/http/src/response';
+import { HttpClient } from '@angular/common/http';
 
+
+interface RequestOptions {
+    observe: 'response';
+    withCredentials: boolean;
+    responseType: 'json';
+}
 
 @Injectable()
 export class EndViewService {
 
-  private static readonly ADDRESS = 'http://localhost:3000';
-  private static readonly AUTHENTICATION_PATH = '/admin/authentication/';
-  private http: HttpClient;
+    private static readonly ADDRESS = 'http://localhost:3000/racing/maps';
+    private static readonly REQUEST_OPTIONS: RequestOptions = {
+        observe: 'response',
+        withCredentials: false,
+        responseType: 'json'
+    };
 
-  public displayGameResult;
-  public mapName;
+    public displayGameResult;
+    public mapName;
+    public numberOfStar;
 
-  constructor() {
-    this.displayGameResult = null;
-    this.mapName = '';
-    this.http = new HttpClient(EndViewService.ADDRESS);
-  }
+    constructor(private http: HttpClient) {
+        this.displayGameResult = null;
+        this.mapName = '';
+    }
+
+    public patchMapRating(rating: number): void {
+        const URL = EndViewService.ADDRESS + '/' + this.mapName + '/rating/' + rating;
+        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
+        console.log(URL, 'postMapRating');
+    }
 }
