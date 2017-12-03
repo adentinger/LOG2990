@@ -83,7 +83,7 @@ export class HUD {
     private drawLapTime(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_TIME_POSITION);
 
-        const lapTime = this.getTime(game.lapTimes[game.userLapNumber - 1]);
+        const lapTime = this.getTime(Date.now() / 1000 - game.userLapTimes[game.userLapTimes.length - 1]);
         const currentTime = this.formatTime(lapTime);
         this.context.fillText(`Lap time: ${currentTime}`,
             textPosition.x, textPosition.y);

@@ -11,9 +11,9 @@ import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AFTER_PHYSIC_UPDATE_EVENT } from '../constants';
 
-export const CAR_LAP_UPDATE = 'carlapupdate';
+export const CAR_LAP_UPDATE_EVENT = 'carlapupdate';
 
-export interface RaceCompletionInfo {
+export interface LapUpdateInfo {
     car: Car;
     lap: number;
     isUser: boolean;
@@ -91,13 +91,13 @@ export class CarsProgressionService {
                 else if (newLapProgression < 0.05 && this.carsHalfMark.get(controller.car)) {
                     this.carsHalfMark.set(controller.car, false);
                     this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
-                    const info: RaceCompletionInfo = {
+                    const info: LapUpdateInfo = {
                         car: controller.car,
                         lap: this.carsLapNumber.get(controller.car),
                         isUser: (controller instanceof UserCarController)
                     };
-                    this.eventManager.fireEvent(CAR_LAP_UPDATE, {
-                        name: CAR_LAP_UPDATE,
+                    this.eventManager.fireEvent(CAR_LAP_UPDATE_EVENT, {
+                        name: CAR_LAP_UPDATE_EVENT,
                         data: info
                     });
                 }

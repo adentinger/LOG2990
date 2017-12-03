@@ -12,3 +12,5 @@ export const MOUSE_EVENT = 'userinput-mouse';
 export const MOUSEDOWN_EVENT = 'userinput-mousedown';
 export const MOUSEUP_EVENT = 'userinput-mouseup';
 export const CAR_COMPLETED_RACE = 'carcompletedrace';
+
+export const USER_INDEX = 42;

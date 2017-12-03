@@ -14,7 +14,7 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
-import { CarsProgressionService, CAR_LAP_UPDATE, RaceCompletionInfo } from './cars-progression.service';
+import { CarsProgressionService, CAR_LAP_UPDATE_EVENT, LapUpdateInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
 import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT, CAR_COMPLETED_RACE } from '../constants';
 
@@ -44,7 +44,9 @@ export class RacingGameService {
         private soundService: SoundService,
         private carsService: CarsService,
         private carsProgressionService: CarsProgressionService) {
-        this.info = new GameInfo(this.carsService, this.carsProgressionService);
+        this.info = new GameInfo(this.carsService,
+            this.carsProgressionService,
+            this.eventManager);
         this.waitToLoad = Promise.all([
             this.carsService.waitToLoad,
             this.soundService.waitToLoad
@@ -151,9 +153,9 @@ export class RacingGameService {
         }
     }
 
-    @EventManager.Listener(CAR_LAP_UPDATE)
+    @EventManager.Listener(CAR_LAP_UPDATE_EVENT)
     // tslint:disable-next-line:no-unused-variable
-    private handleCarCompletedRace(event: EventManager.Event<RaceCompletionInfo>) {
+    private handleCarCompletedRace(event: EventManager.Event<LapUpdateInfo>) {
         if (event.data.lap >= this.info.maxLap) {
             console.log('* Race Completed By A Car *'); // DEBUG
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
@@ -170,7 +172,4 @@ export class RacingGameService {
         }
     }
 
-    /* public get getMap(): RenderableMap {
-        return this.map;
-    } */
 }
