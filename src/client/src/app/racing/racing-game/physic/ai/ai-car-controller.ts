@@ -26,9 +26,9 @@ const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
 const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
-    private static readonly UPDATE_PERIODE = 2; // cycles
+    private static readonly UPDATE_PERIOD = 2; // cycles
 
-    private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
+    private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIOD);
     private mode: AiMode;
 
     public constructor(car: Car) {
@@ -43,7 +43,7 @@ export class AiCarController extends CarController {
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private onAfterPhysicUpdate(event: EventManager.Event<{ deltaTime: Seconds }>): void {
-        if (++this.cycleCount >= AiCarController.UPDATE_PERIODE && this.state === CarControllerState.ENABLED) {
+        if (++this.cycleCount >= AiCarController.UPDATE_PERIOD && this.state === CarControllerState.ENABLED) {
             this.cycleCount = 0;
             const carPosition = this.convertToVector(this.car.position);
             const projectionOfCar = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
