@@ -77,6 +77,12 @@ export class MapsMiddleWare {
         });
     }
 
+    @Route('patch', '/:name/plays')
+    public incrementMapNumberOfPlays(req: express.Request,
+                                     res: express.Response): void {
+        res.sendStatus(HttpStatus.OK);
+    }
+
     @Route('patch', '/:name/best-times/:time')
     public updateMapBestTime(req: express.Request,
                              res: express.Response): void {
