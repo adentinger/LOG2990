@@ -1,6 +1,10 @@
 export class MapUpdater {
 
-    protected readonly instance = new MapUpdater();
+    protected static readonly instance = new MapUpdater();
+
+    public static getInstance(): MapUpdater {
+        return MapUpdater.instance;
+    }
 
     protected constructor() {}
 
