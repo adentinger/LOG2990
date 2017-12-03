@@ -4,6 +4,10 @@ import { HttpStatus } from '../../../../common/src/index';
 
 export class MapUpdater {
 
+    private static readonly MAX_BEST_TIMES_SIZE = 5;
+    private static readonly RATING_MIN = 1;
+    private static readonly RATING_MAX = 5;
+
     protected static readonly instance = new MapUpdater();
 
     private readonly MAP_DB_SERVICE =
@@ -16,15 +20,13 @@ export class MapUpdater {
     protected constructor() {}
 
     public updateTime(mapName: string, time: number): Promise<void> {
-        const MAX_BEST_TIMES_SIZE = 5;
-
         const isTimeValid = time > 0;
         if (isTimeValid) {
             return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, bestTimes: true}).then((mapFields) => {
                 const bestTimes: number[] = mapFields['bestTimes'];
                 bestTimes.push(time);
                 bestTimes.sort();
-                bestTimes.splice(MAX_BEST_TIMES_SIZE);
+                bestTimes.splice(MapUpdater.MAX_BEST_TIMES_SIZE);
 
                 console.log('Updated ' + mapName + '\'s time: ' + time + ' sec');
                 console.log('best times:', bestTimes);
@@ -38,10 +40,8 @@ export class MapUpdater {
     }
 
     public updateRating(mapName: string, rating: number): Promise<void> {
-        const RATING_MIN = 1;
-        const RATING_MAX = 5;
         const roundedRating = Math.round(rating);
-        const isRatingValid = roundedRating > RATING_MIN && roundedRating < RATING_MAX;
+        const isRatingValid = roundedRating > MapUpdater.RATING_MIN && roundedRating < MapUpdater.RATING_MAX;
 
         if (isRatingValid) {
             return this.MAP_DB_SERVICE
