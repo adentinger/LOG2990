@@ -13,15 +13,17 @@ interface RequestOptions {
 @Injectable()
 export class EndViewService {
 
-    private static readonly ADDRESS = 'http://localhost:3000/racing/maps';
     private static readonly REQUEST_OPTIONS: RequestOptions = {
         observe: 'response',
         withCredentials: false,
         responseType: 'json'
     };
 
+    private static readonly MAP_SERVER_PATH = 'http://localhost:3000/racing/maps';
+
     public displayGameResult;
     public mapName;
+    public mapBestTimes;
 
     constructor(private http: HttpClient) {
         this.displayGameResult = null;
@@ -29,7 +31,16 @@ export class EndViewService {
     }
 
     public saveMapRating(rating: number): void {
-        const URL = EndViewService.ADDRESS + '/' + this.mapName + '/rating/' + rating;
+        const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/rating/' + rating;
         this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
+    }
+
+    public getMapBestTimes(): Promise<HttpResponse<Object>> {
+        const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/best-times';
+        return this.http.get(URL, EndViewService.REQUEST_OPTIONS).toPromise();
+    }
+
+    public async setMapBestTimes(): Promise<void> {
+        await this.getMapBestTimes().then(response => this.mapBestTimes = response.body);
     }
 }

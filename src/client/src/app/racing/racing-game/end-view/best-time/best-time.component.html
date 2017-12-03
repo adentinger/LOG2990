@@ -1,8 +1,8 @@
 <div class='best-time-menu' >
     <h1>{{endViewService.mapName }} top 5 Best time</h1>
-    <!-- <ol>
-        <li *ngFor = 'let bestTimes of map.mapBestTimes'>{{bestTimes}}</li>
-    </ol> -->
+    <ol>
+        <li *ngFor = 'let bestTime of endViewService.mapBestTimes'>{{bestTime}}</li>
+    </ol>
     <div *ngIf = 'isOnTopFive'>
     <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
     <input />
