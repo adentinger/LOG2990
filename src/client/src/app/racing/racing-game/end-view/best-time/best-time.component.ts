@@ -12,11 +12,9 @@ import 'rxjs/add/operator/switch';
 
 export class BestTimeComponent {
 
-    @Input() public name;
-    private isOnTopFive = true;
+    @Input() public name = 'Eric';
     constructor(private endViewService: EndViewService,
     private zone: NgZone) {
-        this.name = '';
     }
 
     public reloadPage(): void {

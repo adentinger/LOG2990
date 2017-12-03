@@ -23,7 +23,9 @@ export class EndViewService {
 
     public displayGameResult;
     public mapName;
-    public mapBestTimes;
+    public mapBestTimes = [];
+    public isInMapBestTimes;
+    public userTime = 1;
 
     constructor(private http: HttpClient) {
         this.displayGameResult = null;
@@ -41,6 +43,26 @@ export class EndViewService {
     }
 
     public async setMapBestTimes(): Promise<void> {
-        await this.getMapBestTimes().then(response => this.mapBestTimes = response.body);
+        await this.getMapBestTimes().then(response => {
+            const tempArray = response.body;
+            const tempArrayLength = Object.values(tempArray).length;
+            for (let i = 0; i < tempArrayLength; i++) {
+                this.mapBestTimes.push(tempArray[i]);
+            }
+        });
+    }
+
+    public updateMapBestTime(): void {
+        const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/best-times/' + this.userTime;
+        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
+    }
+
+    public userIsInMapBestTimes(): Boolean {
+         for (const record of this.mapBestTimes) {
+            if (this.userTime < record) {
+                return true;
+            }
+        }
+        return true;
     }
 }

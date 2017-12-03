@@ -3,11 +3,10 @@
     <ol>
         <li *ngFor = 'let bestTime of endViewService.mapBestTimes'>{{bestTime}}</li>
     </ol>
-    <div *ngIf = 'isOnTopFive'>
+    <div *ngIf = 'endViewService.userIsInMapBestTimes()'>
     <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
-    <input />
-    <p>{{userName}}</p>
-    <button>Enter</button>
+    <input type = 'text' (ngModel) = 'name'/>
+    <button (click) = 'endViewService.updateMapBestTime()'>Enter</button>
     </div>
     <button (click) = 'reloadPage()'>Play Again</button>
     <button routerLink='/'>Return Homepage</button>
