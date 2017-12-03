@@ -16,12 +16,20 @@ export class MapUpdater {
     protected constructor() {}
 
     public updateTime(mapName: string, time: number): Promise<void> {
+        const MAX_BEST_TIMES_SIZE = 5;
+
         const isTimeValid = time > 0;
         if (isTimeValid) {
             return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, bestTimes: true}).then((mapFields) => {
-                const bestTimes = mapFields['bestTimes'];
+                const bestTimes: number[] = mapFields['bestTimes'];
+                bestTimes.push(time);
+                bestTimes.sort();
+                bestTimes.splice(MAX_BEST_TIMES_SIZE);
+
                 console.log('Updated ' + mapName + '\'s time: ' + time + ' sec');
                 console.log('best times:', bestTimes);
+
+                return this.MAP_DB_SERVICE.setMapProperties(mapName, {bestTimes: bestTimes});
             });
         }
         else {
