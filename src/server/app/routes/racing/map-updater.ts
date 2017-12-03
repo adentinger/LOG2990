@@ -19,6 +19,17 @@ export class MapUpdater {
 
     protected constructor() {}
 
+    public incrementPlays(mapName: string): Promise<void> {
+        return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, numberOfPlays: true}).then((mapFields) => {
+            const numberOfPlays: number = mapFields['numberOfPlays'] + 1;
+
+            console.log('Incremented ' + mapName + '\'s numberOfPlays.');
+            console.log('Number of plays:', numberOfPlays);
+
+            return this.MAP_DB_SERVICE.setMapProperties(mapName, {numberOfPlays: numberOfPlays});
+        });
+    }
+
     public updateTime(mapName: string, time: number): Promise<void> {
         const isTimeValid = time > 0;
         if (isTimeValid) {
