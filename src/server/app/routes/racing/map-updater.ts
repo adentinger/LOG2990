@@ -48,11 +48,16 @@ export class MapUpdater {
                 .getMapProperties(mapName, {_id: false, sumRatings: true, numberOfRatings: true})
                 .then((mapFields) => {
 
-                const sumRatings = mapFields['sumRatings'];
-                const numberOfRatings = mapFields['numberOfRatings'];
+                const sumRatings = mapFields['sumRatings'] + rating;
+                const numberOfRatings = mapFields['numberOfRatings'] + 1;
+
                 console.log('Updated ' + mapName + '\'s rating: ' + rating + ' / 5');
                 console.log('sumRatings: ', sumRatings, 'numberOfRatings:', numberOfRatings);
 
+                return this.MAP_DB_SERVICE.setMapProperties(
+                    mapName,
+                    {sumRatings: sumRatings, numberOfRatings: numberOfRatings}
+                );
             });
         }
         else {
