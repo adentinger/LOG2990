@@ -21,12 +21,14 @@ import { GameResultsComponent } from './racing-game/end-view/game-results/game-r
 import { EndViewComponent } from './racing-game/end-view/end-view.component';
 import { EndViewService } from './services/end-view.service';
 import { GameInfoService } from './racing-game/game-info.service';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        FormsModule
     ],
     exports: [
         RacingComponent
