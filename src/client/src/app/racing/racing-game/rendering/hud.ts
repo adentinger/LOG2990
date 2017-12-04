@@ -23,7 +23,7 @@ export class HUD {
     private static readonly GAME_TIME_POSITION = HUD.LAP_TIME_POSITION.clone().add(HUD.INCREMENT);
     private static readonly SPEED_POSITION = new THREE.Vector2(HUD.TEXT_OFFSET, 1 - (HUD.TEXT_OFFSET + HUD.TEXT_HEIGTH));
     private static readonly RACE_PLACE_POSITION =
-    new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
+        new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
     private static readonly START_TIMER_POSITION = new THREE.Vector2(HUD.HALF_SCREEN, HUD.HALF_SCREEN);
 
     private context: CanvasRenderingContext2D = null;
@@ -78,8 +78,14 @@ export class HUD {
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+        if (game.userLapNumber < game.maxLap + 1) {
+            this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+                textPosition.x, textPosition.y);
+        }
+        else {
+            this.context.fillText(`Completed!`,
             textPosition.x, textPosition.y);
+        }
 
     }
 
