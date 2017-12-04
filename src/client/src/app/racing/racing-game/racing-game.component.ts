@@ -8,7 +8,7 @@ import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
 import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
-import { EndViewService } from '../services/end-view.service';
+import { EndViewService, EndGameWindow } from '../services/end-view.service';
 
 @Component({
     selector: 'app-racing-game',
@@ -115,8 +115,9 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private async displayable(): Promise<void> {
-        this.endViewService.displayGameResult = true;
+    private displayable(): void {
+        this.endViewService.displayGameResult = EndGameWindow.MAP_RATING;
+        this.endViewService.setMapBestTimes();
     }
 
     private toggleNextColorFilter(): number {
@@ -136,5 +137,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private displayEndGameMenu(event: EventManager.Event<void>) {
         this.displayable();
         this.endViewService.incrementMapNumberOfPlays();
+        this.endViewService.setMapBestTimes();
     }
 }

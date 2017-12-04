@@ -1,5 +1,5 @@
 import { Component} from '@angular/core';
-import { EndViewService } from '../../../services/end-view.service';
+import { EndViewService, EndGameWindow } from '../../../services/end-view.service';
 
 @Component({
     selector: 'app-map-rating',
@@ -45,6 +45,6 @@ export class MapRatingComponent {
         if (this.indexOfStarClicked + 1) {
             this.endViewService.updateMapRating(this.indexOfStarClicked + 1);
         }
-        this.endViewService.displayGameResult = false;
+        this.endViewService.displayGameResult = EndGameWindow.BEST_TIME;
     }
 }

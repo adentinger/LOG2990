@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EndViewService } from '../../services/end-view.service';
+import { EndViewService, EndGameWindow } from '../../services/end-view.service';
 
 @Component({
     selector: 'app-end-view',
@@ -9,5 +9,7 @@ import { EndViewService } from '../../services/end-view.service';
 
 export class EndViewComponent {
 
+    public readonly EndGameWindow = EndGameWindow;
     constructor(public endViewService: EndViewService) { }
+
 }
