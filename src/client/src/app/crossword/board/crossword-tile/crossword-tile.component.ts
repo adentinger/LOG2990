@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { WhoIsSelecting } from './highlight-grid';
+import { Grid } from '../grid';
 
 @Component({
     selector: 'app-tile',
@@ -16,11 +17,15 @@ export class CrosswordTileComponent {
 
     @Input()
     public set tileChar(value: string) {
-        this.tileValue = value;
+        this.tileValue = value !== Grid.BLACK_TILE ? value : '';
     }
 
     public get tileChar(): string {
         return this.tileValue;
+    }
+
+    public get isBlackTile(): boolean {
+        return this.tileValue === '';
     }
 
     @ViewChild('caseInput') public caseInput: ElementRef;
