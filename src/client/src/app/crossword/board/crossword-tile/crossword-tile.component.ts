@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { WhoIsSelecting } from './highlight-grid';
 import { Grid } from '../grid';
 

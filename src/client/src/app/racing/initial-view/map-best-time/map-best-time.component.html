@@ -21,7 +21,7 @@
             <tr>
               <th scope='row'>{{rank + 1}}</th>
               <td>{{bestTime.player.name}}</td>
-              <td>{{bestTime.value}}</td>
+              <td>{{bestTime.value * 1000 | date:'mm:ss'}}</td>
             </tr>
           </ng-container>
         </ng-container>

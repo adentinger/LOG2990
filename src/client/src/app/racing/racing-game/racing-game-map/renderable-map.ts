@@ -4,7 +4,6 @@ import { Point } from '../../../../../../common/src/math/point';
 import { SerializedPothole } from '../../../../../../common/src/racing/serialized-pothole';
 import { SerializedPuddle } from '../../../../../../common/src/racing/serialized-puddle';
 import { SerializedSpeedBoost } from '../../../../../../common/src/racing/serialized-speed-boost';
-import { PhysicMesh } from '../physic/object';
 import { RacingGamePlane } from './racing-game-plane';
 import { RacetrackSegment } from '../models/racetrack/racetrack-segment';
 import { RacetrackJunction } from '../models/racetrack/racetrack-junction';

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 export class OrthographicCamera extends THREE.OrthographicCamera {
-    private static DISTANCE_TO_TARGET = 10;
+    private static DISTANCE_TO_TARGET = 100;
 
     private static readonly WIDTH: number = window.innerWidth;
     private static readonly HEIGHT: number = window.innerHeight;
