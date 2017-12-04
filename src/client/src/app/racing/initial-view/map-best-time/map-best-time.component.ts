@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import 'rxjs/add/operator/switchMap';
 
@@ -10,13 +10,9 @@ import { SerializedMap } from '../../../../../../common/src/racing/serialized-ma
     styleUrls: ['./map-best-time.component.css']
 })
 
-export class MapBestTimeComponent implements OnInit {
+export class MapBestTimeComponent {
     @Input() public map: SerializedMap;
-    public displayable;
+    public displayable = false;
 
     constructor() { }
-
-    public ngOnInit(): void {
-        this.displayable = true;
-    }
 }
