@@ -15,6 +15,7 @@
 }
 
 .best-time-menu h1 {
+    text-align: center;
     border-bottom: 5px solid #383434;
     padding-bottom: 10px;
     color: black;
@@ -51,4 +52,13 @@
     list-style-type: none;    
     padding-left: 0px;
     text-align: center;
+}
+
+.no-best-time {
+    text-align: center;
+    font-weight: bold;
+}
+
+button {
+    border-radius: 0px;
 }
