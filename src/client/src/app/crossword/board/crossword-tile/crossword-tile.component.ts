@@ -15,8 +15,7 @@ export class CrosswordTileComponent {
     @Input() public highlighted: WhoIsSelecting;
     @Input() public filled: WhoIsSelecting;
 
-    @Input()
-    public tileChar: string;
+    @Input() public tileChar: string;
 
     @ViewChild('caseInput') public caseInput: ElementRef;
 
