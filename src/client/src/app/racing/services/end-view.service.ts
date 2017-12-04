@@ -34,7 +34,7 @@ export class EndViewService {
 
     public saveMapRating(rating: number): void {
         const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/rating/' + rating;
-        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
+        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
     }
 
     public getMapBestTimes(): Promise<HttpResponse<Object>> {
@@ -43,6 +43,7 @@ export class EndViewService {
     }
 
     public async setMapBestTimes(): Promise<void> {
+        this.mapBestTimes = [];
         await this.getMapBestTimes().then(response => {
             const tempArray = response.body;
             const tempArrayLength = Object.values(tempArray).length;
