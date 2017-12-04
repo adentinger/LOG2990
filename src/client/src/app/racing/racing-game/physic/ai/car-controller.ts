@@ -23,7 +23,7 @@ export abstract class CarController {
 
     public start(): void {
         this.state = CarControllerState.ENABLED;
-        this.car.setMassBackToDefault();
+        this.car.setup();
     }
 
     public stop(): void {

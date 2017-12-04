@@ -11,11 +11,7 @@ import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
-import { PhysicUtils } from './physic/utils';
 import { CAR_COMPLETED_RACE } from '../constants';
-
-const CAR_OPACITY_DEFAULT = 1;
-const CAR_OPACITY_TRANSPARENT = 0.4;
 
 @Injectable()
 export class CarsService implements Loadable {
@@ -113,15 +109,6 @@ export class CarsService implements Loadable {
         this.controllers.forEach(controller => controller.start());
     }
 
-    public toggleCarColorTransparent(carIndex: number): void {
-        (PhysicUtils.getChildren(this.controllers[carIndex].car).filter((child) => child instanceof THREE.Mesh) as THREE.Mesh[])
-            .forEach((mesh) => {
-                const material = (<THREE.Material>mesh.material);
-                material.transparent = material.transparent ? false : true;
-                material.opacity = material.transparent ? CAR_OPACITY_TRANSPARENT : CAR_OPACITY_DEFAULT;
-            });
-    }
-
     @EventManager.Listener(CAR_COMPLETED_RACE)
     // tslint:disable-next-line:no-unused-variable
     private ghostModeAfterFinalLineCross(event: EventManager.Event<Car>): void {
@@ -129,7 +116,7 @@ export class CarsService implements Loadable {
         for (let i = 0; i < this.controller.length; i++) {
             carIndex = this.controller[i].car === event.data ? i : carIndex;
         }
-        this.toggleCarColorTransparent(carIndex);
+        this.controllers[carIndex].car.makeCarTransparent(true);
         this.controller[carIndex].stop();
     }
 

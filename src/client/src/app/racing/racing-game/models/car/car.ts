@@ -21,6 +21,9 @@ export interface CarLights {
 
 const MIN_RATE = 0.4;
 
+const CAR_OPACITY_DEFAULT = 1;
+const CAR_OPACITY_TRANSPARENT = 0.4;
+
 export class Car extends CarPhysic implements Loadable, SoundEmitter {
     private static readonly MAX_ANGULAR_VELOCITY_TO_SPEED_RATIO = (Math.PI / 4) / (1); // (rad/s) / (m/s)
 
@@ -55,6 +58,11 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
 
     protected dayModeOptions: CarHeadlightDayModeOptions;
 
+    protected isTransparentInternal: boolean;
+    public get isTransparent(): boolean {
+        return this.isTransparentInternal;
+    }
+
     constructor(public readonly color: THREE.Color) {
         super();
         this.addLights();
@@ -81,8 +89,9 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
         this.mass = 0;
     }
 
-    public setMassBackToDefault(): void {
+    public setup(): void {
         this.mass = DEFAULT_MASS;
+        this.makeCarTransparent(false);
     }
 
     private async addCarParts(color: THREE.Color): Promise<void> {
@@ -210,4 +219,15 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
                 0.5 * this.dayModeOptions.intensity + (this.isStopped ? 0.5 : 0);
         }
     }
+
+    public makeCarTransparent(transparent: boolean): void {
+        this.isTransparentInternal = transparent;
+        (PhysicUtils.getChildren(this).filter((child) => child instanceof THREE.Mesh) as THREE.Mesh[])
+            .forEach((mesh) => {
+                const material = (<THREE.Material>mesh.material);
+                material.transparent = transparent;
+                material.opacity = material.transparent ? CAR_OPACITY_TRANSPARENT : CAR_OPACITY_DEFAULT;
+            });
+    }
+
 }
