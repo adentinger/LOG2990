@@ -25,11 +25,17 @@ export class EndViewService {
 
     public displayGameResult;
     public mapName;
-    public mapBestTimes = [];
+    public mapBestTimes;
     public isInMapBestTimes;
     public userTime = 2;
 
     constructor(private http: HttpClient) {
+    }
+
+    public initialiseOnNewMap(mapName: string): void {
+        this.mapName = mapName;
+        this.setMapBestTimes();
+        this.displayGameResult = null;
     }
 
     public updateMapRating(rating: number): void {
