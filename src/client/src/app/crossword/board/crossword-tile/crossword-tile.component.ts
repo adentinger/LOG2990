@@ -15,7 +15,7 @@ export class CrosswordTileComponent {
     @Input() public filled: WhoIsSelecting;
 
     @Input()
-    public set tileChar(value) {
+    public set tileChar(value: string) {
         this.tileValue = value;
     }
 
