@@ -153,7 +153,7 @@ export class RacingGameService {
     @EventManager.Listener(CAR_LAP_UPDATE)
     // tslint:disable-next-line:no-unused-variable
     private handleCarCompletedRace(event: EventManager.Event<RaceCompletionInfo>) {
-        if (event.data.lap >= this.info.maxLap) {
+        if (event.data.lap >= this.info.maxLap + 1) {
             console.log('* Race Completed By A Car *');
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
