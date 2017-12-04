@@ -195,6 +195,7 @@ export class SoundService implements Loadable {
             this.ambientAudio.stop();
             return promise;
         }
+        this.ambientAudio.stop();
         return Promise.resolve();
     }
 
