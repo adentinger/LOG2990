@@ -40,7 +40,8 @@
     margin-top: 10px;
 }
 
-.best-time-menu table th:not(:last-child) {
+.best-time-menu table th:not(:last-child),
+.best-time-menu table td:not(:last-child) {
     border-right: 1px solid #BF8F4D;
 }
 
