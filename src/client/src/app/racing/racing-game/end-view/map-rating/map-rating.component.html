@@ -1,5 +1,12 @@
 <div class = 'map-rating-menu' >
     <h1>Map Rating</h1>
+    <!-- <ul>
+      <tr *ngFor="let car of timeTable.map(">
+        <th *ngFor="let lap of laps">
+          {{lap}}
+        </th>
+      </tr>
+    </ul> -->
     <div class = 'five-stars'>
         <img *ngFor = 'let index of [0, 1, 2, 3, 4]' [src] = 'stars[index]' (mouseenter) = 'mouseHoverStar(index)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(index)'>
     </div>

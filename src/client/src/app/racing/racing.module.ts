@@ -20,6 +20,7 @@ import { BestTimeComponent } from './racing-game/end-view/best-time/best-time.co
 import { GameResultsComponent } from './racing-game/end-view/game-results/game-results.component';
 import { EndViewComponent } from './racing-game/end-view/end-view.component';
 import { EndViewService } from './services/end-view.service';
+import { GameInfoService } from './racing-game/game-info.service';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { EndViewService } from './services/end-view.service';
         RacingGameService,
         PhysicEngine,
         SoundService,
+        GameInfoService,
         CarsService,
         CarsProgressionService,
         EndViewService,

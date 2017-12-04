@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Response } from '@angular/http/src/static_response';
 import { HttpResponse } from '@angular/common/http/src/response';
+import { RacingGameService } from '../racing-game/racing-game.service';
 
 
 interface RequestOptions {
@@ -27,11 +28,16 @@ export class EndViewService {
     public isInMapBestTimes;
     public userTime = 1;
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private racingGameService: RacingGameService) {
         this.displayGameResult = null;
         this.mapName = '';
     }
 
+    // public get timeTable(): Map<Car, Seconds> {
+    //     return this.racingGameService.
+    // }
     public saveMapRating(rating: number): void {
         const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/rating/' + rating;
         this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
@@ -58,7 +64,7 @@ export class EndViewService {
     }
 
     public userIsInMapBestTimes(): Boolean {
-         for (const record of this.mapBestTimes) {
+        for (const record of this.mapBestTimes) {
             if (this.userTime < record) {
                 return true;
             }

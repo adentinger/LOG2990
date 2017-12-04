@@ -5,14 +5,16 @@ import { CarsProgressionService, CAR_LAP_UPDATE_EVENT, LapUpdateInfo } from './c
 import { EventManager } from '../../event-manager.service';
 import { GAME_COMPLETED_EVENT, USER_INDEX } from '../constants';
 import { UserCarController } from './physic/ai/user-car-controller';
+import { Injectable } from '@angular/core';
 
-export class GameInfo {
+@Injectable()
+export class GameInfoService {
 
     public maxLap = 3;
 
     private startTime: Seconds;
 
-    private lapTimesTable: Map<Car, Seconds[]> = new Map(); // reduce pour total
+    public lapTimesTable: Map<Car, Seconds[]> = new Map(); // reduce pour total
 
     public get userLapCompletionInPercent(): number {
         return this.carsProgressionService.userLapProgressionInPercent;
@@ -45,7 +47,7 @@ export class GameInfo {
         this.carsService.cars.forEach((car) => {
             this.lapTimesTable.set(car, [0]);
         });
-        eventManager.registerClass(this, GameInfo.prototype);
+        eventManager.registerClass(this, GameInfoService.prototype);
     }
 
     public startTimer(delay: Seconds = 0): void {
