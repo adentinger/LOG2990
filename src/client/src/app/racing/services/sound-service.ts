@@ -12,7 +12,9 @@ import { Pothole } from '../racing-game/models/obstacles/pothole';
 import { Puddle } from '../racing-game/models/obstacles/puddle';
 import { Sound, SoundType } from '../racing-game/sound/sound';
 import { SpeedBooster } from '../racing-game/models/obstacles/speed-booster';
-import { COLLISION_EVENT } from '../constants';
+import { InvisibleWall } from '../racing-game/models/invisible-wall/invisible-wall';
+import { COLLISION_EVENT, GAME_COMPLETED_EVENT } from '../constants';
+import { getCallers } from '../../../../../common/src/index';
 
 const logger = Logger.getLogger('Sound');
 
@@ -40,7 +42,8 @@ export class SoundService implements Loadable {
         [Pothole, [Sound.POTHOLE]],
         [Puddle, [Sound.PUDDLE]],
         [SpeedBooster, [Sound.BOOST_START, Sound.BOOST_END]],
-        [Car, [Sound.CAR_CRASH]]
+        [Car, [Sound.CAR_CRASH]],
+        [InvisibleWall, [Sound.CAR_HITTING_WALL]]
     ] as [Class<CollidableMesh>, Sound[]][]);
 
     private static readonly SOUND_PROMISES =
@@ -115,13 +118,23 @@ export class SoundService implements Loadable {
         }
     }
 
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    public onRaceEnding(event: EventManager.Event<void>): void {
+        this.setAmbiantSound(Sound.AIR_HORN)
+            .then(() => this.setAmbiantSound(Sound.AIR_HORN))
+            .then(() => this.playAmbiantSound(false))
+            .then(() => this.setAmbiantSound(Sound.END_OF_RACE))
+            .then(() => this.playAmbiantSound(true));
+    }
+
     public initialize(listener: SoundListener): void {
         this.registerListener(listener);
     }
 
     public finalize(): void {
-        this.stopAmbiantSound();
-        this.setAbmiantSound(Sound.NONE);
+        console.log('finalize');
+        this.setAmbiantSound(Sound.NONE);
         this.registeredEmitters.forEach((emitter: SoundEmitter) => {
             if (emitter.eventAudios != null) {
                 emitter.eventAudios.forEach((audio) => audio.stop());
@@ -142,11 +155,9 @@ export class SoundService implements Loadable {
         }
     }
 
-    public setAbmiantSound(soundIndex: Sound): Promise<void> {
-        this.stopAmbiantSound();
+    public setAmbiantSound(soundIndex: Sound): Promise<void> {
         if (soundIndex < 0) {
-            this.ambientAudio.setBuffer(null);
-            return Promise.resolve();
+            return this.stopAmbiantSound();
         }
         return SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             this.ambientAudio.setBuffer(buffer);
@@ -156,21 +167,36 @@ export class SoundService implements Loadable {
     public playAmbiantSound(looping: true): void;
     public playAmbiantSound(looping: false): Promise<void>;
     public playAmbiantSound(looping: boolean = false): Promise<void> | void {
-        this.stopAmbiantSound();
+        if (this.ambientAudio.isPlaying) {
+            this.stopAmbiantSound();
+        }
         this.ambientAudio.setLoop(looping);
         this.ambientAudio.play();
         this.ambientAudio.setVolume(0.6);
         if (!looping) {
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
                 setTimeout(resolve, this.ambientAudio['buffer'].duration * 1000);
             });
         }
     }
 
-    public stopAmbiantSound(): void {
+    public stopAmbiantSound(): Promise<void> {
         if (this.ambientAudio.isPlaying) {
+            const promise = new Promise<void>((resolve) => {
+                const previousOnEnded = this.ambientAudio.onEnded;
+                this.ambientAudio.onEnded = () => {
+                    this.ambientAudio.onEnded = previousOnEnded;
+                    if (typeof previousOnEnded === 'function') {
+                        this.ambientAudio.onEnded();
+                    }
+                    resolve();
+                };
+            });
             this.ambientAudio.stop();
+            return promise;
         }
+        this.ambientAudio.stop();
+        return Promise.resolve();
     }
 
     public registerEmitter(emitter: SoundEmitter): void {

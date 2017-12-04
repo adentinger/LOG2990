@@ -15,6 +15,7 @@ export class HUD {
 
     private static readonly TEXT_HEIGTH = 0.05; // height (proportion of the screen height), normalized between 0 and 1
     private static readonly TEXT_OFFSET = 0.01;
+    private static readonly HALF_SCREEN = 0.5;
     private static readonly INCREMENT = new THREE.Vector2(0, HUD.TEXT_HEIGTH + 2 * HUD.TEXT_OFFSET);
     private static readonly LAP_POSITION =
         new THREE.Vector2(HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
@@ -23,6 +24,7 @@ export class HUD {
     private static readonly SPEED_POSITION = new THREE.Vector2(HUD.TEXT_OFFSET, 1 - (HUD.TEXT_OFFSET + HUD.TEXT_HEIGTH));
     private static readonly RACE_PLACE_POSITION =
         new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
+    private static readonly START_TIMER_POSITION = new THREE.Vector2(HUD.HALF_SCREEN, HUD.HALF_SCREEN);
 
     private context: CanvasRenderingContext2D = null;
     private domElementInternal: HTMLCanvasElement = null;
@@ -70,14 +72,20 @@ export class HUD {
         this.drawGameTime(this.context, game);
         this.drawRacePosition(this.context, game);
         this.drawSpeed(this.context, game);
+        this.drawStartTimer(this.context, game);
     }
 
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfoService): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        const lapNumber = Math.min(game.userLapNumber, game.maxLap);
-        this.context.fillText(`${lapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+        if (game.userLapNumber < game.maxLap + 1) {
+            this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+                textPosition.x, textPosition.y);
+        }
+        else {
+            this.context.fillText(`Completed!`,
             textPosition.x, textPosition.y);
+        }
 
     }
 
@@ -120,6 +128,18 @@ export class HUD {
         const text = `${speed.toFixed(2)} m/s`;
         this.context.fillText(text,
             textPosition.x, textPosition.y);
+    }
+
+    private drawStartTimer(context: CanvasRenderingContext2D, game: GameInfoService) {
+        const textPosition = this.getTextPosition(context, HUD.START_TIMER_POSITION);
+        const screenSize = this.getSize(context);
+
+        const countDown = Math.ceil(game.startTime - Date.now() / 1000);
+        const text = `${countDown > 0 ? countDown : (countDown === 0 ? 'GO' : '')}`;
+        const textWidth = this.context.measureText(text).width;
+        const textHeight = HUD.TEXT_HEIGTH * screenSize.height;
+        this.context.fillText(text,
+            textPosition.x - textWidth / 2, textPosition.y - textHeight / 2);
     }
 
     private getSize(context: CanvasRenderingContext2D): THREE.Vector2 {

@@ -12,7 +12,7 @@ export class GameInfoService {
 
     public maxLap = 3;
 
-    private startTime: Seconds;
+    private startTimeInternal: Seconds;
 
     public lapTimesTable: Map<Car, Seconds[]> = new Map(); // reduce pour total
 
@@ -28,8 +28,12 @@ export class GameInfoService {
         return this.lapTimesTable.get(this.carsService.getPlayerCar());
     }
 
+    public get startTime(): Seconds {
+        return this.startTimeInternal;
+    }
+
     public get totalTime(): Seconds {
-        return Date.now() / 1000 - this.startTime;
+        return Date.now() / 1000 - this.startTimeInternal;
     }
 
     public get controlledCar(): Car {
@@ -51,9 +55,9 @@ export class GameInfoService {
     }
 
     public startTimer(delay: Seconds = 0): void {
-        this.startTime = Date.now() / 1000 + delay;
+        this.startTimeInternal = Date.now() / 1000 + delay;
         this.carsService.cars.forEach((car) => {
-            this.lapTimesTable.set(car, [this.startTime]);
+            this.lapTimesTable.set(car, [this.startTimeInternal]);
         });
     }
 

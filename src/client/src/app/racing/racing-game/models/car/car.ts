@@ -53,7 +53,8 @@ export class Car extends CarPhysic implements Loadable, SoundEmitter {
                                             Sound.BOOST_START,
                                             Sound.BOOST_END,
                                             Sound.POTHOLE,
-                                            Sound.PUDDLE];
+                                            Sound.PUDDLE,
+                                            Sound.CAR_HITTING_WALL];
     public readonly constantSounds: Sound[] = [Sound.CAR_ENGINE];
 
     protected dayModeOptions: CarHeadlightDayModeOptions;

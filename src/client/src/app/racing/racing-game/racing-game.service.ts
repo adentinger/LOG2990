@@ -30,7 +30,7 @@ export class RacingGameService {
     // private readonly info: GameInfo;
 
     private map: RenderableMap;
-
+    public startTime: Seconds = Date.now() / 1000;
     private userInputs: UIInputs = null;
 
     public get lap(): number {
@@ -78,12 +78,12 @@ export class RacingGameService {
             this.renderer.startRendering();
             return Promise.race([
                 finalizePromise,
-                this.soundService.setAbmiantSound(Sound.START_SOUND)
+                this.soundService.setAmbiantSound(Sound.START_SOUND)
             ]);
         }).then(() => {
             this.gameInfoService.startTimer(RacingGameService.COUNTDOWN_DURATION);
             Promise.race([finalizePromise, this.soundService.playAmbiantSound(false)])
-                .then(() => Promise.race([finalizePromise, this.soundService.setAbmiantSound(Sound.TETRIS)]))
+                .then(() => Promise.race([finalizePromise, this.soundService.setAmbiantSound(Sound.TETRIS)]))
                 .then(() => this.soundService.playAmbiantSound(true))
                 .catch(() => { });
             return Promise.race([
@@ -107,9 +107,9 @@ export class RacingGameService {
         this.carsService.finalize();
         this.userInputs = null;
 
+        this.soundService.finalize();
         this.physicEngine.finalize();
         this.renderer.finalize();
-        this.soundService.finalize();
     }
 
     public loadMap(mapName: string): Promise<void> {
@@ -156,6 +156,7 @@ export class RacingGameService {
     // tslint:disable-next-line:no-unused-variable
     private handleCarCompletedRace(event: EventManager.Event<LapUpdateInfo>) {
         if (event.data.lap >= this.gameInfoService.maxLap) {
+            console.log('* Race Completed By A Car *');
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
                 data: event.data.car
