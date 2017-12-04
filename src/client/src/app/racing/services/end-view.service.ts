@@ -30,8 +30,6 @@ export class EndViewService {
     public userTime = 2;
 
     constructor(private http: HttpClient) {
-        this.displayGameResult = null;
-        this.mapName = '';
     }
 
     public updateMapRating(rating: number): void {
@@ -59,7 +57,7 @@ export class EndViewService {
     public updateMapBestTime(userName: string): void {
         const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/best-times/player/' + userName
         + '/time/' + this.userTime;
-        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
+        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
     }
 
     public userIsInMapBestTimes(): Boolean {
@@ -70,5 +68,10 @@ export class EndViewService {
             return true;
         }
         return false;
+    }
+
+    public incrementMapNumberOfPlays(): void {
+        const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/increment-plays';
+        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
     }
 }

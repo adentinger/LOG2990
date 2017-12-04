@@ -139,5 +139,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line:no-unused-variable
     private displayEndGameMenu(event: EventManager.Event<void>) {
         this.displayable();
+        this.endViewService.incrementMapNumberOfPlays();
     }
 }
