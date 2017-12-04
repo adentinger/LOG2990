@@ -11,7 +11,6 @@ import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
-import { PhysicUtils } from './physic/utils';
 import { CAR_COMPLETED_RACE } from '../constants';
 
 @Injectable()
