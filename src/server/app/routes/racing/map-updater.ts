@@ -1,6 +1,7 @@
 import { MapDbService } from './map-db-service';
 import { provideDatabase } from '../../app-db';
 import { HttpStatus } from '../../../../common/src/index';
+import { SerializedBestTime } from '../../../../common/src/racing/serialized-best-time';
 
 export class MapUpdater {
 
@@ -27,14 +28,14 @@ export class MapUpdater {
         });
     }
 
-    public updateTime(mapName: string, time: number): Promise<void> {
-        const isTimeValid = time > 0;
+    public updateTime(mapName: string, bestTime: SerializedBestTime): Promise<void> {
+        const isTimeValid = bestTime.value > 0;
         if (isTimeValid) {
             return this.MAP_DB_SERVICE.getMapProperties(mapName, {_id: false, bestTimes: true}).then((mapFields) => {
-                const bestTimes: number[] = mapFields['bestTimes'];
+                const bestTimes: SerializedBestTime[] = mapFields['bestTimes'];
 
-                bestTimes.push(time);
-                bestTimes.sort();
+                bestTimes.push(bestTime);
+                bestTimes.sort((bestTime1, bestTime2) => bestTime1.value - bestTime2.value);
                 bestTimes.splice(MapUpdater.MAX_BEST_TIMES_SIZE);
 
                 return this.MAP_DB_SERVICE.setMapProperties(mapName, {bestTimes: bestTimes});
