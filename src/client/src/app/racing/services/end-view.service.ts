@@ -28,7 +28,7 @@ export class EndViewService {
 
     private static readonly MAP_SERVER_PATH = 'http://localhost:3000/racing/maps/';
 
-    public displayGameResult: EndGameWindow = EndGameWindow.NONE;;
+    public displayGameResult: EndGameWindow = EndGameWindow.NONE;
     public mapName = '';
     public mapBestTimes: SerializedBestTime[] = [];
     public isInMapBestTimes = false;
