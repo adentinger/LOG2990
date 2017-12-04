@@ -5,7 +5,7 @@
     </ol>
     <div *ngIf = 'endViewService.userIsInMapBestTimes()'>
     <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
-    <input type = 'text' [(ngModel)] = 'userName'/>
+    <label>Enter Your Name: </label><input type = 'text' [(ngModel)] = 'userName'/>
     <button (click) = 'inscribeOnMapBestTimes()' [disabled] = 'inscribeButton'>Inscribe</button>
     </div>
     <button (click) = 'reloadPage()'>Play Again</button>

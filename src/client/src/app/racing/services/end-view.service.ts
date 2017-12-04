@@ -40,6 +40,7 @@ export class EndViewService {
     public initializationForNewMap(mapName: string): void {
         this.mapName = mapName;
         this.displayGameResult = EndGameWindow.NONE;
+        this.mapBestTimes = [];
     }
 
     public updateMapRating(rating: number): void {
@@ -53,7 +54,6 @@ export class EndViewService {
     }
 
     public setMapBestTimes(): Promise<void> {
-        this.mapBestTimes = [];
         return this.getMapBestTimes().then(response => {
             const tempArray: SerializedBestTime[] = (response.body) as SerializedBestTime[];
             tempArray.forEach((bestTime) => {
