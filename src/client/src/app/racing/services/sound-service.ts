@@ -119,8 +119,7 @@ export class SoundService implements Loadable {
     @EventManager.Listener(GAME_COMPLETED_EVENT)
     // tslint:disable-next-line:no-unused-variable
     public onRaceEnding(event: EventManager.Event<void>): void {
-        this.stopAmbiantSound()
-            .then(() => this.setAmbiantSound(Sound.AIR_HORN))
+        this.setAmbiantSound(Sound.AIR_HORN)
             .then(() => this.playAmbiantSound(false))
             .then(() => this.setAmbiantSound(Sound.END_OF_RACE))
             .then(() => this.playAmbiantSound(true));
@@ -155,11 +154,7 @@ export class SoundService implements Loadable {
 
     public setAmbiantSound(soundIndex: Sound): Promise<void> {
         if (soundIndex < 0) {
-            // console.log((this.ambientAudio));
-            this.stopAmbiantSound();
-            this.ambientAudio.setBuffer(null);
-            // console.log((this.ambientAudio));
-            return Promise.resolve();
+            return this.stopAmbiantSound();
         }
         return SoundService.SOUND_PROMISES[soundIndex].then((buffer: THREE.AudioBuffer) => {
             this.ambientAudio.setBuffer(buffer);
