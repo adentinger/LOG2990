@@ -62,7 +62,7 @@ export class AvailableGamesComponent implements OnDestroy {
     }
 
     public async refresh(): Promise<void> {
-        this.userChoiceService.chosenGame = null;
+        this.unselect();
         this.gamesInternal = []; // Display nothing while we refresh
         this.gamesInternal =
             await this.gameHttpService.getGames(
