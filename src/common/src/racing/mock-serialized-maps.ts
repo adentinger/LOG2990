@@ -3,6 +3,8 @@ import { Point } from '../math/point';
 import { SerializedPothole as Pothole } from './serialized-pothole';
 import { SerializedPuddle as Puddle } from './serialized-puddle';
 import { SerializedSpeedBoost as SpeedBoost } from './serialized-speed-boost';
+import { SerializedBestTime } from './serialized-best-time';
+import { SerializedPlayer } from './serialized-player';
 
 export class MockSerializedMaps {
 
@@ -22,7 +24,11 @@ export class MockSerializedMaps {
             [new Pothole(10), new Pothole(20), new Pothole(50)],
             [new Puddle(15), new Puddle(25), new Puddle(55)],
             [new SpeedBoost(5), new SpeedBoost(15), new SpeedBoost(45)],
-            [1 , 2 , 3]
+            [
+                new SerializedBestTime(new SerializedPlayer('x'), 1),
+                new SerializedBestTime(new SerializedPlayer('y'), 2),
+                new SerializedBestTime(new SerializedPlayer('z'), 3)
+            ]
         );
     }
 
@@ -38,7 +44,11 @@ export class MockSerializedMaps {
             [],
             [],
             [],
-            [10 , 20 , 30]
+            [
+                new SerializedBestTime(new SerializedPlayer('a'), 10),
+                new SerializedBestTime(new SerializedPlayer('b'), 20),
+                new SerializedBestTime(new SerializedPlayer('c'), 30)
+            ]
         );
     }
 
