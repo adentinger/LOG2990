@@ -8,24 +8,27 @@ import { WhoIsSelecting } from './highlight-grid';
 })
 export class CrosswordTileComponent {
 
-    public tileValue: string;
     @Input() public readonly tileRow: number;
     @Input() public readonly tileColumn: number;
 
     @Input() public highlighted: WhoIsSelecting;
     @Input() public filled: WhoIsSelecting;
 
-    public WhoIsSelecting = WhoIsSelecting;
-
-    @Input() get tileChar() {
-        return this.tileValue;
-    }
-    @Output() public tileValueChange: EventEmitter<string> = new EventEmitter<string>();
-    set tileChar(value) {
+    @Input()
+    public set tileChar(value) {
         this.tileValue = value;
         this.tileValueChange.emit(this.tileValue);
     }
 
+    public get tileChar(): string {
+        return this.tileValue;
+    }
+
+    @Output() public tileValueChange: EventEmitter<string> = new EventEmitter<string>();
+
     @ViewChild('caseInput') public caseInput: ElementRef;
+
+    public readonly WhoIsSelecting = WhoIsSelecting;
+    public tileValue: string;
 
 }
