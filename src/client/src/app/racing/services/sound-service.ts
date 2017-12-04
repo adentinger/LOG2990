@@ -122,6 +122,7 @@ export class SoundService implements Loadable {
     // tslint:disable-next-line:no-unused-variable
     public onRaceEnding(event: EventManager.Event<void>): void {
         this.setAmbiantSound(Sound.AIR_HORN)
+            .then(() => this.setAmbiantSound(Sound.AIR_HORN))
             .then(() => this.playAmbiantSound(false))
             .then(() => this.setAmbiantSound(Sound.END_OF_RACE))
             .then(() => this.playAmbiantSound(true));
@@ -166,6 +167,9 @@ export class SoundService implements Loadable {
     public playAmbiantSound(looping: true): void;
     public playAmbiantSound(looping: false): Promise<void>;
     public playAmbiantSound(looping: boolean = false): Promise<void> | void {
+        if (this.ambientAudio.isPlaying) {
+            this.stopAmbiantSound();
+        }
         this.ambientAudio.setLoop(looping);
         this.ambientAudio.play();
         this.ambientAudio.setVolume(0.6);
