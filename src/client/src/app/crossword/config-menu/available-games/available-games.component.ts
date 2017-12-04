@@ -43,7 +43,7 @@ export class AvailableGamesComponent implements OnDestroy {
         return this.gamesInternal;
     }
 
-    public choose(index: number): void {
+    public select(index: number): void {
         if (index >= 0 && index < this.gamesInternal.length) {
             this.userChoiceService.chosenGame = this.gamesInternal[index].id;
             this.userChoiceService.difficulty = this.gamesInternal[index].difficulty;

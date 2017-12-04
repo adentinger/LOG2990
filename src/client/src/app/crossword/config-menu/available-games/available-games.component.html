@@ -18,7 +18,7 @@
         <ng-container *ngIf='games.length > 0; else elseBlock'>
           <ng-container *ngFor='let game of games; let i = index'>
             <tr [ngClass]='{selected: isSelected(i)}'
-                (click)='choose(i)'>
+                (click)='select(i)'>
               <th scope='row'>{{game.id}}</th>
               <td>{{game.playerName}}</td>
               <td>{{game.modeAsString()}}</td>
