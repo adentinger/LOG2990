@@ -1,3 +1,4 @@
+<div class='disclaimer' *ngIf='displayable'></div>
 <div class='outer' *ngIf='map' [ngClass]='{hide_me: !displayable, show_me: displayable}' (click)='displayable = !displayable'>
   <div class='best-time-menu'>
     <h2>{{map.name}}</h2>
@@ -27,7 +28,9 @@
         </ng-container>
 
         <ng-template #elseBlock>
-            <td colspan='3' class='no-best-time'>No time recorded yet!</td>
+            <tr>
+              <td colspan='3' class='no-best-time'>No time recorded yet!</td>
+            </tr>
         </ng-template>
 
       </tbody>

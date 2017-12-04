@@ -1,0 +1,16 @@
+<div [ngSwitch] = 'endViewService.displayGameResult'>
+    <div *ngSwitchCase = 'true'>
+        <div class = 'outer'>
+            <div class = 'window'>
+                <app-map-rating></app-map-rating>
+            </div>
+        </div>            
+    </div>
+    <div *ngSwitchCase = 'false'>
+        <div class = 'outer'>
+            <div class = 'window'>
+                <app-best-time></app-best-time>
+            </div>
+        </div>
+    </div>    
+</div>

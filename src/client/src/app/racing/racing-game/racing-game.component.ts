@@ -7,8 +7,8 @@ import { RacingGameService } from './racing-game.service';
 import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
-import { KEYDOWN_EVENT } from '../constants';
-import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
+import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
+import { EndViewService } from '../services/end-view.service';
 
 @Component({
     selector: 'app-racing-game',
@@ -36,12 +36,11 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
-    @ViewChild(MapRatingComponent)
-    private mapRating: MapRatingComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
-        private eventManager: EventManager) {
+        private eventManager: EventManager,
+        private endViewService: EndViewService) {
         this.eventManager.registerClass(this);
     }
 
@@ -51,9 +50,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
+                this.endViewService.initializationForNewMap(mapName);
             });
         });
-        this.mapRating.ngOnInit();
+        this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
     public ngOnDestroy() {
@@ -115,13 +115,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private displayable(): void {
-        if (!this.mapRating.displayable) {
-            this.mapRating.displayable = true;
-        }
-        else {
-            this.mapRating.displayable = false;
-        }
+    private async displayable(): Promise<void> {
+        this.endViewService.displayGameResult = true;
     }
 
     private toggleNextColorFilter(): number {
@@ -136,4 +131,10 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         return false; // Prevent Default behaviors
     }
 
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private displayEndGameMenu(event: EventManager.Event<void>) {
+        this.displayable();
+        this.endViewService.incrementMapNumberOfPlays();
+    }
 }

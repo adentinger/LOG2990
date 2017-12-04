@@ -1,14 +1,34 @@
-<div class = 'outer' *ngIf="displayable" [ngClass]="{hide_me: !displayable, show_me: displayable}" >
-  <div class = 'map-rating-menu' >
-      <h1>Map Rating</h1>
-      <div class = 'five-stars'>
-          <img [src] = 'stars[0]' (mouseenter) = 'OnMouseOver(0)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(0)'>
-          <img [src] = 'stars[1]' (mouseenter) = 'OnMouseOver(1)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(1)'>
-          <img [src] = 'stars[2]' (mouseenter) = 'OnMouseOver(2)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(2)'>
-          <img [src] = 'stars[3]' (mouseenter) = 'OnMouseOver(3)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(3)'>
-          <img [src] = 'stars[4]' (mouseenter) = 'OnMouseOver(4)' (mouseleave) = 'OnMouseOut()' (click) = 'onClick(4)'>
-      </div>
-      <button (click) = 'displayBestTimeComponent()'>Next</button>
-      <app-best-time></app-best-time>
-  </div>
+<div class = 'map-rating-menu' >
+    <h1>Map Rating</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'car' }}</th>
+          <th>{{ 'tag-name' }}</th>
+          <th>{{ 'frequency' }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <!-- <tbody>
+          <ng-container *ngFor="let name of timeTable.map">
+            <tr *ngFor="let lap of laps; let i=index">
+              <td>{{ frequency.value }}</td>
+              <td>{{ name }}</td>
+              <td>{{ frequency.count }}</td>
+            </tr>
+          </ng-container>
+      </tbody> -->
+    </table>
+    <!-- <ul>
+      <tr *ngFor="let car of timeTable.map(">
+        <th *ngFor="let lap of laps">
+          {{lap}}
+        </th>
+      </tr>
+    </ul> -->
+    <div class = 'five-stars'>
+        <img *ngFor = 'let index of [0, 1, 2, 3, 4]' [src] = 'stars[index]' (mouseenter) = 'mouseHoverStar(index)' (mouseleave) = 'mouseOutOfStar()' (click) = 'clickOnStar(index)'>
+    </div>
+    <button (click) = 'displayBestTimeComponent()'>Next</button>
 </div>
+

@@ -16,8 +16,32 @@
 .best-time-menu h2 {
     text-align: center;
     border-bottom: 5px solid #383434;
-    padding-bottom: 10px;
     color: black;
+    margin: 0;
+    padding: 20px 0px 20px 0px;
+}
+
+.disclaimer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background:#666;
+    opacity: 0.7;
+}
+
+.best-time-menu table {
+    margin: 0;
+}
+
+.best-time-menu table tbody tr {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.best-time-menu table th:not(:last-child) {
+    border-right: 1px solid #BF8F4D;
 }
 
 .outer {
@@ -26,8 +50,6 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background:#666;
-    opacity: 0.9;
 }
 
 .hide_me {
@@ -59,8 +81,9 @@
 }
 
 .btn {
-    border-radius: 0px;
-    background: #DFAF5D
+    border-radius: 0;
+    border-top: 5px solid black;
+    background: #DFAF5D;
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {
@@ -75,4 +98,5 @@
 .table > thead > tr > td,
 .table > thead > tr > th {
   border-color: rgb(158, 110, 28) !important;
+  text-align: center;
 }

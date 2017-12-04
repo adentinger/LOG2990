@@ -1,5 +1,14 @@
-<div class = 'outer' *ngIf="displayable" [ngClass]="{hide_me: !displayable, show_me: displayable}" >
-    <div class='best-time-menu' >
-        <h1>test</h1>
+<div class='best-time-menu' >
+    <h1>{{endViewService.mapName }} <br /> Top 5 Best times</h1>
+    <ol>
+        <li *ngFor = 'let bestTime of endViewService.mapBestTimes'>{{bestTime.player.name}} : {{bestTime.value}}</li>
+    </ol>
+    <div *ngIf = 'endViewService.userIsInMapBestTimes()'>
+    <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
+    <input type = 'text' [(ngModel)] = 'userName'/>
+    <button (click) = 'inscribeOnMapBestTimes()' [disabled] = 'inscribeButton'>Inscribe</button>
     </div>
+    <button (click) = 'reloadPage()'>Play Again</button>
+    <button routerLink='/'>Return Homepage</button>
 </div>
+

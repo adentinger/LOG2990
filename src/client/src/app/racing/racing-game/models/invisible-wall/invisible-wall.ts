@@ -9,7 +9,7 @@ const SLOW_FACTOR = 0.8;
 /**
  * DEBUG_MODE disables the walls completely for testing (DEBUG)
  */
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 export class InvisibleWall extends CollidableMesh {
     public static readonly WALL_HEIGHT: Meters = 10.0;
