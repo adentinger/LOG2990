@@ -75,7 +75,8 @@ export class HUD {
     private drawLapCount(context: CanvasRenderingContext2D, game: GameInfoService): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+        const lapNumber = Math.min(game.userLapNumber, game.maxLap);
+        this.context.fillText(`${lapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
             textPosition.x, textPosition.y);
 
     }

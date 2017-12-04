@@ -63,6 +63,10 @@ export class CarsProgressionService {
         }
     }
 
+    public getCarCompletion(car: Car): number {
+        return this.carsLapNumber.get(car) + this.carsLapProgression.get(car);
+    }
+
     private get cars(): Car[] {
         return this.controllers.map((controller) => controller.car);
     }
@@ -73,9 +77,9 @@ export class CarsProgressionService {
     }
 
     private compareCarPosition(carA: Car, carB: Car): number {
-        const progressionA: number = this.carsLapNumber.get(carA) + this.carsLapProgression.get(carA);
-        const progressionB: number = this.carsLapNumber.get(carB) + this.carsLapProgression.get(carB);
-        return (progressionB - progressionA);
+        const completionA: number = this.getCarCompletion(carA);
+        const completionB: number = this.getCarCompletion(carB);
+        return (completionB - completionA);
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)

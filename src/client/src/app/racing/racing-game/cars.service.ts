@@ -11,18 +11,18 @@ import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
 import { UIInputs } from '../services/ui-input.service';
 import { CarsProgressionService } from './cars-progression.service';
-import { CAR_COMPLETED_RACE } from '../constants';
+import { CAR_COMPLETED_RACE, GAME_COMPLETED_EVENT } from '../constants';
 
 @Injectable()
 export class CarsService implements Loadable {
 
     public static readonly CAR_COUNT: number = 4;
 
-    private static readonly CAR_COLORS: THREE.Color[] = [
-        new THREE.Color('green'),
-        new THREE.Color('yellow'),
-        new THREE.Color('blue'),
-        new THREE.Color('red')];
+    private static readonly CAR_COLORS: string[] = [
+        'green',
+        'yellow',
+        'blue',
+        'red'];
 
     public readonly waitToLoad: Promise<void>;
 
@@ -44,9 +44,9 @@ export class CarsService implements Loadable {
         private carsProgressionService: CarsProgressionService) {
         for (let index = 0; index < CarsService.CAR_COUNT; ++index) {
             this.controllers.push(index === this.userControllerIndex ?
-                new UserCarController(new Car(CarsService.CAR_COLORS[index])) :
-                new AiCarController(new Car(CarsService.CAR_COLORS[index])));
-
+                new UserCarController(new Car(new THREE.Color(CarsService.CAR_COLORS[index]))) :
+                new AiCarController(new Car(new THREE.Color(CarsService.CAR_COLORS[index]))));
+            this.controllers[this.controllers.length - 1].car.name = CarsService.CAR_COLORS[index];
             this.carsProgression.set(this.controllers[index].car, 0);
         }
 
@@ -118,6 +118,15 @@ export class CarsService implements Loadable {
         }
         this.controllers[carIndex].car.makeCarTransparent(true);
         this.controller[carIndex].stop();
+    }
+
+    @EventManager.Listener(GAME_COMPLETED_EVENT)
+    // tslint:disable-next-line:no-unused-variable
+    private ghostModeAfterGameEnd(event: EventManager.Event<void>): void {
+        this.controllers.forEach((controller) => {
+            controller.car.makeCarTransparent(true);
+            controller.stop();
+        });
     }
 
 }
