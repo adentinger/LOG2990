@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, NgZone } from '@angular/core';
+import { EndViewService } from '../../../services/end-view.service';
+import 'rxjs/add/operator/switch';
 
-import 'rxjs/add/operator/switchMap';
-import { RenderableMap } from '../../racing-game-map/renderable-map';
 
 @Component({
     selector: 'app-best-time',
@@ -9,14 +9,21 @@ import { RenderableMap } from '../../racing-game-map/renderable-map';
     styleUrls: ['./best-time.component.css']
 })
 
-export class BestTimeComponent implements OnInit {
+export class BestTimeComponent {
 
-    @Input() public map: RenderableMap;
-    public displayable;
+    @Input() public userName;
+    public inscribeButton;
 
-    constructor() { }
+    constructor(public endViewService: EndViewService,
+    private zone: NgZone) {
+    }
 
-    public ngOnInit(): void {
-        this.displayable = false;
+    public reloadPage(): void {
+        this.zone.runOutsideAngular(() => location.reload());
+    }
+
+    public inscribeOnMapBestTimes(): void {
+        this.endViewService.updateMapBestTime(this.userName);
+        this.inscribeButton = true;
     }
 }

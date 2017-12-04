@@ -16,6 +16,9 @@ import { CarsService } from './cars.service';
 import { CarsProgressionService } from './cars-progression.service';
 import { BestTimeComponent } from './end-view/best-time/best-time.component';
 import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
+import { EndViewComponent } from './end-view/end-view.component';
+import { EndViewService } from '../services/end-view.service';
+import { FormsModule } from '@angular/forms';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -26,9 +29,10 @@ describe('RacingGameComponent', () => {
             imports: [
                 RouterModule.forRoot([{ path: 'racing/racing-game/:map-name', component: RacingGameComponent }]),
                 HttpModule,
-                NoopAnimationsModule
+                NoopAnimationsModule,
+                FormsModule
             ],
-            declarations: [RacingGameComponent, UIInputs, MapRatingComponent, BestTimeComponent],
+            declarations: [RacingGameComponent, UIInputs, MapRatingComponent, BestTimeComponent, EndViewComponent],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/' },
                 RacingGameService,
@@ -37,7 +41,8 @@ describe('RacingGameComponent', () => {
                 PhysicEngine,
                 CarsService,
                 CarsProgressionService,
-                SoundService
+                SoundService,
+                EndViewService
             ]
         })
             .compileComponents();

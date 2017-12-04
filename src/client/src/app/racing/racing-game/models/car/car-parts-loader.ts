@@ -65,7 +65,7 @@ export class CarPartsLoader {
         geometry.computeMorphNormals();
 
         const material = (carPart.material as THREE.MeshPhongMaterial);
-        material.blending = THREE.NoBlending;
+        material.blending = THREE.NormalBlending;
         material.transparent = false;
         material.shininess = CarPartsLoader.SHININESS;
         material.emissiveIntensity = 0;

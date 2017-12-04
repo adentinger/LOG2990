@@ -41,8 +41,8 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     @Output() public mapCouldNotBeSavedBecauseNotFound = new EventEmitter<string>();
 
     constructor(private mapEditor: MapEditorService,
-                private mapRenderer: MapRendererService,
-                private mapService: MapService) {
+        private mapRenderer: MapRendererService,
+        private mapService: MapService) {
         this.width = INITIAL_WIDTH;
         this.displayable = true;
     }
