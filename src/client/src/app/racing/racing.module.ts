@@ -20,12 +20,14 @@ import { BestTimeComponent } from './racing-game/end-view/best-time/best-time.co
 import { GameResultsComponent } from './racing-game/end-view/game-results/game-results.component';
 import { EndViewComponent } from './racing-game/end-view/end-view.component';
 import { EndViewService } from './services/end-view.service';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        FormsModule
     ],
     exports: [
         RacingComponent

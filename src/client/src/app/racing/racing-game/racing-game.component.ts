@@ -54,6 +54,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
                 this.endViewService.mapName = mapName;
+                this.endViewService.setMapBestTimes();
             });
         });
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
@@ -118,7 +119,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private displayable(): void {
+    private async displayable(): Promise<void> {
         this.endViewService.displayGameResult = true;
     }
 

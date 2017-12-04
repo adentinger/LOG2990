@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Response } from '@angular/http/src/static_response';
 import { HttpResponse } from '@angular/common/http/src/response';
+import { Object } from '../../../../../common/src/index';
 
 
 interface RequestOptions {
@@ -13,32 +14,33 @@ interface RequestOptions {
 @Injectable()
 export class EndViewService {
 
+    private static readonly MAX_BEST_TIMES = 5;
     private static readonly REQUEST_OPTIONS: RequestOptions = {
         observe: 'response',
         withCredentials: false,
         responseType: 'json'
     };
 
-    private static readonly MAP_SERVER_PATH = 'http://localhost:3000/racing/maps';
+    private static readonly MAP_SERVER_PATH = 'http://localhost:3000/racing/maps/';
 
     public displayGameResult;
     public mapName;
     public mapBestTimes = [];
     public isInMapBestTimes;
-    public userTime = 1;
+    public userTime = 2;
 
     constructor(private http: HttpClient) {
         this.displayGameResult = null;
         this.mapName = '';
     }
 
-    public saveMapRating(rating: number): void {
-        const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/rating/' + rating;
+    public updateMapRating(rating: number): void {
+        const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/rating/' + rating;
         this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
     }
 
     public getMapBestTimes(): Promise<HttpResponse<Object>> {
-        const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/best-times';
+        const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/best-times';
         return this.http.get(URL, EndViewService.REQUEST_OPTIONS).toPromise();
     }
 
@@ -46,24 +48,27 @@ export class EndViewService {
         this.mapBestTimes = [];
         await this.getMapBestTimes().then(response => {
             const tempArray = response.body;
-            const tempArrayLength = Object.values(tempArray).length;
-            for (let i = 0; i < tempArrayLength; i++) {
-                this.mapBestTimes.push(tempArray[i]);
+            for (let i = 0 ; i < EndViewService.MAX_BEST_TIMES; i++) {
+                if (tempArray[i] !== undefined) {
+                    this.mapBestTimes.push(tempArray[i]);
+                }
             }
         });
     }
 
-    public updateMapBestTime(): void {
-        const URL = EndViewService.MAP_SERVER_PATH + '/' + this.mapName + '/best-times/' + this.userTime;
+    public updateMapBestTime(userName: string): void {
+        const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/best-times/player/' + userName
+        + '/time/' + this.userTime;
         this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(res => console.log(res));
     }
 
     public userIsInMapBestTimes(): Boolean {
-         for (const record of this.mapBestTimes) {
-            if (this.userTime < record) {
-                return true;
-            }
+        if (this.mapBestTimes.length === EndViewService.MAX_BEST_TIMES) {
+            this.mapBestTimes.sort();
+            return this.userTime < this.mapBestTimes[this.mapBestTimes.length - 1].value;
+        } else if (this.mapBestTimes.length >= 0 && this.mapBestTimes.length < EndViewService.MAX_BEST_TIMES) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

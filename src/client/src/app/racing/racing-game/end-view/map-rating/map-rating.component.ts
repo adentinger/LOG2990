@@ -46,9 +46,8 @@ export class MapRatingComponent {
 
     private displayBestTimeComponent(): void {
         if (this.indexOfStarClicked + 1) {
-            this.endViewService.saveMapRating(this.indexOfStarClicked + 1);
+            this.endViewService.updateMapRating(this.indexOfStarClicked + 1);
         }
         this.endViewService.displayGameResult = false;
-        this.endViewService.setMapBestTimes();
     }
 }
