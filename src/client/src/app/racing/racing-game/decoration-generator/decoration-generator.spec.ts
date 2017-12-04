@@ -22,16 +22,13 @@ describe('Decoration generator', () => {
         });
 
     it('Should be created', () => {
-        console.log('HOLA');
         expect(DecorationGenerator).toBeTruthy();
-        console.log('done 26');
     });
 
     it('Should add decorations on map',
         (done) => {
             decorationGenerator.placeDecorationsOnMap(map).then(() => {
                 expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
-                console.log('done 33');
                 done();
             });
         },
@@ -50,7 +47,6 @@ describe('Decoration generator', () => {
                             Math.max(dimensions.x, dimensions.z))
                     )
                 )).toBeTruthy();
-                console.log('done 52');
                 done();
             });
         },
