@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Response } from '@angular/http/src/static_response';
 import { HttpResponse } from '@angular/common/http/src/response';
-import { Object } from '../../../../../common/src/index';
 
 
 interface RequestOptions {

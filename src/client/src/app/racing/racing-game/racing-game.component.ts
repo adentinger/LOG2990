@@ -7,10 +7,7 @@ import { RacingGameService } from './racing-game.service';
 import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
-import { GAME_COMPLETED_EVENT2, KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
-import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
-import { EndViewComponent } from './end-view/end-view.component';
-import { BestTimeComponent } from './end-view/best-time/best-time.component';
+import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
 import { EndViewService } from '../services/end-view.service';
 
 @Component({
