@@ -14,7 +14,7 @@ interface RequestOptions {
 @Injectable()
 export class EndViewService {
 
-    private static readonly MAX_BEST_TIMES = 5;
+    private static readonly MAX_NUMBER_BEST_TIMES = 5;
     private static readonly REQUEST_OPTIONS: RequestOptions = {
         observe: 'response',
         withCredentials: false,
@@ -53,7 +53,7 @@ export class EndViewService {
         this.mapBestTimes = [];
         await this.getMapBestTimes().then(response => {
             const tempArray = response.body;
-            for (let i = 0 ; i < EndViewService.MAX_BEST_TIMES; i++) {
+            for (let i = 0 ; i < EndViewService.MAX_NUMBER_BEST_TIMES; i++) {
                 if (tempArray[i] !== undefined) {
                     this.mapBestTimes.push(tempArray[i]);
                 }
@@ -69,11 +69,11 @@ export class EndViewService {
 
     public userIsInMapBestTimes(): Boolean {
         if (this.userIsFirstPlace) {
-            if (this.mapBestTimes.length === EndViewService.MAX_BEST_TIMES) {
+            if (this.mapBestTimes.length === EndViewService.MAX_NUMBER_BEST_TIMES) {
                 this.mapBestTimes.sort();
                 return this.userTime < this.mapBestTimes[this.mapBestTimes.length - 1].value;
             } else if (this.mapBestTimes.length >= 0 &&
-                 this.mapBestTimes.length < EndViewService.MAX_BEST_TIMES) {
+                 this.mapBestTimes.length < EndViewService.MAX_NUMBER_BEST_TIMES) {
                 return true;
             }
         }
