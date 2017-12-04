@@ -8,6 +8,7 @@ import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
 import { KEYDOWN_EVENT } from '../constants';
+import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 
 @Component({
     selector: 'app-racing-game',
@@ -35,6 +36,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
+    @ViewChild(MapRatingComponent)
+    private mapRating: MapRatingComponent;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -50,6 +53,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.updateRendererSize();
             });
         });
+        this.mapRating.ngOnInit();
     }
 
     public ngOnDestroy() {
@@ -98,12 +102,25 @@ export class RacingGameComponent implements OnInit, OnDestroy {
             this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
         }
 
+        if (this.uiInputs.isKeyPressed('x')) {
+            this.displayable();
+        }
+
         const areAllowedKeyCombinationsPressed =
             this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
             this.uiInputs.isKeyPressed('f5');
 
         if (!areAllowedKeyCombinationsPressed) {
             return false; // Prevent Default behaviors
+        }
+    }
+
+    private displayable(): void {
+        if (!this.mapRating.displayable) {
+            this.mapRating.displayable = true;
+        }
+        else {
+            this.mapRating.displayable = false;
         }
     }
 

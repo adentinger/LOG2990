@@ -110,7 +110,9 @@ export class SoundService implements Loadable {
                             this.soundBuffer.delete(car);
                         }
                     };
-                    playNextSound();
+                    if (!collision.target.isTransparent) {
+                        playNextSound();
+                    }
                 }
             }
         }

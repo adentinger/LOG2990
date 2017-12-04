@@ -43,7 +43,7 @@ export class AvailableGamesComponent implements OnDestroy {
         return this.gamesInternal;
     }
 
-    public choose(index: number): void {
+    public select(index: number): void {
         if (index >= 0 && index < this.gamesInternal.length) {
             this.userChoiceService.chosenGame = this.gamesInternal[index].id;
             this.userChoiceService.difficulty = this.gamesInternal[index].difficulty;
@@ -53,12 +53,16 @@ export class AvailableGamesComponent implements OnDestroy {
         }
     }
 
+    public unselect(): void {
+        this.userChoiceService.chosenGame = null;
+    }
+
     public isSelected(index: number): boolean {
         return this.gamesInternal[index].id === this.userChoiceService.chosenGame;
     }
 
     public async refresh(): Promise<void> {
-        this.userChoiceService.chosenGame = null;
+        this.unselect();
         this.gamesInternal = []; // Display nothing while we refresh
         this.gamesInternal =
             await this.gameHttpService.getGames(

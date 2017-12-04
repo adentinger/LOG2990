@@ -6,8 +6,8 @@ import { EventManager } from '../../../../event-manager.service';
 import { Seconds, Meters } from '../../../../types';
 import { UP_DIRECTION } from '../engine';
 import { CarPhysic } from '../../models/car/car-physic';
-import { MapPositionAlgorithms } from '../../../../util/map-position-algorithms';
-import { Projection } from '../../../../util/projection';
+import { MapPositionAlgorithms } from '../../../util/map-position-algorithms';
+import { Projection } from '../../../util/projection';
 import { Point, Vector } from '../../../../../../../common/src/math';
 import { Obstacle } from '../../models/obstacles/obstacle';
 import { Class } from '../../../../../../../common/src';
@@ -27,9 +27,9 @@ const OBSTACLE_WEIGHTS: Map<Class<Obstacle>, number> = new Map([
 const MAX_ANGULAR_SPEED = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED * 1.2;
 
 export class AiCarController extends CarController {
-    private static readonly UPDATE_PERIODE = 5; // cycles
+    private static readonly UPDATE_PERIOD = 2; // cycles
 
-    private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIODE);
+    private cycleCount = Math.floor(Math.random() * AiCarController.UPDATE_PERIOD);
     private mode: AiMode;
 
     public constructor(car: Car) {
@@ -44,7 +44,7 @@ export class AiCarController extends CarController {
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private onAfterPhysicUpdate(event: EventManager.Event<{ deltaTime: Seconds }>): void {
-        if (++this.cycleCount >= AiCarController.UPDATE_PERIODE && this.state === CarControllerState.ENABLED) {
+        if (++this.cycleCount >= AiCarController.UPDATE_PERIOD && this.state === CarControllerState.ENABLED) {
             this.cycleCount = 0;
             const carPosition = this.convertToVector(this.car.position);
             const projectionOfCar = MapPositionAlgorithms.getClosestProjection(carPosition, this.trackLines);
@@ -156,14 +156,14 @@ export class AiCarController extends CarController {
         const normalizedRelativeVelocity = relativeVelocity.clone().normalize();
 
         const direction = Math.pow((-normalizedRelativeVelocity.dot(normalizedRelativePosition) + 1) / 2, 2);
-        const lateralAvoidanceFactor = this.car.front.cross(relativeVelocity).dot(UP_DIRECTION) - direction;
-        const frontalAvoidanceFactor = /* Math.sign(Math.max(0.0,
-            this.car.front.dot(normalizedRelativePosition))) */ 1;
+        const side = relativePosition.cross(this.car.front).dot(UP_DIRECTION) *
+            Math.sign(-Math.min(0, normalizedRelativeVelocity.dot(normalizedRelativePosition)));
+        const lateralAvoidanceFactor = side * relativeVelocity.length();
         const distanceToOpponent = Math.max(1, relativePosition.length());
 
         angularSpeed = CarPhysic.DEFAULT_TARGET_ANGULAR_SPEED *
-            lateralAvoidanceFactor * frontalAvoidanceFactor * direction *
-            Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 2);
+            lateralAvoidanceFactor * direction *
+            Math.pow(this.mode.distanceToStartAvoidingOpponents / distanceToOpponent, 3);
         return Math.clamp(this.mode.angularSpeedForOpponentsFactor * angularSpeed,
             -MAX_ANGULAR_SPEED, MAX_ANGULAR_SPEED);
     }

@@ -1,5 +1,6 @@
-import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { WhoIsSelecting } from './highlight-grid';
+import { Grid } from '../grid';
 
 @Component({
     selector: 'app-tile',
@@ -8,24 +9,20 @@ import { WhoIsSelecting } from './highlight-grid';
 })
 export class CrosswordTileComponent {
 
-    public tileValue: string;
     @Input() public readonly tileRow: number;
     @Input() public readonly tileColumn: number;
 
     @Input() public highlighted: WhoIsSelecting;
     @Input() public filled: WhoIsSelecting;
 
-    public WhoIsSelecting = WhoIsSelecting;
-
-    @Input() get tileChar() {
-        return this.tileValue;
-    }
-    @Output() public tileValueChange: EventEmitter<string> = new EventEmitter<string>();
-    set tileChar(value) {
-        this.tileValue = value;
-        this.tileValueChange.emit(this.tileValue);
-    }
+    @Input() public tileChar: string;
 
     @ViewChild('caseInput') public caseInput: ElementRef;
+
+    public readonly WhoIsSelecting = WhoIsSelecting;
+
+    public isBlackTile(): boolean {
+        return this.tileChar === Grid.BLACK_TILE;
+    }
 
 }
