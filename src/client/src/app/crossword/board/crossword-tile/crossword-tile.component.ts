@@ -17,14 +17,11 @@ export class CrosswordTileComponent {
     @Input()
     public set tileChar(value) {
         this.tileValue = value;
-        this.tileValueChange.emit(this.tileValue);
     }
 
     public get tileChar(): string {
         return this.tileValue;
     }
-
-    @Output() public tileValueChange: EventEmitter<string> = new EventEmitter<string>();
 
     @ViewChild('caseInput') public caseInput: ElementRef;
 
