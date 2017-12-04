@@ -98,4 +98,5 @@
 .table > thead > tr > td,
 .table > thead > tr > th {
   border-color: rgb(158, 110, 28) !important;
+  text-align: center;
 }
