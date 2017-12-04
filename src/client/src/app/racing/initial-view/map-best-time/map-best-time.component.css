@@ -27,7 +27,7 @@
     height: 100%;
     width: 100%;
     background:#666;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .hide_me {
@@ -58,6 +58,21 @@
     font-weight: bold;
 }
 
-button {
+.btn {
     border-radius: 0px;
+    background: #DFAF5D
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #DFAF5D;
+}
+
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  border-color: rgb(158, 110, 28) !important;
 }
