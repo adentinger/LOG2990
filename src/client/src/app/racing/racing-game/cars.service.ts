@@ -5,7 +5,7 @@ import { SoundService } from '../services/sound-service';
 import { Loadable } from '../../loadable';
 import { RenderableMap } from './racing-game-map/renderable-map';
 import { Progression } from './racing-types';
-import { EventManager, eventManagerValue } from '../../event-manager.service';
+import { EventManager } from '../../event-manager.service';
 import { CarController } from './physic/ai/car-controller';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AiCarController } from './physic/ai/ai-car-controller';
