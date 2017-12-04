@@ -21,9 +21,11 @@
               <label>Type:</label>
             </td>
             <td>
-              <select [(ngModel)]="internalMap.type">
-                <option *ngFor="let type of mapTypes" value="{{type}}">{{type}}</option>
-              </select>
+              <div class="btn-group" role="group" aria-label="Type Selection Buttons" data-toggle="buttons">
+                <ng-container *ngFor="let type of mapTypes">
+                  <button type=button class="btn btn-default" [ngClass]="{active: internalMap.type === type}" (click)="internalMap.type = type">{{type}}</button>
+                </ng-container>
+              </div>
             </td>
           </tr>
           <tr>
