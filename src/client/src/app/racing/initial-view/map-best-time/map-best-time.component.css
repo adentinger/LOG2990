@@ -1,11 +1,10 @@
 .best-time-menu {
-    position: absolute;
+    position: relative;
     top: 30%;
     left: 35%;
     background-color: #D89925;
     border-radius: 10px;
     min-width: 300px;
-    min-height: 40%;
     max-height: 90%;
     width: 30%;
     height: auto;
@@ -14,7 +13,7 @@
     overflow: auto;
 }
 
-.best-time-menu h1 {
+.best-time-menu h2 {
     text-align: center;
     border-bottom: 5px solid #383434;
     padding-bottom: 10px;
