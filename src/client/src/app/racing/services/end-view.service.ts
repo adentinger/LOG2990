@@ -28,11 +28,12 @@ export class EndViewService {
     public mapBestTimes;
     public isInMapBestTimes;
     public userTime = 2;
+    public userIsFirstPlace = true;
 
     constructor(private http: HttpClient) {
     }
 
-    public initialiseOnNewMap(mapName: string): void {
+    public initializationForNewMap(mapName: string): void {
         this.mapName = mapName;
         this.setMapBestTimes();
         this.displayGameResult = null;
@@ -67,11 +68,14 @@ export class EndViewService {
     }
 
     public userIsInMapBestTimes(): Boolean {
-        if (this.mapBestTimes.length === EndViewService.MAX_BEST_TIMES) {
-            this.mapBestTimes.sort();
-            return this.userTime < this.mapBestTimes[this.mapBestTimes.length - 1].value;
-        } else if (this.mapBestTimes.length >= 0 && this.mapBestTimes.length < EndViewService.MAX_BEST_TIMES) {
-            return true;
+        if (this.userIsFirstPlace) {
+            if (this.mapBestTimes.length === EndViewService.MAX_BEST_TIMES) {
+                this.mapBestTimes.sort();
+                return this.userTime < this.mapBestTimes[this.mapBestTimes.length - 1].value;
+            } else if (this.mapBestTimes.length >= 0 &&
+                 this.mapBestTimes.length < EndViewService.MAX_BEST_TIMES) {
+                return true;
+            }
         }
         return false;
     }

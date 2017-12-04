@@ -53,7 +53,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
-                this.endViewService.initialiseOnNewMap(mapName);
+                this.endViewService.initializationForNewMap(mapName);
             });
         });
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
