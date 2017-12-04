@@ -2,7 +2,7 @@
   class='crossword-board-item' 
   disabled
   [ngClass]='{playerHighlighted: this.highlighted === WhoIsSelecting.player, opponentHighlighted: this.highlighted === WhoIsSelecting.opponent, bothHighlighted: this.highlighted === WhoIsSelecting.both, playerFilled: this.filled === WhoIsSelecting.player, opponentFilled: this.filled === WhoIsSelecting.opponent, bothFilled: this.filled === WhoIsSelecting.both}'
-  [class.black-square]='isBlackTile' 
+  [class.black-square]='isBlackTile()' 
   [value]='tileChar' 
   maxlength='1'
 />
