@@ -53,6 +53,10 @@ export class AvailableGamesComponent implements OnDestroy {
         }
     }
 
+    public unselect(): void {
+        this.userChoiceService.chosenGame = null;
+    }
+
     public isSelected(index: number): boolean {
         return this.gamesInternal[index].id === this.userChoiceService.chosenGame;
     }
