@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { EndViewService } from '../../services/end-view.service';
 
 @Component({
@@ -9,5 +9,5 @@ import { EndViewService } from '../../services/end-view.service';
 
 export class EndViewComponent {
 
-    constructor(private endViewService: EndViewService) { }
+    constructor(public endViewService: EndViewService) { }
 }

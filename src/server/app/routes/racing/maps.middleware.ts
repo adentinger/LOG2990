@@ -6,6 +6,8 @@ import { provideDatabase } from '../../app-db';
 import { MapDbService } from './map-db-service';
 import { SerializedMap } from '../../../../common/src/racing/serialized-map';
 import { MapUpdater } from './map-updater';
+import { SerializedBestTime } from '../../../../common/src/racing/serialized-best-time';
+import { SerializedPlayer } from '../../../../common/src/racing/serialized-player';
 
 @MiddleWare('/racing/maps')
 export class MapsMiddleWare {
@@ -86,11 +88,12 @@ export class MapsMiddleWare {
             .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
-    @Route('patch', '/:name/best-times/:time')
+    @Route('patch', '/:name/best-times/player/:player/time/:time')
     public updateMapBestTime(req: express.Request,
                              res: express.Response): void {
+        const bestTime = new SerializedBestTime(new SerializedPlayer(req.params.player), Number(req.params.time));
         MapUpdater.getInstance()
-            .updateTime(req.params.name, Number(req.params.time))
+            .updateTime(req.params.name, bestTime)
             .then(() => res.sendStatus(HttpStatus.OK))
             .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }

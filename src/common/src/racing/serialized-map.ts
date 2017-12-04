@@ -2,6 +2,7 @@ import { Point } from '../math/point';
 import { SerializedPothole } from './serialized-pothole';
 import { SerializedPuddle } from './serialized-puddle';
 import { SerializedSpeedBoost } from './serialized-speed-boost';
+import { SerializedBestTime } from './serialized-best-time';
 
 export class SerializedMap {
 
@@ -16,7 +17,7 @@ export class SerializedMap {
     public potholes: SerializedPothole[];
     public puddles: SerializedPuddle[];
     public speedBoosts: SerializedSpeedBoost[];
-    public bestTimes: number[];
+    public bestTimes: SerializedBestTime[];
 
 
     public constructor(name: string = '',
@@ -29,7 +30,7 @@ export class SerializedMap {
                        potholes: SerializedPothole[] = [],
                        puddles: SerializedPuddle[] = [],
                        speedBoosts: SerializedSpeedBoost[] = [],
-                       bestTimes: number[] = []) {
+                       bestTimes: SerializedBestTime[] = []) {
         this.name = name;
         this.description = description;
         this.type = type;
