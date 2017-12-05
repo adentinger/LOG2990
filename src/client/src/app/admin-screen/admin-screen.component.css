@@ -53,13 +53,13 @@
 }
 
 .maps {
-    width: 80%;
+    width: 70%;
     background:#FFFFFF;
     text-align:center;
     font-size:18px;
     font-family: Ubuntu;
     padding: 10px 0px;
-    margin: 0px 10%;
+    margin: 0px 15%;
     border-top: none;
     border-bottom: 1px solid #888;
 }
