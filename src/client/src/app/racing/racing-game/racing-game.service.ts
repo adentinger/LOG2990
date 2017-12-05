@@ -13,7 +13,6 @@ import { Observable } from 'rxjs/Observable';
 import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
-import { GameInfo } from './game-info';
 import { CarsProgressionService, CAR_LAP_UPDATE_EVENT } from './cars-progression.service';
 import { GameInfoService } from './game-info.service';
 import { Seconds } from '../../types';

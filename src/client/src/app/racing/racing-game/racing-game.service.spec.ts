@@ -10,6 +10,7 @@ import { MapService } from '../services/map.service';
 import { SoundService } from '../services/sound-service';
 import { CarsProgressionService } from './cars-progression.service';
 import { CarsService } from './cars.service';
+import { GameInfoService } from './game-info.service';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -25,7 +26,8 @@ describe('RacingGameService', () => {
                 UIInputs,
                 CarsService,
                 CarsProgressionService,
-                SoundService
+                SoundService,
+                GameInfoService
             ]
         });
     });

@@ -21,6 +21,7 @@ import { EndViewService } from '../services/end-view.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpHandler } from '@angular/common/http';
+import { GameInfoService } from './game-info.service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -46,7 +47,8 @@ describe('RacingGameComponent', () => {
                 SoundService,
                 EndViewService,
                 HttpClient,
-                HttpHandler
+                HttpHandler,
+                GameInfoService
             ]
         })
             .compileComponents();
