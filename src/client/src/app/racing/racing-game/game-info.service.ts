@@ -46,7 +46,7 @@ export class GameInfoService {
     constructor(
         private carsService: CarsService,
         private carsProgressionService: CarsProgressionService,
-        private eventManager: EventManager) {
+        eventManager: EventManager) {
         this.carsService.cars.forEach((car) => {
             this.lapTimesTable.set(car, [0]);
         });

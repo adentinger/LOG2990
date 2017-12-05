@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http/src/response';
 import { SerializedBestTime } from '../../../../../common/src/racing/serialized-best-time';
 import { RacingGameService } from '../racing-game/racing-game.service';
-import { EventManager } from '../../event-manager.service';
-import { GAME_COMPLETED_EVENT } from '../constants';
 import { CarsProgressionService } from '../racing-game/cars-progression.service';
 
 
