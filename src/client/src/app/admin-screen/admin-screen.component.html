@@ -13,6 +13,7 @@
   <div *ngIf="serializedMap">
       <app-map-editor [map]="serializedMap"
         (mapWasSaved)="addMap($event)"
+        (mapWasDeleted)="keepAllMapsExcept($event)"
         (mapCouldNotBeSavedBecauseAlreadyExists)="alertMapCouldNotBeSavedBecuaseAlreadyExists()"
         (mapCouldNotBeSavedBecauseNotFound)="alertMapCouldNotBeSavedBecauseNotFound()">
       </app-map-editor> 
