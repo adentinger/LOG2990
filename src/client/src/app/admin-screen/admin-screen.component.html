@@ -4,7 +4,7 @@
     <app-admin-config></app-admin-config>
     <div class="mapList">
       <div class="tableTitle">Map name</div>
-      <div class="maps" *ngFor="let map of mapNames" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
+      <div class="maps no-select" *ngFor="let map of mapNames" [ngClass]="{selected: map === selectedMap}" (click)="mapSelected(map)">
         <span>{{map}}</span>
       </div>
     </div>
