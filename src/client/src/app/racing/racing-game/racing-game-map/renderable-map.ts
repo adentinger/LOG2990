@@ -131,6 +131,9 @@ export class RenderableMap extends THREE.Mesh {
             const angle = new THREE.Vector2(line.translation.y, line.translation.x).angle();
             const middlePoint = line.interpolate(0.5);
             const segment = new RacetrackSegment(segmentLength);
+            if (lines.indexOf(line) === 0) {
+                segment.placeStartingSegment();
+            }
 
             segment.rotation.y = angle;
             segment.position.set(middlePoint.x, segment.position.y, middlePoint.y);

@@ -12,8 +12,9 @@ import { PhysicUtils } from '../physic/utils';
 describe('Decoration generator', () => {
 
     let decorationGenerator: DecorationGenerator;
-    const mockMaps = new MockMaps();
     let map: RenderableMap;
+    const mockMaps = new MockMaps();
+    const PLACEMENT_SPEC_TIMEOUT = 120000; // ms
 
     beforeEach(() => {
             map = mockMaps.renderableMap();
@@ -24,22 +25,31 @@ describe('Decoration generator', () => {
         expect(DecorationGenerator).toBeTruthy();
     });
 
-    it('Should add decorations on map', () => {
-        decorationGenerator.placeDecorationsOnMap(map).then(() => {
-            expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
-        });
-    });
+    it('Should add decorations on map',
+        (done) => {
+            decorationGenerator.placeDecorationsOnMap(map).then(() => {
+                expect(map.children.some(child => child instanceof Decoration)).toBeTruthy();
+                done();
+            });
+        },
+        PLACEMENT_SPEC_TIMEOUT
+    );
 
-    it('Should not place decorations on track', () => {
-        decorationGenerator.placeDecorationsOnMap(map);
-        const decorations = map.children.filter(child => child instanceof Decoration) as Decoration[];
-        let dimensions: THREE.Vector3;
-        expect(decorations.every(decoration =>
-            map.mapLines.every(line =>
-                MapPositionAlgorithms.getProjectionOnLine(new Point(decoration.position.x, decoration.position.z), line)
-                    .distanceToSegment > (Track.SEGMENT_WIDTH / 2) + ((dimensions = PhysicUtils.getObjectDimensions(decoration)) &&
-                    Math.max(dimensions.x, dimensions.z))
-            )
-        )).toBeTruthy();
-    });
+    it('Should not place decorations on track',
+        (done) => {
+            decorationGenerator.placeDecorationsOnMap(map).then(() => {
+                const decorations = map.children.filter(child => child instanceof Decoration) as Decoration[];
+                let dimensions: THREE.Vector3;
+                expect(decorations.every(decoration =>
+                    map.mapLines.every(line =>
+                        MapPositionAlgorithms.getProjectionOnLine(new Point(decoration.position.x, decoration.position.z), line)
+                            .distanceToSegment > (Track.SEGMENT_WIDTH / 2) + ((dimensions = PhysicUtils.getObjectDimensions(decoration)) &&
+                            Math.max(dimensions.x, dimensions.z))
+                    )
+                )).toBeTruthy();
+                done();
+            });
+        },
+        PLACEMENT_SPEC_TIMEOUT
+    );
 });

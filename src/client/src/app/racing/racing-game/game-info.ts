@@ -7,7 +7,7 @@ export class GameInfo {
 
     public maxLap = 3;
 
-    private startTime: Seconds;
+    public startTime: Seconds;
     private lapTimesInternal = new Array(this.maxLap).fill(0);
 
     public get userLapCompletionInPercent(): number {
