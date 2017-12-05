@@ -2,7 +2,7 @@
     position: absolute;
     top: 30%;
     left: 35%;
-    background-color: rgb(112, 112, 112);
+    background-color: white;
     border-radius: 10px;
     min-width: 300px;
     min-height: 40%;
@@ -13,7 +13,7 @@
     z-index: 2;
 }
 
-.outer {
+.disclaimer {
     position: absolute;
     top: 0;
     left: 0;
@@ -21,6 +21,14 @@
     width: 100%;
     background:#666;
     opacity: 0.8;
+}
+
+.outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .hide_me {

@@ -15,13 +15,14 @@ import { SoundService } from '../services/sound-service';
 import { CarsService } from './cars.service';
 import { CarsProgressionService } from './cars-progression.service';
 import { BestTimeComponent } from './end-view/best-time/best-time.component';
-import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
+import { GameResultsComponent } from './end-view/game-results/game-results.component';
 import { EndViewComponent } from './end-view/end-view.component';
 import { EndViewService } from '../services/end-view.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpHandler } from '@angular/common/http';
 import { GameInfoService } from './game-info.service';
+import { RainEngine } from './physic/rain/rain-engine';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -35,7 +36,7 @@ describe('RacingGameComponent', () => {
                 NoopAnimationsModule,
                 FormsModule
             ],
-            declarations: [RacingGameComponent, UIInputs, MapRatingComponent, BestTimeComponent, EndViewComponent],
+            declarations: [RacingGameComponent, UIInputs, GameResultsComponent, BestTimeComponent, EndViewComponent],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/' },
                 RacingGameService,
@@ -48,7 +49,8 @@ describe('RacingGameComponent', () => {
                 EndViewService,
                 HttpClient,
                 HttpHandler,
-                GameInfoService
+                GameInfoService,
+                RainEngine
             ]
         })
             .compileComponents();
