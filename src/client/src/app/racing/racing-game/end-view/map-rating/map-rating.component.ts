@@ -19,6 +19,8 @@ export class MapRatingComponent {
     private orderedLapTimesTable;
     public stars: string[] = [];
     public indexOfStarClicked;
+    public laps: [Car, Seconds[], Seconds][];
+    public sortedCarsTime;
 
     constructor(
         private endViewService: EndViewService,
@@ -68,7 +70,6 @@ export class MapRatingComponent {
                 carTime = this.getApproximatedTimeForCar(car);
                 const missingTime = carTime - lapTimes[lapTimes.length - 1] + lapTimes[0];
                 const missingLaps = this.gameInfoService.maxLap - (lapTimes.length - 1);
-                console.log(missingLaps);
                 for (let i = 0; i < missingLaps; ++i) {
                     lapTimes.push(lapTimes[lapTimes.length - 1] + (i + 1) * (missingTime / missingLaps));
                 }
@@ -82,9 +83,19 @@ export class MapRatingComponent {
         const sortedCarsTimes = carsTimes.sort(([car1, time1], [car2, time2]) => {
             return time1 - time2;
         });
-        const car = this.gameInfoService.controlledCar;
-        console.log(this.gameInfoService.lapTimesTable.get(car)[0]);
-        console.log(this.gameInfoService.lapTimesTable.get(car)[this.gameInfoService.maxLap]);
+        this.sortedCarsTime = sortedCarsTimes;
+        this.laps = sortedCarsTimes.map(([car, time]) =>
+            [car, this.gameInfoService.lapTimesTable.get(car), time] as [Car, Seconds[], Seconds])
+            .map(([car, lapTimes, time]) => {
+                const startingTime = lapTimes[0];
+                lapTimes.forEach((lapTime: Seconds, index) => {
+                    lapTimes[index] -= startingTime;
+                    lapTimes[index] = Math.round(lapTimes[index] * 100) / 100;
+                });
+                lapTimes.shift();
+                time = Math.round(time * 100) / 100;
+                return [car, lapTimes, time] as [Car, Seconds[], Seconds];
+            });
     }
 
     public getApproximatedTimeForCar(car: Car): Seconds {
