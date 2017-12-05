@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http/src/response';
 import { SerializedBestTime } from '../../../../../common/src/racing/serialized-best-time';
+import { RacingGameService } from '../racing-game/racing-game.service';
 
 
 export enum EndGameWindow {
@@ -35,12 +36,13 @@ export class EndViewService {
     public userTime = 2;
     public userIsFirstPlace = true;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private racingGameService: RacingGameService) { }
 
-    public initializationForNewMap(mapName: string): void {
-        this.mapName = mapName;
-        this.displayGameResult = EndGameWindow.NONE;
+    public initializationForNewMap(): void {
+        this.mapName = this.racingGameService.mapName;
+        this.displayGameResult = EndGameWindow.MAP_RATING;
         this.mapBestTimes = [];
+        this.setMapBestTimes();
     }
 
     public updateMapRating(rating: number): void {

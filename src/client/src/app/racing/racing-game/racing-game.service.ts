@@ -138,6 +138,10 @@ export class RacingGameService {
         this.renderer.toggleDayMode();
     }
 
+    public get mapName(): string {
+        return this.map.mapName;
+    }
+
     @EventManager.Listener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private changeMaxLap(event: EventManager.Event<KeyboardEvent>) {
@@ -168,7 +172,4 @@ export class RacingGameService {
         }
     }
 
-    /* public get getMap(): RenderableMap {
-        return this.map;
-    } */
 }

@@ -50,7 +50,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
                 this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
                 this.updateRendererSize();
-                this.endViewService.initializationForNewMap(mapName);
             });
         });
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
@@ -116,8 +115,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     private displayable(): void {
-        this.endViewService.displayGameResult = EndGameWindow.MAP_RATING;
-        this.endViewService.setMapBestTimes();
+        this.endViewService.initializationForNewMap();
     }
 
     private toggleNextColorFilter(): number {
@@ -135,8 +133,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     @EventManager.Listener(GAME_COMPLETED_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private displayEndGameMenu(event: EventManager.Event<void>) {
-        this.displayable();
+        this.endViewService.initializationForNewMap();
         this.endViewService.incrementMapNumberOfPlays();
-        this.endViewService.setMapBestTimes();
     }
 }

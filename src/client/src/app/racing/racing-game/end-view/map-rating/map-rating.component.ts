@@ -47,4 +47,5 @@ export class MapRatingComponent {
         }
         this.endViewService.displayGameResult = EndGameWindow.BEST_TIME;
     }
+
 }
