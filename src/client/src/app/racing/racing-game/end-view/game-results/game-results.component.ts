@@ -83,6 +83,10 @@ export class GameResultsComponent {
         const sortedCarsTimes = carsTimes.sort(([car1, time1], [car2, time2]) => {
             return time1 - time2;
         });
+        this.sortOrderedLapTimesTable(sortedCarsTimes);
+    }
+
+    public sortOrderedLapTimesTable(sortedCarsTimes: any): void {
         this.sortedCarsTime = sortedCarsTimes;
         this.endViewService.userIsFirstPlace = this.sortedCarsTime[0][0] === this.gameInfoService.controlledCar;
         this.laps = sortedCarsTimes.map(([car, time]) =>
