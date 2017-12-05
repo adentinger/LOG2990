@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Seconds, Meters } from '../../../../types';
-import { Object3D, Vector3, Vector2 } from 'three';
+import { Object3D, Vector3 } from 'three';
 import { Track } from '../../../track';
 import { Injectable } from '@angular/core';
 
