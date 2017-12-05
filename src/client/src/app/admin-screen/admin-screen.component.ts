@@ -40,7 +40,7 @@ export class AdminScreenComponent implements OnInit {
         this.mapService.getByName(this.selectedMap).then((serializedMap) => this.serializedMap = serializedMap);
     }
 
-    private keepAllMapsExcept(map: string): void {
+    public keepAllMapsExcept(map: string): void {
         this.mapNames = this.mapNames.filter((name: string) => name !== map);
     }
 
