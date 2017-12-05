@@ -1,11 +1,10 @@
 import { Car } from './models/car/car';
 import { Seconds } from '../../types';
 import { CarsService } from './cars.service';
-import { CarsProgressionService, CAR_LAP_UPDATE_EVENT, LapUpdateInfo } from './cars-progression.service';
+import { CarsProgressionService, CAR_LAP_UPDATE_EVENT } from './cars-progression.service';
 import { EventManager } from '../../event-manager.service';
-import { GAME_COMPLETED_EVENT, USER_INDEX } from '../constants';
-import { UserCarController } from './physic/ai/user-car-controller';
 import { Injectable } from '@angular/core';
+import { LapUpdateInfo } from './lap-update-info';
 
 @Injectable()
 export class GameInfoService {

@@ -13,10 +13,12 @@ import { Observable } from 'rxjs/Observable';
 import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
+import { GameInfo } from './game-info';
+import { CarsProgressionService, CAR_LAP_UPDATE_EVENT } from './cars-progression.service';
 import { GameInfoService } from './game-info.service';
-import { CarsProgressionService, CAR_LAP_UPDATE_EVENT, LapUpdateInfo } from './cars-progression.service';
 import { Seconds } from '../../types';
 import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT, CAR_COMPLETED_RACE } from '../constants';
+import { LapUpdateInfo } from './lap-update-info';
 
 @Injectable()
 export class RacingGameService {
@@ -27,7 +29,6 @@ export class RacingGameService {
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
     private readonly finalizeSubject = new Subject<void>();
-    // private readonly info: GameInfo;
 
     private map: RenderableMap;
     public startTime: Seconds = Date.now() / 1000;
@@ -156,7 +157,6 @@ export class RacingGameService {
     // tslint:disable-next-line:no-unused-variable
     private handleCarCompletedRace(event: EventManager.Event<LapUpdateInfo>) {
         if (event.data.lap >= this.gameInfoService.maxLap) {
-            console.log('* Race Completed By A Car *');
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
                 data: event.data.car
