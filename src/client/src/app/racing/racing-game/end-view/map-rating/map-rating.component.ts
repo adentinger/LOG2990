@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { EndViewService, EndGameWindow } from '../../../services/end-view.service';
 import { GameInfoService } from '../../game-info.service';
-import { Map as RacingMap } from '../../../../admin-screen/map-editor/map';
 import { Car } from '../../models/car/car';
 import { Seconds } from '../../../../types';
 import { CarsProgressionService } from '../../cars-progression.service';
@@ -16,7 +15,6 @@ export class MapRatingComponent {
     private static readonly NUMBER_OF_STARS = 5;
     private static readonly FILLED_STAR_URL = '/assets/racing/stars-rating/filled-star.png';
     private static readonly EMPTY_STAR_URL = '/assets/racing/stars-rating/empty-star.png';
-    private orderedLapTimesTable;
     public stars: string[] = [];
     public indexOfStarClicked;
     public laps: [Car, Seconds[], Seconds][];

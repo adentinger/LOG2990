@@ -29,6 +29,7 @@ import { RacingGameService } from './racing/racing-game/racing-game.service';
 import { PhysicEngine } from './racing/racing-game/physic/engine';
 import { SoundService } from './racing/services/sound-service';
 import { TextureLoader, textureLoaderValue } from './racing/services/texture-loader';
+import { GameInfoService } from './racing/racing-game/game-info.service';
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { TextureLoader, textureLoaderValue } from './racing/services/texture-loa
         RacingGameService,
         PhysicEngine,
         SoundService,
+        GameInfoService,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ],
     bootstrap: [AppComponent]
