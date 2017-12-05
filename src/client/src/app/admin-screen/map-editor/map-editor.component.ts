@@ -101,6 +101,10 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
         return this.mapEditor.computeMapErrors() === MapError.NONE;
     }
 
+    public get canMapBeSaved(): boolean {
+        return this.isMapValid && this.mapEditor.currentMap.name.trim() !== '';
+    }
+
     public saveMap(): void {
         const SERIALIZED_MAP = this.mapEditor.serializeMap();
 
