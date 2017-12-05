@@ -28,6 +28,7 @@ export class GameResultsComponent {
             this.stars.push(GameResultsComponent.EMPTY_STAR_URL);
         }
         this.orderLapTimesTable();
+        this.setUserTimeIfFinishFirst();
     }
     public get timeTable(): Map<Car, number[]> {
         return this.gameInfoService.lapTimesTable;
@@ -104,6 +105,10 @@ export class GameResultsComponent {
         const completionTime = Date.now() / 1000 - this.gameInfoService.lapTimesTable.get(car)[0];
         const expectedCompletionTime = expectedCompletion * completionTime / carCompletion;
         return expectedCompletionTime;
+    }
+
+    public setUserTimeIfFinishFirst(): void {
+        this.endViewService.userTime = this.laps[0][2];
     }
 
 }
