@@ -143,6 +143,12 @@ export class CarsProgressionService {
         // Divide by map length to get a [0,1) value
         progression /= this.mapLength;
 
+        // To avoid starting out at ~99% if starting on back row
+        if (this.carProgressionState.get(car) === ProgressionState.FIRST_QUARTER &&
+            this.carsLapNumber.get(car) === 1 &&
+            progression > 0.80) {
+            progression = 0;
+        }
         return progression;
     }
 }
