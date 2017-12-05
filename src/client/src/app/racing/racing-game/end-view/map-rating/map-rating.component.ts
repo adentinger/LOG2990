@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EndViewService } from '../../../services/end-view.service';
+import { EndViewService, EndGameWindow } from '../../../services/end-view.service';
 import { GameInfoService } from '../../game-info.service';
 import { Map as RacingMap } from '../../../../admin-screen/map-editor/map';
 import { Car } from '../../models/car/car';
@@ -59,7 +59,8 @@ export class MapRatingComponent {
         if (this.indexOfStarClicked + 1) {
             this.endViewService.updateMapRating(this.indexOfStarClicked + 1);
         }
-        this.endViewService.displayGameResult = false;
+        this.endViewService.displayGameResult = EndGameWindow.BEST_TIME;
+        this.endViewService.setMapBestTimes();
     }
 
     public orderLapTimesTable(): void {
