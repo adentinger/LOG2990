@@ -49,3 +49,15 @@
 textarea {
     resize: none;
 }
+
+#actionButtons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+#actionButtons > * {
+    flex-grow: 1;
+    width: 100%;
+}

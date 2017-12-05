@@ -37,10 +37,9 @@
           <button (click)="randomiseSpeedBoosts()" [disabled]="!isMapValid" type=button class="btn btn-default">Speed Boost</button>
         </div>
       </div>
-      <div>
-        <div class="btn-group band-element" role="group" aria-label="Item Quantity Change Buttons" data-toggle="buttons">
-          <button (click)="saveMap()" [disabled]="!canMapBeSaved" type=button class="btn btn-default btn-lg btn-block btn-primary">Save Map</button>
-        </div>
+      <div class="btn-group" id="actionButtons" role="group" aria-label="Item Quantity Change Buttons" data-toggle="buttons">
+        <button (click)="saveMap()"   [disabled]="!canMapBeSaved"   type=button class="btn btn-default btn-lg btn-primary">Save Map</button>
+        <button (click)="deleteMap()" [disabled]="!canMapBeDeleted" type=button class="btn btn-default btn-lg btn-danger" >Delete</button>
       </div>
     </div>
     <div class="editionArea">
