@@ -37,6 +37,7 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     private loadedMapName = '';
 
     @Output() public mapWasSaved = new EventEmitter<string>();
+    @Output() public mapWasDeleted = new EventEmitter<string>();
     @Output() public mapCouldNotBeSavedBecauseAlreadyExists = new EventEmitter<string>();
     @Output() public mapCouldNotBeSavedBecauseNotFound = new EventEmitter<string>();
 
@@ -129,6 +130,13 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
                 this.loadedMapName = SERIALIZED_MAP.name;
                 this.mapWasSaved.emit(SERIALIZED_MAP.name);
             });
+        }
+    }
+
+    public deleteMap(): void {
+        if (this.canMapBeDeleted) {
+            const MAP_NAME = this.mapEditor.currentMap.name;
+            this.mapService.delete(MAP_NAME).then(() => this.mapWasDeleted.emit(MAP_NAME)).catch();
         }
     }
 
