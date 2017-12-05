@@ -31,10 +31,12 @@
   <div *ngIf = 'endViewService.userIsInMapBestTimes()'>
     <h3>Congratulation, you managed to score in the top 5 best times of the map</h3>
     <label>Enter Your Name: </label><input type='text' [(ngModel)]='userName'/>
-    <button (click)='inscribeOnMapBestTimes()' [disabled]='inscribeButton'>Inscribe</button>
+    <button (click)='inscribeOnMapBestTimes()' [disabled]='inscribeButton' type=button class='btn btn-default'>Inscribe</button>
   </div>
 
-  <button (click)='reloadPage()'>Play Again</button>
-  <button (click)='endViewService.reset()' routerLink='/'>Return Homepage</button>
+  <div class='btn-group' id='actionButtons' role='group' aria-label='Item Quantity Change Buttons' data-toggle='buttons'>
+    <button (click)='reloadPage()' type=button class='btn btn-default btn-lg'>Play Again</button>
+    <button (click)='endViewService.reset()' routerLink='/' type=button class='btn btn-default btn-lg'>Return to Homepage</button>
+  </div>
 
 </div>
