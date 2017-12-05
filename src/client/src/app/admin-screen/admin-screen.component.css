@@ -35,11 +35,27 @@
     text-shadow: 2px 2px 5px lightgrey;
 }
 
+.maps {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
 .maps:hover {
-    cursor: pointer;
     background: linear-gradient(-90deg, white, #00A2FF 20%, #00A2FF 80%, white);
+    cursor: pointer;
     color:#FFFFFF;
-    border-top: 1px solid #EBF0F8;
+}
+
+.map-name-container {
+    width: 70%;
+    text-align:center;
+    font-size:18px;
+    font-family: Ubuntu;
+    padding: 10px 0px;
+    margin: 0px 15%;
+    border-top: none;
+    border-bottom: 1px solid #888;
 }
 
 .no-select * {
@@ -50,16 +66,4 @@
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome and Opera */
-}
-
-.maps {
-    width: 70%;
-    background:#FFFFFF;
-    text-align:center;
-    font-size:18px;
-    font-family: Ubuntu;
-    padding: 10px 0px;
-    margin: 0px 15%;
-    border-top: none;
-    border-bottom: 1px solid #888;
 }
