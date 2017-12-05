@@ -83,5 +83,4 @@ export class CheatModeComponent {
             this.timerInput.nativeElement.value
         );
     }
-
 }
