@@ -11,6 +11,7 @@ import { SoundService } from '../services/sound-service';
 import { CarsProgressionService } from './cars-progression.service';
 import { CarsService } from './cars.service';
 import { GameInfoService } from './game-info.service';
+import { RainEngine } from './physic/rain/rain-engine';
 
 describe('RacingGameService', () => {
     beforeEach(() => {
@@ -27,7 +28,8 @@ describe('RacingGameService', () => {
                 CarsService,
                 CarsProgressionService,
                 SoundService,
-                GameInfoService
+                GameInfoService,
+                RainEngine
             ]
         });
     });
