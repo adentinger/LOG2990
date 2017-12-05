@@ -6,11 +6,11 @@ import { Seconds } from '../../../../types';
 import { CarsProgressionService } from '../../cars-progression.service';
 
 @Component({
-    selector: 'app-map-rating',
-    templateUrl: './map-rating.component.html',
-    styleUrls: ['./map-rating.component.css']
+    selector: 'app-game-results',
+    templateUrl: './game-results.component.html',
+    styleUrls: ['./game-results.component.css']
 })
-export class MapRatingComponent {
+export class GameResultsComponent {
 
     private static readonly NUMBER_OF_STARS = 5;
     private static readonly FILLED_STAR_URL = '/assets/racing/stars-rating/filled-star.png';
@@ -24,8 +24,8 @@ export class MapRatingComponent {
         private endViewService: EndViewService,
         private gameInfoService: GameInfoService,
         private carProgressionService: CarsProgressionService) {
-        for (let i = 0; i < MapRatingComponent.NUMBER_OF_STARS; i++) {
-            this.stars.push(MapRatingComponent.EMPTY_STAR_URL);
+        for (let i = 0; i < GameResultsComponent.NUMBER_OF_STARS; i++) {
+            this.stars.push(GameResultsComponent.EMPTY_STAR_URL);
         }
         this.orderLapTimesTable();
     }
@@ -34,17 +34,17 @@ export class MapRatingComponent {
     }
 
     public mouseHoverStar(indexOfStar: number): void {
-        this.stars.fill(MapRatingComponent.EMPTY_STAR_URL);
+        this.stars.fill(GameResultsComponent.EMPTY_STAR_URL);
         for (let i = 0; i <= indexOfStar; i++) {
-            this.stars[i] = MapRatingComponent.FILLED_STAR_URL;
+            this.stars[i] = GameResultsComponent.FILLED_STAR_URL;
         }
     }
 
     public mouseOutOfStar(): void {
-        this.stars.fill(MapRatingComponent.EMPTY_STAR_URL);
+        this.stars.fill(GameResultsComponent.EMPTY_STAR_URL);
         if (this.indexOfStarClicked >= 0 && this.indexOfStarClicked !== null) {
             for (let i = 0; i <= this.indexOfStarClicked; i++) {
-                this.stars[i] = MapRatingComponent.FILLED_STAR_URL;
+                this.stars[i] = GameResultsComponent.FILLED_STAR_URL;
             }
         }
     }

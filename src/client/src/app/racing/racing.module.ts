@@ -15,7 +15,7 @@ import { SoundService } from './services/sound-service';
 import { CarsService } from './racing-game/cars.service';
 import { TextureLoader, textureLoaderValue } from './services/texture-loader';
 import { CarsProgressionService } from './racing-game/cars-progression.service';
-import { MapRatingComponent } from './racing-game/end-view/map-rating/map-rating.component';
+import { GameResultsComponent } from './racing-game/end-view/game-results/game-results.component';
 import { BestTimeComponent } from './racing-game/end-view/best-time/best-time.component';
 import { EndViewComponent } from './racing-game/end-view/end-view.component';
 import { EndViewService } from './services/end-view.service';
@@ -38,9 +38,9 @@ import { FormsModule } from '@angular/forms';
         RacingGameComponent,
         MapBestTimeComponent,
         MapThumbnailComponent,
-        MapRatingComponent,
         BestTimeComponent,
         EndViewComponent,
+        GameResultsComponent,
         UIInputs
     ],
     providers: [
