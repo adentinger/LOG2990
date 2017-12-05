@@ -18,7 +18,7 @@ export class MapRatingComponent {
     public stars: string[] = [];
     public indexOfStarClicked;
     public laps: [Car, Seconds[], Seconds][];
-    public sortedCarsTime;
+    public sortedCarsTime: [Car, Seconds][];
 
     constructor(
         private endViewService: EndViewService,
@@ -83,6 +83,7 @@ export class MapRatingComponent {
             return time1 - time2;
         });
         this.sortedCarsTime = sortedCarsTimes;
+        this.endViewService.userIsFirstPlace = this.sortedCarsTime[0][0] === this.gameInfoService.controlledCar;
         this.laps = sortedCarsTimes.map(([car, time]) =>
             [car, this.gameInfoService.lapTimesTable.get(car), time] as [Car, Seconds[], Seconds])
             .map(([car, lapTimes, time]) => {
