@@ -2,9 +2,6 @@
   <div class="mapEditionScreen">
     <div class="mapParameters">
       <div>
-          <button (click)="saveMap()" [disabled]="!isMapValid">Save Map</button>
-      </div>
-      <div>
           <div class="input-group">
             <span class="input-group-addon" id="Map Name Label">Name</span>
             <input [(ngModel)]="internalMap.name" type="text" class="form-control" placeholder="Map Name" aria-describedby="Map Name Input">
@@ -38,6 +35,11 @@
               <button (click)="randomisePotholes()"    [disabled]="!isMapValid" type=button class="btn btn-default">Potholes</button>
               <button (click)="randomisePuddles()"     [disabled]="!isMapValid" type=button class="btn btn-default">Puddle</button>
               <button (click)="randomiseSpeedBoosts()" [disabled]="!isMapValid" type=button class="btn btn-default">Speed Boost</button>
+          </div>
+      </div>
+      <div>
+          <div class="btn-group band-element" role="group" aria-label="Item Quantity Change Buttons" data-toggle="buttons">
+              <button (click)="saveMap()" [disabled]="!isMapValid" type=button class="btn btn-default btn-lg btn-block">Save Map</button>
           </div>
       </div>
     </div>

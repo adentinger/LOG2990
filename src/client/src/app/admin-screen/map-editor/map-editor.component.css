@@ -34,3 +34,7 @@
     padding: 0px;
     user-select: none;
 }
+
+.band-element {
+    width: 100%;
+}
