@@ -9,7 +9,7 @@ import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
 import { EndViewService } from '../services/end-view.service';
-
+3
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
