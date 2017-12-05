@@ -36,7 +36,8 @@
 }
 
 .maps:hover {
-    background:#00A2FF;
+    cursor: pointer;
+    background: linear-gradient(-90deg, white, #00A2FF 20%, #00A2FF 80%, white);
     color:#FFFFFF;
     border-top: 1px solid #EBF0F8;
 }
