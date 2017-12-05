@@ -21,6 +21,7 @@ import { EndViewComponent } from './racing-game/end-view/end-view.component';
 import { EndViewService } from './services/end-view.service';
 import { GameInfoService } from './racing-game/game-info.service';
 import { FormsModule } from '@angular/forms';
+import { RainEngine } from './racing-game/physic/rain/rain-engine';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { FormsModule } from '@angular/forms';
         CarsService,
         CarsProgressionService,
         EndViewService,
+        RainEngine,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ]
 })

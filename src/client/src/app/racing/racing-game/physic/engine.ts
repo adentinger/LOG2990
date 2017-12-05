@@ -3,6 +3,7 @@ import { PhysicUtils } from './utils';
 import * as THREE from 'three';
 import { Seconds } from '../../../types';
 import { EventManager } from '../../../event-manager.service';
+import { RainEngine } from './rain/rain-engine';
 import '../../../../../../common/src/math/clamp';
 import { BEFORE_PHYSIC_UPDATE_EVENT, AFTER_PHYSIC_UPDATE_EVENT } from '../../constants';
 
@@ -22,15 +23,18 @@ export class PhysicEngine {
         return (this.deltaTimes.length / this.deltaTimes.reduce((accumulator, value) => accumulator + value, 0)) || 0;
     }
 
-    constructor(private eventManager: EventManager) {
+    constructor(private eventManager: EventManager,
+        private rain: RainEngine) {
         this.physicUtils = new PhysicUtils(eventManager);
     }
 
     public initialize(root: THREE.Object3D): void {
         this.physicUtils.setRoot(root);
+        this.rain.initialize(root);
     }
 
     public finalize(): void {
+        this.rain.finalize();
         delete this.physicUtils['root'];
     }
 
@@ -40,7 +44,9 @@ export class PhysicEngine {
             this.timer = setInterval(() => {
                 now = Date.now();
                 const deltaTimeMs = now - last;
-                this.updateWorld(Math.clamp(deltaTimeMs / 1000, 0, PhysicEngine.MAX_DELTA_TIME));
+                const deltaTime = Math.clamp(deltaTimeMs / 1000, 0, PhysicEngine.MAX_DELTA_TIME);
+                this.updateWorld(deltaTime);
+                this.rain.update(deltaTime);
                 if (this.deltaTimes.length >= this.sampleSize) {
                     this.deltaTimes.splice(0, this.deltaTimes.length - this.sampleSize + 1);
                 }
