@@ -32,19 +32,19 @@
     text-align:center;
     font-family: Ubuntu;
     text-shadow: 2px 2px 5px #00B7FF;
-  }
+}
 
-  .maps:hover {
+.maps:hover {
     background:#00A2FF;
     color:#FFFFFF;
     border-top: 1px solid #EBF0F8;
-  }
+}
 
-  .maps {
+.maps {
     width: 100%;
     background:#FFFFFF;
     text-align:center;
     font-size:18px;
     border-right: 1px solid #D4DCDF;
     font-family: Ubuntu;
-  }
+}
