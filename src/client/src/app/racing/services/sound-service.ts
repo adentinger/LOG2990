@@ -133,7 +133,6 @@ export class SoundService implements Loadable {
     }
 
     public finalize(): void {
-        console.log('finalize');
         this.setAmbiantSound(Sound.NONE);
         this.registeredEmitters.forEach((emitter: SoundEmitter) => {
             if (emitter.eventAudios != null) {
