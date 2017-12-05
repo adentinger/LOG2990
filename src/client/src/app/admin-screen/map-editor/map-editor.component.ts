@@ -136,7 +136,10 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     public deleteMap(): void {
         if (this.canMapBeDeleted) {
             const MAP_NAME = this.mapEditor.currentMap.name;
-            this.mapService.delete(MAP_NAME).then(() => this.mapWasDeleted.emit(MAP_NAME)).catch();
+            this.mapService.delete(MAP_NAME).then(() => {
+                this.mapWasDeleted.emit(MAP_NAME);
+                this.loadedMapName = '';
+            }).catch();
         }
     }
 
