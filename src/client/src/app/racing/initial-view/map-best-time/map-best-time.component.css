@@ -46,6 +46,7 @@
 }
 
 .outer {
+    user-select: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -85,6 +86,16 @@
     border-radius: 0;
     border-top: 5px solid black;
     background: #DFAF5D;
+}
+
+.btn:hover {
+    background: #EFBF6D;
+    box-shadow: 0px 5px 7px -3px #777;
+}
+
+.btn:active {
+    background: #BF8F4D;
+    box-shadow: inset 0px 5px 7px -3px #777;
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {
