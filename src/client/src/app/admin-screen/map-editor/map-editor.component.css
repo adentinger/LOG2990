@@ -20,6 +20,8 @@
 .mapParameters {
     flex-grow: 1;
     align-items: flex-start;
+    padding: 20px;
+    max-width: 500px;
 }
 
 .editionArea {
@@ -37,4 +39,8 @@
 
 .band-element {
     width: 100%;
+}
+
+textarea {
+    resize: none;
 }
