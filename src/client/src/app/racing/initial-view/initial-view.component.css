@@ -20,7 +20,6 @@
   padding:24px;
   text-align:center;
   font-family: Ubuntu;
-  text-shadow: 1px 1px 2px #00B7FF;
 }
 
 .map-list tbody tr {
@@ -57,7 +56,6 @@
   font-size:18px;
   border-right: 1px solid #D4DCDF;
   font-family: Ubuntu;
-  text-shadow: 1px 1px 2px #777;
 }
 
 .map-list {

@@ -40,19 +40,13 @@ export class AdminScreenComponent implements OnInit {
         this.mapService.getByName(this.selectedMap).then((serializedMap) => this.serializedMap = serializedMap);
     }
 
-    private keepAllMapsExcept(map: string): void {
+    public keepAllMapsExcept(map: string): void {
         this.mapNames = this.mapNames.filter((name: string) => name !== map);
     }
 
     public addMap(map: string): void {
         this.keepAllMapsExcept(map);
         this.mapNames.push(map);
-    }
-
-    public deleteMap(map: string): void {
-        this.mapService.delete(map)
-            .then(() => this.keepAllMapsExcept(map))
-            .catch(() => { });
     }
 
     public alertMapCouldNotBeSavedBecuaseAlreadyExists(): void {
