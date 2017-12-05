@@ -8,7 +8,7 @@ import { UIInputs } from '../services/ui-input.service';
 
 import { EventManager } from '../../event-manager.service';
 import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
-import { EndViewService, EndGameWindow } from '../services/end-view.service';
+import { EndViewService } from '../services/end-view.service';
 
 @Component({
     selector: 'app-racing-game',
