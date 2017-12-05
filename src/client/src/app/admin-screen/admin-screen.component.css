@@ -20,6 +20,7 @@
     align-items: stretch;
     flex-direction: column;
     overflow: auto;
+    border-right: 1px solid #D4DCDF;
 }
 
 .tableTitle {
@@ -31,7 +32,7 @@
     padding:24px;
     text-align:center;
     font-family: Ubuntu;
-    text-shadow: 2px 2px 5px #00B7FF;
+    text-shadow: 2px 2px 5px lightgrey;
 }
 
 .maps:hover {
@@ -41,10 +42,12 @@
 }
 
 .maps {
-    width: 100%;
+    width: 80%;
     background:#FFFFFF;
     text-align:center;
     font-size:18px;
-    border-right: 1px solid #D4DCDF;
     font-family: Ubuntu;
+    padding: 10px;
+    margin: 0px 10%;
+    border-bottom: 2px solid #888;
 }
