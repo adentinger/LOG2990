@@ -19,6 +19,9 @@ import { MapRatingComponent } from './end-view/map-rating/map-rating.component';
 import { EndViewComponent } from './end-view/end-view.component';
 import { EndViewService } from '../services/end-view.service';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { HttpHandler } from '@angular/common/http';
+import { GameInfoService } from './game-info.service';
 
 describe('RacingGameComponent', () => {
     let component: RacingGameComponent;
@@ -42,7 +45,10 @@ describe('RacingGameComponent', () => {
                 CarsService,
                 CarsProgressionService,
                 SoundService,
-                EndViewService
+                EndViewService,
+                HttpClient,
+                HttpHandler,
+                GameInfoService
             ]
         })
             .compileComponents();

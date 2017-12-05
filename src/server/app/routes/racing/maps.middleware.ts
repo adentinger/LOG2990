@@ -84,7 +84,10 @@ export class MapsMiddleWare {
                                      res: express.Response): void {
         MapUpdater.getInstance()
             .incrementPlays(req.params.name)
-            .then(() => res.sendStatus(HttpStatus.OK))
+            .then(() => {
+                res.status(HttpStatus.OK);
+                res.json({});
+            })
             .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
@@ -94,7 +97,10 @@ export class MapsMiddleWare {
         const bestTime = new SerializedBestTime(new SerializedPlayer(req.params.player), Number(req.params.time));
         MapUpdater.getInstance()
             .updateTime(req.params.name, bestTime)
-            .then(() => res.sendStatus(HttpStatus.OK))
+            .then(() => {
+                res.status(HttpStatus.OK);
+                res.json({});
+            })
             .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 
@@ -103,7 +109,10 @@ export class MapsMiddleWare {
                            res: express.Response): void {
         MapUpdater.getInstance()
             .updateRating(req.params.name, Math.round(Number(req.params.rating)))
-            .then(() => res.sendStatus(HttpStatus.OK))
+            .then(() => {
+                res.status(HttpStatus.OK);
+                res.json({});
+            })
             .catch((reason: any) => res.sendStatus(getStatusOrDefault(reason)));
     }
 

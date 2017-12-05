@@ -9,7 +9,8 @@ import { UIInputs } from '../services/ui-input.service';
 import { EventManager } from '../../event-manager.service';
 import { KEYDOWN_EVENT, GAME_COMPLETED_EVENT } from '../constants';
 import { EndViewService } from '../services/end-view.service';
-3
+import { Subscription } from 'rxjs/Subscription';
+
 @Component({
     selector: 'app-racing-game',
     templateUrl: './racing-game.component.html',
@@ -36,6 +37,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private hudCanvas: ElementRef;
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
+    private routeSubscription: Subscription;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -45,20 +47,21 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.route.paramMap.switchMap((params: ParamMap) => [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
-            this.racingGame.loadMap(mapName).then(() => {
-                this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
-                this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
-                this.updateRendererSize();
-                this.endViewService.initializationForNewMap(mapName);
+        this.routeSubscription = this.route.paramMap.switchMap((params: ParamMap) =>
+            [params.get(RacingGameComponent.MAP_NAME_URL_PARAMETER)]).subscribe(mapName => {
+                this.racingGame.loadMap(mapName).then(() => {
+                    this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
+                    this.racingGame.initialize(this.racingGameContainer.nativeElement, this.hudCanvas.nativeElement, this.uiInputs);
+                    this.updateRendererSize();
+                });
             });
-        });
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
     }
 
     public ngOnDestroy() {
         this.gameLoaded = false;
         this.racingGame.finalize();
+        this.routeSubscription.unsubscribe();
     }
 
     @HostListener('window:resize', ['$event'])
@@ -115,8 +118,8 @@ export class RacingGameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private async displayable(): Promise<void> {
-        this.endViewService.displayGameResult = true;
+    private displayable(): void {
+        this.endViewService.initializationForNewMap();
     }
 
     private toggleNextColorFilter(): number {
@@ -134,7 +137,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     @EventManager.Listener(GAME_COMPLETED_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private displayEndGameMenu(event: EventManager.Event<void>) {
-        this.displayable();
+        this.endViewService.initializationForNewMap();
         this.endViewService.incrementMapNumberOfPlays();
     }
 }

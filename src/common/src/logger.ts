@@ -15,7 +15,7 @@ const DEFAULT_NAME = '<Anonymous>';
 const SYSTEM_LEVEL = 'process' in context ?
     typeof context['process'].env['LOG_LEVEL'] === 'string' && context['process'].env['LOG_LEVEL'].toUpperCase() in Level ?
         Level[context['process'].env['LOG_LEVEL'].toUpperCase()] : Level.IMPORTANT
-    : Level.ALL;
+    : Level.IMPORTANT;
 
 export class Logger {
     public static readonly SYSTEM_LEVEL = SYSTEM_LEVEL;

@@ -11,8 +11,8 @@ import 'rxjs/add/operator/switch';
 
 export class BestTimeComponent {
 
-    @Input() public userName;
-    public inscribeButton;
+    @Input() public userName: string;
+    public inscribeButton: Boolean;
 
     constructor(public endViewService: EndViewService,
     private zone: NgZone) {
@@ -26,4 +26,5 @@ export class BestTimeComponent {
         this.endViewService.updateMapBestTime(this.userName);
         this.inscribeButton = true;
     }
+
 }
