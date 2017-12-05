@@ -6,7 +6,6 @@
       <div class="tableTitle">Map name</div>
       <div class="maps" *ngFor="let map of mapNames" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
         <span class="mapNames">{{map}}</span>
-        <button class="delete" (click)="deleteMap(map); $event.stopPropagation()">x</button>
       </div>
     </div>
   </div>
