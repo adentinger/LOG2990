@@ -49,12 +49,6 @@ export class AdminScreenComponent implements OnInit {
         this.mapNames.push(map);
     }
 
-    public deleteMap(map: string): void {
-        this.mapService.delete(map)
-            .then(() => this.keepAllMapsExcept(map))
-            .catch(() => { });
-    }
-
     public alertMapCouldNotBeSavedBecuaseAlreadyExists(): void {
         alert('Map could not be saved:\n' +
               'A map with that name already exists.');
