@@ -111,23 +111,25 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     }
 
     public saveMap(): void {
-        const SERIALIZED_MAP = this.mapEditor.serializeMap();
+        if (this.canMapBeSaved) {
+            const SERIALIZED_MAP = this.mapEditor.serializeMap();
 
-        let savePromise: Promise<void>;
-        if (SERIALIZED_MAP.name !== this.loadedMapName) {
-            this.internalMap.name = SERIALIZED_MAP.name;
-            savePromise = this.mapService.saveNew(SERIALIZED_MAP)
-                .catch(() => this.mapCouldNotBeSavedBecauseAlreadyExists.emit(SERIALIZED_MAP.name));
-        }
-        else {
-            savePromise = this.mapService.saveEdited(SERIALIZED_MAP)
-                .catch(() => this.mapCouldNotBeSavedBecauseNotFound.emit(SERIALIZED_MAP.name));
-        }
+            let savePromise: Promise<void>;
+            if (SERIALIZED_MAP.name !== this.loadedMapName) {
+                this.internalMap.name = SERIALIZED_MAP.name;
+                savePromise = this.mapService.saveNew(SERIALIZED_MAP)
+                    .catch(() => this.mapCouldNotBeSavedBecauseAlreadyExists.emit(SERIALIZED_MAP.name));
+            }
+            else {
+                savePromise = this.mapService.saveEdited(SERIALIZED_MAP)
+                    .catch(() => this.mapCouldNotBeSavedBecauseNotFound.emit(SERIALIZED_MAP.name));
+            }
 
-        savePromise.then(() => {
-            this.loadedMapName = SERIALIZED_MAP.name;
-            this.mapWasSaved.emit(SERIALIZED_MAP.name);
-        });
+            savePromise.then(() => {
+                this.loadedMapName = SERIALIZED_MAP.name;
+                this.mapWasSaved.emit(SERIALIZED_MAP.name);
+            });
+        }
     }
 
     public potholes(): void {
