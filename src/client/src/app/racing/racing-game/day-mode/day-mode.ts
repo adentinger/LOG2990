@@ -23,11 +23,11 @@ export class DayModeDay implements DayMode {
     }
 
     public get LIGHTING_OPTIONS(): LightingOptions {
-        const COLOR = 0xfff6a3;
+        const COLOR = 0xfff6ca;
         return {
             keyLight: {
                 color: COLOR,
-                intensity: 1,
+                intensity: 0.8,
                 rotation: new THREE.Euler((2 / 5) ** 2 * Math.PI, 1.837, 0, 'YXZ')
             },
             backlight: {
