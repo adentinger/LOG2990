@@ -8,7 +8,7 @@ import { EventManager } from '../../../event-manager.service';
 import { Lighting } from '../models/lighting/lighting';
 import { RenderableMap } from '../racing-game-map/renderable-map';
 import { HUD } from './hud';
-import { GameInfo } from '../game-info';
+import { GameInfoService } from '../game-info.service';
 
 export type CameraId = 0 | 1;
 
@@ -44,8 +44,10 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         return this.dayModeManager.mode;
     }
 
-    constructor(eventManager: EventManager, private game: GameInfo) {
-        super({ antialias: true, alpha: true, clearColor: 0x000000});
+    constructor(
+        eventManager: EventManager,
+        private gameInfoService: GameInfoService) {
+        super({ antialias: true, alpha: true, clearColor: 0x000000 });
         this.shadowMap.enabled = false;
         this.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -124,7 +126,7 @@ export class RacingRenderer extends THREE.WebGLRenderer {
         this.setViewport(positionx - width / 2, positiony - height / 2, width, height);
         this.render(this.scene, this.rearViewCamera);
 
-        this.hud.render(this.game);
+        this.hud.render(this.gameInfoService);
     }
 
     public setCamerasTarget(target: THREE.Object3D): void {

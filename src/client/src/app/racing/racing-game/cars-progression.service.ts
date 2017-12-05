@@ -10,13 +10,15 @@ import { MapPositionAlgorithms } from '../util/map-position-algorithms';
 import { Point } from '../../../../../common/src/math/point';
 import { UserCarController } from './physic/ai/user-car-controller';
 import { AFTER_PHYSIC_UPDATE_EVENT } from '../constants';
+import { LapUpdateInfo } from './lap-update-info';
 
-export const CAR_LAP_UPDATE = 'carlapupdate';
+export const CAR_LAP_UPDATE_EVENT = 'carlapupdate';
 
-export interface RaceCompletionInfo {
-    car: Car;
-    lap: number;
-    isUser: boolean;
+enum ProgressionState {
+    FIRST_QUARTER = 0,
+    SECOND_QUARTER,
+    THIRD_QUARTER,
+    FOURTH_QUARTER
 }
 
 @Injectable()
@@ -29,6 +31,8 @@ export class CarsProgressionService {
     public carsLapProgression: Map<Car, number> = new Map();
     public carsLapNumber: Map<Car, number> = new Map();
 
+    public carPositionTrackingState: Map<Car, boolean> = new Map();
+
     public get userLapsCount(): number {
         return this.carsLapNumber.get(this.userCar);
     }
@@ -37,7 +41,7 @@ export class CarsProgressionService {
         return Math.floor((this.carsLapProgression.get(this.userCar) % 1) * 100);
     }
 
-    private carsHalfMark: Map<Car, boolean> = new Map();
+    private carProgressionState: Map<Car, ProgressionState> = new Map();
 
     private controllers: CarController[] = [];
     private userCar: Car;
@@ -56,11 +60,16 @@ export class CarsProgressionService {
         for (const controller of controllers) {
             this.carsLapProgression.set(controller.car, 0);
             this.carsLapNumber.set(controller.car, 1);
-            this.carsHalfMark.set(controller.car, false);
+            this.carProgressionState.set(controller.car, ProgressionState.FIRST_QUARTER);
             if (controller instanceof UserCarController) {
                 this.userCar = controller.car;
             }
+            this.carPositionTrackingState.set(controller.car, true);
         }
+    }
+
+    public getCarCompletion(car: Car): number {
+        return this.carsLapNumber.get(car) + this.carsLapProgression.get(car);
     }
 
     private get cars(): Car[] {
@@ -73,9 +82,9 @@ export class CarsProgressionService {
     }
 
     private compareCarPosition(carA: Car, carB: Car): number {
-        const progressionA: number = this.carsLapNumber.get(carA) + this.carsLapProgression.get(carA);
-        const progressionB: number = this.carsLapNumber.get(carB) + this.carsLapProgression.get(carB);
-        return (progressionB - progressionA);
+        const completionA: number = this.getCarCompletion(carA);
+        const completionB: number = this.getCarCompletion(carB);
+        return (completionB - completionA);
     }
 
     @EventManager.Listener(AFTER_PHYSIC_UPDATE_EVENT)
@@ -84,22 +93,32 @@ export class CarsProgressionService {
         if (++this.progressionUpdateCounter === 30) {
             this.progressionUpdateCounter = 0;
             for (const controller of this.controllers) {
-                const newLapProgression: number = this.computeLapProgression(controller.car);
-                if (newLapProgression > 0.45 && newLapProgression < 0.55) {
-                    this.carsHalfMark.set(controller.car, true);
+                if (!this.carPositionTrackingState.get(controller.car)) {
+                    continue;
                 }
-                else if (newLapProgression < 0.05 && this.carsHalfMark.get(controller.car)) {
-                    this.carsHalfMark.set(controller.car, false);
+                const newLapProgression: number = this.computeLapProgression(controller.car);
+                if (newLapProgression > 0.00 && newLapProgression < 0.25 &&
+                    this.carProgressionState.get(controller.car) === ProgressionState.FOURTH_QUARTER) {
+                    this.carProgressionState.set(controller.car, ProgressionState.FIRST_QUARTER);
                     this.carsLapNumber.set(controller.car, this.carsLapNumber.get(controller.car) + 1);
-                    const info: RaceCompletionInfo = {
+                    const info: LapUpdateInfo = {
                         car: controller.car,
                         lap: this.carsLapNumber.get(controller.car),
                         isUser: (controller instanceof UserCarController)
                     };
-                    this.eventManager.fireEvent(CAR_LAP_UPDATE, {
-                        name: CAR_LAP_UPDATE,
+                    this.eventManager.fireEvent(CAR_LAP_UPDATE_EVENT, {
+                        name: CAR_LAP_UPDATE_EVENT,
                         data: info
                     });
+                } else if (newLapProgression > 0.25 && newLapProgression < 0.50 &&
+                    this.carProgressionState.get(controller.car) === ProgressionState.FIRST_QUARTER) {
+                    this.carProgressionState.set(controller.car, ProgressionState.SECOND_QUARTER);
+                } else if (newLapProgression > 0.50 && newLapProgression < 0.75 &&
+                    this.carProgressionState.get(controller.car) === ProgressionState.SECOND_QUARTER) {
+                    this.carProgressionState.set(controller.car, ProgressionState.THIRD_QUARTER);
+                } else if (newLapProgression > 0.75 && newLapProgression < 1.00 &&
+                    this.carProgressionState.get(controller.car) === ProgressionState.THIRD_QUARTER) {
+                    this.carProgressionState.set(controller.car, ProgressionState.FOURTH_QUARTER);
                 }
                 this.carsLapProgression.set(controller.car, this.computeLapProgression(controller.car));
             }

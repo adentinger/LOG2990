@@ -14,9 +14,12 @@ import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
 import { GameInfo } from './game-info';
-import { CarsProgressionService, CAR_LAP_UPDATE, RaceCompletionInfo } from './cars-progression.service';
+import { CarsProgressionService, CAR_LAP_UPDATE_EVENT } from './cars-progression.service';
+import { GameInfoService } from './game-info.service';
 import { Seconds } from '../../types';
 import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT, CAR_COMPLETED_RACE } from '../constants';
+import { LapUpdateInfo } from './lap-update-info';
+import { Subscription } from 'rxjs/Subscription';
 
 @Injectable()
 export class RacingGameService {
@@ -26,15 +29,17 @@ export class RacingGameService {
     public readonly renderer: RacingRenderer;
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
+    public startTime: Seconds = Date.now() / 1000;
+
     private readonly finalizeSubject = new Subject<void>();
-    private readonly info: GameInfo;
 
     private map: RenderableMap;
-    public startTime: Seconds = Date.now() / 1000;
     private userInputs: UIInputs = null;
+    private initialSubscription: Subscription;
 
     public get lap(): number {
-        return this.info.maxLap;
+        console.log('game service is fetching lap value, which is : ' + this.gameInfoService.maxLap);
+        return this.gameInfoService.maxLap;
     }
 
     constructor(private physicEngine: PhysicEngine,
@@ -42,14 +47,15 @@ export class RacingGameService {
         private eventManager: EventManager,
         private soundService: SoundService,
         private carsService: CarsService,
-        private carsProgressionService: CarsProgressionService) {
-        this.info = new GameInfo(this.carsService, this.carsProgressionService);
+        private carsProgressionService: CarsProgressionService,
+        private gameInfoService: GameInfoService) {
+
         this.waitToLoad = Promise.all([
             this.carsService.waitToLoad,
             this.soundService.waitToLoad
         ]).then(() => { });
         this.waitToFinalize = this.finalizeSubject.asObservable();
-        this.renderer = new RacingRenderer(eventManager, this.info);
+        this.renderer = new RacingRenderer(eventManager, this.gameInfoService);
         eventManager.registerClass(this);
     }
 
@@ -67,7 +73,7 @@ export class RacingGameService {
 
         // If the game is stopping before it was loaded, then don't start anything.
         const finalizePromise = new Promise<void>((resolve, reject) => {
-            this.waitToFinalize.subscribe(resolve, reject, resolve);
+            this.initialSubscription = this.waitToFinalize.subscribe(resolve, reject, resolve);
         }).then(() => Promise.reject('Initialization canceled'));
         Promise.race([
             finalizePromise,
@@ -79,7 +85,7 @@ export class RacingGameService {
                 this.soundService.setAmbiantSound(Sound.START_SOUND)
             ]);
         }).then(() => {
-            this.info.startTimer(RacingGameService.COUNTDOWN_DURATION);
+            this.gameInfoService.startTimer(RacingGameService.COUNTDOWN_DURATION);
             Promise.race([finalizePromise, this.soundService.playAmbiantSound(false)])
                 .then(() => Promise.race([finalizePromise, this.soundService.setAmbiantSound(Sound.TETRIS)]))
                 .then(() => this.soundService.playAmbiantSound(true))
@@ -108,6 +114,7 @@ export class RacingGameService {
         this.soundService.finalize();
         this.physicEngine.finalize();
         this.renderer.finalize();
+        this.initialSubscription.unsubscribe();
     }
 
     public loadMap(mapName: string): Promise<void> {
@@ -137,6 +144,10 @@ export class RacingGameService {
         this.renderer.toggleDayMode();
     }
 
+    public get mapName(): string {
+        return this.map.mapName;
+    }
+
     @EventManager.Listener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private changeMaxLap(event: EventManager.Event<KeyboardEvent>) {
@@ -146,21 +157,20 @@ export class RacingGameService {
         const keys = new Set(keysArray);
 
         if (this.userInputs && keys.has(event.data.key) && this.userInputs.isKeyPressed(event.data.key)) {
-            this.info.maxLap = +event.data.key;
+            this.gameInfoService.maxLap = +event.data.key;
         }
     }
 
-    @EventManager.Listener(CAR_LAP_UPDATE)
+    @EventManager.Listener(CAR_LAP_UPDATE_EVENT)
     // tslint:disable-next-line:no-unused-variable
-    private handleCarCompletedRace(event: EventManager.Event<RaceCompletionInfo>) {
-        if (event.data.lap >= this.info.maxLap) {
-            console.log('* Race Completed By A Car *');
+    private handleCarCompletedRace(event: EventManager.Event<LapUpdateInfo>) {
+        if (event.data.lap > this.gameInfoService.maxLap) {
+            this.carsProgressionService.carPositionTrackingState.set(event.data.car, false);
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
                 data: event.data.car
             });
             if (event.data.isUser) {
-                console.log('** Race Completed By User **');
                 this.eventManager.fireEvent(GAME_COMPLETED_EVENT, {
                     name: GAME_COMPLETED_EVENT,
                     data: void 0

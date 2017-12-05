@@ -1,7 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-import 'rxjs/add/operator/switchMap';
-import { RenderableMap } from '../racing-game-map/renderable-map';
+import { Component, OnInit } from '@angular/core';
+import { EndViewService, EndGameWindow } from '../../services/end-view.service';
 
 @Component({
     selector: 'app-end-view',
@@ -11,12 +9,11 @@ import { RenderableMap } from '../racing-game-map/renderable-map';
 
 export class EndViewComponent implements OnInit {
 
-    @Input() public map: RenderableMap;
-    public displayable;
-
-    constructor() { }
+    public readonly EndGameWindow = EndGameWindow;
+    constructor(public endViewService: EndViewService) { }
 
     public ngOnInit(): void {
-        this.displayable = false;
+        this.endViewService.displayGameResult = EndGameWindow.NONE;
     }
+
 }

@@ -17,13 +17,17 @@ import { TextureLoader, textureLoaderValue } from './services/texture-loader';
 import { CarsProgressionService } from './racing-game/cars-progression.service';
 import { MapRatingComponent } from './racing-game/end-view/map-rating/map-rating.component';
 import { BestTimeComponent } from './racing-game/end-view/best-time/best-time.component';
-import { GameResultsComponent } from './racing-game/end-view/game-results/game-results.component';
 import { EndViewComponent } from './racing-game/end-view/end-view.component';
+import { EndViewService } from './services/end-view.service';
+import { GameInfoService } from './racing-game/game-info.service';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        FormsModule
     ],
     exports: [
         RacingComponent
@@ -36,7 +40,6 @@ import { EndViewComponent } from './racing-game/end-view/end-view.component';
         MapThumbnailComponent,
         MapRatingComponent,
         BestTimeComponent,
-        GameResultsComponent,
         EndViewComponent,
         UIInputs
     ],
@@ -45,8 +48,10 @@ import { EndViewComponent } from './racing-game/end-view/end-view.component';
         RacingGameService,
         PhysicEngine,
         SoundService,
+        GameInfoService,
         CarsService,
         CarsProgressionService,
+        EndViewService,
         { provide: TextureLoader, useValue: textureLoaderValue }
     ]
 })

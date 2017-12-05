@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Seconds } from '../../../types';
-import { GameInfo } from '../game-info';
+import { GameInfoService } from '../game-info.service';
 
 export interface Time {
     milliseconds: number;
@@ -23,7 +23,7 @@ export class HUD {
     private static readonly GAME_TIME_POSITION = HUD.LAP_TIME_POSITION.clone().add(HUD.INCREMENT);
     private static readonly SPEED_POSITION = new THREE.Vector2(HUD.TEXT_OFFSET, 1 - (HUD.TEXT_OFFSET + HUD.TEXT_HEIGTH));
     private static readonly RACE_PLACE_POSITION =
-    new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
+        new THREE.Vector2(1 - HUD.TEXT_OFFSET, HUD.TEXT_HEIGTH + HUD.TEXT_OFFSET);
     private static readonly START_TIMER_POSITION = new THREE.Vector2(HUD.HALF_SCREEN, HUD.HALF_SCREEN);
 
     private context: CanvasRenderingContext2D = null;
@@ -61,7 +61,7 @@ export class HUD {
         }
     }
 
-    public render(game: GameInfo): void {
+    public render(game: GameInfoService): void {
         const size = this.getSize(this.context);
 
         this.context.clearRect(0, 0, size.width, size.height);
@@ -75,24 +75,30 @@ export class HUD {
         this.drawStartTimer(this.context, game);
     }
 
-    private drawLapCount(context: CanvasRenderingContext2D, game: GameInfo): void {
+    private drawLapCount(context: CanvasRenderingContext2D, game: GameInfoService): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_POSITION);
 
-        this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+        if (game.userLapNumber < game.maxLap + 1) {
+            this.context.fillText(`${game.userLapNumber}/${game.maxLap} laps     ${game.userLapCompletionInPercent}%`,
+                textPosition.x, textPosition.y);
+        }
+        else {
+            this.context.fillText(`Completed!`,
             textPosition.x, textPosition.y);
+        }
 
     }
 
-    private drawLapTime(context: CanvasRenderingContext2D, game: GameInfo): void {
+    private drawLapTime(context: CanvasRenderingContext2D, game: GameInfoService): void {
         const textPosition = this.getTextPosition(context, HUD.LAP_TIME_POSITION);
 
-        const lapTime = this.getTime(game.lapTimes[game.userLapNumber - 1]);
+        const lapTime = this.getTime(Date.now() / 1000 - game.userLapTimes[game.userLapTimes.length - 1]);
         const currentTime = this.formatTime(lapTime);
         this.context.fillText(`Lap time: ${currentTime}`,
             textPosition.x, textPosition.y);
     }
 
-    private drawGameTime(context: CanvasRenderingContext2D, game: GameInfo): void {
+    private drawGameTime(context: CanvasRenderingContext2D, game: GameInfoService): void {
         const textPosition = this.getTextPosition(context, HUD.GAME_TIME_POSITION);
 
         const gameTime = this.getTime(game.totalTime);
@@ -101,7 +107,7 @@ export class HUD {
             textPosition.x, textPosition.y);
     }
 
-    private drawRacePosition(context: CanvasRenderingContext2D, game: GameInfo): void {
+    private drawRacePosition(context: CanvasRenderingContext2D, game: GameInfoService): void {
         const textPosition = this.getTextPosition(context, HUD.RACE_PLACE_POSITION);
 
         const position: number = game.currentRank;
@@ -114,7 +120,7 @@ export class HUD {
             textPosition.x - textWidth, textPosition.y);
     }
 
-    private drawSpeed(context: CanvasRenderingContext2D, game: GameInfo) {
+    private drawSpeed(context: CanvasRenderingContext2D, game: GameInfoService) {
         const textPosition = this.getTextPosition(context, HUD.SPEED_POSITION);
 
         const speed = game.controlledCar.front.dot(game.controlledCar.velocity);
@@ -124,7 +130,7 @@ export class HUD {
             textPosition.x, textPosition.y);
     }
 
-    private drawStartTimer(context: CanvasRenderingContext2D, game: GameInfo) {
+    private drawStartTimer(context: CanvasRenderingContext2D, game: GameInfoService) {
         const textPosition = this.getTextPosition(context, HUD.START_TIMER_POSITION);
         const screenSize = this.getSize(context);
 
