@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http/src/response';
 import { RacingGameService } from '../racing-game/racing-game.service';
+import { EventManager } from '../../event-manager.service';
+import { GAME_COMPLETED_EVENT } from '../constants';
+import { CarsProgressionService } from '../racing-game/cars-progression.service';
 
 
 interface RequestOptions {
@@ -27,11 +30,12 @@ export class EndViewService {
     public mapBestTimes;
     public isInMapBestTimes;
     public userTime = 2;
-    public userIsFirstPlace = true;
+    public userIsFirstPlace = false;
 
     constructor(
         private http: HttpClient,
-        private racingGameService: RacingGameService) { }
+        private racingGameService: RacingGameService,
+        private carProgressionService: CarsProgressionService) { }
 
     public initializationForNewMap(mapName: string): void {
         this.mapName = mapName;
@@ -68,7 +72,7 @@ export class EndViewService {
     }
 
     public userIsInMapBestTimes(): Boolean {
-        if (this.userIsFirstPlace) {
+        if (this.checkIfUserIsFirstPlace()) {
             if (this.mapBestTimes.length === EndViewService.MAX_NUMBER_BEST_TIMES) {
                 this.mapBestTimes.sort();
                 return this.userTime < this.mapBestTimes[this.mapBestTimes.length - 1].value;
@@ -83,5 +87,9 @@ export class EndViewService {
     public incrementMapNumberOfPlays(): void {
         const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/increment-plays';
         this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
+    }
+
+    private checkIfUserIsFirstPlace(): boolean {
+        return this.carProgressionService.computeUserRank() === 1;
     }
 }

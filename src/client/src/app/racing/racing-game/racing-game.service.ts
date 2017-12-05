@@ -161,6 +161,7 @@ export class RacingGameService {
     // tslint:disable-next-line:no-unused-variable
     private handleCarCompletedRace(event: EventManager.Event<LapUpdateInfo>) {
         if (event.data.lap > this.gameInfoService.maxLap) {
+            this.carsProgressionService.carPositionTrackingState.set(event.data.car, false);
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
                 data: event.data.car

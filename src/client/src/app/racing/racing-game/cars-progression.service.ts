@@ -31,6 +31,8 @@ export class CarsProgressionService {
     public carsLapProgression: Map<Car, number> = new Map();
     public carsLapNumber: Map<Car, number> = new Map();
 
+    public carPositionTrackingState: Map<Car, boolean> = new Map();
+
     public get userLapsCount(): number {
         return this.carsLapNumber.get(this.userCar);
     }
@@ -62,6 +64,7 @@ export class CarsProgressionService {
             if (controller instanceof UserCarController) {
                 this.userCar = controller.car;
             }
+            this.carPositionTrackingState.set(controller.car, true);
         }
     }
 
@@ -90,6 +93,9 @@ export class CarsProgressionService {
         if (++this.progressionUpdateCounter === 30) {
             this.progressionUpdateCounter = 0;
             for (const controller of this.controllers) {
+                if (!this.carPositionTrackingState.get(controller.car)) {
+                    continue;
+                }
                 const newLapProgression: number = this.computeLapProgression(controller.car);
                 if (newLapProgression > 0.00 && newLapProgression < 0.25 &&
                     this.carProgressionState.get(controller.car) === ProgressionState.FOURTH_QUARTER) {
