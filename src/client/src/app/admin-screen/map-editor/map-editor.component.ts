@@ -105,6 +105,11 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
         return this.isMapValid && this.mapEditor.currentMap.name.trim() !== '';
     }
 
+    public get canMapBeDeleted(): boolean {
+        return this.loadedMapName !== '' &&
+               this.mapEditor.serializeMap().name === this.loadedMapName;
+    }
+
     public saveMap(): void {
         const SERIALIZED_MAP = this.mapEditor.serializeMap();
 
