@@ -37,6 +37,7 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
     private loadedMapName = '';
 
     @Output() public mapWasSaved = new EventEmitter<string>();
+    @Output() public mapWasDeleted = new EventEmitter<string>();
     @Output() public mapCouldNotBeSavedBecauseAlreadyExists = new EventEmitter<string>();
     @Output() public mapCouldNotBeSavedBecauseNotFound = new EventEmitter<string>();
 
@@ -101,24 +102,45 @@ export class MapEditorComponent implements OnInit, AfterViewInit {
         return this.mapEditor.computeMapErrors() === MapError.NONE;
     }
 
+    public get canMapBeSaved(): boolean {
+        return this.isMapValid && this.mapEditor.currentMap.name.trim() !== '';
+    }
+
+    public get canMapBeDeleted(): boolean {
+        return this.loadedMapName !== '' &&
+               this.mapEditor.serializeMap().name === this.loadedMapName;
+    }
+
     public saveMap(): void {
-        const SERIALIZED_MAP = this.mapEditor.serializeMap();
+        if (this.canMapBeSaved) {
+            const SERIALIZED_MAP = this.mapEditor.serializeMap();
 
-        let savePromise: Promise<void>;
-        if (SERIALIZED_MAP.name !== this.loadedMapName) {
-            this.internalMap.name = SERIALIZED_MAP.name;
-            savePromise = this.mapService.saveNew(SERIALIZED_MAP)
-                .catch(() => this.mapCouldNotBeSavedBecauseAlreadyExists.emit(SERIALIZED_MAP.name));
-        }
-        else {
-            savePromise = this.mapService.saveEdited(SERIALIZED_MAP)
-                .catch(() => this.mapCouldNotBeSavedBecauseNotFound.emit(SERIALIZED_MAP.name));
-        }
+            let savePromise: Promise<void>;
+            if (SERIALIZED_MAP.name !== this.loadedMapName) {
+                this.internalMap.name = SERIALIZED_MAP.name;
+                savePromise = this.mapService.saveNew(SERIALIZED_MAP)
+                    .catch(() => this.mapCouldNotBeSavedBecauseAlreadyExists.emit(SERIALIZED_MAP.name));
+            }
+            else {
+                savePromise = this.mapService.saveEdited(SERIALIZED_MAP)
+                    .catch(() => this.mapCouldNotBeSavedBecauseNotFound.emit(SERIALIZED_MAP.name));
+            }
 
-        savePromise.then(() => {
-            this.loadedMapName = SERIALIZED_MAP.name;
-            this.mapWasSaved.emit(SERIALIZED_MAP.name);
-        });
+            savePromise.then(() => {
+                this.loadedMapName = SERIALIZED_MAP.name;
+                this.mapWasSaved.emit(SERIALIZED_MAP.name);
+            });
+        }
+    }
+
+    public deleteMap(): void {
+        if (this.canMapBeDeleted) {
+            const MAP_NAME = this.mapEditor.currentMap.name;
+            this.mapService.delete(MAP_NAME).then(() => {
+                this.mapWasDeleted.emit(MAP_NAME);
+                this.loadedMapName = '';
+            }).catch();
+        }
     }
 
     public potholes(): void {

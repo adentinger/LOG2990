@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http/src/response';
+import { SerializedBestTime } from '../../../../../common/src/racing/serialized-best-time';
 import { RacingGameService } from '../racing-game/racing-game.service';
+import { CarsProgressionService } from '../racing-game/cars-progression.service';
 
+
+export enum EndGameWindow {
+    NONE,
+    MAP_RATING,
+    BEST_TIME
+}
 
 interface RequestOptions {
     observe: 'response';
@@ -22,21 +30,28 @@ export class EndViewService {
 
     private static readonly MAP_SERVER_PATH = 'http://localhost:3000/racing/maps/';
 
-    public displayGameResult;
-    public mapName;
-    public mapBestTimes;
-    public isInMapBestTimes;
-    public userTime = 2;
-    public userIsFirstPlace = true;
+    public displayGameResult: EndGameWindow = EndGameWindow.NONE;
+    public mapName = '';
+    public mapBestTimes: SerializedBestTime[] = [];
+    public isInMapBestTimes = false;
+    public userTime;
+    public userIsFirstPlace = false;
 
     constructor(
         private http: HttpClient,
-        private racingGameService: RacingGameService) { }
+        private racingGameService: RacingGameService,
+        private carProgressionService: CarsProgressionService) { }
 
-    public initializationForNewMap(mapName: string): void {
-        this.mapName = mapName;
-        this.setMapBestTimes();
-        this.displayGameResult = null;
+    public reset(): void {
+        this.displayGameResult = EndGameWindow.NONE;
+        this.userIsFirstPlace = false;
+        this.isInMapBestTimes = false;
+        this.userTime = 0;
+    }
+
+    public initializationForNewMap(): void {
+        this.mapName = this.racingGameService.mapName;
+        this.displayGameResult = EndGameWindow.MAP_RATING;
     }
 
     public updateMapRating(rating: number): void {
@@ -49,39 +64,40 @@ export class EndViewService {
         return this.http.get(URL, EndViewService.REQUEST_OPTIONS).toPromise();
     }
 
-    public async setMapBestTimes(): Promise<void> {
+    public setMapBestTimes(): Promise<void> {
         this.mapBestTimes = [];
-        await this.getMapBestTimes().then(response => {
-            const tempArray = response.body;
-            for (let i = 0; i < EndViewService.MAX_NUMBER_BEST_TIMES; i++) {
-                if (tempArray[i] !== undefined) {
-                    this.mapBestTimes.push(tempArray[i]);
-                }
-            }
+        return this.getMapBestTimes().then(response => {
+            const tempArray: SerializedBestTime[] = (response.body) as SerializedBestTime[];
+            tempArray.forEach((bestTime) => {
+                this.mapBestTimes.push(bestTime);
+            });
         });
     }
 
-    public updateMapBestTime(userName: string): void {
+    public updateMapBestTime(userName: string): Promise<void> {
         const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/best-times/player/' + userName
-            + '/time/' + this.userTime;
-        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
+        + '/time/' + this.userTime;
+        return this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(() => {});
     }
 
     public userIsInMapBestTimes(): Boolean {
-        if (this.userIsFirstPlace) {
+        if (this.checkIfUserIsFirstPlace()) {
             if (this.mapBestTimes.length === EndViewService.MAX_NUMBER_BEST_TIMES) {
                 this.mapBestTimes.sort();
                 return this.userTime < this.mapBestTimes[this.mapBestTimes.length - 1].value;
-            } else if (this.mapBestTimes.length >= 0 &&
-                this.mapBestTimes.length < EndViewService.MAX_NUMBER_BEST_TIMES) {
+            } else {
                 return true;
             }
         }
         return false;
     }
 
-    public incrementMapNumberOfPlays(): void {
+    public incrementMapNumberOfPlays(): Promise<void> {
         const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/increment-plays';
-        this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise();
+        return this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(() => {});
+    }
+
+    private checkIfUserIsFirstPlace(): boolean {
+        return this.carProgressionService.computeUserRank() === 1;
     }
 }

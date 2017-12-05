@@ -13,12 +13,12 @@ import { Observable } from 'rxjs/Observable';
 import { SoundService } from '../services/sound-service';
 import { Sound } from './sound/sound';
 import { CarsService } from './cars.service';
-import { GameInfo } from './game-info';
 import { CarsProgressionService, CAR_LAP_UPDATE_EVENT } from './cars-progression.service';
 import { GameInfoService } from './game-info.service';
 import { Seconds } from '../../types';
 import { GAME_START_EVENT, GAME_COMPLETED_EVENT, KEYDOWN_EVENT, CAR_COMPLETED_RACE } from '../constants';
 import { LapUpdateInfo } from './lap-update-info';
+import { Subscription } from 'rxjs/Subscription';
 
 @Injectable()
 export class RacingGameService {
@@ -28,11 +28,13 @@ export class RacingGameService {
     public readonly renderer: RacingRenderer;
     public readonly waitToLoad: Promise<void>;
     public readonly waitToFinalize: Observable<void>;
+    public startTime: Seconds = Date.now() / 1000;
+
     private readonly finalizeSubject = new Subject<void>();
 
     private map: RenderableMap;
-    public startTime: Seconds = Date.now() / 1000;
     private userInputs: UIInputs = null;
+    private initialSubscription: Subscription;
 
     public get lap(): number {
         console.log('game service is fetching lap value, which is : ' + this.gameInfoService.maxLap);
@@ -70,7 +72,7 @@ export class RacingGameService {
 
         // If the game is stopping before it was loaded, then don't start anything.
         const finalizePromise = new Promise<void>((resolve, reject) => {
-            this.waitToFinalize.subscribe(resolve, reject, resolve);
+            this.initialSubscription = this.waitToFinalize.subscribe(resolve, reject, resolve);
         }).then(() => Promise.reject('Initialization canceled'));
         Promise.race([
             finalizePromise,
@@ -111,6 +113,7 @@ export class RacingGameService {
         this.soundService.finalize();
         this.physicEngine.finalize();
         this.renderer.finalize();
+        this.initialSubscription.unsubscribe();
     }
 
     public loadMap(mapName: string): Promise<void> {
@@ -140,6 +143,10 @@ export class RacingGameService {
         this.renderer.toggleDayMode();
     }
 
+    public get mapName(): string {
+        return this.map.mapName;
+    }
+
     @EventManager.Listener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private changeMaxLap(event: EventManager.Event<KeyboardEvent>) {
@@ -157,6 +164,7 @@ export class RacingGameService {
     // tslint:disable-next-line:no-unused-variable
     private handleCarCompletedRace(event: EventManager.Event<LapUpdateInfo>) {
         if (event.data.lap > this.gameInfoService.maxLap) {
+            this.carsProgressionService.carPositionTrackingState.set(event.data.car, false);
             this.eventManager.fireEvent(CAR_COMPLETED_RACE, {
                 name: CAR_COMPLETED_RACE,
                 data: event.data.car

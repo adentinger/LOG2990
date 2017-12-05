@@ -20,12 +20,19 @@
 .mapParameters {
     flex-grow: 1;
     align-items: flex-start;
+    padding: 20px;
+    max-width: 500px;
+}
+
+.mapParameters > div {
+    margin-bottom: 15px;
 }
 
 .editionArea {
     flex-grow: 1;
     align-items: flex-start;
     text-align: center;
+    padding: 20px;
 }
 
 .creationSpace {
@@ -33,4 +40,24 @@
     padding: 25px;
     padding: 0px;
     user-select: none;
+}
+
+.band-element {
+    width: 100%;
+}
+
+textarea {
+    resize: none;
+}
+
+#actionButtons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+#actionButtons > * {
+    flex-grow: 1;
+    width: 100%;
 }
