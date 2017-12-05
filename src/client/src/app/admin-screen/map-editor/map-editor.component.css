@@ -24,10 +24,15 @@
     max-width: 500px;
 }
 
+.mapParameters > div {
+    margin-bottom: 15px;
+}
+
 .editionArea {
     flex-grow: 1;
     align-items: flex-start;
     text-align: center;
+    padding: 20px;
 }
 
 .creationSpace {
