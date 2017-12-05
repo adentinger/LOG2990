@@ -38,11 +38,16 @@ export class EndViewService {
 
     constructor(private http: HttpClient, private racingGameService: RacingGameService) { }
 
+    public reset(): void {
+        this.displayGameResult = EndGameWindow.NONE;
+        this.userIsFirstPlace = false;
+        this.isInMapBestTimes = false;
+        this.userTime = 0;
+    }
+
     public initializationForNewMap(): void {
         this.mapName = this.racingGameService.mapName;
         this.displayGameResult = EndGameWindow.MAP_RATING;
-        this.mapBestTimes = [];
-        this.setMapBestTimes();
     }
 
     public updateMapRating(rating: number): void {
@@ -56,6 +61,7 @@ export class EndViewService {
     }
 
     public setMapBestTimes(): Promise<void> {
+        this.mapBestTimes = [];
         return this.getMapBestTimes().then(response => {
             const tempArray: SerializedBestTime[] = (response.body) as SerializedBestTime[];
             tempArray.forEach((bestTime) => {
@@ -86,4 +92,6 @@ export class EndViewService {
         const URL = EndViewService.MAP_SERVER_PATH + this.mapName + '/increment-plays';
         return this.http.patch(URL, EndViewService.REQUEST_OPTIONS).toPromise().then(() => {});
     }
+
+
 }

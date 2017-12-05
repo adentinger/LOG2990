@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EndViewService, EndGameWindow } from '../../services/end-view.service';
 
 @Component({
@@ -7,9 +7,13 @@ import { EndViewService, EndGameWindow } from '../../services/end-view.service';
     styleUrls: ['./end-view.component.css']
 })
 
-export class EndViewComponent {
+export class EndViewComponent implements OnInit {
 
     public readonly EndGameWindow = EndGameWindow;
     constructor(public endViewService: EndViewService) { }
+
+    public ngOnInit(): void {
+        this.endViewService.displayGameResult = EndGameWindow.NONE;
+    }
 
 }
