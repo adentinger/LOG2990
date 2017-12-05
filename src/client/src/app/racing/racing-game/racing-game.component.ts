@@ -38,6 +38,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     @ViewChild('userInputs')
     private uiInputs: UIInputs;
     private routeSubscription: Subscription;
+    private endGameState;
 
     constructor(private racingGame: RacingGameService,
         private route: ActivatedRoute,
@@ -56,6 +57,7 @@ export class RacingGameComponent implements OnInit, OnDestroy {
                 });
             });
         this.racingGame.waitToLoad.then(() => this.gameLoaded = true);
+        this.endGameState = false;
     }
 
     public ngOnDestroy() {
@@ -76,45 +78,47 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     @EventManager.Listener(KEYDOWN_EVENT)
     // tslint:disable-next-line:no-unused-variable
     private onKeyDown() {
-        if (this.uiInputs.isKeyPressed('c')) {
-            this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
-        }
+        if (!this.endGameState) {
+            if (this.uiInputs.isKeyPressed('c')) {
+                this.racingGame.renderer.currentCamera = (1 - this.racingGame.renderer.currentCamera) as 0 | 1;
+            }
 
-        if (this.uiInputs.isKeyPressed('n')) {
-            this.racingGame.toggleDayMode();
-        }
+            if (this.uiInputs.isKeyPressed('n')) {
+                this.racingGame.toggleDayMode();
+            }
 
-        if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
-            const currentCamera = this.racingGame.renderer.currentCamera;
-            this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= RacingGameComponent.ZOOM_FACTOR;
-            this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
-        }
+            if (this.uiInputs.isKeyPressed('+') || this.uiInputs.isKeyPressed('=')) {
+                const currentCamera = this.racingGame.renderer.currentCamera;
+                this.racingGame.renderer.getBothCameras()[currentCamera].zoom *= RacingGameComponent.ZOOM_FACTOR;
+                this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
+            }
 
-        if (this.uiInputs.isKeyPressed('-') || this.uiInputs.isKeyPressed('_')) {
-            const currentCamera = this.racingGame.renderer.currentCamera;
-            this.racingGame.renderer.getBothCameras()[currentCamera].zoom /= RacingGameComponent.ZOOM_FACTOR;
-            this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
-        }
+            if (this.uiInputs.isKeyPressed('-') || this.uiInputs.isKeyPressed('_')) {
+                const currentCamera = this.racingGame.renderer.currentCamera;
+                this.racingGame.renderer.getBothCameras()[currentCamera].zoom /= RacingGameComponent.ZOOM_FACTOR;
+                this.racingGame.renderer.getBothCameras()[currentCamera].updateProjectionMatrix();
+            }
 
-        if (this.uiInputs.isKeyPressed('r')) {
-            this.racingGame.renderer.toggleRearViewCamera();
-        }
+            if (this.uiInputs.isKeyPressed('r')) {
+                this.racingGame.renderer.toggleRearViewCamera();
+            }
 
-        if (this.uiInputs.isKeyPressed('f')) {
-            const indexOfFilter = this.toggleNextColorFilter();
-            this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
-        }
+            if (this.uiInputs.isKeyPressed('f')) {
+                const indexOfFilter = this.toggleNextColorFilter();
+                this.colorFilterClass = RacingGameComponent.COLOR_FILTERS[indexOfFilter];
+            }
 
-        if (this.uiInputs.isKeyPressed('x')) {
-            this.displayable();
-        }
+            if (this.uiInputs.isKeyPressed('x')) {
+                this.displayable();
+            }
 
-        const areAllowedKeyCombinationsPressed =
-            this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
-            this.uiInputs.isKeyPressed('f5');
+            const areAllowedKeyCombinationsPressed =
+                this.uiInputs.areKeysPressed('control', 'shift', 'i') ||
+                this.uiInputs.isKeyPressed('f5');
 
-        if (!areAllowedKeyCombinationsPressed) {
-            return false; // Prevent Default behaviors
+            if (!areAllowedKeyCombinationsPressed) {
+                return false; // Prevent Default behaviors
+            }
         }
     }
 
@@ -139,5 +143,6 @@ export class RacingGameComponent implements OnInit, OnDestroy {
     private displayEndGameMenu(event: EventManager.Event<void>) {
         this.endViewService.initializationForNewMap();
         this.endViewService.incrementMapNumberOfPlays();
+        this.endGameState = true;
     }
 }

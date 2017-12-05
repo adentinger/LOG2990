@@ -34,7 +34,7 @@ export class EndViewService {
     public mapName = '';
     public mapBestTimes: SerializedBestTime[] = [];
     public isInMapBestTimes = false;
-    public userTime = 2;
+    public userTime;
     public userIsFirstPlace = false;
 
     constructor(

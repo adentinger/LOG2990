@@ -4,18 +4,19 @@
     <app-admin-config></app-admin-config>
     <div class="mapList">
       <div class="tableTitle">Map name</div>
-      <div class="maps" *ngFor="let map of mapNames" [class.selected]="map === selectedMap" (click)="mapSelected(map)">
-        <span class="mapNames">{{map}}</span>
-        <button class="delete" (click)="deleteMap(map); $event.stopPropagation()">x</button>
+      <div class="maps no-select" *ngFor="let map of mapNames" [ngClass]="{selected: map === selectedMap}" (click)="mapSelected(map)">
+        <div class="map-name-container">
+          <span>{{map}}</span>
+        </div>
       </div>
     </div>
   </div>
   <div *ngIf="serializedMap">
       <app-map-editor [map]="serializedMap"
         (mapWasSaved)="addMap($event)"
+        (mapWasDeleted)="keepAllMapsExcept($event)"
         (mapCouldNotBeSavedBecauseAlreadyExists)="alertMapCouldNotBeSavedBecuaseAlreadyExists()"
         (mapCouldNotBeSavedBecauseNotFound)="alertMapCouldNotBeSavedBecauseNotFound()">
       </app-map-editor> 
   </div>
-  <!--<button (click)="sendSocket()">Send word constraint</button>-->
 </div>
